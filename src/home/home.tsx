@@ -34,7 +34,7 @@ class HomePage extends Component<IProps, IState> {
   }
 
   async componentDidMount() {
-    const url = "/hello";
+    const url = "/student";
     const response = await axios.get(Constant.BASE_URL + url)
     this.setState({name: response.data.name});
   }
