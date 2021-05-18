@@ -1,2 +1,7 @@
-### this is my web site
-### let see about me 🥰 ...!# capstone-project-front-end
+### this is our capstone-project-front-end
+
+```
+nmp run start
+
+yarn start
+```
