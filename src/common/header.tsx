@@ -8,9 +8,12 @@ import styled from 'styled-components';
 
 function Header(props: any) {
   return (
-    <header>
+    <StyledHeader>
       <div className="menu">
         <ul>
+          <li>
+            <Link to="/login">Login</Link>
+          </li>
           <li>
             <Link to="/">HomePage</Link>
           </li>
@@ -33,12 +36,13 @@ function Header(props: any) {
         </div>
       </div>
 
-    </header>
+    </StyledHeader>
   );
 }
 
-const StyledHeader = styled(Header)`
+const StyledHeader = styled.div`
   display:flex;
+  background-color: red;
 `
 
-export default StyledHeader;
+export default Header;
