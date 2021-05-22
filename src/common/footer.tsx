@@ -1,4 +1,3 @@
-import "./footer.css";
 
 function Footer(props: any) {
     return (
