@@ -1,14 +1,9 @@
-import React from 'react';
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 
-
-import {
-  Link
-} from "react-router-dom";
-import styled from 'styled-components';
-
-function Header(props: any) {
+const Header = ({className=""}) => {
   return (
-    <header>
+    <header className={className}>
       <div className="menu">
         <ul>
           <li>
@@ -32,13 +27,17 @@ function Header(props: any) {
           <div className="txt">Logout</div>
         </div>
       </div>
-
     </header>
   );
-}
+};
 
 const StyledHeader = styled(Header)`
-  display:flex;
-`
+  display: flex;
+  color: red;
+
+  .log-out{
+    color: blue;
+  }
+`;
 
 export default StyledHeader;
