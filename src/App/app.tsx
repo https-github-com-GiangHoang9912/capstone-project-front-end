@@ -12,7 +12,10 @@ import HomePage from "../screen/home";
 import CheckDuplicate from '../screen/check-duplicate';
 import SelfGenerate from '../screen/self-generation-question';
 import Login from '../screen/login';
+import ForgotPassword from '../screen/forgot-password';
+import ChangePassword from '../screen/change-password';
 import Header from '../common/header';
+
     
 function App(props:any) {
   return (
@@ -33,7 +36,11 @@ function App(props:any) {
     //     </Route>
     //     </Switch>
     // </Router>
-    <Login />
+
+    //! Quy test screen 
+    //! <Login />
+    //! <ForgotPassword />
+    <ChangePassword />
   );
 }
 
