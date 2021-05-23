@@ -11,3 +11,8 @@ npm run format
 
 npm run lint
 ```
+
+### lint auto fix
+```
+npm run lint:fix
+```
