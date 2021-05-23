@@ -18,7 +18,7 @@ function App(props:any) {
     <Router>
       <Header />
       <Switch>
-        <Route exact path="/">
+        <Route exact path="/home">
           <HomePage />
         </Route>
         <Route exact path="/check-duplicate">
