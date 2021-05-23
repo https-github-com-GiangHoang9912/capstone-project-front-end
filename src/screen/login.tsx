@@ -10,6 +10,8 @@ import styled from 'styled-components';
 
 const Login = ({ className = "" }) => {
   return (
+
+
     <div className={className}>
       <div className='container'>
         <div className="form-login">
@@ -23,6 +25,8 @@ const Login = ({ className = "" }) => {
         </div>
       </div>
     </div>
+
+
   );
 }
 
@@ -31,13 +35,18 @@ const StyledLogin = styled(Login)`
 *{
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 #register {
  display: block;
 }
 
+.container::-webkit-scrollbar {
+  display: none;
+}
 .container {
+    overflow: hidden; 
     font-family: Arial;
     background: #2ecc71;
     background-repeat: no-repeat;
@@ -45,10 +54,13 @@ const StyledLogin = styled(Login)`
     background-size: cover;
     background-position: center center;
     height: 100vh;
-    padding-top: 5%;
+    width: 100%;
+    justify-content: center;
+    -ms-overflow-style: none; 
 }
 
 .form-login {
+    justify-content: center;
     width: 320px;
     height: auto;
     margin: 0 auto;
@@ -61,6 +73,12 @@ const StyledLogin = styled(Login)`
     text-align: center;
 }
 
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  [class*="col-"] {
+    width: 100%;
+  }
+}
 .form-login h1 {
     text-align: center;
     margin-bottom: 30px;
