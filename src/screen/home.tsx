@@ -1,5 +1,5 @@
-import React from "react";
-import DialogComponent from "../common/dialog";
+// import React from 'react'
+// import DialogComponent from '../common/dialog'
 
 // import Constant from "../const.json";
 // import axios from "axios";
@@ -17,7 +17,7 @@ function HomePage(props: any) {
       /> */}
       Home
     </div>
-  );
+  )
 }
 
-export default HomePage;
+export default HomePage

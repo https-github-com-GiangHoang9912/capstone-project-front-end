@@ -1,16 +1,16 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 const DialogComponent = ({
-  className = "",
-  title = "",
-  message = "",
-  buttonAccept = "",
-  buttonCancel = "",
+  className = '',
+  title = '',
+  message = '',
+  buttonAccept = '',
+  buttonCancel = '',
   isValid = true,
 }) => {
-  let classOfTitle = "title-valid";
+  let classOfTitle = 'title-valid'
   if (!isValid) {
-    classOfTitle = "title-duplicate";
+    classOfTitle = 'title-duplicate'
   }
 
   return (
@@ -24,14 +24,13 @@ const DialogComponent = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 const StyledDialog = styled(DialogComponent)`
   position: absolute;
   left: 50%;
   font-weight: bold;
-  
 
   .container {
     position: relative;
@@ -90,6 +89,6 @@ const StyledDialog = styled(DialogComponent)`
   .buttonCancel {
     background-color: rgb(237, 104, 92);
   }
-`;
+`
 
-export default StyledDialog;
+export default StyledDialog

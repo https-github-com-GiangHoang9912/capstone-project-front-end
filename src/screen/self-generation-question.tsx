@@ -1,9 +1,5 @@
-import React from 'react';
+import React from 'react'
 
-export default function SelfGenerate(props:any) {
-  return (
-    <div>
-      SelfGenerationQuestion
-    </div>
-  )
+export default function SelfGenerate(props: any) {
+  return <div>SelfGenerationQuestion</div>
 }
