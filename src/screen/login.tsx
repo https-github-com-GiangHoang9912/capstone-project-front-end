@@ -3,17 +3,29 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import GoogleLogin from 'react-google-login'
 
-const Login = ({ className = '' }) => {
+function Login({ className = '' }) {
+  const responseGoogle = (response: any) =>{
+    console.log(response)
+  }
+
   return (
     <div className={className}>
       <div className="container">
         <div className="form-login">
           <form action="#">
             <h1>Login</h1>
-            <input type="text" id="uname" placeholder="🤵 Enter username" required></input>
-            <input type="password" id="pass" placeholder="🔒 Enter password" required></input>
+            <input type="text" id="uname" placeholder="🤵 Enter username" required />
+            <input type="password" id="pass" placeholder="🔒 Enter password" required />
             <button id="submit">Submit</button>
+            <GoogleLogin 
+              className="button-google-login"
+              clientId="827399353225-6da9iooquukb62dosd6sdbddp6jo0k8a.apps.googleusercontent.com"
+              buttonText="Login"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+            />
             <a id="register" href="#">
               Click here! If you forgot password
             </a>
@@ -29,6 +41,12 @@ const StyledLogin = styled(Login)`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+  }
+
+  .button-google-login{
+    height: 41px !important;
+    margin-top: 10px;
+    border-radius: 5px;
   }
 
   #register {

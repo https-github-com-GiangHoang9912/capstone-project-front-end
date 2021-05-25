@@ -8,6 +8,7 @@ import HomePage from '../screen/home'
 import CheckDuplicate from '../screen/check-duplicate'
 import SelfGenerate from '../screen/self-generation-question'
 import Header from '../common/header'
+import Login from '../screen/login'
 
 function App(props: any) {
   return (
@@ -22,6 +23,9 @@ function App(props: any) {
         </Route>
         <Route exact path="/self-generate">
           <SelfGenerate />
+        </Route>
+        <Route exact path="/login">
+          <Login />
         </Route>
       </Switch>
     </Router>
