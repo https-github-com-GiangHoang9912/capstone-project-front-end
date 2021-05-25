@@ -38,8 +38,6 @@ const SelfGenerate = ({ className = '' }) => {
          {showDialog ? <Dialog title="Self" message="Do you want to add this question to the bank"
        buttonAccept="Yes" buttonCancel="No"/> : ''}
       {/* Generate cau hoi */}
-      
-      
       <button className="btn-generate" onClick={handleProgress}>Generate</button><br/>
       
       {/* call components ProgressBar */}
@@ -60,7 +58,6 @@ const SelfGenerate = ({ className = '' }) => {
 
 const SelfStyle = styled(SelfGenerate)`
       background-color: #F7F8FC;
-      width: 100%;
       height: auto;
       margin:auto;
       .form-container{
