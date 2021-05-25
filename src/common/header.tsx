@@ -1,59 +1,68 @@
-import React, { FC } from 'react';
+import React, { FC } from 'react'
 
-import {
-  NavLink,
-  useParams
-} from "react-router-dom";
-import styled from 'styled-components';
+import { NavLink, useParams } from 'react-router-dom'
+import styled from 'styled-components'
 
 interface Styled {
   className?: string
 }
-type HeaderProps = {
-
-} & Styled
+type HeaderProps = {} & Styled
 type MyParams = {
-  id: string;
-};
+  id: string
+}
 
 const Header: FC<HeaderProps> = (props) => {
   const { className } = props
-  const { id } = useParams<MyParams>();
-  console.log(id);
-  
+  const { id } = useParams<MyParams>()
+  console.log(id)
+
   return (
     <header className={className}>
       <div className="menu">
         <ul>
           <li>
-            <NavLink to="/home" activeClassName="active-li">🏡 HomePage</NavLink>
+            <NavLink to="/home" activeClassName="active-li">
+              🏡 HomePage
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/check-duplicate" activeClassName="active-li"> 🍣 Check Duplicate</NavLink>
+            <NavLink to="/check-duplicate" activeClassName="active-li">
+              {' '}
+              🍣 Check Duplicate
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/self-generate" activeClassName="active-li"> 🎰 Self-generate Question</NavLink>
+            <NavLink to="/self-generate" activeClassName="active-li">
+              {' '}
+              🎰 Self-generate Question
+            </NavLink>
           </li>
         </ul>
       </div>
       <div className="account-box">
         <NavLink to="/profile" className="right-menu user">
           <div className="avt">
-            <img src="https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png" alt="avt"/>
+            <img
+              src="https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png"
+              alt="avt"
+            />
           </div>
           <div className="txt">Hello, Mr.BanTQ</div>
           <span className="tooltiptext">Edit Profile</span>
         </NavLink>
         <NavLink to="/login" className="right-menu log-out">
           <div className="avt">
-            <img src="https://i.pinimg.com/originals/24/2d/c2/242dc2fd066c6c8e36eff57b81275619.png" alt="logout-img" />
+            <img
+              src="https://i.pinimg.com/originals/24/2d/c2/242dc2fd066c6c8e36eff57b81275619.png"
+              alt="logout-img"
+            />
           </div>
           <div className="txt">Logout</div>
         </NavLink>
       </div>
-  </header>
-)
-  }
+    </header>
+  )
+}
 const StyledHeader = styled(Header)`
   display: flex;
   flex-direction: row;
@@ -66,7 +75,7 @@ const StyledHeader = styled(Header)`
     background-color: whitesmoke;
     color: #3f3333;
     list-style-type: none;
-    display:flex;
+    display: flex;
     flex-direction: row;
     justify-content: space-around;
     padding: 5px 10px 2px 20px;
@@ -74,10 +83,10 @@ const StyledHeader = styled(Header)`
   }
 
   ul li {
-   margin-right: 10px;
-   border-bottom: 5px solid gray;
-   border-radius: 5px;
-   font-size: 20px;
+    margin-right: 10px;
+    border-bottom: 5px solid gray;
+    border-radius: 5px;
+    font-size: 20px;
   }
 
   .active-li {
@@ -102,22 +111,22 @@ const StyledHeader = styled(Header)`
   }
 
   .user .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
 
-  /* Position the tooltip */
-  position: absolute;
-  z-index: 1;
-}
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+  }
 
-.user:hover .tooltiptext {
-  visibility: visible;
-}
+  .user:hover .tooltiptext {
+    visibility: visible;
+  }
 
   .avt {
     margin: auto;
@@ -125,10 +134,9 @@ const StyledHeader = styled(Header)`
   }
 
   .avt img {
-    width:100%;
+    width: 100%;
     border-radius: 100%;
   }
-
 `
 
 export default StyledHeader

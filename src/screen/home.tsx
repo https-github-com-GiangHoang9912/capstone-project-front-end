@@ -6,22 +6,22 @@ import DialogComponent from '../common/dialog'
 // import axios from "axios";
 
 function HomePage(props: any) {
-  const [className, setChoice] = useState("hidden-dialog")
+  const [className, setChoice] = useState('hidden-dialog')
 
   function handleDialogChoice(choice_: boolean) {
     if (choice_) {
-      console.log("accept")
+      console.log('accept')
       return
     }
-    console.log("cancel")
+    console.log('cancel')
   }
 
   function handleShowDialog(isShow: boolean) {
     if (isShow) {
-      setChoice("show-dialog")
+      setChoice('show-dialog')
       return
     }
-    setChoice("hidden-dialog")
+    setChoice('hidden-dialog')
   }
 
   return (
