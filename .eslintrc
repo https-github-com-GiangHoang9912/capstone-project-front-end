@@ -10,6 +10,8 @@
       "typescript": {
         "alwaysTryTypes": true
       }
+      
+      
     }
   },
   "rules": {
