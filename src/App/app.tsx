@@ -1,19 +1,15 @@
-import React from 'react';
+import React from 'react'
 
 // lib
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
- 
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+
 // components
-import HomePage from "../screen/home";
-import CheckDuplicate from '../screen/check-duplicate';
-import SelfGenerate from '../screen/self-generation-question';
-import Header from '../common/header';
-    
-function App(props:any) {
+import HomePage from '../screen/home'
+import CheckDuplicate from '../screen/check-duplicate'
+import SelfGenerate from '../screen/self-generation-question'
+import Header from '../common/header'
+
+function App(props: any) {
   return (
     <Router>
       <Header />
@@ -27,9 +23,9 @@ function App(props:any) {
         <Route exact path="/self-generate">
           <SelfGenerate />
         </Route>
-        </Switch>
+      </Switch>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App

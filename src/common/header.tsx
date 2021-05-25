@@ -51,11 +51,9 @@ const Header: FC<HeaderProps> = (props) => {
           <div className="txt">Logout</div>
         </NavLink>
       </div>
-
-    </header>
-  );
-}
-
+  </header>
+)
+  }
 const StyledHeader = styled(Header)`
   display: flex;
   flex-direction: row;
@@ -133,4 +131,4 @@ const StyledHeader = styled(Header)`
 
 `
 
-export default StyledHeader;
+export default StyledHeader
