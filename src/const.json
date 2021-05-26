@@ -1,3 +1,4 @@
 {
-  "BASE_URL": "http://localhost:3001"
+  "BASE_URL": "http://localhost:3001",
+  "GOOGLE-CLIENT-ID": "827399353225-6da9iooquukb62dosd6sdbddp6jo0k8a.apps.googleusercontent.com"
 }
