@@ -4,10 +4,22 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleLogin from 'react-google-login'
+import CONSTANT from '../const.json'
 
 function Login({ className = '' }) {
-  const responseGoogle = (response: any) =>{
-    console.log(response)
+  const responseGoogle = (response: any) => {
+    if (response.error) return
+    const PATTENT_TEACHER = new RegExp("fe.edu.vn");
+    const PATTEN_STUDENT = new RegExp("fpt.edu.vn");
+    if (PATTENT_TEACHER.test(response.profileObj.email)) {
+      console.log("Teacher")
+    } else if (PATTEN_STUDENT.test(response.profileObj.email)) {
+      console.log("Student")
+    } else {
+      console.log("Out of FPT")
+    }
+    console.log(response.profileObj)
+    console.log(response.tokenObj)
   }
 
   return (
@@ -19,9 +31,9 @@ function Login({ className = '' }) {
             <input type="text" id="uname" placeholder="🤵 Enter username" required />
             <input type="password" id="pass" placeholder="🔒 Enter password" required />
             <button id="submit">Submit</button>
-            <GoogleLogin 
+            <GoogleLogin
               className="button-google-login"
-              clientId="827399353225-6da9iooquukb62dosd6sdbddp6jo0k8a.apps.googleusercontent.com"
+              clientId={CONSTANT['GOOGLE-CLIENT-ID']}
               buttonText="Login"
               onSuccess={responseGoogle}
               onFailure={responseGoogle}
@@ -43,7 +55,7 @@ const StyledLogin = styled(Login)`
     box-sizing: border-box;
   }
 
-  .button-google-login{
+  .button-google-login {
     height: 41px !important;
     margin-top: 10px;
     border-radius: 5px;
