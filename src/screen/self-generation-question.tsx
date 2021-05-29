@@ -74,6 +74,7 @@ const SelfGenerate = ({ className = '' }) => {
 }
 
 const SelfStyle = styled(SelfGenerate)`
+
   background-color: #f7f8fc;
   height: auto;
   margin: auto;
@@ -85,9 +86,12 @@ const SelfStyle = styled(SelfGenerate)`
   }
   h2 {
     color: #10182f;
-    font-style: italic;
-    padding: 20px;
+    font-style: italic;;
     text-align: center;
+    font-size: 28px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    text-shadow: 3px 3px rgba(0, 0, 0, 0.1);
   }
   form {
     width: 80%;
@@ -98,10 +102,11 @@ const SelfStyle = styled(SelfGenerate)`
     font-size: 18px;
     font-weight: 600;
     color: #545d7a;
+    margin-top: 1rem;
   }
   form .input-answer {
     width: 100%;
-    height: 20px;
+    height: 32px;
     padding: 10px;
   }
   .note-box {
