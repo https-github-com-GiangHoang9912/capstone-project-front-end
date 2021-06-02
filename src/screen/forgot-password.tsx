@@ -4,24 +4,30 @@ import PropTypes from 'prop-types';
 import {
   Link
 } from "react-router-dom";
-import avatar from '../images/avatar2.png';
+// import avatar from './images/avatar2.png';
 import styled from 'styled-components';
 
+ForgotPassword.propTypes = {
+  className: PropTypes.string,
+}
 
-const ForgotPassword = ({ className = "" }) => {
+ForgotPassword.defaultProps = {
+  className: ''
+}
+
+function ForgotPassword(props: any) {
+  const { className } = props;
   return (
-
-
     <div className={className}>
       <div className='container'>
         <div className="form-login">
           <form action='#'>
             <h1 className='title'>Forgot Password</h1>
-            <img src={avatar} className='avatar' alt="" />
+            <img src="avatar2.png" className='avatar' alt="" />
             <h3 className="mess-guide">Enter your account and email:</h3>
             <div className="input-content">
-              <input type='text' id='uname' placeholder='🤵 Enter username' required></input>
-              <input type="password" id="pass" placeholder="📧 Enter email" required></input>
+              <input type='text' id='uname' placeholder='🤵 Enter username' required />
+              <input type="password" id="pass" placeholder="📧 Enter email" required />
               <button id="submit" className="reset">Reset Password</button>
             </div>
           </form>

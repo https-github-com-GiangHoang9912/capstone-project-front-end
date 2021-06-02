@@ -5,56 +5,56 @@ import Progress from '../common/progress'
 import Dialog from '../common/dialog'
 
 const SelfGenerate = ({ className = '' }) => {
-   const [showProgress, setShowProgress] = useState<Boolean>(false);
-   const [showDialog, setShowDialog] = useState<Boolean>(false);
-   function handleProgress(e:any){
-     e.preventDefault();
-     setShowProgress(!showProgress);
-     
-   };
+  const [showProgress, setShowProgress] = useState<Boolean>(false);
+  const [showDialog, setShowDialog] = useState<Boolean>(false);
+  function handleProgress(e: any) {
+    e.preventDefault();
+    setShowProgress(!showProgress);
 
-   function handleDialog(e:any){
+  };
+
+  function handleDialog(e: any) {
     e.preventDefault();
     setShowDialog(!showDialog);
-  
+
   };
-   return(
+  return (
     <div className={className}>
       <h2>Self-generation</h2>
       <div className="form-container">
-    <form>
-      {/* Nhap cau tra loi */}
-      <p className="label">Input Answers</p>
-      <input type="text" id="answer" className="input-answer inp-border" name="answer" placeholder="Enter an answer" />
-      <br/>
-       {/* Nhap doan van hoac ideal */}
-      <p className="label">Context</p>
-      <textarea className="text-area inp-border" id="text" name="text"/><br/>
-      <p className="note-box">Enter the question in the Question box 
-        and enter the text in the Context box then press Generate button.<br/>
+        <form>
+          {/* Nhap cau tra loi */}
+          <p className="label">Input Answers</p>
+          <input type="text" id="answer" className="input-answer inp-border" name="answer" placeholder="Enter an answer" />
+          <br />
+          {/* Nhap doan van hoac ideal */}
+          <p className="label">Context</p>
+          <textarea className="text-area inp-border" id="text" name="text" /><br />
+          <p className="note-box">Enter the question in the Question box
+        and enter the text in the Context box then press Generate button.<br />
         Processing will take a couple of time
          </p>
 
-         {showDialog ? <Dialog title="Self" message="Do you want to add this question to the bank"
-       buttonAccept="Yes" buttonCancel="No"/> : ''}
-      {/* Generate cau hoi */}
-      <button className="btn-generate" onClick={handleProgress}>Generate</button><br/>
-      
-      {/* call components ProgressBar */}
-      {showProgress ? <Progress percentage={60}/> : ''}
+          {showDialog ? <Dialog title="Self" message="Do you want to add this question to the bank"
+            buttonAccept="Yes" buttonCancel="No" /> : ''}
+          {/* Generate cau hoi */}
+          <button className="btn-generate" onClick={handleProgress}>Generate</button><br />
 
-      {/* Display question generated */}
-      <p className="label">Question generated</p>
-      <textarea className="text-area inp-border question-area" />
-      <button className="btn-generate" onClick={handleDialog}>Add to bank</button>
-    </form>
-      
+          {/* call components ProgressBar */}
+          {showProgress ? <Progress percentage={60} /> : ''}
+
+          {/* Display question generated */}
+          <p className="label">Question generated</p>
+          <textarea className="text-area inp-border question-area" />
+          <button className="btn-generate" onClick={handleDialog}>Add to bank</button>
+        </form>
+
+      </div>
+
+
     </div>
-      
-    
-    </div>
-   )
-   }
+  )
+}
 
 const SelfStyle = styled(SelfGenerate)`
       background-color: #F7F8FC;

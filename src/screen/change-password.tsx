@@ -4,25 +4,33 @@ import PropTypes from 'prop-types';
 import {
   Link
 } from "react-router-dom";
-import avatar from '../images/avatar2.png';
 import styled from 'styled-components';
 
-const ChangePassword = ({ className = "" }) => {
+
+ChangePassword.propTypes = {
+  className: PropTypes.string,
+}
+
+ChangePassword.defaultProps = {
+  className: ''
+}
+
+
+function ChangePassword(props: any) {
+  const { className } = props;
   return (
-
-
     <div className={className}>
       <div className='container'>
         <div className="form-login">
           <form action='#'>
             <h1 className='title'>Change Password</h1>
-            <img src={avatar} className='avatar' alt="" />
+            <img src="avatar2.png" className='avatar' alt="" />
             <h3 className="mess-guide">Enter your username and password:</h3>
             <div className="input-content">
-              <input type='text' id='uname' placeholder='🤵 Enter username' required></input>
-              <input type="password" id="pass" placeholder="Old Password" required></input>
-              <input type="password" id="pass" placeholder="New Password" required></input>
-              <input type="password" id="pass" placeholder="Re-Enter Password" required></input>
+              <input type='text' id='uname' placeholder='🤵 Enter username' required />
+              <input type="password" id="pass" placeholder="Old Password" required />
+              <input type="password" id="pass" placeholder="New Password" required />
+              <input type="password" id="pass" placeholder="Re-Enter Password" required />
               <button id="submit" className="reset">Submit</button>
             </div>
           </form>
@@ -34,12 +42,11 @@ const ChangePassword = ({ className = "" }) => {
   );
 }
 
-
 const StyledForgotPassword = styled(ChangePassword)`
 *{
     margin: 0;
     padding: 0;
-    /* box-sizing: border-box; */
+    box-sizing: border-box;
 }
 
 .container::-webkit-scrollbar {
