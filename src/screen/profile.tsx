@@ -1,77 +1,77 @@
 import React, { useState } from 'react';
 import styled from 'styled-components'
-import  PropTypes  from 'prop-types';
+import PropTypes from 'prop-types';
 
 
-Profile.propTypes ={
-   className : PropTypes.string,
- 
+Profile.propTypes = {
+  className: PropTypes.string,
+
 }
 Profile.defaultProps = {
   className: ''
 }
-interface IImage{
+interface IImage {
   url: string
 }
 function Profile(props: any) {
-  const { className} = props;
-  const [editStatus,setEditStatus] = useState<boolean>(true);
-  const [image, setImage] = useState<IImage>({url: 'https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png'});
+  const { className } = props;
+  const [editStatus, setEditStatus] = useState<boolean>(true);
+  const [image, setImage] = useState<IImage>({ url: 'https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png' });
 
-  
-  function handleEdit(){
-      setEditStatus(!editStatus);
-      console.log(editStatus);
+
+  function handleEdit() {
+    setEditStatus(!editStatus);
+    console.log(editStatus);
   }
-  
-  function handleFileChange(e:any){
-      setImage({url:URL.createObjectURL(e.target.files[0])})
+
+  function handleFileChange(e: any) {
+    setImage({ url: URL.createObjectURL(e.target.files[0]) })
   }
-  return(
+  return (
     <div className={className}>
       <div className="info-container">
-        <h2>Your Profile</h2>
+        <h2 className="title-task">Your Profile</h2>
         <div className="contain">
-           <div className="form-contain">
-              <div className="form-info">
-                <span>💁‍Username</span>
-                <input type="text" id="username" className="input-bar" disabled={editStatus}/>
-              </div>
-              <div className="form-info">
-                <span>📆Date of birth</span>
-                <input type="text" id="dob"  className="input-bar" disabled={editStatus}/>
-              </div>
-              <div className="form-info">
-                <span>⛪Address</span>
-                <input type="text" id="address"  className="input-bar" disabled={editStatus}/>
-              </div>
-              <div className="form-info">
-                <span>📞Phone number</span>
-                <input type="text" id="phone"  className="input-bar" disabled={editStatus}/>
-              </div>
-              <div className="form-info">
-                <span>📩Email</span>
-                <input type="text" id="email"  className="input-bar " disabled={editStatus}/>
-              </div>
-              <button className="btn-edit" onClick={handleEdit}>{editStatus?"Edit profile":"Save"}</button>
-           </div>
-           <div className="img-avt">
-           <img src={image.url} alt=""/>
+          <div className="form-contain">
+            <div className="form-info">
+              <span>💁‍Username</span>
+              <input type="text" id="username" className="input-bar" disabled={editStatus} />
+            </div>
+            <div className="form-info">
+              <span>📆Date of birth</span>
+              <input type="text" id="dob" className="input-bar" disabled={editStatus} />
+            </div>
+            <div className="form-info">
+              <span>⛪Address</span>
+              <input type="text" id="address" className="input-bar" disabled={editStatus} />
+            </div>
+            <div className="form-info">
+              <span>📞Phone number</span>
+              <input type="text" id="phone" className="input-bar" disabled={editStatus} />
+            </div>
+            <div className="form-info">
+              <span>📩Email</span>
+              <input type="text" id="email" className="input-bar " disabled={editStatus} />
+            </div>
+            <button className="btn-edit" onClick={handleEdit}>{editStatus ? "Edit profile" : "Save"}</button>
+          </div>
+          <div className="img-avt">
+            <img src={image.url} alt="" />
             <input type="file" name="file" id="file" className="input-file" onChange={handleFileChange} disabled={editStatus} />
-             
 
-           </div>
-           
+
+          </div>
+
         </div>
-        
-        
+
+
       </div>
     </div>
   )
 }
 
 
-const styleProfile =styled(Profile)`
+const styleProfile = styled(Profile)`
     
     width: 100%;
     height: 100vh;
@@ -83,15 +83,7 @@ const styleProfile =styled(Profile)`
       text-align: center;
       border-radius: 20px;
     }
-    h2{ 
-      text-align: center;
-      color: #10182F;
-      font-style: italic;
-      font-size: 28px;
-      font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 20px;
-      text-shadow: 3px 3px rgba(0, 0, 0, 0.1);
-    }
+   
     .contain{
       width: 100%;
       display: flex;
@@ -134,6 +126,7 @@ const styleProfile =styled(Profile)`
 
     .input-bar:focus {
       border: 2px solid #306BF3;
+      box-shadow:  15px 15px 80px #1cac66, -5px -5px 80px #2cffa4;
     }
     span{
       color: #fff;
