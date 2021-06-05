@@ -10,13 +10,15 @@ import SelfGenerate from '../screen/self-generation-question'
 import Login from "../screen/login"
 import ForgotPassword from '../screen/forgot-password'
 import Header from '../common/header'
+import Admin from '../screen/admin'
 
 function App(props: any) {
   return (
     <Router>
       <Switch>
-        <ForgotPassword />
+        {/* <ForgotPassword /> */}
         {/* <Login /> */}
+        <Admin />
       </Switch>
     </Router>
   )
