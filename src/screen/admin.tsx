@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Checkbox } from '@material-ui/core';
-
 import styled from 'styled-components';
+
+import SelectStaff from './select-staff';
+
 
 Admin.propTypes = {
   className: PropTypes.string,
@@ -17,9 +19,9 @@ function Admin(props: any) {
   const { className } = props;
   const [checked, setChecked] = useState(true);
 
-  const handleChange = (event: any) => {
-    setChecked(event.target.checked);
-  };
+  // const handleChange = (event: any) => {
+  //   setChecked(event.target.checked);
+  // };
 
   return (
     <div className={className}>
@@ -32,7 +34,7 @@ function Admin(props: any) {
                 <FontAwesomeIcon icon={faSearch} />
               </span>
               <div className="text-box">
-                <a href="#" className="btn btn-white btn-animate">Cancel</a>
+                <p className="btn btn-white btn-animate">Cancel</p>
               </div>
             </div>
             <hr className="display" />
@@ -40,42 +42,24 @@ function Admin(props: any) {
               <div className="content-all">
                 <div className="checkbox">
                   <Checkbox
-                    defaultChecked
-                    color="primary"
-                    inputProps={{ 'aria-label': 'secondary checkbox' }}
-                  />
-                  <Checkbox
-                    defaultChecked
+                    defaultChecked={checked}
                     color="primary"
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                   />
                 </div>
-                <span>Select All</span>
+                <div className='text-all'>
+                  <span className='text-select'>Select All</span>
+                </div>
                 <div className="profile">
-                  <span>Profile</span>
+                  <span className='text-profile'>Profile</span>
                 </div>
                 <div className="iconTrash">
-                  <span className="icon-pass">
-                    <FontAwesomeIcon icon={faTrash} />
+                  <span className="icon">
+                    <FontAwesomeIcon className='checkbox' icon={faTrash} />
                   </span>
                 </div>
               </div>
-              <div className="content-detail">
-                <Checkbox
-                  defaultChecked
-                  color="primary"
-                  inputProps={{ 'aria-label': 'secondary checkbox' }}
-                />
-                <div className="img-show">
-                  <img src='avatar2.png' alt="IMG" />
-                </div>
-                <div className="profile">
-                  <span>@fe.edu.vn</span>
-                </div>
-                <span className="icon-pass">
-                  <FontAwesomeIcon icon={faTrash} />
-                </span>
-              </div>
+              <SelectStaff />
             </div>
           </div>
         </div>
@@ -100,6 +84,25 @@ html {
 input {
   outline: none;
   border: none;
+}
+
+div .checkbox {
+  width: 20%;
+}
+
+div .text-all {
+  width: 20%;
+}
+
+div .profile {
+  width: 28%;
+  height: 60px;
+  display: flex;
+  padding: 5px;
+}
+
+div .iconTrash {
+  width: 20%;
 }
 
 .limiter {
@@ -132,8 +135,9 @@ input {
   overflow: hidden;
   position: absolute;
   align-items: center;
-  /* padding: 120px 130px 102px 95px; */
   padding-top: 10px;
+
+  /* padding: 120px 130px 102px 95px; */
 }
 
 /** css for area contain search */
@@ -146,8 +150,6 @@ input {
   background: #cecdcd;
   padding: 10px;
   width: 500px;
-  /* margin-top: 20px; */
-  /* justify-content: ; */
 }
 .value-search {
   width: 350px;
@@ -181,14 +183,12 @@ input {
   color: rgb(20, 235, 20);
   cursor: pointer;
 }
-a {
-  text-decoration: none;
-}
+
 .btn-white {
   margin-left: 10px;
 }
 
-/** css button */
+//** css button */
 .text-box {
   margin-left: 25px;
   width: 90px;
@@ -199,17 +199,18 @@ a {
   border-radius: 5px;
   padding-left: 10px;
 }
-.text-box a {
+.text-box p {
   color: #fff;
   font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.text-box a:hover {
+.text-box p:hover {
   color: red;
+  cursor: pointer;
 }
 
-/** kẻ ngang **/
+//** kẻ ngang **/
 .display {
   width: 45%;
   align-items: center;
@@ -218,10 +219,12 @@ a {
   left: 50%;
   transform: translateX(-50%);
 }
+
+//* content select */
 .content-all {
   display: flex;
   margin-top: 70px;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-around;
 }
 .content-detail {
@@ -236,8 +239,14 @@ img {
 }
 
 .checkbox {
-  display: flex;
-  flex-direction: column;
+  width: 20px;
+  height: 20px;
 }
+
+.text-select, .text-profile {
+  font-size: 20px;
+}
+
+
 `
 export default StyledAdmin;

@@ -4,12 +4,14 @@ import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 // components
-import HomePage from '../screen/home'
-import CheckDuplicate from '../screen/check-duplicate'
-import SelfGenerate from '../screen/self-generation-question'
-import Login from "../screen/login"
-import ForgotPassword from '../screen/forgot-password'
-import Header from '../common/header'
+// import HomePage from '../screen/home'
+// import CheckDuplicate from '../screen/check-duplicate'
+// import SelfGenerate from '../screen/self-generation-question'
+// import Login from "../screen/login"
+// import ForgotPassword from '../screen/forgot-password'
+// import Header from '../common/header'
+// import SelectStaff from '../screen/select-staff'
+
 import Admin from '../screen/admin'
 
 function App(props: any) {
@@ -18,10 +20,13 @@ function App(props: any) {
       <Switch>
         {/* <ForgotPassword /> */}
         {/* <Login /> */}
+        {/* <SelectStaff /> */}
         <Admin />
       </Switch>
     </Router>
   )
 }
+
+
 
 export default App
