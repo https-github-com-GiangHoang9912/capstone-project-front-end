@@ -83,7 +83,7 @@ const SelfStyle = styled(SelfGenerate)`
   .form-container {
     width: 75%;
     margin: auto;
-    border-radius: 20px;
+    border-radius: 10px;
     background: #F7F8FC;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
     

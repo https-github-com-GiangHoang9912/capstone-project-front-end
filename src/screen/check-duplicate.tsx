@@ -17,6 +17,8 @@ Duplicate.defaultProps = {
 function Duplicate(props: any) {
   const { className } = props;
   const [fileName, setFileName] =  useState<string>('');
+  const [visibleResult, setVisibleResult] = useState<boolean>(false);
+  const [question, setQuestion] = useState<string>('');
   const [listBank, setListBank] = useState<IBank[]>([
        {
          id: 1,
@@ -33,11 +35,26 @@ function Duplicate(props: any) {
         title: 'English',
         code: 'ENM101',
       },
+      {
+        id: 4,
+        title: 'Software Engineering',
+        code: 'SWE102',
+      }
 
   ]);
 
   function handleFileChange(e:any){
       setFileName(e.target.value);
+  }
+  function handleCheck(){
+    setVisibleResult(true);
+  }
+  function handleInputQuestion(e:any){
+    setQuestion(e.target.value);
+  }
+  function handleClear(){
+    setVisibleResult(false);
+    setQuestion('');
   }
   return (
     <div className={className}>
@@ -50,16 +67,17 @@ function Duplicate(props: any) {
            <h2 className="select">Select Imported Bank</h2>
            <select className="input-select" >
              {listBank.map(bank =>(
-               <option key={bank.id} value={bank.id}>{bank.title}</option>
+               <option key={bank.id} value={bank.id}>{bank.code} - {bank.title}</option>
              ))}
            </select>
         </div>
         <div className="control-right">
           <h2>Enter your question here:</h2>
-          <textarea className="input-question"/>
-          <button className="btn btn-check">Check</button>
-          <button className="btn btn-clear">Clear</button>
-
+          <textarea className="input-question" value={question} onChange={handleInputQuestion}/>
+          <button className="btn btn-check" onClick={handleCheck}>Check</button>
+          <button className="btn btn-clear" onClick={handleClear}>Clear</button>
+          {visibleResult ? <p className="result">❗❗ Existing question.... ... ? | Duplicate score</p> : ' ' }
+          
         </div>
       </div>
     </div>
@@ -72,32 +90,27 @@ const StyleDuplicate = styled(Duplicate)`
     background-color: #F7F8FC;
       .container{
         width: 80%;
-        height: 500px;
         margin: auto;
         display: flex;
         justify-content: center;
-        align-items: center;
-        background: #F7F8FC;
+        background: linear-gradient(#141E30,#243B55);
         text-align: center;
-        border-radius: 10px;
         box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
       }
       .control-left{
         width: 100%;
         height: 100%;
-        background-color: red;
-        
-        background: linear-gradient(#141E30,#243B55);
+                
 
       }
       .control-right{
         width: 100%;
-        max-width: 80%;
-        height: 100%;
-        
+        max-width: 70%;
+        min-height: 500px;
+        background: #F7F8FC;
       }
-      .control-right{
-        margin-top: 2rem;
+      .control-right h2{
+        padding: 1rem;
       }
       .input-bank::-webkit-file-upload-button {
           visibility: hidden;
@@ -137,11 +150,11 @@ const StyleDuplicate = styled(Duplicate)`
         font-weight: 600;
       }
       .input-question{
-        margin: 2rem;
+        margin: 1rem;
         width: 80%;
         min-width: 80%;
         max-width: 80%;
-        height: 30%;
+        height: 200px;
         font-size: 18px;
         border-radius: 10px;
         padding:10px;
@@ -164,12 +177,24 @@ const StyleDuplicate = styled(Duplicate)`
     .btn-clear{
       background-color: #21774F;
     }
-    
+    .result{
+      margin: 1rem;
+      font-weight:450;
+      padding: 10px 0;
+      background-color:#F0F2FB;
+    }
     @media screen and (max-width:600px){
       .container{
         display: flex;
         flex-direction: column;
         height: auto;
+      }
+      .control-right{
+        width:100%;
+        max-width: 100%;
+      }
+      .input-question{
+        width: 100%;
       }
     }
 
