@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import {
@@ -24,6 +24,16 @@ ChangePassword.defaultProps = {
 
 function ChangePassword(props: any) {
   const { className } = props;
+  const [valuesPassword, setValuesPassword] = useState({
+    showPassword: false,
+  });
+
+  const handleClickShowPassword = () => {
+    setValuesPassword({
+      ...valuesPassword,
+      showPassword: !valuesPassword.showPassword
+    })
+  }
   return (
     <div className={className}>
       <div className="limiter">
@@ -43,30 +53,48 @@ function ChangePassword(props: any) {
             </div>
             <form className="login-area-form">
               <div className="password">
-                <input type="password" name="input-pass" id="input-pass" placeholder="Enter old password" required />
+                <input type={valuesPassword.showPassword ? "text" : "password"}
+                  name="input-pass"
+                  id="input-pass"
+                  placeholder="Enter old password" required />
                 <span className="icon-pass">
                   <FontAwesomeIcon icon={faLock} />
                 </span>
                 <span className="icon-eye">
-                  <FontAwesomeIcon icon={faEye} />
+                  <FontAwesomeIcon
+                    icon={faEye}
+                    onClick={handleClickShowPassword}
+                  />
                 </span>
               </div>
               <div className="password">
-                <input type="password" name="input-pass" id="input-pass" placeholder="Enter new password" required />
+                <input type={valuesPassword.showPassword ? "text" : "password"}
+                  name="input-pass"
+                  id="input-pass"
+                  placeholder="Enter new password" required />
                 <span className="icon-pass">
                   <FontAwesomeIcon icon={faLock} />
                 </span>
                 <span className="icon-eye">
-                  <FontAwesomeIcon icon={faEye} />
+                  <FontAwesomeIcon
+                    icon={faEye}
+                    onClick={handleClickShowPassword}
+                  />
                 </span>
               </div>
               <div className="password">
-                <input type="password" name="input-pass" id="input-pass" placeholder="Re_enter new password" required />
+                <input type={valuesPassword.showPassword ? "text" : "password"}
+                  name="input-pass"
+                  id="input-pass"
+                  placeholder="Re_Enter new password" required />
                 <span className="icon-pass">
                   <FontAwesomeIcon icon={faLock} />
                 </span>
                 <span className="icon-eye">
-                  <FontAwesomeIcon icon={faEye} />
+                  <FontAwesomeIcon
+                    icon={faEye}
+                    onClick={handleClickShowPassword}
+                  />
                 </span>
               </div>
               <div className="contain-btn">
