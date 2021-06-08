@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {
   Link
 } from "react-router-dom";
-// import avatar from './images/avatar2.png';
 import styled from 'styled-components';
 
 ForgotPassword.propTypes = {
@@ -44,7 +43,7 @@ const StyledForgotPassword = styled(ForgotPassword)`
 *{
     margin: 0;
     padding: 0;
-    /* box-sizing: border-box; */
+    box-sizing: border-box;
 }
 
 .container::-webkit-scrollbar {
@@ -69,7 +68,7 @@ const StyledForgotPassword = styled(ForgotPassword)`
     width: 420px;
     height: auto;
     margin: 0 auto;
-    margin-top: 12.5%;
+    margin-top: 12%;
     border: 1px solid #fff;
     border-radius: 10px;
     padding: 20px;
@@ -96,7 +95,7 @@ const StyledForgotPassword = styled(ForgotPassword)`
     cursor: pointer;
 }
 .form-login input:hover {
-    border-radius: 15px;
+    /* border-radius: 15px; */
     border: 1px solid #f368e0;
     cursor: pointer;
 }
@@ -150,9 +149,18 @@ input:focus {
   margin-top:40px
 }
 
-p {
+/* p {
     color: red;
     font-size: 13px;
+} */
+@media screen and (max-width: 46.1875em) {
+  .form-login {
+    width: 500px;
+    /* height: 540px; */
+    padding: 25px;
+    margin-top: 13%;
+  }
 }
+
 `
 export default StyledForgotPassword;

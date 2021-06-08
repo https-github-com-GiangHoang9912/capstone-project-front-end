@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 // import CheckDuplicate from '../screen/check-duplicate'
 // import SelfGenerate from '../screen/self-generation-question'
 // import Login from "../screen/login"
-// import ForgotPassword from '../screen/forgot-password'
+import ForgotPassword from '../screen/forgot-password'
 // import Header from '../common/header'
 // import SelectStaff from '../screen/select-staff'
 
@@ -18,10 +18,10 @@ function App(props: any) {
   return (
     <Router>
       <Switch>
-        {/* <ForgotPassword /> */}
+        <ForgotPassword />
         {/* <Login /> */}
         {/* <SelectStaff /> */}
-        <Admin />
+        {/* <Admin /> */}
       </Switch>
     </Router>
   )
