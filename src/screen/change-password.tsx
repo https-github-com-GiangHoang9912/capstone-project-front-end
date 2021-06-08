@@ -1,10 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable max-len */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
 
 import {
   Link
 } from "react-router-dom";
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCheck, faLock, faEye, faRecycle } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components';
 
 
@@ -21,201 +26,316 @@ function ChangePassword(props: any) {
   const { className } = props;
   return (
     <div className={className}>
-      <div className='container'>
-        <div className="form-login">
-          <form action='#'>
-            <h1 className='title'>Change Password</h1>
-            <img src="avatar2.png" className='avatar' alt="" />
-            <h3 className="mess-guide">Enter your username and password:</h3>
-            <div className="input-content">
-              {/* <input type='text' id='uname' placeholder='🤵 Enter username' required /> */}
-              <div className="css-text">
-                <TextField
-                  className="input-text"
-                  id="outlined-input"
-                  label="Username"
-                  type="text"
-                  autoComplete="current-password"
-                  variant="outlined"
-                />
-
+      <div className="limiter">
+        <div className="container">
+          <div className="wrap-login">
+            <div className="rules-account">
+              <div className="title">
+                <h2>Change Password</h2>
               </div>
-              <div className="css-text">
-                <TextField
-                  className="input-text"
-                  id="outlined-password-input"
-                  label="Old Password"
-                  type="password"
-                  autoComplete="current-password"
-                  variant="outlined"
-                />
-
+              <div className="detail-rules">
+                <h5>Password must contains: </h5>
+                <p><FontAwesomeIcon className="checked" icon={faCheck} />At least 6 characters.</p>
+                <p><FontAwesomeIcon className="checked" icon={faCheck} />At least 1 upper case letter (A-Z).</p>
+                <p><FontAwesomeIcon className="checked" icon={faCheck} />At least 1 lower case letter (a-z).</p>
+                <p><FontAwesomeIcon className="checked" icon={faCheck} />At least 1 number (0-9).</p>
               </div>
-              <div className="css-text">
-                <TextField
-                  className="input-text"
-                  id="outlined-password-input"
-                  label="New Password"
-                  type="password"
-                  autoComplete="current-password"
-                  variant="outlined"
-                />
-
-              </div>
-              <div className="css-text">
-                <TextField
-                  className="input-text"
-                  id="outlined-password-input"
-                  label="New Password Again"
-                  type="password"
-                  autoComplete="current-password"
-                  variant="outlined"
-                />
-
-              </div>
-              
-              {/* <input type="password" id="pass" placeholder="New Password" required />
-              <input type="password" id="pass" placeholder="Re-Enter Password" required /> */}
             </div>
-            <div className="btn-submit">
-                <button id="submit" className="reset">Submit</button>
+            <form className="login-area-form">
+              <div className="password">
+                <input type="password" name="input-pass" id="input-pass" placeholder="Enter old password" required />
+                <span className="icon-pass">
+                  <FontAwesomeIcon icon={faLock} />
+                </span>
+                <span className="icon-eye">
+                  <FontAwesomeIcon icon={faEye} />
+                </span>
               </div>
-          </form>
+              <div className="password">
+                <input type="password" name="input-pass" id="input-pass" placeholder="Enter new password" required />
+                <span className="icon-pass">
+                  <FontAwesomeIcon icon={faLock} />
+                </span>
+                <span className="icon-eye">
+                  <FontAwesomeIcon icon={faEye} />
+                </span>
+              </div>
+              <div className="password">
+                <input type="password" name="input-pass" id="input-pass" placeholder="Re_enter new password" required />
+                <span className="icon-pass">
+                  <FontAwesomeIcon icon={faLock} />
+                </span>
+                <span className="icon-eye">
+                  <FontAwesomeIcon icon={faEye} />
+                </span>
+              </div>
+              <div className="contain-btn">
+                <button className="btn-login">
+                  Login
+                </button>
+              </div>
+              <div className="text-process">
+                <a className="cancel" href="#">
+                  Cancel
+                </a>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-
-
   );
 }
 
 const StyledForgotPassword = styled(ChangePassword)`
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
-.input-text {
-  height: 60px;
+
+body,
+html {
+  height: 100%;
+  font-family: sans-serif;
 }
-.css-text {
-  width: 250px;
-  padding-top: 10px;
+
+.limiter {
+  width: 100%;
+  margin: 0 auto;
 }
-.container::-webkit-scrollbar {
-  display: none;
-}
+
 .container {
-    overflow: hidden; 
-    font-family: Arial;
-    background: #2ecc71;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center center;
-    height: 100vh;
-    width: 100%;
-    justify-content: center;
-    -ms-overflow-style: none; 
-}
-
-.form-login {
-    justify-content: center;
-    width: 420px;
-    height: auto;
-    margin: 0 auto;
-    margin-top: 3%;
-    border: 1px solid #fff;
-    border-radius: 10px;
-    padding: 20px;
-    background-color: #fff;
-    /* opacity: ; */
-    /* text-align: center; */
-}
-
-.form-login h1 {
-    text-align: center;
-    display: block;
-    margin-bottom: 5px;
-    color: #2c3e50;
-}
-/* .form-login input, .reset {
-    margin: 0 auto;
-    margin-bottom: 8px;
-    display: block;
-    width: 200px;
-    height: 40px;
-    border-radius: 5px;
-    border: 1px solid #1ed760;
-    padding: 0 10px;
-    cursor: pointer;
-} */
-/* .form-login input:hover {
-    border: 1px solid #f368e0;
-    cursor: pointer;
-} */
-.form-login button,
-input:focus {
-    outline: none;
-}
-.form-login button {
-    border: 1px solid #1ed760;
-    background: #1ed760;
-    height: 35px;
-    width: 250px;
-    padding: 0 10px;
-    border-radius: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    color:white;
-}
-.form-login button:hover {
-    background-color: #4b6584;
-    border: 1px solid #eb3b5a;
-}
-.form-login a {
-    margin-top: 20px;
-    font-size: 13px;
-}
-.avatar {
-  height: 80px;
-  width: 80px;
-  margin-bottom: 10px;  
-  display: block;
-  margin-left: auto; 
-  margin-right: auto;
-}
-.mess-guide {
-  margin-bottom: 5px;
-}
-
-.reset {
-  margin-top: 20px;
-  margin-left: 52px;
-}
-#register {
- display: block;
-}
-
-.input-content {
+  width: 100%;
+  height: 100vh;
   display: flex;
-  flex-direction: column;
-  margin-top:0px;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
+  padding: 15px;
+  background: #f5f6fa;
+}
+.wrap-login {
+  width: 960px;
+  background: #fff;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 75px 130px 102px 95px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  /* box-shadow:
+       inset 0 -3em 3em rgba(0,0,0,0.1),
+             0 0  0 2px rgb(255,255,255),
+             0.3em 0.3em 1em rgba(0,0,0,0.3); */
 }
 
-//* responsive for tablet */
-@media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
-  .form-login {
-    margin-top: 13%;
+/*  css for detail rules*/
+.rules-account {
+  width: 316px;
+}
+.rules-account {
+  max-width: 100%;
+}
+.title h2 {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.detail-rules {
+  padding-top: 20px;
+}
+.detail-rules h5 {
+  margin-bottom: 5px;
+  font-size: 17px;
+}
+.detail-rules p {
+  font-size: 15px;
+  padding: 10px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+.detail-rules .checked {
+  color: #2980b9;
+}
+/* Input css */
+
+input {
+  outline: none;
+  border: none;
+}
+
+input:focus {
+  animation: pulse-animation 1.5s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(32, 182, 45, 0.527);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
   }
 }
 
-//* Mobile @media only screen and (max-width: 46.1875em) */
-@media only screen and (max-width: 46.1875em) {
-  .form-login {
-    margin-top: 50% !important;
+.password {
+  position: relative;
+  width: 100%;
+  z-index: auto;
+  margin-bottom: 10px;
+}
+
+#input-pass {
+  font-family: sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #666666;
+  display: block;
+  width: 100%;
+  background: #ecf0f1;
+
+  height: 50px;
+  padding: 0 30px 0 68px;
+  cursor: pointer;
+}
+
+.icon-pass {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  padding-left: 25px;
+}
+.icon-eye {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 15px;
+  height: 100%;
+  padding-right: 20px;
+}
+
+/* button login */
+
+.contain-btn {
+  position: relative;
+  width: 100%;
+  z-index: auto;
+  margin-bottom: 10px;
+  margin-top: 25px;
+}
+.btn-login {
+  font-family: Helvetica;
+  font-size: 23px;
+  font-weight: bold;
+  line-height: 1.5;
+  position: absolute;
+  color: #fff;
+  display: block;
+  width: 100%;
+  background: #1e90ff;
+  height: 50px;
+  padding: 0 30px 0 68px;
+  cursor: pointer;
+  align-items: center;
+  padding-left: 42px;
+}
+.btn-login {
+  outline: none;
+  border: none;
+}
+.btn-login:hover {
+  background-color: #273c75;
+}
+
+/* text css */
+
+.text-process {
+  margin-top: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.cancel {
+  font-family: Poppins-Regular;
+  font-size: 22px;
+  line-height: 1.5;
+  color: #666666;
+  text-decoration: none;
+}
+.cancel:hover {
+  cursor: pointer;
+  color:  tomato;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .wrap-login {
+    padding: 177px 90px 33px 85px;
+  }
+
+  .rules-account {
+    width: 35%;
+  }
+
+  .login-area-form {
+    width: 50%;
   }
 }
+
+@media (max-width: 768px) {
+  .wrap-login {
+    padding: 100px 80px 33px 80px;
+    display: flex;
+    flex-direction: column;
+  }
+  .login-area-form {
+    width: 100%;
+  }
+  .detail-rules h5, p{
+    display: none;
+  }
+  /* .title{
+    text-align: center;
+    width: 100%;
+  }
+   */
+  h2{
+    display:inline-block;
+    font-size: 20px;
+    margin-left: 150px;
+  }
+}
+
+@media (max-width: 576px) {
+  .wrap-login {
+    padding: 100px 15px 33px 15px;
+  }
+  .wrap-login {
+    padding: 100px 80px 33px 80px;
+    display: flex;
+    flex-direction: column;
+  }
+  .login-area-form {
+    width: 100%;
+  }
+  .detail-rules h5, p{
+    display: none;
+  }
+  /* .title{
+    text-align: center;
+    width: 100%;
+  }
+   */
+  h2{
+    display:inline-block;
+    font-size: 20px;
+    margin-left: 150px;
+  }
+}
+
 `
 export default StyledForgotPassword;
