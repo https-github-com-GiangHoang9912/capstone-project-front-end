@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import TextField from '@material-ui/core/TextField';
 
 import {
   Link
@@ -27,12 +28,58 @@ function ChangePassword(props: any) {
             <img src="avatar2.png" className='avatar' alt="" />
             <h3 className="mess-guide">Enter your username and password:</h3>
             <div className="input-content">
-              <input type='text' id='uname' placeholder='🤵 Enter username' required />
-              <input type="password" id="pass" placeholder="Old Password" required />
-              <input type="password" id="pass" placeholder="New Password" required />
-              <input type="password" id="pass" placeholder="Re-Enter Password" required />
-              <button id="submit" className="reset">Submit</button>
+              {/* <input type='text' id='uname' placeholder='🤵 Enter username' required /> */}
+              <div className="css-text">
+                <TextField
+                  className="input-text"
+                  id="outlined-input"
+                  label="Username"
+                  type="text"
+                  autoComplete="current-password"
+                  variant="outlined"
+                />
+
+              </div>
+              <div className="css-text">
+                <TextField
+                  className="input-text"
+                  id="outlined-password-input"
+                  label="Old Password"
+                  type="password"
+                  autoComplete="current-password"
+                  variant="outlined"
+                />
+
+              </div>
+              <div className="css-text">
+                <TextField
+                  className="input-text"
+                  id="outlined-password-input"
+                  label="New Password"
+                  type="password"
+                  autoComplete="current-password"
+                  variant="outlined"
+                />
+
+              </div>
+              <div className="css-text">
+                <TextField
+                  className="input-text"
+                  id="outlined-password-input"
+                  label="New Password Again"
+                  type="password"
+                  autoComplete="current-password"
+                  variant="outlined"
+                />
+
+              </div>
+              
+              {/* <input type="password" id="pass" placeholder="New Password" required />
+              <input type="password" id="pass" placeholder="Re-Enter Password" required /> */}
             </div>
+            <div className="btn-submit">
+                <button id="submit" className="reset">Submit</button>
+              </div>
           </form>
         </div>
       </div>
@@ -48,7 +95,13 @@ const StyledForgotPassword = styled(ChangePassword)`
     padding: 0;
     box-sizing: border-box;
 }
-
+.input-text {
+  height: 60px;
+}
+.css-text {
+  width: 250px;
+  padding-top: 10px;
+}
 .container::-webkit-scrollbar {
   display: none;
 }
@@ -71,7 +124,7 @@ const StyledForgotPassword = styled(ChangePassword)`
     width: 420px;
     height: auto;
     margin: 0 auto;
-    margin-top: 12.5%;
+    margin-top: 3%;
     border: 1px solid #fff;
     border-radius: 10px;
     padding: 20px;
@@ -83,12 +136,12 @@ const StyledForgotPassword = styled(ChangePassword)`
 .form-login h1 {
     text-align: center;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     color: #2c3e50;
 }
-.form-login input, .reset {
+/* .form-login input, .reset {
     margin: 0 auto;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
     display: block;
     width: 200px;
     height: 40px;
@@ -96,12 +149,11 @@ const StyledForgotPassword = styled(ChangePassword)`
     border: 1px solid #1ed760;
     padding: 0 10px;
     cursor: pointer;
-}
-.form-login input:hover {
-    border-radius: 15px;
+} */
+/* .form-login input:hover {
     border: 1px solid #f368e0;
     cursor: pointer;
-}
+} */
 .form-login button,
 input:focus {
     outline: none;
@@ -110,7 +162,7 @@ input:focus {
     border: 1px solid #1ed760;
     background: #1ed760;
     height: 35px;
-    width: 220px;
+    width: 250px;
     padding: 0 10px;
     border-radius: 18px;
     font-weight: bold;
@@ -128,19 +180,18 @@ input:focus {
 .avatar {
   height: 80px;
   width: 80px;
-  margin-bottom: 20px;  
-  /* justify-content: center; */
+  margin-bottom: 10px;  
   display: block;
-   margin-left: auto; 
-   margin-right: auto;
+  margin-left: auto; 
+  margin-right: auto;
 }
 .mess-guide {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 .reset {
-  margin-top: 30px;
-
+  margin-top: 20px;
+  margin-left: 52px;
 }
 #register {
  display: block;
@@ -149,12 +200,22 @@ input:focus {
 .input-content {
   display: flex;
   flex-direction: column;
-  margin-top:40px
+  margin-top:0px;
+  align-items: center;
 }
 
-p {
-    color: red;
-    font-size: 13px;
+//* responsive for tablet */
+@media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
+  .form-login {
+    margin-top: 13%;
+  }
+}
+
+//* Mobile @media only screen and (max-width: 46.1875em) */
+@media only screen and (max-width: 46.1875em) {
+  .form-login {
+    margin-top: 50% !important;
+  }
 }
 `
 export default StyledForgotPassword;

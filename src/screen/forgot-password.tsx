@@ -153,10 +153,11 @@ input:focus {
     color: red;
     font-size: 13px;
 } */
-@media screen and (max-width: 46.1875em) {
+
+//* responsive for tablet */
+@media only screen and (min-width: 46.25em) and (max-width: 63.9375em) {
   .form-login {
     width: 500px;
-    /* height: 540px; */
     padding: 25px;
     margin-top: 13%;
   }
