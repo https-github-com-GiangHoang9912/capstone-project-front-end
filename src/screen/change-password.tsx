@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faLock, faEye, faRecycle } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faLock, faEye } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components';
 
 
@@ -218,9 +218,8 @@ input:focus {
   display: block;
   width: 100%;
   background: #ecf0f1;
-
-  height: 50px;
-  padding: 0 30px 0 68px;
+  height: 50px;padding: 0 30px 0 68px;
+  
   cursor: pointer;
 }
 
@@ -319,6 +318,8 @@ input:focus {
     padding: 100px 80px 33px 80px;
     display: flex;
     flex-direction: column;
+    text-align: center;
+
   }
   .login-area-form {
     width: 100%;
@@ -326,15 +327,15 @@ input:focus {
   .detail-rules h5, p{
     display: none;
   }
-  /* .title{
-    text-align: center;
-    width: 100%;
+  .title{
+    /* width: 100%; */
   }
-   */
+   
   h2{
     display:inline-block;
     font-size: 20px;
-    margin-left: 150px;
+    width: 200px;
+    margin-left: 80px;
   }
 }
 
@@ -353,15 +354,16 @@ input:focus {
   .detail-rules h5, p{
     display: none;
   }
-  /* .title{
+   .title{
     text-align: center;
-    width: 100%;
+    /* width: 100%; */
   }
-   */
+   
   h2{
     display:inline-block;
     font-size: 20px;
-    margin-left: 150px;
+    width: 200px;
+    margin-left: 80px;
   }
 }
 
