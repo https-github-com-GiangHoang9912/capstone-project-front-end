@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-len */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import {
@@ -24,16 +24,30 @@ ChangePassword.defaultProps = {
 
 function ChangePassword(props: any) {
   const { className } = props;
-  const [valuesPassword, setValuesPassword] = useState({
-    showPassword: false,
-  });
 
-  const handleClickShowPassword = () => {
-    setValuesPassword({
-      ...valuesPassword,
-      showPassword: !valuesPassword.showPassword
-    })
-  }
+  const [iconList, setIconList] = useState([
+    {
+      id: 1,
+      showPassword: false,
+    },
+    {
+      id: 2,
+      showPassword: false,
+    },
+    {
+      id: 3,
+      showPassword: false,
+    }
+  ]);
+
+  const onCheckBtnClick = useCallback((id) => {
+    setIconList((prevState) =>
+      prevState.map((icon) =>
+        icon.id === id ? { ...icon, showPassword: !icon.showPassword } : { ...icon, showPassword: icon.showPassword }
+      )
+    );
+  }, []);
+
   return (
     <div className={className}>
       <div className="limiter">
@@ -53,24 +67,25 @@ function ChangePassword(props: any) {
             </div>
             <form className="login-area-form">
               <div className="password">
-                <input type={valuesPassword.showPassword ? "text" : "password"}
-                  name="input-pass"
-                  id="input-pass"
-                  placeholder="Enter old password" required />
+                <input type={iconList[0].showPassword ? "text" : "password"}
+                  key={iconList[0].id}
+                  className="input-pass"
+                  placeholder="Enter old password"
+                  required />
                 <span className="icon-pass">
                   <FontAwesomeIcon icon={faLock} />
                 </span>
                 <span className="icon-eye">
                   <FontAwesomeIcon
                     icon={faEye}
-                    onClick={handleClickShowPassword}
+                    onClick={() => onCheckBtnClick(iconList[0].id)}
                   />
                 </span>
               </div>
               <div className="password">
-                <input type={valuesPassword.showPassword ? "text" : "password"}
-                  name="input-pass"
-                  id="input-pass"
+                <input type={iconList[1].showPassword ? "text" : "password"}
+                  key={iconList[1].id}
+                  className="input-pass"
                   placeholder="Enter new password" required />
                 <span className="icon-pass">
                   <FontAwesomeIcon icon={faLock} />
@@ -78,14 +93,14 @@ function ChangePassword(props: any) {
                 <span className="icon-eye">
                   <FontAwesomeIcon
                     icon={faEye}
-                    onClick={handleClickShowPassword}
+                    onClick={() => onCheckBtnClick(iconList[1].id)}
                   />
                 </span>
               </div>
               <div className="password">
-                <input type={valuesPassword.showPassword ? "text" : "password"}
-                  name="input-pass"
-                  id="input-pass"
+                <input type={iconList[2].showPassword ? "text" : "password"}
+                  key={iconList[2].id}
+                  className="input-pass"
                   placeholder="Re_Enter new password" required />
                 <span className="icon-pass">
                   <FontAwesomeIcon icon={faLock} />
@@ -93,7 +108,7 @@ function ChangePassword(props: any) {
                 <span className="icon-eye">
                   <FontAwesomeIcon
                     icon={faEye}
-                    onClick={handleClickShowPassword}
+                    onClick={() => onCheckBtnClick(iconList[2].id)}
                   />
                 </span>
               </div>
@@ -210,7 +225,7 @@ input:focus {
   margin-bottom: 10px;
 }
 
-#input-pass {
+.input-pass {
   font-family: sans-serif;
   font-size: 15px;
   line-height: 1.5;
