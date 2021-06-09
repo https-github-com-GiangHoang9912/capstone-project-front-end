@@ -89,7 +89,7 @@ const StyleDuplicate = styled(Duplicate)`
     height: 100vh;
     background-color: #F7F8FC;
       .container{
-        width: 80%;
+        width: 90%;
         margin: auto;
         display: flex;
         justify-content: center;

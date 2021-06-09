@@ -33,6 +33,7 @@ function Profile(props: any) {
         <h2 className="title-task">Your Profile</h2>
         <div className="contain">
           <div className="form-contain">
+            <h3>Information</h3>
             <div className="form-info">
               <span>💁‍Username</span>
               <input type="text" id="username" className="input-bar" disabled={editStatus} />
@@ -54,6 +55,9 @@ function Profile(props: any) {
               <input type="text" id="email" className="input-bar " disabled={editStatus} />
             </div>
             <button className="btn-edit" onClick={handleEdit}>{editStatus ? "Edit profile" : "Save"}</button>
+            <h3>Change Password</h3>
+            <button className="btn-change">Go to change password</button>
+            
           </div>
           <div className="img-avt">
             <img src={image.url} alt="" />
@@ -74,11 +78,11 @@ function Profile(props: any) {
 const styleProfile = styled(Profile)`
     
     width: 100%;
-    height: 100vh;
+    height: auto;
     background-color: #F7F8FC;
     
     .info-container{
-      width: 70%;
+      width: 90%;
       margin: auto;
       text-align: center;
       border-radius: 20px;
@@ -89,16 +93,20 @@ const styleProfile = styled(Profile)`
       display: flex;
       justify-content: space-between;
       background-color:#fff;
-      border-radius: 20px;
+      border-radius: 10px;
       box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, 
       rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
     }
     .form-contain{
       width: 100%;
       padding: 20px;
-      background: linear-gradient(#141E30,#243B55);
       border-radius: 20px 0px 0 20px;
       text-align: center;
+    }
+    .form-contain h3{
+      margin: 2rem;
+      color: #545D7A;
+      font-size: 20px;
     }
     .img-avt{
       margin: 30px;
@@ -117,33 +125,40 @@ const styleProfile = styled(Profile)`
       height: 32px;
       outline: none;
       background: none;
-      color: #fff;
-      border-radius: 20px;
       padding: 10px 10px;
       margin-bottom: 15px;
-      border: 2px solid #DAE1F5;
+      border: none;
+      border-bottom: 1px solid #DAE1F5;
     }
 
-    .input-bar:focus {
-      border: 2px solid #306BF3;
-      box-shadow:  15px 15px 80px #1cac66, -5px -5px 80px #2cffa4;
-    }
+   
     span{
-      color: #fff;
+      color: #10182F;
       font-weight: 500;
+    }
+    .btn-change{
+      width: 250px;
+      height: 40px;
+      font-weight: bold;
+      background-color: #306BF3;
+      color: #fff;
+      border: none;
+    }
+    .btn-change:hover{
+      background-color: #0e47cc;
     }
     .btn-edit{
       width: 100px;
       height: 40px;
-      background-color: #DF184A;
+      background-color: #10182F;
       color: #fff;
       border: 1px solid #DAE1F5;
-      border-radius: 10px;
+      border-radius: 5px;
       font-weight: bold;
       margin-top: 20px;
     }
     .btn-edit:hover {
-      background-color: #306BF3;
+      background-color: #000;
     }
     
     @media screen and (max-width:600px){
