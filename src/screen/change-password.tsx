@@ -55,7 +55,7 @@ function ChangePassword(props: any) {
           <div className="wrap-login">
             <div className="rules-account">
               <div className="title">
-                <h2>Change Password</h2>
+                <h2 className="title-h2">Change Password</h2>
               </div>
               <div className="detail-rules">
                 <h5>Password must contains: </h5>
@@ -67,7 +67,8 @@ function ChangePassword(props: any) {
             </div>
             <form className="login-area-form">
               <div className="password">
-                <input type={iconList[0].showPassword ? "text" : "password"}
+                <input 
+                  type={iconList[0].showPassword ? "text" : "password"}
                   key={iconList[0].id}
                   className="input-pass"
                   placeholder="Enter old password"
@@ -83,7 +84,8 @@ function ChangePassword(props: any) {
                 </span>
               </div>
               <div className="password">
-                <input type={iconList[1].showPassword ? "text" : "password"}
+                <input 
+                  type={iconList[1].showPassword ? "text" : "password"}
                   key={iconList[1].id}
                   className="input-pass"
                   placeholder="Enter new password" required />
@@ -98,7 +100,8 @@ function ChangePassword(props: any) {
                 </span>
               </div>
               <div className="password">
-                <input type={iconList[2].showPassword ? "text" : "password"}
+                <input 
+                  type={iconList[2].showPassword ? "text" : "password"}
                   key={iconList[2].id}
                   className="input-pass"
                   placeholder="Re_Enter new password" required />
@@ -131,12 +134,6 @@ function ChangePassword(props: any) {
 }
 
 const StyledForgotPassword = styled(ChangePassword)`
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
 body,
 html {
   height: 100%;
@@ -167,10 +164,6 @@ html {
   justify-content: space-between;
   padding: 75px 130px 102px 95px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  /* box-shadow:
-       inset 0 -3em 3em rgba(0,0,0,0.1),
-             0 0  0 2px rgb(255,255,255),
-             0.3em 0.3em 1em rgba(0,0,0,0.3); */
 }
 
 /*  css for detail rules*/
@@ -199,13 +192,11 @@ html {
   color: #2980b9;
 }
 /* Input css */
-
-input {
+.input-pass {
   outline: none;
   border: none;
 }
-
-input:focus {
+.input-pass:focus {
   animation: pulse-animation 1.5s infinite;
 }
 
@@ -217,14 +208,12 @@ input:focus {
     box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
   }
 }
-
 .password {
   position: relative;
   width: 100%;
   z-index: auto;
   margin-bottom: 10px;
 }
-
 .input-pass {
   font-family: sans-serif;
   font-size: 15px;
@@ -237,7 +226,6 @@ input:focus {
   
   cursor: pointer;
 }
-
 .icon-pass {
   display: flex;
   align-items: center;
@@ -342,11 +330,7 @@ input:focus {
   .detail-rules h5, p{
     display: none;
   }
-  .title{
-    /* width: 100%; */
-  }
-   
-  h2{
+  .title-h2{
     display:inline-block;
     font-size: 20px;
     width: 200px;
@@ -371,10 +355,9 @@ input:focus {
   }
    .title{
     text-align: center;
-    /* width: 100%; */
   }
    
-  h2{
+  .title-h2{
     display:inline-block;
     font-size: 20px;
     width: 200px;
@@ -383,4 +366,4 @@ input:focus {
 }
 
 `
-export default StyledForgotPassword;
+export default StyledForgotPassword

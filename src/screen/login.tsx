@@ -67,12 +67,6 @@ function Login(props: any) {
 }
 
 const StyledLogin = styled(Login)`
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
 body,
 html {
   height: 100%;
@@ -105,16 +99,11 @@ html {
   background: #fff;
   border-radius: 10px;
   overflow: hidden;
-  /* display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox; */
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   padding: 120px 130px 102px 95px;
 }
-
 /*  css for image*/
 .img-show {
   width: 316px;
@@ -123,11 +112,9 @@ html {
   max-width: 100%;
 }
 /* ------------ */
-
 .login-area-form {
   width: 290px;
 }
-
 .login-form-title {
   font-family: Poppins-Bold;
   font-size: 24px;
@@ -139,18 +126,14 @@ html {
   display: block;
   padding-bottom: 54px;
 }
-
 /* Input css */
-
 input {
   outline: none;
   border: none;
 }
-
 input:focus {
   animation: pulse-animation 1.5s infinite;
 }
-
 @keyframes pulse-animation {
   0% {
     box-shadow: 0 0 0 0px rgba(32, 182, 45, 0.527);
@@ -159,7 +142,6 @@ input:focus {
     box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
   }
 }
-
 .input-email {
   width: 300px;
   height: 70px;
@@ -198,7 +180,6 @@ input:focus {
   position: absolute;
   bottom: 0;
   left: 0;
-  /* width: 100%; */
   height: 100%;
   padding-left: 35px;
 }

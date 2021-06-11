@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 import PropTypes from 'prop-types';
 import {
@@ -21,7 +21,7 @@ function ForgotPassword(props: any) {
   const { className } = props;
   return (
     <div className={className}>
-      <div className='container'>
+      <div className="container">
         <div className="form-login">
           <form action='#'>
             <h1 className='title'>Forgot Password</h1>
@@ -29,13 +29,13 @@ function ForgotPassword(props: any) {
             <h3 className="mess-guide">Enter your account and email:</h3>
             <div className="input-content">
               <div className="input-name">
-                <input type='text' id='uname' placeholder='Enter username' required />
+                <input className='text-name' type='text' id='uname' placeholder='Enter username' required />
                 <span className="icon">
                   <FontAwesomeIcon icon={faUserCircle} />
                 </span>
               </div>
               <div className="input-email">
-                <input type='email' id='uname' placeholder='Enter email' required />
+                <input className='text-name' type='email' id='uname' placeholder='Enter email' required />
                 <span className="icon">
                   <FontAwesomeIcon icon={faEnvelope} />
                 </span>
@@ -51,14 +51,7 @@ function ForgotPassword(props: any) {
   );
 }
 
-
 const StyledForgotPassword = styled(ForgotPassword)`
-
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 .container::-webkit-scrollbar {
   display: none;
 }
@@ -73,8 +66,8 @@ const StyledForgotPassword = styled(ForgotPassword)`
     height: 100vh;
     width: 100%;
     justify-content: center;
-    -ms-overflow-style: none; 
-}
+    -ms-overflow-style: none;
+  }
 
 //** css for form login  */
 .form-login {
@@ -183,4 +176,4 @@ input:focus {
 }
 
 `
-export default StyledForgotPassword;
+export default StyledForgotPassword

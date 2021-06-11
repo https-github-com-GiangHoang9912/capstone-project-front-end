@@ -4,26 +4,28 @@ import React from 'react'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 // components
-// import HomePage from '../screen/home'
-// import CheckDuplicate from '../screen/check-duplicate'
-// import SelfGenerate from '../screen/self-generation-question'
-// import Login from "../screen/login"
-import ForgotPassword from '../screen/forgot-password'
-import ChangePassword from '../screen/change-password'
-// import Header from '../common/header'
-// import SelectStaff from '../screen/select-staff'
-
-import Admin from '../screen/admin'
+import HomePage from '../screen/home'
+import CheckDuplicate from '../screen/check-duplicate'
+import SelfGenerate from '../screen/self-generation-question'
+import Header from '../common/header'
+import Login from '../screen/login'
 
 function App(props: any) {
   return (
     <Router>
       <Switch>
-        {/* <ForgotPassword /> */}
-        {/* <Login /> */}
-        {/* <SelectStaff /> */}
-        {/* <Admin /> */}
-        <ChangePassword />
+        <Route exact path="/home">
+          <HomePage />
+        </Route>
+        <Route exact path="/check-duplicate">
+          <CheckDuplicate />
+        </Route>
+        <Route exact path="/self-generate">
+          <SelfGenerate />
+        </Route>
+        <Route exact path="/login">
+          <Login />
+        </Route>
       </Switch>
     </Router>
   )

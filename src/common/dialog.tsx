@@ -1,16 +1,31 @@
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 
-const DialogComponent = ({
-  className = '',
-  title = '',
-  message = '',
-  buttonAccept = '',
-  buttonCancel = '',
-  isValid = true,
-}) => {
+DialogComponent.propTypes = {
+  className: PropTypes.string,
+  title: PropTypes.string.isRequired,
+  message: PropTypes.string.isRequired,
+  buttonAccept: PropTypes.string.isRequired,
+  buttonCancel: PropTypes.string.isRequired,
+  isValid: PropTypes.bool.isRequired,
+  handleDialogChoice: PropTypes.func.isRequired,
+}
+
+DialogComponent.defaultProps = {
+  className: '',
+}
+
+function DialogComponent(props: any) {
+  const { className, title, message, buttonAccept, buttonCancel, isValid, handleDialogChoice } =
+    props
+
   let classOfTitle = 'title-valid'
   if (!isValid) {
     classOfTitle = 'title-duplicate'
+  }
+
+  function handleChoice(choice: boolean) {
+    handleDialogChoice(choice)
   }
 
   return (
@@ -19,8 +34,12 @@ const DialogComponent = ({
         <div className={classOfTitle}>{title}</div>
         <div className="message">{message}</div>
         <div className="div-button">
-          <button className="button buttonAccept">{buttonAccept}</button>
-          <button className="button buttonCancel">{buttonCancel}</button>
+          <button className="button buttonAccept" onClick={() => handleChoice(true)}>
+            {buttonAccept}
+          </button>
+          <button className="button buttonCancel" onClick={() => handleChoice(false)}>
+            {buttonCancel}
+          </button>
         </div>
       </div>
     </div>
