@@ -14,7 +14,6 @@ import Login from '../screen/login'
 function App(props: any) {
   return (
     <Router>
-      <Header />
       <Switch>
         <Route exact path="/home">
           <HomePage />
@@ -35,5 +34,7 @@ function App(props: any) {
     </Router>
   )
 }
+
+
 
 export default App

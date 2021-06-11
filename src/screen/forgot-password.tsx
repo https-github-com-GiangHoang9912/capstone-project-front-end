@@ -1,47 +1,64 @@
 import React from 'react'
 
-import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
-import avatar from '../images/avatar2.png'
-import styled from 'styled-components'
+import PropTypes from 'prop-types';
+import {
+  Link
+} from "react-router-dom";
 
-const ForgotPassword = ({ className = '' }) => {
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEnvelope, faUserCircle } from '@fortawesome/free-solid-svg-icons'
+import styled from 'styled-components';
+
+ForgotPassword.propTypes = {
+  className: PropTypes.string,
+}
+
+ForgotPassword.defaultProps = {
+  className: ''
+}
+
+function ForgotPassword(props: any) {
+  const { className } = props;
   return (
     <div className={className}>
       <div className="container">
         <div className="form-login">
-          <form action="#">
-            <h1 className="title">Forgot Password</h1>
-            <img src={avatar} className="avatar" alt="" />
+          <form action='#'>
+            <h1 className='title'>Forgot Password</h1>
+            <img src="avatar2.png" className='avatar' alt="" />
             <h3 className="mess-guide">Enter your account and email:</h3>
             <div className="input-content">
-              <input type="text" id="uname" placeholder="🤵 Enter username" required></input>
-              <input type="password" id="pass" placeholder="📧 Enter email" required></input>
-              <button id="submit" className="reset">
-                Reset Password
-              </button>
+              <div className="input-name">
+                <input className='text-name' type='text' id='uname' placeholder='Enter username' required />
+                <span className="icon">
+                  <FontAwesomeIcon icon={faUserCircle} />
+                </span>
+              </div>
+              <div className="input-email">
+                <input className='text-name' type='email' id='uname' placeholder='Enter email' required />
+                <span className="icon">
+                  <FontAwesomeIcon icon={faEnvelope} />
+                </span>
+              </div>
+              <div className="button-reset">
+                <button id="submit" className="reset">Reset Password</button>
+              </div>
             </div>
           </form>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 const StyledForgotPassword = styled(ForgotPassword)`
-  * {
-    margin: 0;
-    padding: 0;
-    /* box-sizing: border-box; */
-  }
-
-  .container::-webkit-scrollbar {
-    display: none;
-  }
-  .container {
-    overflow: hidden;
+.container::-webkit-scrollbar {
+  display: none;
+}
+.container {
+    overflow: hidden; 
     font-family: Arial;
-    background: #2ecc71;
+    background: #f5f6fa;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -52,95 +69,111 @@ const StyledForgotPassword = styled(ForgotPassword)`
     -ms-overflow-style: none;
   }
 
-  .form-login {
+//** css for form login  */
+.form-login {
     justify-content: center;
-    width: 420px;
-    height: auto;
+    width: 500px;
+    height: 530px;
     margin: 0 auto;
-    margin-top: 12.5%;
+    margin-top: 10%;
     border: 1px solid #fff;
-    border-radius: 10px;
     padding: 20px;
     background-color: #fff;
-    /* opacity: ; */
-    /* text-align: center; */
-  }
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
 
-  .form-login h1 {
+//** css for title */
+.form-login h1 {
     text-align: center;
     display: block;
     margin-bottom: 10px;
     color: #2c3e50;
-  }
-  .form-login input,
-  .reset {
-    margin: 0 auto;
-    margin-bottom: 15px;
-    display: block;
-    width: 200px;
-    height: 40px;
-    border-radius: 5px;
-    border: 1px solid #1ed760;
-    padding: 0 10px;
+}
+
+//** css for input  */
+.form-login input{
+  font-family: sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #666666;
+  display: block;
+  width: 250px;
+  background: #ecf0f1;
+  height: 50px;
+  cursor: pointer;
+  border: none;
+  padding: 0 30px 0 50px;
+}
+
+.form-login input:hover {
     cursor: pointer;
-  }
-  .form-login input:hover {
-    border-radius: 15px;
-    border: 1px solid #f368e0;
-    cursor: pointer;
-  }
-  .form-login button,
-  input:focus {
+}
+
+
+.input-name, .input-email {
+  position: relative;
+  z-index: auto;
+  margin-bottom: 15px;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  padding-left: 15px;
+  font-size:20px;
+}
+//* css for button */
+.form-login button,
+input:focus {
     outline: none;
-  }
-  .form-login button {
-    border: 1px solid #1ed760;
-    background: #1ed760;
-    height: 35px;
-    width: 220px;
-    padding: 0 10px;
-    border-radius: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    color: white;
-  }
-  .form-login button:hover {
-    background-color: #4b6584;
-    border: 1px solid #eb3b5a;
-  }
-  .form-login a {
-    margin-top: 20px;
-    font-size: 13px;
-  }
-  .avatar {
-    height: 80px;
-    width: 80px;
-    margin-bottom: 20px;
-    /* justify-content: center; */
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .mess-guide {
-    margin-bottom: 20px;
-  }
+}
+.button-reset {
+  z-index: auto;
+  margin-top: 15px;
+  display:flex;
+  align-items: center;
+}
+.form-login button {
+  font-family: Helvetica;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 1.5;
+  color: #fff;
+  display: block;
+  width: 250px; 
+  background: #1e90ff;
+  height: 50px;
+  padding: 0 30px 0 68px;
+  cursor: pointer;
+  align-items: center;
+  padding-left: 42px;
+  border: none;
+}
+.form-login button:hover {
+    background-color: #0968db;
+}
+.avatar {
+  height: 80px;
+  width: 80px;
+  margin-bottom: 20px; 
+  display: block;
+   margin-left: auto; 
+   margin-right: auto;
+}
+.mess-guide {
+  margin-bottom: 20px;
+}
 
-  .reset {
-    margin-top: 30px;
-  }
-  #register {
-    display: block;
-  }
+.input-content {
+  display: flex;
+  flex-direction: column;
+  margin-top:40px;
+  align-items: center;
+}
 
-  .input-content {
-    display: flex;
-    flex-direction: column;
-    margin-top: 40px;
-  }
-
-  p {
-    color: red;
-    font-size: 13px;
-  }
 `
 export default StyledForgotPassword
