@@ -1,19 +1,57 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import GoogleLogin from 'react-google-login'
+import axios from 'axios'
+import * as CONSTANT from '../const'
 
-const Login = ({ className = '' }) => {
+function Login({ className = '' }) {
+  const responseGoogle = (response: any) => {
+    if (response.error) return
+    const PATTENT_TEACHER = new RegExp("fe.edu.vn");
+    const PATTEN_STUDENT = new RegExp("fpt.edu.vn");
+    if (PATTENT_TEACHER.test(response.profileObj.email)) {
+      console.log("Teacher")
+    } else if (PATTEN_STUDENT.test(response.profileObj.email)) {
+      console.log("Student")
+    } else {
+      console.log("Out of FPT")
+    }
+    console.log(response.profileObj)
+    console.log(response.tokenObj)
+  }
+
+  const [userName, setUserName] = useState("")
+  const [password, setPassword] = useState("")
+
+  const handleLogin = async (e: any) => {
+    e.preventDefault()
+    console.log(userName)
+    const accessToken = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
+      username: userName,
+      password
+    })
+    console.log(accessToken.data)
+  }
+
   return (
     <div className={className}>
       <div className="container">
         <div className="form-login">
-          <form action="#">
+          <form onSubmit={handleLogin}>
             <h1>Login</h1>
-            <input type="text" id="uname" placeholder="🤵 Enter username" required></input>
-            <input type="password" id="pass" placeholder="🔒 Enter password" required></input>
+            <input type="text" id="uname" placeholder="🤵 Enter username" value={userName} onChange={e => setUserName(e.target.value)} required />
+            <input type="password" id="pass" placeholder="🔒 Enter password" value={password} onChange={e => setPassword(e.target.value)} required />
             <button id="submit">Submit</button>
+            <GoogleLogin
+              className="button-google-login"
+              clientId={CONSTANT.GOOGLE_CLIENT_ID}
+              buttonText="Login"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+            />
             <a id="register" href="#">
               Click here! If you forgot password
             </a>
@@ -29,6 +67,12 @@ const StyledLogin = styled(Login)`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+  }
+
+  .button-google-login {
+    height: 41px !important;
+    margin-top: 10px;
+    border-radius: 5px;
   }
 
   #register {

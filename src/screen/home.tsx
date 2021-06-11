@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types';
+import {NavLink} from 'react-router-dom';
 // import Constant from "../const.json";
 // import axios from "axios";
 
@@ -25,8 +26,8 @@ function HomePage(props: any) {
        answers in <a>the final exam question bank (FE)</a> using <a>artificial intelligence (AI) </a> technology in <a>natural language processing (NLP)</a></p>
     
     <div className="function">
-       <button className="btn btn-dup">Duplicate dectection</button>
-       <button className="btn btn-self">Self-Generation Question</button>
+    <NavLink to="/check-duplicate"><button className="btn btn-dup">Duplicate dectection</button></NavLink>
+    <NavLink to="/self-generate"><button className="btn btn-self">Self-Generation Question</button></NavLink>
     </div>
     <p>Version 1.0.0</p>
     </div>
@@ -73,7 +74,7 @@ const HomeStyled = styled(HomePage) `
       font-family: 'Open Sans', sans-serif;
       color: #f8f9fa;
     }
-    a{
+    .intro-para a{
       color: #ABC4FF; 
       background: #545D7A; 
       text-decoration: none;
@@ -108,6 +109,15 @@ const HomeStyled = styled(HomePage) `
     }
     .btn-self:hover{
       background-color: #2b63cc;
+    }
+
+    @media screen and (max-width:780px){
+      .function{
+        display: flex;
+        flex-direction: column;
+        justify-content:center;
+        align-items: center;
+      }
     }
 `
 export default HomeStyled
