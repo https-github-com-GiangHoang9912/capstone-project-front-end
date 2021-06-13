@@ -14,6 +14,9 @@ function App(props: any) {
   return (
     <Router>
       <Switch>
+       <Route exact path="/header">
+          <Header />
+        </Route>
         <Route exact path="/home">
           <HomePage />
         </Route>

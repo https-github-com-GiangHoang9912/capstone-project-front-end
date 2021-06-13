@@ -3,7 +3,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import {
-  Link, useParams
+  NavLink, useParams
 } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
@@ -32,7 +32,7 @@ function Login(props: any) {
             <form className="login-area-form">
               <span className="login-form-title">
                 Member Login
-          </span>
+              </span>
               <div className="email">
                 <input type="text" name="input-email" id="input-email" placeholder="Enter email" required />
                 <span className="icon-email">
@@ -46,17 +46,20 @@ function Login(props: any) {
                 </span>
               </div>
               <div className="contain-btn">
-                <button className="btn-login">
-                  Login
-               </button>
+
+                <NavLink to="/home" activeClassName="active-li">
+                  <button className="btn-login">
+                    Login
+                  </button>
+                </NavLink>
               </div>
               <div className="text-process">
                 <a className="txt2" href="#">
                   Change /
-            </a>
+                </a>
                 <a className="txt2" href="#">
                   Forgot Password
-            </a>
+                </a>
               </div>
             </form>
           </div>
