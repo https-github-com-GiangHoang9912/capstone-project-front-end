@@ -1,61 +1,88 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
+
 import styled from 'styled-components'
-import GoogleLogin from 'react-google-login'
 import axios from 'axios'
 import * as CONSTANT from '../const'
 
-function Login({ className = '' }) {
-  const responseGoogle = (response: any) => {
-    if (response.error) return
-    const PATTENT_TEACHER = new RegExp("fe.edu.vn");
-    const PATTEN_STUDENT = new RegExp("fpt.edu.vn");
-    if (PATTENT_TEACHER.test(response.profileObj.email)) {
-      console.log("Teacher")
-    } else if (PATTEN_STUDENT.test(response.profileObj.email)) {
-      console.log("Student")
-    } else {
-      console.log("Out of FPT")
-    }
-    console.log(response.profileObj)
-    console.log(response.tokenObj)
-  }
+Login.propTypes = {
+  className: PropTypes.string,
+}
 
-  const [userName, setUserName] = useState("")
-  const [password, setPassword] = useState("")
+Login.defaultProps = {
+  className: '',
+}
+
+function Login(props: any) {
+  const { className } = props
+  const [userName, setUserName] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleLogin = async (e: any) => {
     e.preventDefault()
     console.log(userName)
     const accessToken = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
       username: userName,
-      password
+      password,
     })
     console.log(accessToken.data)
   }
 
   return (
-    <div className={className}>
-      <div className="container">
-        <div className="form-login">
-          <form onSubmit={handleLogin}>
-            <h1>Login</h1>
-            <input type="text" id="uname" placeholder="🤵 Enter username" value={userName} onChange={e => setUserName(e.target.value)} required />
-            <input type="password" id="pass" placeholder="🔒 Enter password" value={password} onChange={e => setPassword(e.target.value)} required />
-            <button id="submit">Submit</button>
-            <GoogleLogin
-              className="button-google-login"
-              clientId={CONSTANT.GOOGLE_CLIENT_ID}
-              buttonText="Login"
-              onSuccess={responseGoogle}
-              onFailure={responseGoogle}
-            />
-            <a id="register" href="#">
-              Click here! If you forgot password
-            </a>
-          </form>
+    <div className={className} onSubmit={handleLogin}>
+      <div className="limiter">
+        <div className="container">
+          <div className="wrap-login">
+            <div className="img-show">
+              <img src="desk.png" alt="IMG" />
+            </div>
+            <form className="login-area-form">
+              <span className="login-form-title">Member Login</span>
+              <div className="email">
+                <input
+                  type="text"
+                  name="input-email"
+                  id="input-email"
+                  placeholder="Enter email"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  required
+                />
+                <span className="icon-email">
+                  <FontAwesomeIcon icon={faEnvelope} />
+                </span>
+              </div>
+              <div className="password">
+                <input
+                  type="password"
+                  name="input-pass"
+                  id="input-pass"
+                  placeholder="Enter password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <span className="icon-pass">
+                  <FontAwesomeIcon icon={faLock} />
+                </span>
+              </div>
+              <div className="contain-btn">
+                <button className="btn-login">Login</button>
+              </div>
+              <div className="text-process">
+                <a className="txt2" href="#">
+                  Change /
+                </a>
+                <a className="txt2" href="#">
+                  Forgot Password
+                </a>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -63,105 +90,207 @@ function Login({ className = '' }) {
 }
 
 const StyledLogin = styled(Login)`
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  body,
+  html {
+    height: 100%;
+    font-family: Poppins-Regular, sans-serif;
   }
-
-  .button-google-login {
-    height: 41px !important;
-    margin-top: 10px;
-    border-radius: 5px;
-  }
-
-  #register {
-    display: block;
-  }
-
-  .container::-webkit-scrollbar {
-    display: none;
+  .limiter {
+    width: 100%;
+    margin: 0 auto;
   }
   .container {
-    overflow: hidden;
-    font-family: Arial;
-    background: #2ecc71;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center center;
-    height: 100vh;
     width: 100%;
+    min-height: 100vh;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    -ms-overflow-style: none;
+    align-items: center;
+    padding: 15px;
+    background: #9053c7;
+    background: -webkit-linear-gradient(-135deg, #c850c0, #4158d0);
+    background: -o-linear-gradient(-135deg, #c850c0, #4158d0);
+    background: -moz-linear-gradient(-135deg, #c850c0, #4158d0);
+    background: linear-gradient(-135deg, #c850c0, #4158d0);
   }
-
-  .form-login {
-    justify-content: center;
-    width: 320px;
-    height: auto;
-    margin: 0 auto;
-    margin-top: 15%;
-    border: 1px solid #fff;
+  .wrap-login {
+    width: 960px;
+    background: #fff;
     border-radius: 10px;
-    padding: 20px;
-    background-color: #fff;
-    /* opacity: ; */
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 120px 130px 102px 95px;
+  }
+  /*  css for image*/
+  .img-show {
+    width: 316px;
+  }
+  .img-show img {
+    max-width: 100%;
+  }
+  /* ------------ */
+  .login-area-form {
+    width: 290px;
+  }
+  .login-form-title {
+    font-family: Poppins-Bold;
+    font-size: 24px;
+    color: #333333;
+    line-height: 1.2;
     text-align: center;
+    font-weight: bold;
+    width: 100%;
+    display: block;
+    padding-bottom: 54px;
+  }
+  /* Input css */
+  input {
+    outline: none;
+    border: none;
+  }
+  input:focus {
+    animation: pulse-animation 1.5s infinite;
+  }
+  @keyframes pulse-animation {
+    0% {
+      box-shadow: 0 0 0 0px rgba(32, 182, 45, 0.527);
+    }
+    100% {
+      box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+    }
+  }
+  .input-email {
+    width: 300px;
+    height: 70px;
+  }
+  .email,
+  .password {
+    position: relative;
+    width: 100%;
+    z-index: auto;
+    margin-bottom: 10px;
   }
 
-  @media only screen and (max-width: 768px) {
-    /* For mobile phones: */
-    [class*='col-'] {
+  #input-email,
+  #input-pass {
+    font-family: Poppins-Medium;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #666666;
+    display: block;
+    width: 100%;
+    background: #e6e6e6;
+    height: 50px;
+    border-radius: 25px;
+    padding: 0 30px 0 68px;
+    cursor: pointer;
+  }
+
+  #input-email:focus {
+    outline: none;
+  }
+
+  .icon-email,
+  .icon-pass {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    padding-left: 35px;
+  }
+
+  /* button login */
+
+  .contain-btn {
+    position: relative;
+    width: 100%;
+    z-index: auto;
+    margin-bottom: 10px;
+    margin-top: 25px;
+  }
+  .btn-login {
+    font-family: Poppins-Medium;
+    font-size: 23px;
+    font-weight: bold;
+    line-height: 1.5;
+    position: absolute;
+    color: #fff;
+    display: block;
+    width: 100%;
+    background: #57b846e6;
+    height: 50px;
+    border-radius: 25px;
+    padding: 0 30px 0 68px;
+    cursor: pointer;
+    align-items: center;
+    padding-left: 42px;
+  }
+  .btn-login {
+    outline: none;
+    border: none;
+  }
+  .btn-login:hover {
+    background-color: #273c75;
+  }
+
+  /* text css */
+
+  .text-process {
+    margin-top: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .txt2 {
+    font-family: Poppins-Regular;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #666666;
+    text-decoration: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .wrap-login {
+      padding: 177px 90px 33px 85px;
+    }
+
+    .img-show {
+      width: 35%;
+    }
+
+    .login-area-form {
+      width: 50%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .wrap-login {
+      padding: 100px 80px 33px 80px;
+    }
+
+    .img-show {
+      display: none;
+    }
+
+    .login-area-form {
       width: 100%;
     }
   }
-  .form-login h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #2c3e50;
-  }
-  .form-login input {
-    margin: 0 auto;
-    margin-bottom: 10px;
-    display: block;
-    width: 200px;
-    height: 28px;
-    border-radius: 15px;
-    border: 1px solid #1ed760;
-    padding: 0 10px;
-    cursor: pointer;
-  }
-  .form-login input:hover {
-    border-radius: 15px;
-    border: 1px solid #f368e0;
-    cursor: pointer;
-  }
-  .form-login button,
-  input:focus {
-    outline: none;
-  }
-  .form-login button {
-    border: 1px solid #1ed760;
-    background: #1ed760;
-    height: 28px;
-    width: 220px;
-    padding: 0 10px;
-    border-radius: 15px;
-    cursor: pointer;
-  }
-  .form-login button:hover {
-    background-color: #4b6584;
-    border: 1px solid #eb3b5a;
-  }
-  .form-login a {
-    margin-top: 20px;
-    font-size: 13px;
-  }
-  p {
-    color: red;
-    font-size: 13px;
+
+  @media (max-width: 576px) {
+    .wrap-login {
+      padding: 100px 15px 33px 15px;
+    }
   }
 `
-
 export default StyledLogin
