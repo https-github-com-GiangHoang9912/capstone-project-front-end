@@ -18,10 +18,11 @@ const SelfGenerate = ({ className = '' }) => {
   }
   return (
     <div className={className}>
-      <h2>Self-generation</h2>
+      <h2 className="title-task">Self-generation</h2>
       <div className="form-container">
         <form>
           {/* Nhap cau tra loi */}
+          <br />
           <p className="label">Input Answers</p>
           <input
             type="text"
@@ -74,21 +75,19 @@ const SelfGenerate = ({ className = '' }) => {
 }
 
 const SelfStyle = styled(SelfGenerate)`
-  background-color: #f7f8fc;
-  height: auto;
+  background: #f7f8fc;
+  min-height: 100vh;
   margin: auto;
+  padding: 20px;
   .form-container {
-    width: 80%;
+    width: 75%;
     margin: auto;
-    border: 4px solid #dae1f5;
     border-radius: 10px;
+    background: #f7f8fc;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
+      rgba(17, 17, 26, 0.1) 0px 16px 56px;
   }
-  h2 {
-    color: #10182f;
-    font-style: italic;
-    padding: 20px;
-    text-align: center;
-  }
+
   form {
     width: 80%;
     margin: auto;
@@ -98,17 +97,21 @@ const SelfStyle = styled(SelfGenerate)`
     font-size: 18px;
     font-weight: 600;
     color: #545d7a;
+    padding: 10px 0;
   }
   form .input-answer {
     width: 100%;
-    height: 20px;
+    height: 32px;
     padding: 10px;
+    transition: 0.7s;
   }
+
   .note-box {
     color: #616161;
   }
   .text-area {
     width: 100%;
+    max-width: 100%;
     height: 150px;
     padding: 10px;
   }
@@ -123,11 +126,11 @@ const SelfStyle = styled(SelfGenerate)`
     font-weight: 600;
     border-radius: 5px;
     border: 2px solid #fff;
-    background-color: #306bf3;
-    margin-bottom: 1rem;
+    background-color: #000000;
+    margin: 1rem 0;
   }
   .btn-generate:hover {
-    background-color: #df184a;
+    background-color: #333333;
   }
   .question-area {
     margin-top: 1rem;
