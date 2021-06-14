@@ -5,16 +5,54 @@ import { faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Checkbox } from '@material-ui/core'
 import styled from 'styled-components'
 
-import SelectStaff from './select-staff'
-
-Admin.propTypes = {
+Staff.propTypes = {
   className: PropTypes.string,
 }
 
-Admin.defaultProps = {
+Staff.defaultProps = {
   className: '',
 }
-function Admin(props: any) {
+
+
+ManageStaffs.propTypes = {
+  className: PropTypes.string,
+}
+
+ManageStaffs.defaultProps = {
+  className: '',
+}
+
+function Staff(props: any) {
+  const { className } = props
+  const [checked, setChecked] = useState(true)
+  return (
+    <div className={className}>
+      <div className="child-container">
+        <div className="checkbox-child">
+          <Checkbox
+            defaultChecked={checked}
+            color="primary"
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+          />
+        </div>
+        <div className="avatar-user">
+          <img src="avatar2.png" />
+        </div>
+        <div className="profile-user">
+          <span className="text-email">FPTgmail@fe.edu.vn</span>
+          <span className="text-name">Tran Quy Ban</span>
+        </div>
+        <div className="iconTrash">
+          <span className="icon">
+            <FontAwesomeIcon className="faTrash" icon={faTrash} />
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ManageStaffs(props: any) {
   const { className } = props
   const [checked, setChecked] = useState(true)
 
@@ -62,7 +100,7 @@ function Admin(props: any) {
                   </span>
                 </div>
               </div>
-              <SelectStaff />
+              <Staff />
             </div>
           </div>
         </div>
@@ -71,7 +109,7 @@ function Admin(props: any) {
   )
 }
 
-const StyledAdmin = styled(Admin)`
+const StyledAdmin = styled(ManageStaffs)`
   * {
     padding: 0;
     margin: 0;
@@ -236,10 +274,6 @@ const StyledAdmin = styled(Admin)`
     align-items: center;
     justify-content: space-around;
   }
-  img {
-    width: 50px;
-    height: 50px;
-  }
 
   .checkbox {
     width: 20px;
@@ -248,6 +282,59 @@ const StyledAdmin = styled(Admin)`
 
   .text-select,
   .text-profile {
+    font-size: 20px;
+  }
+
+  /* css for Staff */
+
+  .child-container {
+    display: flex;
+    margin-top: 30px;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .faTrash {
+    width: 18px;
+    height: 18px;
+  }
+
+  .text-select,
+  .text-profile {
+    font-size: 20px;
+  }
+
+  //** setsize div */
+  div .checkbox-child {
+    width: 20%;
+  }
+
+  div .avatar-user {
+    width: 20%;
+  }
+
+  div .profile-user {
+    width: 28%;
+    height: 60px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+  }
+
+  div .iconTrash {
+    width: 20%;
+  }
+
+  .profile-user .text-email {
+    font-size: 13px;
+  }
+  .profile-user .text-name {
     font-size: 20px;
   }
 `

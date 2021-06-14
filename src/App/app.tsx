@@ -10,6 +10,7 @@ import SelfGenerate from '../screen/self-generation-question'
 import Header from '../common/header'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
+import ManageStaffs from '../screen/manage-staffs'
 
 function App(props: any) {
   return (
@@ -24,6 +25,9 @@ function App(props: any) {
         </Route>
         <Route exact path="/self-generate">
           <SelfGenerate />
+        </Route>
+        <Route exact path="/admin/manage-staffs">
+          <ManageStaffs />
         </Route>
         <Route exact path="/profile">
           <Profile />
