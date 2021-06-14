@@ -74,8 +74,10 @@ function Duplicate(props: any) {
         <div className="control-right">
           <h2>Enter your question here:</h2>
           <textarea className="input-question" value={question} onChange={handleInputQuestion}/>
+          <div>
           <button className="btn btn-check" onClick={handleCheck}>Check</button>
           <button className="btn btn-clear" onClick={handleClear}>Clear</button>
+          </div>
           {visibleResult ? <p className="result">❗❗ Existing question.... ... ? | Duplicate score</p> : ' ' }
           
         </div>
@@ -98,13 +100,13 @@ const StyleDuplicate = styled(Duplicate)`
         box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
       }
       .control-left{
-        width: 100%;
+        width: 30%;
         height: 100%;
                 
 
       }
       .control-right{
-        width: 100%;
+        width: 70%;
         max-width: 70%;
         min-height: 500px;
         background: #F7F8FC;
@@ -154,7 +156,7 @@ const StyleDuplicate = styled(Duplicate)`
         width: 80%;
         min-width: 80%;
         max-width: 80%;
-        height: 200px;
+        height: 300px;
         font-size: 18px;
         border-radius: 10px;
         padding:10px;
@@ -187,7 +189,11 @@ const StyleDuplicate = styled(Duplicate)`
       .container{
         display: flex;
         flex-direction: column;
+        justify-content: center;
         height: auto;
+      }
+      .control-left{
+        width:100%
       }
       .control-right{
         width:100%;

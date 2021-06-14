@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components'
 import PropTypes from 'prop-types';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEnvelope, faUser, faPhone, faAddressBook, faCalendar } from '@fortawesome/free-solid-svg-icons'
 
 Profile.propTypes = {
   className: PropTypes.string,
@@ -35,40 +36,36 @@ function Profile(props: any) {
           <div className="form-contain">
             <h3>Information</h3>
             <div className="form-info">
-              <span>💁‍Username</span>
+              <span>‍<FontAwesomeIcon icon={faUser} /> Username</span>
               <input type="text" id="username" className="input-bar" disabled={editStatus} />
             </div>
             <div className="form-info">
-              <span>📆Date of birth</span>
+              <span><FontAwesomeIcon icon={faCalendar} /> Date of birth</span>
               <input type="text" id="dob" className="input-bar" disabled={editStatus} />
             </div>
             <div className="form-info">
-              <span>⛪Address</span>
+              <span><FontAwesomeIcon icon={faAddressBook} /> Address</span>
               <input type="text" id="address" className="input-bar" disabled={editStatus} />
             </div>
             <div className="form-info">
-              <span>📞Phone number</span>
+              <span><FontAwesomeIcon icon={faPhone} /> Phone number</span>
               <input type="text" id="phone" className="input-bar" disabled={editStatus} />
             </div>
             <div className="form-info">
-              <span>📩Email</span>
+              <span><FontAwesomeIcon icon={faEnvelope} /> Email</span>
               <input type="text" id="email" className="input-bar " disabled={editStatus} />
             </div>
             <button className="btn-edit" onClick={handleEdit}>{editStatus ? "Edit profile" : "Save"}</button>
             <h3>Change Password</h3>
-            <button className="btn-change">Go to change password</button>
-            
+            <button className="btn btn-change">Go to change password</button>
+            <h3>View Activity History</h3>
+            <button className="btn btn-his">View Activity History</button>
           </div>
           <div className="img-avt">
             <img src={image.url} alt="" />
             <input type="file" name="file" id="file" className="input-file" onChange={handleFileChange} disabled={editStatus} />
-
-
           </div>
-
         </div>
-
-
       </div>
     </div>
   )
@@ -136,13 +133,21 @@ const styleProfile = styled(Profile)`
       color: #10182F;
       font-weight: 500;
     }
-    .btn-change{
+    .btn{
       width: 250px;
       height: 40px;
       font-weight: bold;
-      background-color: #306BF3;
       color: #fff;
       border: none;
+    }
+    .btn-change{
+      background-color: #306BF3;
+    }
+    .btn-his{
+      background-color: #da880f;
+    }
+    .btn-his:hover{
+      background-color: #eb8f06;
     }
     .btn-change:hover{
       background-color: #0e47cc;

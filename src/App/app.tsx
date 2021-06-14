@@ -32,6 +32,7 @@ function App(props: any) {
         </Route>
       </Switch>
     </Router>
+    
   )
 }
 
