@@ -1,75 +1,76 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
 Duplicate.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
 }
 Duplicate.defaultProps = {
-  className: ''
+  className: '',
 }
 
-  interface IBank{
-    id: number,
-    title: string,
-    code: string,
-  }
+interface IBank {
+  id: number
+  title: string
+  code: string
+}
 function Duplicate(props: any) {
-  const { className } = props;
-  const [fileName, setFileName] =  useState<string>('');
-  const [visibleResult, setVisibleResult] = useState<boolean>(false);
-  const [question, setQuestion] = useState<string>('');
+  const { className } = props
+  const [fileName, setFileName] = useState<string>('')
+  const [visibleResult, setVisibleResult] = useState<boolean>(false)
+  const [question, setQuestion] = useState<string>('')
   const [listBank, setListBank] = useState<IBank[]>([
-       {
-         id: 1,
-         title: 'Data Warehouse',
-         code: 'DBW391',
-       },
-       {
-        id: 2,
-        title: 'Japanese',
-        code: 'JPN101',
-      },
-      {
-        id: 3,
-        title: 'English',
-        code: 'ENM101',
-      },
-      {
-        id: 4,
-        title: 'Software Engineering',
-        code: 'SWE102',
-      }
+    {
+      id: 1,
+      title: 'Data Warehouse',
+      code: 'DBW391',
+    },
+    {
+      id: 2,
+      title: 'Japanese',
+      code: 'JPN101',
+    },
+    {
+      id: 3,
+      title: 'English',
+      code: 'ENM101',
+    },
+    {
+      id: 4,
+      title: 'Software Engineering',
+      code: 'SWE102',
+    },
+  ])
 
-  ]);
-
-  function handleFileChange(e:any){
-      setFileName(e.target.value);
+  function handleFileChange(e: any) {
+    setFileName(e.target.value)
   }
-  function handleCheck(){
-    setVisibleResult(true);
+  function handleCheck() {
+    setVisibleResult(true)
   }
-  function handleInputQuestion(e:any){
-    setQuestion(e.target.value);
+  function handleInputQuestion(e: any) {
+    setQuestion(e.target.value)
   }
-  function handleClear(){
-    setVisibleResult(false);
-    setQuestion('');
+  function handleClear() {
+    setVisibleResult(false)
+    setQuestion('')
   }
   return (
     <div className={className}>
       <h2 className="title-task">Duplicate Detection</h2>
       <div className="container">
         <div className="control-left">
-        <h2 className="select">Import a new Bank</h2>
-           <input type="file" className="input-bank" value={fileName} onChange={handleFileChange}/>
-           <p className="bank-name">Bank name: {fileName}</p>
-           <h2 className="select">Select Imported Bank</h2>
-           <select className="input-select" >
-             {listBank.map(bank =>(
-               <option key={bank.id} value={bank.id}>{bank.code} - {bank.title}</option>
-             ))}
-           </select>
+          <h2 className="select">Import a new Bank</h2>
+          <input type="file" className="input-bank" value={fileName} onChange={handleFileChange} />
+          <p className="bank-name">Bank name: {fileName}</p>
+          <h2 className="select">Select Imported Bank</h2>
+          <select className="input-select">
+            {listBank.map((bank) => (
+              <option key={bank.id} value={bank.id}>
+                {bank.code} - {bank.title}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="control-right">
           <h2>Enter your question here:</h2>
@@ -87,6 +88,20 @@ function Duplicate(props: any) {
 }
 
 const StyleDuplicate = styled(Duplicate)`
+  width: 100%;
+  height: 100vh;
+  background-color: #f7f8fc;
+  .container {
+    width: 90%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(#141e30, #243b55);
+    text-align: center;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
+      rgba(17, 17, 26, 0.1) 0px 16px 56px;
+  }
+  .control-left {
     width: 100%;
     height: 100vh;
     background-color: #F7F8FC;
@@ -179,11 +194,9 @@ const StyleDuplicate = styled(Duplicate)`
     .btn-clear{
       background-color: #21774F;
     }
-    .result{
-      margin: 1rem;
-      font-weight:450;
-      padding: 10px 0;
-      background-color:#F0F2FB;
+    .control-right {
+      width: 100%;
+      max-width: 100%;
     }
     @media screen and (max-width:600px){
       .container{
@@ -202,7 +215,7 @@ const StyleDuplicate = styled(Duplicate)`
       .input-question{
         width: 100%;
       }
+    
     }
-
 `
 export default StyleDuplicate
