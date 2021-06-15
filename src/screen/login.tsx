@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
 import PropTypes from 'prop-types'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 
 import styled from 'styled-components'
 import axios from 'axios'
 import * as CONSTANT from '../const'
+import { AccountContext } from '../contexts/account-context'
 
 Login.propTypes = {
   className: PropTypes.string,
@@ -21,15 +22,29 @@ function Login(props: any) {
   const { className } = props
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
+  const { setInformation } = useContext(AccountContext)
+  const history = useHistory()
 
   const handleLogin = async (e: any) => {
     e.preventDefault()
-    console.log(userName)
-    const accessToken = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
-      username: userName,
-      password,
+    setInformation({
+      usename: "admin",
+      role: 1,
+      profile: {
+        firstname: "gianghoang",
+        lastname: "Nguyen",
+        email: "giangnhhe130936@fpt.edu.vn",
+        phone: "0819169868",
+        dateofbirth: "12/09/1999"
+      }
     })
-    console.log(accessToken.data)
+
+    history.push("/profile")
+    // const accessToken = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
+    //   username: userName,
+    //   password,
+    // })
+    // console.log(accessToken.data)
   }
 
   return (
