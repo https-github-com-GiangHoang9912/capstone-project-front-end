@@ -75,8 +75,7 @@ const SelfGenerate = ({ className = '' }) => {
 }
 
 const SelfStyle = styled(SelfGenerate)`
-
-  background: #F7F8FC;
+  background: #f7f8fc;
   min-height: 100vh;
   margin: auto;
   padding: 20px;
@@ -84,11 +83,11 @@ const SelfStyle = styled(SelfGenerate)`
     width: 75%;
     margin: auto;
     border-radius: 10px;
-    background: #F7F8FC;
-    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
-    
+    background: #f7f8fc;
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
+      rgba(17, 17, 26, 0.1) 0px 16px 56px;
   }
-  
+
   form {
     width: 80%;
     margin: auto;
@@ -97,7 +96,7 @@ const SelfStyle = styled(SelfGenerate)`
   .label {
     font-size: 18px;
     font-weight: 600;
-    color: #545D7A;
+    color: #545d7a;
     padding: 10px 0;
   }
   form .input-answer {
@@ -106,7 +105,7 @@ const SelfStyle = styled(SelfGenerate)`
     padding: 10px;
     transition: 0.7s;
   }
-  
+
   .note-box {
     color: #616161;
   }
