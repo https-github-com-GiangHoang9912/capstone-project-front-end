@@ -1,13 +1,16 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
 import PropTypes from 'prop-types'
-import { Link, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 
 import styled from 'styled-components'
 import axios from 'axios'
+import { Account } from "../interface/acc"
+
 import * as CONSTANT from '../const'
+import { AccountContext } from '../contexts/account-context'
 
 Login.propTypes = {
   className: PropTypes.string,
@@ -21,15 +24,32 @@ function Login(props: any) {
   const { className } = props
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
+  const { setInformation } = useContext(AccountContext)
+  const history = useHistory()
 
   const handleLogin = async (e: any) => {
     e.preventDefault()
-    console.log(userName)
-    const accessToken = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
-      username: userName,
-      password,
-    })
-    console.log(accessToken.data)
+    const account: Account = {
+      username: "admin",
+      role: 1,
+      profile: {
+        firstname: "tranquyban",
+        lastname: "Tran",
+        email: "bantq @fpt.edu.vn",
+        phone: "0819169868",
+        dateofbirth: "12/09/1999",
+        img: 'https://vtv1.mediacdn.vn/thumb_w/650/2020/10/30/doanh-thu-amazon-1-16040457718391475449241.jpg'
+      }
+    }
+    setInformation(
+      account
+    )
+    history.push("/Home")
+    // const accessToken = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
+    //   username: userName,
+    //   password,
+    // })
+    // console.log(accessToken.data)
   }
 
   return (
