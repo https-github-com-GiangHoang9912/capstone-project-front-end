@@ -101,10 +101,7 @@ const StyleDuplicate = styled(Duplicate)`
     box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
       rgba(17, 17, 26, 0.1) 0px 16px 56px;
   }
-  .control-left {
-    width: 100%;
-    height: 100vh;
-    background-color: #F7F8FC;
+  
       .container{
         width: 90%;
         margin: auto;
@@ -117,8 +114,7 @@ const StyleDuplicate = styled(Duplicate)`
       .control-left{
         width: 30%;
         height: 100%;
-                
-
+   
       }
       .control-right{
         width: 70%;
@@ -217,5 +213,6 @@ const StyleDuplicate = styled(Duplicate)`
       }
     
     }
+  
 `
 export default StyleDuplicate

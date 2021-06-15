@@ -1,46 +1,62 @@
 import { useState } from 'react'
-
+import GoogleLogin from 'react-google-login';
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
-
+import { NavLink, useParams, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import axios from 'axios'
 import * as CONSTANT from '../const'
+// import { on } from 'process'
 
 Login.propTypes = {
   className: PropTypes.string,
+  onSubmit: PropTypes.func,
 }
 
 Login.defaultProps = {
   className: '',
+  onSubmit: null,
 }
 
 function Login(props: any) {
-  const { className } = props
+  const { className, onSubmit } = props
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
-
+  const responseGoogle = (response:any) => {
+    console.log(response);
+  }
+  const history = useHistory();
   const handleLogin = async (e: any) => {
     e.preventDefault()
-    console.log(userName)
-    const accessToken = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
+    if (!onSubmit) return;
+    // console.log(userName)
+    // const accessToken = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
+    //   username: userName,
+    //   password,
+    // })
+    // console.log(accessToken.data)
+    const Account = {
       username: userName,
-      password,
-    })
-    console.log(accessToken.data)
+      password
+    }
+      history.push('/profile',{params:Account});
+    onSubmit(Account);
+    // console.log('acuuuu', Account);
   }
 
   return (
-    <div className={className} onSubmit={handleLogin}>
+    <div className={className} >
       <div className="limiter">
         <div className="container">
           <div className="wrap-login">
             <div className="img-show">
               <img src="desk.png" alt="IMG" />
             </div>
-            <form className="login-area-form">
-              <span className="login-form-title">Member Login</span>
+            <form className="login-area-form" onSubmit={handleLogin}>
+              <span className="login-form-title">
+                Member Login
+              </span>
               <div className="email">
                 <input
                   type="text"
@@ -70,8 +86,21 @@ function Login(props: any) {
                 </span>
               </div>
               <div className="contain-btn">
-                <button className="btn-login">Login</button>
+              
+                  <button className="btn-login">
+                    Login
+                  </button>
+                 
               </div>
+              <div className="login-gg">
+              <GoogleLogin
+                      clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+                      buttonText="Login with Google"
+                      onSuccess={responseGoogle}
+                      onFailure={responseGoogle}
+                      
+                      />
+                  </div>
               <div className="text-process">
                 <a className="txt2" href="#">
                   Change /
@@ -239,7 +268,14 @@ const StyledLogin = styled(Login)`
   .btn-login:hover {
     background-color: #273c75;
   }
-
+  .login-gg{
+    position: relative;
+    width: 100%;
+    top: 20%;
+    left: 20%;
+    z-index: auto;
+    margin: auto;
+  }
   /* text css */
 
   .text-process {

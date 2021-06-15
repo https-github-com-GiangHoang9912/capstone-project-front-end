@@ -3,23 +3,32 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faUser, faPhone, faAddressBook, faCalendar } from '@fortawesome/free-solid-svg-icons'
+import { useLocation } from 'react-router-dom'
 
 Profile.propTypes = {
   className: PropTypes.string,
+  // account: PropTypes.object
+ 
 }
 Profile.defaultProps = {
   className: '',
+  
+  // account: null,
 }
 interface IImage {
   url: string
 }
 function Profile(props: any) {
-  const { className } = props
+  const { className} = props
   const [editStatus, setEditStatus] = useState<boolean>(true)
   const [image, setImage] = useState<IImage>({
     url: 'https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png',
   })
 
+  // console.log('kakakak', account.username);
+  
+  const location: any = useLocation();
+  const account = location.state.params;
   function handleEdit() {
     setEditStatus(!editStatus)
     console.log(editStatus)
@@ -31,13 +40,13 @@ function Profile(props: any) {
   return (
     <div className={className}>
       <div className="info-container">
-        <h2 className="title-task">Your Profile</h2>
+        <h2 className="title-task"> Your Profile</h2>
         <div className="contain">
           <div className="form-contain">
             <h3>Information</h3>
             <div className="form-info">
               <span>‍<FontAwesomeIcon icon={faUser} /> Username</span>
-              <input type="text" id="username" className="input-bar" disabled={editStatus} />
+              <input type="text" id="username" className="input-bar" value={account.username} disabled={editStatus} />
             </div>
             <div className="form-info">
               <span><FontAwesomeIcon icon={faCalendar} /> Date of birth</span>
