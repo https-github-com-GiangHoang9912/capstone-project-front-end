@@ -16,8 +16,14 @@ DialogComponent.defaultProps = {
 }
 
 function DialogComponent(props: any) {
-  const { className, title, message, buttonAccept, buttonCancel, isValid, handleDialogChoice } =
-    props
+  const { 
+    className, 
+    title, 
+    message, 
+    buttonAccept, 
+    buttonCancel, 
+    isValid, 
+    handleDialogChoice } = props
 
   let classOfTitle = 'title-valid'
   if (!isValid) {

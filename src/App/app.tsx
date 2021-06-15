@@ -1,8 +1,6 @@
-import React from 'react'
-
 // lib
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-
+import { useState } from 'react'
 // components
 import HomePage from '../screen/home'
 import CheckDuplicate from '../screen/check-duplicate'
@@ -10,6 +8,7 @@ import SelfGenerate from '../screen/self-generation-question'
 import Header from '../common/header'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
+import { AccountContextProvider } from '../contexts/account-context'
 
 function App(props: any) {
   return (
@@ -25,12 +24,10 @@ function App(props: any) {
         <Route exact path="/self-generate">
           <SelfGenerate />
         </Route>
-        <Route exact path="/profile">
-          <Profile />
-        </Route>
-        <Route exact path="/login">
-          <Login />
-        </Route>
+        <AccountContextProvider>
+          <Route exact path="/profile" component={Profile}/>
+          <Route exact path="/login" component={Login} />
+        </AccountContextProvider>
       </Switch>
     </Router>
   )

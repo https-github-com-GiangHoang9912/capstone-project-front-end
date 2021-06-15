@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import { AccountContext } from '../contexts/account-context'
 
 Profile.propTypes = {
   className: PropTypes.string,
@@ -17,6 +18,8 @@ function Profile(props: any) {
   const [image, setImage] = useState<IImage>({
     url: 'https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png',
   })
+  const { accountContextData } = useContext(AccountContext)
+  console.log(accountContextData)
 
   function handleEdit() {
     setEditStatus(!editStatus)
