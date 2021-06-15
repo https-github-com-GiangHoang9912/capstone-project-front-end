@@ -11,6 +11,19 @@ import Login from '../screen/login'
 import { AccountContextProvider } from '../contexts/account-context'
 
 function App(props: any) {
+
+  // const [Account, setAccount] = useState<Object>({});
+  let Account = {
+
+  }
+
+  function handleTakeAccount(values: any) {
+    // setAccount(values)
+    // return Account;
+    Account = values;
+    console.log('value kakak ', Account);
+  }
+
   return (
     <Router>
       <AccountContextProvider>
@@ -36,6 +49,7 @@ function App(props: any) {
         </Switch>
       </AccountContextProvider>
     </Router>
+    
   )
 }
 
