@@ -33,9 +33,13 @@ function Login(props: any) {
   
   // Login with google auth
   const responseGoogle = async (googleRes: any) => {
-    console.log(googleRes)
-    const response = await axios.post(LOGIN_WIHT_GOOGLE_API, googleRes)
-    console.log(response)
+    const response = await axios.post(LOGIN_WIHT_GOOGLE_API, googleRes.profileObj)
+    
+    if (response && response.data) {
+      setInformation(response.data.account)
+      console.log(response.data)
+      history.push('/Home')
+    }
   }
   const history = useHistory()
   const { setInformation } = useContext(AccountContext)
