@@ -26,9 +26,8 @@ function Profile(props: any) {
     url: 'https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png',
   })
   const { accountContextData } = useContext(AccountContext);
-  
-  const location: any = useLocation();
-  const account = location.state.params;
+
+  const account = accountContextData
   function handleEdit() {
     setEditStatus(!editStatus)
     console.log(editStatus)

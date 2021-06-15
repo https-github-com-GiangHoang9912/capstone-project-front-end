@@ -30,39 +30,19 @@ function Login(props: any) {
     console.log(response)
   }
   const history = useHistory()
+  const { setInformation } = useContext(AccountContext)
 
-  const handleLogin = async (e: any) => {
+  const HandleLogin = async (e: any) => {
     e.preventDefault()
-    if (!onSubmit) return
-    // console.log(userName)
-    const { setInformation } = useContext(AccountContext)
 
-    const account: Account = {
-      username: 'admin',
-      role: 1,
-      profile: {
-        firstname: 'tranquyban',
-        lastname: 'Tran',
-        email: 'bantq @fpt.edu.vn',
-        phone: '0819169868',
-        dateofbirth: '12/09/1999',
-        img: 'https://vtv1.mediacdn.vn/thumb_w/650/2020/10/30/doanh-thu-amazon-1-16040457718391475449241.jpg',
-      },
-    }
-    setInformation(account)
-    history.push('/Home')
-    // const accessToken = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
-    //   username: userName,
-    //   password,
-    // })
-    // console.log(accessToken.data)
-    const Account = {
+    const response = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
       username: userName,
       password,
-    }
-    history.push('/profile', { params: Account })
-    onSubmit(Account)
-    // console.log('acuuuu', Account);
+    })
+
+    setInformation(response.data.account)
+    history.push('/Home')
+    
   }
 
   return (
@@ -73,7 +53,7 @@ function Login(props: any) {
             <div className="img-show">
               <img src="desk.png" alt="IMG" />
             </div>
-            <form className="login-area-form" onSubmit={handleLogin}>
+            <form className="login-area-form" onSubmit={HandleLogin}>
               <span className="login-form-title">Member Login</span>
               <div className="email">
                 <input
@@ -108,7 +88,7 @@ function Login(props: any) {
               </div>
               <div className="login-gg">
                 <GoogleLogin
-                  clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+                  clientId={CONSTANT.GOOGLE_CLIENT_ID}
                   buttonText="Login with Google"
                   onSuccess={responseGoogle}
                   onFailure={responseGoogle}
