@@ -22,11 +22,19 @@ Login.defaultProps = {
   onSubmit: null,
 }
 
+const LOGIN_WIHT_USERNAME_API = `${CONSTANT.BASE_URL}/auth/login`
+const LOGIN_WIHT_GOOGLE_API = `${CONSTANT.BASE_URL}/google-auth/login`
+
+
 function Login(props: any) {
   const { className, onSubmit } = props
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
-  const responseGoogle = (response: any) => {
+  
+  // Login with google auth
+  const responseGoogle = async (googleRes: any) => {
+    console.log(googleRes)
+    const response = await axios.post(LOGIN_WIHT_GOOGLE_API, googleRes)
     console.log(response)
   }
   const history = useHistory()
@@ -35,14 +43,16 @@ function Login(props: any) {
   const HandleLogin = async (e: any) => {
     e.preventDefault()
 
-    const response = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
+    const response = await axios.post(LOGIN_WIHT_USERNAME_API, {
       username: userName,
       password,
     })
 
-    setInformation(response.data.account)
-    history.push('/Home')
-    
+    if (response && response.data) {
+      setInformation(response.data.account)
+      console.log(response.data)
+      history.push('/Home')
+    }
   }
 
   return (

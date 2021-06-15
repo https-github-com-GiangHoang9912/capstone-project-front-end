@@ -22,12 +22,14 @@ interface IImage {
 function Profile(props: any) {
   const { className} = props
   const [editStatus, setEditStatus] = useState<boolean>(true)
-  const [image, setImage] = useState<IImage>({
-    url: 'https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png',
-  })
+  
   const { accountContextData } = useContext(AccountContext);
 
   const account = accountContextData
+
+  const [image, setImage] = useState<IImage>({
+    url: account.profile.avatar?account.profile.avatar:''
+  })
   function handleEdit() {
     setEditStatus(!editStatus)
     console.log(editStatus)
@@ -49,19 +51,19 @@ function Profile(props: any) {
             </div>
             <div className="form-info">
               <span><FontAwesomeIcon icon={faCalendar} /> Date of birth</span>
-              <input type="text" id="dob" className="input-bar" disabled={editStatus} />
+              <input type="text" id="dob" className="input-bar" value={account.profile.dateofbirth} disabled={editStatus} />
             </div>
             <div className="form-info">
               <span><FontAwesomeIcon icon={faAddressBook} /> Address</span>
-              <input type="text" id="address" className="input-bar" disabled={editStatus} />
+              <input type="text" id="address" className="input-bar" value={account.profile.address} disabled={editStatus} />
             </div>
             <div className="form-info">
               <span><FontAwesomeIcon icon={faPhone} /> Phone number</span>
-              <input type="text" id="phone" className="input-bar" disabled={editStatus} />
+              <input type="text" id="phone" className="input-bar" value={account.profile.phone} disabled={editStatus} />
             </div>
             <div className="form-info">
               <span><FontAwesomeIcon icon={faEnvelope} /> Email</span>
-              <input type="text" id="email" className="input-bar " disabled={editStatus} />
+              <input type="text" id="email" className="input-bar " value={account.profile.email} disabled={editStatus} />
             </div>
             <button className="btn-edit" onClick={handleEdit}>
               {editStatus ? 'Edit profile' : 'Save'}
@@ -72,11 +74,10 @@ function Profile(props: any) {
             <button className="btn btn-his">View Activity History</button>
           </div>
           <div className="img-avt">
-            <img src={image.url} alt="" />
             <input type="file" name="file" id="file" className="input-file" onChange={handleFileChange} disabled={editStatus} />
             <img
               // eslint-disable-next-line max-len
-              src={accountContextData.profile.img}
+              src={image.url}
               alt="" />
             <input
               type="file"
