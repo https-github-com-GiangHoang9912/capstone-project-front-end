@@ -1,28 +1,31 @@
-import React, { createContext, useState } from "react";
+import { createContext, useState } from "react";
+import { AccountContextProps, Account } from "../interface/acc"
 
+
+const accountDefault: Account = {
+    username: "admin",
+    role: 1,
+    profile: {
+    }
+}
 
 export const AccountContext = createContext({
-    accountContextData: {},
-    setInformation: (accountLogin: any) => {},
+    accountContextData: accountDefault,
+    setInformation: (accountLogin: Account) => { },
 })
 
-export const AccountContextProvider = ({children}: any) => {
-    const [account, setAccountLogin] = useState({
-        username: '',
-        role: 0,
-        profile: {}
-    })
-
-    const setInformation = (accountLogin: any) => {
+export const AccountContextProvider = ({ children }: AccountContextProps) => {
+    const [account, setAccountLogin] = useState(
+        accountDefault
+    )
+    const setInformation = (accountLogin: Account) => {
         setAccountLogin(accountLogin)
     }
+    const accountContextData = account;
 
-    const accountContextData = {
-        account
-    }
 
     return (
-        <AccountContext.Provider value={{accountContextData, setInformation}}>
+        <AccountContext.Provider value={{ accountContextData, setInformation }}>
             {children}
         </AccountContext.Provider>
     )

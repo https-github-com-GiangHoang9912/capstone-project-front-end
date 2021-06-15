@@ -13,22 +13,28 @@ import { AccountContextProvider } from '../contexts/account-context'
 function App(props: any) {
   return (
     <Router>
-      <Header />
-      <Switch>
-        <Route exact path="/home">
-          <HomePage />
-        </Route>
-        <Route exact path="/check-duplicate">
-          <CheckDuplicate />
-        </Route>
-        <Route exact path="/self-generate">
-          <SelfGenerate />
-        </Route>
-        <AccountContextProvider>
-          <Route exact path="/profile" component={Profile}/>
+      <AccountContextProvider>
+        <Switch>
+          <Route exact path="/home">
+            <Header />
+            <HomePage />
+          </Route>
+          <Route exact path="/check-duplicate">
+            <Header />
+            <CheckDuplicate />
+          </Route>
+          <Route exact path="/self-generate">
+            <Header />
+            <SelfGenerate />
+          </Route>
+
+          <Route exact path="/profile" component={Profile} >
+            <Header />
+            <Profile />
+          </Route>
           <Route exact path="/login" component={Login} />
-        </AccountContextProvider>
-      </Switch>
+        </Switch>
+      </AccountContextProvider>
     </Router>
   )
 }

@@ -18,8 +18,10 @@ function Profile(props: any) {
   const [image, setImage] = useState<IImage>({
     url: 'https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png',
   })
-  const { accountContextData } = useContext(AccountContext)
-  console.log(accountContextData)
+  const { accountContextData } = useContext(AccountContext);
+
+  // console.log(accountContextData)
+  // console.log(linkImg);
 
   function handleEdit() {
     setEditStatus(!editStatus)
@@ -63,7 +65,10 @@ function Profile(props: any) {
             <button className="btn-change">Go to change password</button>
           </div>
           <div className="img-avt">
-            <img src={image.url} alt="" />
+            <img
+              // eslint-disable-next-line max-len
+              src={accountContextData.profile.img}
+              alt="" />
             <input
               type="file"
               name="file"

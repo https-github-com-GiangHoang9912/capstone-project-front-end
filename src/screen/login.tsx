@@ -1,12 +1,14 @@
 import { useContext, useState } from 'react'
 
 import PropTypes from 'prop-types'
-import { Link, useParams, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
 
 import styled from 'styled-components'
 import axios from 'axios'
+import { Account } from "../interface/acc"
+
 import * as CONSTANT from '../const'
 import { AccountContext } from '../contexts/account-context'
 
@@ -27,19 +29,22 @@ function Login(props: any) {
 
   const handleLogin = async (e: any) => {
     e.preventDefault()
-    setInformation({
-      usename: "admin",
+    const account: Account = {
+      username: "admin",
       role: 1,
       profile: {
-        firstname: "gianghoang",
-        lastname: "Nguyen",
-        email: "giangnhhe130936@fpt.edu.vn",
+        firstname: "tranquyban",
+        lastname: "Tran",
+        email: "bantq @fpt.edu.vn",
         phone: "0819169868",
-        dateofbirth: "12/09/1999"
+        dateofbirth: "12/09/1999",
+        img: 'https://vtv1.mediacdn.vn/thumb_w/650/2020/10/30/doanh-thu-amazon-1-16040457718391475449241.jpg'
       }
-    })
-
-    history.push("/profile")
+    }
+    setInformation(
+      account
+    )
+    history.push("/Home")
     // const accessToken = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
     //   username: userName,
     //   password,
