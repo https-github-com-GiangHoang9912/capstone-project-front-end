@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faUser, faPhone, faAddressBook, faCalendar } from '@fortawesome/free-solid-svg-icons'
 import { useLocation } from 'react-router-dom'
+import { AccountContext } from '../contexts/account-context'
 
 Profile.propTypes = {
   className: PropTypes.string,
@@ -24,8 +25,7 @@ function Profile(props: any) {
   const [image, setImage] = useState<IImage>({
     url: 'https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png',
   })
-
-  // console.log('kakakak', account.username);
+  const { accountContextData } = useContext(AccountContext);
   
   const location: any = useLocation();
   const account = location.state.params;
@@ -75,6 +75,18 @@ function Profile(props: any) {
           <div className="img-avt">
             <img src={image.url} alt="" />
             <input type="file" name="file" id="file" className="input-file" onChange={handleFileChange} disabled={editStatus} />
+            <img
+              // eslint-disable-next-line max-len
+              src={accountContextData.profile.img}
+              alt="" />
+            <input
+              type="file"
+              name="file"
+              id="file"
+              className="input-file"
+              onChange={handleFileChange}
+              disabled={editStatus}
+            />
           </div>
         </div>
       </div>

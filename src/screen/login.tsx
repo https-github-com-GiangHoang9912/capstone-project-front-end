@@ -1,13 +1,16 @@
-import { useState } from 'react'
-import GoogleLogin from 'react-google-login';
+import GoogleLogin from 'react-google-login'
+import { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
-import { NavLink, useParams, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import axios from 'axios'
+import { Account } from '../interface/acc'
+
 import * as CONSTANT from '../const'
 // import { on } from 'process'
+import { AccountContext } from '../contexts/account-context'
 
 Login.propTypes = {
   className: PropTypes.string,
@@ -23,14 +26,31 @@ function Login(props: any) {
   const { className, onSubmit } = props
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
-  const responseGoogle = (response:any) => {
-    console.log(response);
+  const responseGoogle = (response: any) => {
+    console.log(response)
   }
-  const history = useHistory();
+  const history = useHistory()
+
   const handleLogin = async (e: any) => {
     e.preventDefault()
-    if (!onSubmit) return;
+    if (!onSubmit) return
     // console.log(userName)
+    const { setInformation } = useContext(AccountContext)
+
+    const account: Account = {
+      username: 'admin',
+      role: 1,
+      profile: {
+        firstname: 'tranquyban',
+        lastname: 'Tran',
+        email: 'bantq @fpt.edu.vn',
+        phone: '0819169868',
+        dateofbirth: '12/09/1999',
+        img: 'https://vtv1.mediacdn.vn/thumb_w/650/2020/10/30/doanh-thu-amazon-1-16040457718391475449241.jpg',
+      },
+    }
+    setInformation(account)
+    history.push('/Home')
     // const accessToken = await axios.post(`${CONSTANT.BASE_URL}/auth/login`, {
     //   username: userName,
     //   password,
@@ -38,15 +58,15 @@ function Login(props: any) {
     // console.log(accessToken.data)
     const Account = {
       username: userName,
-      password
+      password,
     }
-      history.push('/profile',{params:Account});
-    onSubmit(Account);
+    history.push('/profile', { params: Account })
+    onSubmit(Account)
     // console.log('acuuuu', Account);
   }
 
   return (
-    <div className={className} >
+    <div className={className}>
       <div className="limiter">
         <div className="container">
           <div className="wrap-login">
@@ -54,9 +74,7 @@ function Login(props: any) {
               <img src="desk.png" alt="IMG" />
             </div>
             <form className="login-area-form" onSubmit={handleLogin}>
-              <span className="login-form-title">
-                Member Login
-              </span>
+              <span className="login-form-title">Member Login</span>
               <div className="email">
                 <input
                   type="text"
@@ -86,21 +104,16 @@ function Login(props: any) {
                 </span>
               </div>
               <div className="contain-btn">
-              
-                  <button className="btn-login">
-                    Login
-                  </button>
-                 
+                <button className="btn-login">Login</button>
               </div>
               <div className="login-gg">
-              <GoogleLogin
-                      clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
-                      buttonText="Login with Google"
-                      onSuccess={responseGoogle}
-                      onFailure={responseGoogle}
-                      
-                      />
-                  </div>
+                <GoogleLogin
+                  clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+                  buttonText="Login with Google"
+                  onSuccess={responseGoogle}
+                  onFailure={responseGoogle}
+                />
+              </div>
               <div className="text-process">
                 <a className="txt2" href="#">
                   Change /
@@ -268,7 +281,7 @@ const StyledLogin = styled(Login)`
   .btn-login:hover {
     background-color: #273c75;
   }
-  .login-gg{
+  .login-gg {
     position: relative;
     width: 100%;
     top: 20%;
