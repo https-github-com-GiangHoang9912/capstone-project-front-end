@@ -7,10 +7,16 @@ import styled from 'styled-components'
 
 Staff.propTypes = {
   className: PropTypes.string,
+  staff: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    mail: PropTypes.string.isRequired,
+  })
 }
 
 Staff.defaultProps = {
   className: '',
+  staff: {}
 }
 
 
@@ -24,6 +30,7 @@ ManageStaffs.defaultProps = {
 
 function Staff(props: any) {
   const { className } = props
+  const { staff } = props
   const [checked, setChecked] = useState(true)
   return (
     <div className={className}>
@@ -39,8 +46,8 @@ function Staff(props: any) {
           <img src="avatar2.png" />
         </div>
         <div className="profile-user">
-          <span className="text-email">FPTgmail@fe.edu.vn</span>
-          <span className="text-name">Tran Quy Ban</span>
+          <span className="text-email">{ staff.mail }</span>
+          <span className="text-name">{ staff.name }</span>
         </div>
         <div className="iconTrash">
           <span className="icon">
@@ -53,6 +60,34 @@ function Staff(props: any) {
 }
 
 function ManageStaffs(props: any) {
+  const staffs = [
+    {
+      id: 101,
+      name: 'Nguyen Anh Tien',
+      mail: 'tienna@fe.edu.vn'
+    },
+    {
+      id: 102,
+      name: 'Tran Van Toan',
+      mail: 'toantv@fe.edu.vn'
+    },
+    {
+      id: 201,
+      name: 'Pham Nhat Anh',
+      mail: 'anhpn@fe.edu.vn'
+    }
+  ]
+
+  let StaffsComponents:any = []
+
+  try {
+    StaffsComponents = staffs.map((staff) =>
+      <Staff key={staff.id.toString()} staff={staff} />
+    )
+  } catch (error) {
+    console.log(`err: ${error}`);
+  }
+
   const { className } = props
   const [checked, setChecked] = useState(true)
 
@@ -79,8 +114,8 @@ function ManageStaffs(props: any) {
               </div>
             </div>
             <hr className="display" />
-            <div className="add-delete">
-              <div className="content-all">
+            <div className="manage">
+              <div className="select-all">
                 <div className="checkbox">
                   <Checkbox
                     defaultChecked={checked}
@@ -100,7 +135,9 @@ function ManageStaffs(props: any) {
                   </span>
                 </div>
               </div>
-              <Staff />
+              <div>
+               { StaffsComponents }
+              </div>
             </div>
           </div>
         </div>
@@ -262,7 +299,7 @@ const StyledAdmin = styled(ManageStaffs)`
   }
 
   //* content select */
-  .content-all {
+  .select-all {
     display: flex;
     margin-top: 70px;
     align-items: baseline;
