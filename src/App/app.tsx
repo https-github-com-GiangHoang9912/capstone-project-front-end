@@ -8,6 +8,7 @@ import SelfGenerate from '../screen/self-generation-question'
 import Header from '../common/header'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
+import ManageStaffs from '../screen/manage-staffs'
 import { AccountContextProvider } from '../contexts/account-context'
 
 function App(props: any) {
@@ -26,30 +27,30 @@ function App(props: any) {
 
   return (
     <Router>
+      <Header />
       <AccountContextProvider>
         <Switch>
           <Route exact path="/home">
-            <Header />
             <HomePage />
           </Route>
           <Route exact path="/check-duplicate">
-            <Header />
             <CheckDuplicate />
           </Route>
           <Route exact path="/self-generate">
-            <Header />
             <SelfGenerate />
           </Route>
-
-          <Route exact path="/profile" component={Profile} >
-            <Header />
+          <Route exact path="/admin/manage-staffs">
+            <ManageStaffs />
+          </Route>
+          <Route exact path="/profile">
             <Profile />
           </Route>
-          <Route exact path="/login" component={Login} />
+          <Route exact path="/login">
+            <Login />
+          </Route>
         </Switch>
       </AccountContextProvider>
     </Router>
-    
   )
 }
 

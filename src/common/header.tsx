@@ -44,6 +44,12 @@ const Header: FC<HeaderProps> = (props) => {
               🎰 Self-generate Question
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/admin/manage-staffs" activeClassName="active-li">
+              {' '}
+              ⛑ Manage Staffs
+            </NavLink>
+          </li>
         </ul>
       </div>
       <div className="account-box">
