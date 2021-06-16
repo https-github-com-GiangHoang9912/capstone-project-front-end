@@ -1,7 +1,8 @@
-import React, { FC } from 'react'
+import { FC,  useContext} from 'react'
 
 import { NavLink, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { AccountContext } from '../contexts/account-context'
 
 interface Styled {
   className?: string
@@ -14,7 +15,13 @@ type MyParams = {
 const Header: FC<HeaderProps> = (props) => {
   const { className } = props
   const { id } = useParams<MyParams>()
-  console.log(id)
+  // console.log(id)
+
+    const { accountContextData } = useContext(AccountContext);
+    // eslint-disable-next-line no-console
+    console.log('hhaa: ', accountContextData)
+    // eslint-disable-next-line no-console
+    console.log('Tyof : ',typeof accountContextData);
 
   return (
     <header className={className}>
@@ -53,7 +60,7 @@ const Header: FC<HeaderProps> = (props) => {
               alt="avt"
             />
           </div>
-          <div className="txt">Hello, Mr.BanTQ</div>
+          <div className="txt">Hello, {accountContextData.username}</div>
           <span className="tooltiptext">Edit Profile</span>
         </NavLink>
         <NavLink to="/login" className="right-menu log-out">

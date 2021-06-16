@@ -74,18 +74,13 @@ function Duplicate(props: any) {
         </div>
         <div className="control-right">
           <h2>Enter your question here:</h2>
-          <textarea className="input-question" value={question} onChange={handleInputQuestion} />
-          <button className="btn btn-check" onClick={handleCheck}>
-            Check
-          </button>
-          <button className="btn btn-clear" onClick={handleClear}>
-            Clear
-          </button>
-          {visibleResult ? (
-            <p className="result">❗❗ Existing question.... ... ? | Duplicate score</p>
-          ) : (
-            ' '
-          )}
+          <textarea className="input-question" value={question} onChange={handleInputQuestion}/>
+          <div>
+          <button className="btn btn-check" onClick={handleCheck}>Check</button>
+          <button className="btn btn-clear" onClick={handleClear}>Clear</button>
+          </div>
+          {visibleResult ? <p className="result">❗❗ Existing question.... ... ? | Duplicate score</p> : ' ' }
+          
         </div>
       </div>
     </div>
@@ -106,103 +101,118 @@ const StyleDuplicate = styled(Duplicate)`
     box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
       rgba(17, 17, 26, 0.1) 0px 16px 56px;
   }
-  .control-left {
-    width: 100%;
-    height: 100%;
-  }
-  .control-right {
-    width: 100%;
-    max-width: 70%;
-    min-height: 500px;
-    background: #f7f8fc;
-  }
-  .control-right h2 {
-    padding: 1rem;
-  }
-  .input-bank::-webkit-file-upload-button {
-    visibility: hidden;
-  }
-  .input-bank::before {
-    content: 'Import your bank';
-    display: inline-block;
-    font-size: 20px;
-    padding: 10px 20px;
-    color: #000;
-    background-color: #f0f2fb;
-    font-weight: 600;
-    margin-left: 1rem;
-  }
-  .input-bank:hover {
-    background-color: #f0f2fb;
-  }
-  .bank-name {
-    padding-top: 20px;
-    color: #fff;
-    font-size: 18px;
-    font-weight: 600;
-  }
-  .select {
-    color: #f9fbff;
-    margin-top: 2rem;
-    padding: 20px;
-  }
-  .input-select {
-    outline: none;
-    display: inline-block;
-    font-size: 16px;
-    padding: 5px 15px;
-    margin: 20px;
-    border: none;
-    color: #545d7a;
-    font-weight: 600;
-  }
-  .input-question {
-    margin: 1rem;
-    width: 80%;
-    min-width: 80%;
-    max-width: 80%;
-    height: 200px;
-    font-size: 18px;
-    border-radius: 10px;
-    padding: 10px;
-    border: 2px solid #dae1f5;
-  }
-  .btn {
-    width: 100px;
-    height: 40px;
-    border: none;
-    margin: 20px;
-    color: #fff;
-    font-weight: bold;
-  }
-  .btn:hover {
-    background-color: #306bf3;
-  }
-  .btn-check {
-    background-color: #10182f;
-  }
-  .btn-clear {
-    background-color: #21774f;
-  }
-  .result {
-    margin: 1rem;
-    font-weight: 450;
-    padding: 10px 0;
-    background-color: #f0f2fb;
-  }
-  @media screen and (max-width: 600px) {
-    .container {
-      display: flex;
-      flex-direction: column;
-      height: auto;
+  
+      .container{
+        width: 90%;
+        margin: auto;
+        display: flex;
+        justify-content: center;
+        background: linear-gradient(#141E30,#243B55);
+        text-align: center;
+        box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+      }
+      .control-left{
+        width: 30%;
+        height: 100%;
+   
+      }
+      .control-right{
+        width: 70%;
+        max-width: 70%;
+        min-height: 500px;
+        background: #F7F8FC;
+      }
+      .control-right h2{
+        padding: 1rem;
+      }
+      .input-bank::-webkit-file-upload-button {
+          visibility: hidden;
+        }
+      .input-bank::before{
+        content: "Import your bank";
+        display: inline-block;
+        font-size:20px;
+        padding: 10px 20px;
+        color: #000;
+        background-color:#F0F2FB;
+        font-weight: 600;
+        margin-left: 1rem;
+      }
+      .input-bank:hover{
+        background-color:#F0F2FB;
+      }
+      .bank-name{
+        padding-top: 20px;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .select{
+        color: #F9FBFF;
+        margin-top: 2rem;
+        padding: 20px;
+      }
+      .input-select{
+        outline: none;
+        display: inline-block;
+        font-size: 16px;
+        padding: 5px 15px;
+        margin: 20px;
+        border: none;
+        color: #545D7A;
+        font-weight: 600;
+      }
+      .input-question{
+        margin: 1rem;
+        width: 80%;
+        min-width: 80%;
+        max-width: 80%;
+        height: 300px;
+        font-size: 18px;
+        border-radius: 10px;
+        padding:10px;
+        border: 2px solid #DAE1F5;
+      }
+      .btn{
+        width: 100px;
+        height: 40px;
+        border: none;
+        margin: 20px;
+        color: #fff;
+        font-weight: bold;
+      }
+    .btn:hover{
+      background-color: #306BF3;
+    }
+    .btn-check{
+      background-color: #10182F;
+    }
+    .btn-clear{
+      background-color: #21774F;
     }
     .control-right {
       width: 100%;
       max-width: 100%;
     }
-    .input-question {
-      width: 100%;
+    @media screen and (max-width:600px){
+      .container{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: auto;
+      }
+      .control-left{
+        width:100%
+      }
+      .control-right{
+        width:100%;
+        max-width: 100%;
+      }
+      .input-question{
+        width: 100%;
+      }
+    
     }
-  }
+  
 `
 export default StyleDuplicate
