@@ -8,6 +8,7 @@ import SelfGenerate from '../screen/self-generation-question'
 import Header from '../common/header'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
+import CreateExam from '../screen/create-exam'
 import { AccountContextProvider } from '../contexts/account-context'
 
 function App(props: any) {
@@ -27,12 +28,15 @@ function App(props: any) {
             <Header />
             <SelfGenerate />
           </Route>
-
           <Route exact path="/profile" component={Profile} >
             <Header />
             <Profile />
           </Route>
           <Route exact path="/login" component={Login} />
+          <Route exact path="/create-exam">
+            {/* <Header /> */}
+            <CreateExam />
+          </Route>
         </Switch>
       </AccountContextProvider>
     </Router>
