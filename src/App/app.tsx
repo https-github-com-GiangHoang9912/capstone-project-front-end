@@ -40,7 +40,6 @@ function App(props: any) {
             <Header />
             <SelfGenerate />
           </Route>
-
           <Route exact path="/profile" component={Profile} >
             <Header />
             <Profile />
