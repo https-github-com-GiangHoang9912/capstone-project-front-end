@@ -9,6 +9,7 @@ import Header from '../common/header'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
 import { AccountContextProvider } from '../contexts/account-context'
+import ManageStaffs from '../screen/manage-staffs'
 
 function App(props: any) {
 
@@ -43,6 +44,10 @@ function App(props: any) {
           <Route exact path="/profile" component={Profile} >
             <Header />
             <Profile />
+          </Route>
+          <Route exact path="/admin/manage-staffs">
+            <Header />
+            <ManageStaffs />
           </Route>
           <Route exact path="/login" component={Login} />
         </Switch>
