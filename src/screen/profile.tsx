@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types';
+import { NavLink, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faUser, faPhone, faAddressBook, faCalendar } from '@fortawesome/free-solid-svg-icons'
-import { useLocation } from 'react-router-dom'
 import { AccountContext } from '../contexts/account-context'
 
 Profile.propTypes = {
@@ -38,6 +38,7 @@ function Profile(props: any) {
   function handleFileChange(e: any) {
     setImage({ url: URL.createObjectURL(e.target.files[0]) })
   }
+  
   return (
     <div className={className}>
       <div className="info-container">
@@ -69,12 +70,15 @@ function Profile(props: any) {
               {editStatus ? 'Edit profile' : 'Save'}
             </button>
             <h3>Change Password</h3>
+            <NavLink to="/changePassword">
             <button className="btn btn-change">Go to change password</button>
+            </NavLink>
             <h3>View Activity History</h3>
+            <NavLink to="/viewHistory">
             <button className="btn btn-his">View Activity History</button>
+            </NavLink>
           </div>
           <div className="img-avt">
-            <input type="file" name="file" id="file" className="input-file" onChange={handleFileChange} disabled={editStatus} />
             <img
               // eslint-disable-next-line max-len
               src={image.url}

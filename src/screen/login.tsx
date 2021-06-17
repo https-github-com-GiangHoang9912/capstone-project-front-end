@@ -46,12 +46,10 @@ function Login(props: any) {
 
   const HandleLogin = async (e: any) => {
     e.preventDefault()
-
     const response = await axios.post(LOGIN_WIHT_USERNAME_API, {
       username: userName,
       password,
     })
-
     if (response && response.data) {
       setInformation(response.data.account)
       console.log(response.data)
