@@ -8,10 +8,10 @@ import SelfGenerate from '../screen/self-generation-question'
 import Header from '../common/header'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
+import { AccountContextProvider } from '../contexts/account-context'
 import ManageStaffs from '../screen/manage-staffs'
 import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
-import { AccountContextProvider } from '../contexts/account-context'
 
 function App(props: any) {
 
@@ -29,46 +29,44 @@ function App(props: any) {
 
   return (
     <Router>
-      
       <AccountContextProvider>
         <Switch>
-        <Route exact path="/">
-          <Header />
+          <Route exact path="/">
+            <Header />
             <HomePage />
           </Route>
           <Route exact path="/home">
-          <Header />
+            <Header />
             <HomePage />
           </Route>
           <Route exact path="/check-duplicate">
-          <Header />
+            <Header />
             <CheckDuplicate />
           </Route>
           <Route exact path="/self-generate">
-          <Header />
+            <Header />
             <SelfGenerate />
           </Route>
-          <Route exact path="/admin/manage-staffs">
-          <Header />
-            <ManageStaffs />
-          </Route>
-          <Route exact path="/profile">
-          <Header />
+          <Route exact path="/profile" component={Profile} >
+            <Header />
             <Profile />
           </Route>
-          <Route exact path="/login">
-            <Login />
+          <Route exact path="/history" component={Profile} >
+            <Header />
+            <ViewHistory />
           </Route>
-          <Route exact path="/viewHistory">
-          <Header />
-            <ViewHistory/>
+          <Route exact path="/changePassword" component={Profile} >
+            <ChangePassword />
           </Route>
-          <Route exact path="/changePassword">
-            <ChangePassword/>
+          <Route exact path="/admin/manage-staffs">
+            <Header />
+            <ManageStaffs />
           </Route>
+          <Route exact path="/login" component={Login} />
         </Switch>
       </AccountContextProvider>
     </Router>
+
   )
 }
 

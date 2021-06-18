@@ -74,7 +74,7 @@ function Profile(props: any) {
             <button className="btn btn-change">Go to change password</button>
             </NavLink>
             <h3>View Activity History</h3>
-            <NavLink to="/viewHistory">
+            <NavLink to="/history">
             <button className="btn btn-his">View Activity History</button>
             </NavLink>
           </div>
@@ -100,14 +100,14 @@ function Profile(props: any) {
 
 const styleProfile = styled(Profile)`
   width: 100%;
-  height: auto;
+  min-height: 100vh;
   background-color: #f7f8fc;
-
+  padding: 20px 0;
   .info-container {
     width: 90%;
     margin: auto;
     text-align: center;
-    border-radius: 20px;
+    border-radius: 5px;
   }
 
   .contain {
@@ -115,7 +115,7 @@ const styleProfile = styled(Profile)`
     display: flex;
     justify-content: space-between;
     background-color: #fff;
-    border-radius: 10px;
+    border-radius: 5px;
     box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
       rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
   }
