@@ -179,7 +179,7 @@ const styleProfile = styled(Profile)`
     .btn-edit{
       width: 100px;
       height: 40px;
-      background-color: #10182F;
+      background-color: #303f9f;
       color: #fff;
       border: 1px solid #DAE1F5;
       border-radius: 5px;
@@ -187,7 +187,7 @@ const styleProfile = styled(Profile)`
       margin-top: 20px;
     }
     .btn-edit:hover {
-      background-color: #000;
+      background-color: #0e47cc;
     }
     .form-contain {
       border-radius: 0px;

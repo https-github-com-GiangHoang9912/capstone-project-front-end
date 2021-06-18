@@ -115,11 +115,10 @@ const SelfStyle = styled(SelfGenerate)`
     box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
       rgba(17, 17, 26, 0.1) 0px 16px 56px;
   }
-
   form {
     width: 80%;
     margin: auto;
-    padding-bottom: 1rem;
+    padding-bottom: 2rem;
   }
   .label {
     font-size: 18px;
@@ -127,43 +126,10 @@ const SelfStyle = styled(SelfGenerate)`
     color: #545d7a;
     padding: 10px 0;
   }
-  form .input-answer {
-    width: 100%;
-    height: 32px;
-    padding: 10px;
-    transition: 0.7s;
-  }
-
   .note-box {
     color: #545d7a;
     margin: 10px;
   }
-  .text-area {
-    width: 100%;
-    max-width: 100%;
-    height: 150px;
-    padding: 10px;
-  }
-  .inp-border {
-    border-radius: 10px;
-    border: 2px solid #dae1f5;
-  }
-  .btn-generate {
-    width: 100px;
-    height: 40px;
-    color: #fff;
-    font-weight: 600;
-    border-radius: 5px;
-    border: 2px solid #fff;
-    background-color: #000000;
-    margin: 1rem 0;
-  }
-  .btn-generate:hover {
-    background-color: #333333;
-  }
-  .question-area {
-    margin-top: 1rem;
-    background-color: #ecfdf5;
-  }
+ 
 `
 export default SelfStyle

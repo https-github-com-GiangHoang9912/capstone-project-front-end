@@ -188,7 +188,7 @@ const StyleViewHistory = styled(ViewHistory)`
     font-weight: 400;
    }
    .item-icon{
-     color: #306BF3;
+     color: #303f9f;
      margin-right: 5px;
    }
    .item-delete{

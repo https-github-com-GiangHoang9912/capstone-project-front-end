@@ -120,7 +120,10 @@ function Duplicate(props: any) {
             </Button>
           </div>
           {visibleResult ? (
-            <p className="result">❗❗ Existing question.... ... ? | Duplicate score</p>
+            <div>
+             <p className="result"> ❗❗ Existing question.... ................ ? | Duplicate score</p>
+            <p className="result">✅ Does not duplicate with question in the bank  | <a href="#"> Add to question bank</a></p>
+             </div>
           ) : (
             ' '
           )}
@@ -222,6 +225,7 @@ const StyleDuplicate = styled(Duplicate)`
   }
   .result {
     margin: 40px;
+    background-color: #F0F2FB;
   }
   @media screen and (max-width: 600px) {
     .container {
