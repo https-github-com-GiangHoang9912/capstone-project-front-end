@@ -129,7 +129,6 @@ function Login(props: IProps) {
       username: userName,
       password,
     })
-
     if (response && response.data) {
       setInformation(response.data.account)
       console.log(response.data)
