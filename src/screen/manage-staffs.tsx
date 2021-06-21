@@ -91,10 +91,6 @@ function ManageStaffs(props: any) {
   const { className } = props
   const [checked, setChecked] = useState(true)
 
-  // const handleChange = (event: any) => {
-  //   setChecked(event.target.checked);
-  // };
-
   return (
     <div className={className}>
       <div className="limiter">
@@ -123,21 +119,8 @@ function ManageStaffs(props: any) {
                     inputProps={{ 'aria-label': 'secondary checkbox' }}
                   />
                 </div>
-                <div className="text-all">
-                  <span className="text-select">Select All</span>
-                </div>
-                <div className="profile">
-                  <span className="text-profile">Profile</span>
-                </div>
-                <div className="iconTrash">
-                  <span className="icon">
-                    <FontAwesomeIcon className="checkbox" icon={faTrash} />
-                  </span>
-                </div>
               </div>
-              <div>
-               { StaffsComponents }
-              </div>
+              { StaffsComponents }
             </div>
           </div>
         </div>
@@ -190,6 +173,7 @@ const StyledAdmin = styled(ManageStaffs)`
   .container {
     width: 100%;
     min-height: 100vh;
+    overflow: auto;
     display: -webkit-box;
     display: -webkit-flex;
     display: -moz-box;
@@ -206,25 +190,23 @@ const StyledAdmin = styled(ManageStaffs)`
     background: linear-gradient(-135deg, #50c8c2f8, #e24c9f);
   }
   .main {
-    width: 960px;
-    height: 400px;
     background: #fff;
     border-radius: 10px;
-    overflow: hidden;
+    overflow: auto;
     position: absolute;
     align-items: center;
-    padding-top: 10px;
-
-    /* padding: 120px 130px 102px 95px; */
+    padding: 10px;
+    width: 70%;
+    min-width: 690px;
   }
 
   /** css for area contain search */
   .search {
     position: relative;
     display: flex;
+    margin: auto;
     margin-bottom: 10px;
     align-items: center;
-    margin-left: 220px;
     background: #cecdcd;
     padding: 10px;
     width: 500px;
@@ -243,9 +225,6 @@ const StyledAdmin = styled(ManageStaffs)`
     cursor: pointer;
     padding: 0 30px 0 65px;
     cursor: pointer;
-    /* position: absolute;
-  left: 50%;
-  transform: translateX(-50%); */
   }
   /** icon search */
   .icon-search {
@@ -303,13 +282,11 @@ const StyledAdmin = styled(ManageStaffs)`
     display: flex;
     margin-top: 70px;
     align-items: baseline;
-    justify-content: space-around;
   }
   .content-detail {
     display: flex;
     margin-top: 30px;
     align-items: center;
-    justify-content: space-around;
   }
 
   .checkbox {
@@ -323,12 +300,10 @@ const StyledAdmin = styled(ManageStaffs)`
   }
 
   /* css for Staff */
-
   .child-container {
     display: flex;
     margin-top: 30px;
     align-items: center;
-    justify-content: space-around;
   }
 
   img {
@@ -336,10 +311,6 @@ const StyledAdmin = styled(ManageStaffs)`
     height: 60px;
   }
 
-  .faTrash {
-    width: 18px;
-    height: 18px;
-  }
 
   .text-select,
   .text-profile {
@@ -348,11 +319,11 @@ const StyledAdmin = styled(ManageStaffs)`
 
   //** setsize div */
   div .checkbox-child {
-    width: 20%;
+    width: 50px;
   }
 
   div .avatar-user {
-    width: 20%;
+    width: 10%;
   }
 
   div .profile-user {
@@ -366,6 +337,7 @@ const StyledAdmin = styled(ManageStaffs)`
 
   div .iconTrash {
     width: 20%;
+    margin-left: 10px;
   }
 
   .profile-user .text-email {
