@@ -23,7 +23,7 @@ function CreateExam(props: any) {
             <span className="title-exam">
               New Exam
             </span>
-            <div className="content-exame" >
+            <div className="content-exam" >
               <p>1. In which region does Asia have a lot of oil and gas?</p>
               <p>2. Asia is a continent?</p>
               <p>3. Asia has a land area about approx?</p>
@@ -47,6 +47,22 @@ function CreateExam(props: any) {
               <p>7. In which region are the mountain and plateau systems of Asia
                 concentrated?</p>
               <p>8. In which direction does the mountain and plateau
+                system run?</p>
+              <p>9. In which region does Asia have a lot of oil and gas?</p>
+              <p>10. Asia is a continent?</p>
+              <p>11. Asia has a land area about approx?</p>
+              <p>12. Which continent is bordered by Asia?</p>
+              <p>13. Which ocean does Asia not border?</p>
+              <p>14. Which of the following plains is not part of Asia?</p>
+              <p>15. In which region are the mountain and plateau systems
+                of Asia concentrated?</p>
+              <p>16. In which region are the mountain and plateau systems
+                of Asia concentrated?</p>
+              <p>17. In which direction does the mountain and plateau
+                system run?</p>
+              <p>18. In which region are the mountain and plateau systems
+                of Asia concentrated?</p>
+              <p>19. In which direction does the mountain and plateau
                 system run?</p>
             </div>
           </div>
@@ -72,6 +88,7 @@ html {
     height: 100%;
     font-family: Poppins-Regular, sans-serif;
   }
+
 //* Css for button */
 .container-button {
     margin-bottom: 10px;
@@ -110,7 +127,8 @@ html {
   padding:  60px 100px 10px 100px;
 }
 
-.content-exame, .content-bank {
+.content-exam, .content-bank {
+  flex: 2;
   width: 600px;
   height: 650px;
   border: 1px solid black;
@@ -118,8 +136,9 @@ html {
   padding: 10px;
   border: none;
   box-shadow: rgba(240, 234, 234, 0.35) 0px 5px 15px;
+  overflow-y: scroll;
 }
-.content-exame, .content-bank p {
+.content-exam, .content-bank p {
   font-size: 20px;
 }
 .title-exam {
