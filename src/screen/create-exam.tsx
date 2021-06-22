@@ -150,6 +150,15 @@ const StyledLogin = styled(CreateExam)`
 .content-exam, .content-bank p {
   font-size: 20px;
 }
+
+.content-exam p:hover {
+  color:#5cb85c;
+  cursor: pointer;
+}
+.content-bank p:hover {
+  color:#5cb85c;
+  cursor: pointer;
+}
 .title-exam {
   align-items: center;
   font-family: Barlow;
@@ -161,9 +170,13 @@ const StyledLogin = styled(CreateExam)`
 //* css for icon forward */
 .forward {
   font-size: 50px;
-  color: #e74c3c;  
+  color: #fd647a;  
   margin-top: 320px;
   width: 15%;
+}
+.forward:hover {
+  color: #c5031f;
+  cursor: pointer;
 }
 //* Responsive */
 @media (max-width: 768px) { 
