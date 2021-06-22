@@ -2,19 +2,29 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { Button, makeStyles } from '@material-ui/core'
+
 
 import styled from 'styled-components'
 
 CreateExam.propTypes = {
   className: PropTypes.string,
 };
-
 CreateExam.defaultProps = {
   className: '',
 };
 
+const useStyles = makeStyles({
+  styleBtn: {
+    width: 150,
+    height: 50,
+    backgroundColor: '#1e90ff'
+  }
+})
+
 function CreateExam(props: any) {
   const { className } = props;
+  const classes = useStyles();
   return (
     <div className={className}>
       <div className="create-exam">
@@ -28,6 +38,8 @@ function CreateExam(props: any) {
               <p>2. Asia is a continent?</p>
               <p>3. Asia has a land area about approx?</p>
               <p>4. Which continent is bordered by Asia?</p>
+              <p>7. In which region are the mountain and plateau
+                systems of Asia concentrated?</p>
             </div>
           </div>
           <div className="icon">
@@ -74,6 +86,14 @@ function CreateExam(props: any) {
           <div>
             <button className="btn">Save</button>
           </div>
+          {/* <div>
+            <Button variant="contained"
+              color="primary"
+              className={classes.styleBtn}
+            >
+              Primary
+            </Button>
+          </div> */}
           <div>
             <button className="btn">Reset</button>
           </div>
@@ -83,11 +103,10 @@ function CreateExam(props: any) {
   );
 }
 const StyledLogin = styled(CreateExam)`
-body,
-html {
-    height: 100%;
-    font-family: Poppins-Regular, sans-serif;
-  }
+
+  height: 100vh;
+  font-family: Poppins-Regular, sans-serif;
+  background-color: #f7f8fb;
 
 //* Css for button */
 .container-button {
@@ -109,49 +128,65 @@ html {
     outline: none;
     border:none;
     cursor: pointer;
-    /* margin-left: 500px; */
+  
   }
 .btn:hover {
  background-color: #094a8a;
 }
 //* Css for area create exam and bank */
+
 .create-exam {
-  height: 900px;
+  height: auto;
   width: 100%;
-  background: linear-gradient(#141e30, #243b55);
+  /* background: linear-gradient(#141e30, #243b55); */
 }
 .container-exam {
   height: auto;
   display:flex;
   justify-content: space-around;
-  padding:  60px 100px 10px 100px;
+  padding:  0px 100px 10px 100px;
+  text-align:center;
 }
-
 .content-exam, .content-bank {
-  flex: 2;
-  width: 600px;
+  flex: 1;
+  width: 100%;
   height: 650px;
   border: 1px solid black;
   background-color: #fff;
   padding: 10px;
   border: none;
-  box-shadow: rgba(240, 234, 234, 0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   overflow-y: scroll;
+  text-align: start;
+  border-radius: 10px;
 }
 .content-exam, .content-bank p {
   font-size: 20px;
 }
 .title-exam {
   align-items: center;
+  font-family: Barlow;
   font-size: 40px;
-  margin-left: 35%;
-  color:#fff;
+  font-weight:1000;
+  margin-left: 6%;
+  color:#ee4949;
 }
 //* css for icon forward */
 .forward {
   font-size: 50px;
-  color: #fff;  
+  color: #e74c3c;  
   margin-top: 320px;
+  width: 15%;
+}
+//* Responsive */
+@media (max-width: 768px) { 
+  .container-exam {
+    flex-direction: column;
+    padding: 10px;
+  }
+  .content-exam, .content-bank {
+    width: 100%;
+  }
 }
 `
 

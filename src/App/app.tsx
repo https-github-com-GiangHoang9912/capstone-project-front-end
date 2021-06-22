@@ -34,7 +34,7 @@ function App(props: any) {
           </Route>
           <Route exact path="/login" component={Login} />
           <Route exact path="/create-exam">
-            {/* <Header /> */}
+            <Header />
             <CreateExam />
           </Route>
         </Switch>
