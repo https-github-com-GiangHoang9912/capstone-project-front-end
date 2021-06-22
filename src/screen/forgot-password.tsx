@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faUserCircle } from '@fortawesome/free-solid-svg-icons'
+import { Button, makeStyles } from '@material-ui/core'
+
 import styled from 'styled-components'
 
 ForgotPassword.propTypes = {
@@ -14,13 +16,23 @@ ForgotPassword.propTypes = {
 ForgotPassword.defaultProps = {
   className: '',
 }
+const useStyles = makeStyles({
+  styleBtn: {
+    width: 250,
+    height: 50,
+    backgroundColor: '#1e90ff',
+    cursor: 'pointer',
+    marginTop: 15
+  }
+})
 
 function ForgotPassword(props: any) {
-  const { className } = props
+  const { className } = props;
+  const classes = useStyles();
   return (
     <div className={className}>
       <div className="container">
-        <div className="form-login">
+        <div className="form-forgot">
           <form action="#">
             <h1 className="title">Forgot Password</h1>
             <img src="avatar2.png" className="avatar" alt="" />
@@ -51,9 +63,18 @@ function ForgotPassword(props: any) {
                 </span>
               </div>
               <div className="button-reset">
-                <button id="submit" className="reset">
+                <Button variant="contained"
+                  color="primary"
+                  className={classes.styleBtn}
+                >
+                  Clear Text
+                </Button>
+                <Button variant="contained"
+                  color="primary"
+                  className={classes.styleBtn}
+                >
                   Reset Password
-                </button>
+                </Button>
               </div>
             </div>
           </form>
@@ -82,7 +103,7 @@ const StyledForgotPassword = styled(ForgotPassword)`
   }
 
   //** css for form login  */
-  .form-login {
+  .form-forgot {
     justify-content: center;
     width: 500px;
     height: 530px;
@@ -95,7 +116,7 @@ const StyledForgotPassword = styled(ForgotPassword)`
   }
 
   //** css for title */
-  .form-login h1 {
+  .form-forgot h1 {
     text-align: center;
     display: block;
     margin-bottom: 10px;
@@ -103,7 +124,7 @@ const StyledForgotPassword = styled(ForgotPassword)`
   }
 
   //** css for input  */
-  .form-login input {
+  .form-forgot input {
     font-family: sans-serif;
     font-size: 18px;
     line-height: 1.5;
@@ -117,7 +138,7 @@ const StyledForgotPassword = styled(ForgotPassword)`
     padding: 0 30px 0 50px;
   }
 
-  .form-login input:hover {
+  .form-forgot input:hover {
     cursor: pointer;
   }
 
@@ -139,35 +160,16 @@ const StyledForgotPassword = styled(ForgotPassword)`
     font-size: 20px;
   }
   //* css for button */
-  .form-login button,
+  .form-forgot button,
   input:focus {
     outline: none;
   }
   .button-reset {
-    z-index: auto;
-    margin-top: 15px;
     display: flex;
+    flex-direction: column;
     align-items: center;
   }
-  .form-login button {
-    font-family: Helvetica;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 1.5;
-    color: #fff;
-    display: block;
-    width: 250px;
-    background: #1e90ff;
-    height: 50px;
-    padding: 0 30px 0 68px;
-    cursor: pointer;
-    align-items: center;
-    padding-left: 42px;
-    border: none;
-  }
-  .form-login button:hover {
-    background-color: #0968db;
-  }
+ 
   .avatar {
     height: 80px;
     width: 80px;

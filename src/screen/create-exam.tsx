@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     width: 150,
     height: 50,
     backgroundColor: '#1e90ff',
-    cursor: 'pointer',
+    cursor: 'pointer'
   }
 })
 
