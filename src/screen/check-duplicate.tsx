@@ -1,6 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import { makeStyles } from '@material-ui/core/styles'
+import axios from 'axios'
+import * as CONSTANT from '../const'
 
 Duplicate.propTypes = {
   className: PropTypes.string,
@@ -14,11 +21,25 @@ interface IBank {
   title: string
   code: string
 }
+
+interface IQuestion {
+  question: string
+  point: number
+}
+
+const useStyles = makeStyles((theme) => ({
+  root: {},
+  inputQuestion: {
+    width: '80%',
+  },
+}))
 function Duplicate(props: any) {
   const { className } = props
+  const classes = useStyles()
   const [fileName, setFileName] = useState<string>('')
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const [question, setQuestion] = useState<string>('')
+  const [result, setResult] = useState<IQuestion[]>([])
   const [listBank, setListBank] = useState<IBank[]>([
     {
       id: 1,
@@ -45,8 +66,19 @@ function Duplicate(props: any) {
   function handleFileChange(e: any) {
     setFileName(e.target.value)
   }
-  function handleCheck() {
-    setVisibleResult(true)
+  async function handleCheck() {
+    const response = await axios
+    .post(CONSTANT.MODEL_CHECK_DUPLICATE_URL, {
+      question,
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    console.log(response)
+    if (response && response.data) {
+      setResult(response.data)
+      setVisibleResult(true)
+    }
   }
   function handleInputQuestion(e: any) {
     setQuestion(e.target.value)
@@ -74,15 +106,46 @@ function Duplicate(props: any) {
         </div>
         <div className="control-right">
           <h2>Enter your question here:</h2>
-          <textarea className="input-question" value={question} onChange={handleInputQuestion} />
-          <button className="btn btn-check" onClick={handleCheck}>
-            Check
-          </button>
-          <button className="btn btn-clear" onClick={handleClear}>
-            Clear
-          </button>
+          <TextField
+            id="outlined-multiline-static"
+            multiline
+            rowsMax={6}
+            variant="outlined"
+            label="Question"
+            value={question}
+            onChange={handleInputQuestion}
+            className={classes.inputQuestion}
+          />
+          <div className="guide-line">
+            <p>
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Enter the question in the Question box
+              then press Check button. Processing will take a couple of time.
+            </p>
+            <p>
+              {' '}
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> If the results returned to the question
+              is not duplicated with question in the bank, you can add them to your bank.{' '}
+            </p>
+            <p>
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Only Staff and Admin can input question
+              bank, dataset to system.
+            </p>
+          </div>
+          <div className="button-group">
+            <Button variant="contained" color="primary" onClick={handleCheck}>
+              Check
+            </Button>
+            <Button variant="contained" color="secondary" onClick={handleClear}>
+              Clear
+            </Button>
+          </div>
           {visibleResult ? (
-            <p className="result">❗❗ Existing question.... ... ? | Duplicate score</p>
+            <div>
+             {result.map((item, i) => (
+                <p className="result" key={i}>❗❗ Existing question: {item.question} | Duplicate score: {item.point.toFixed(2)}</p>
+              ))}
+            <p className="result">✅ Does not duplicate with question in the bank  | <a href="#"> Add to question bank</a></p>
+             </div>
           ) : (
             ' '
           )}
@@ -101,17 +164,18 @@ const StyleDuplicate = styled(Duplicate)`
     margin: auto;
     display: flex;
     justify-content: center;
-    background: linear-gradient(#141e30, #243b55);
+    background-color: #303f9f;
     text-align: center;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
       rgba(17, 17, 26, 0.1) 0px 16px 56px;
   }
+
   .control-left {
-    width: 100%;
+    width: 30%;
     height: 100%;
   }
   .control-right {
-    width: 100%;
+    width: 70%;
     max-width: 70%;
     min-height: 500px;
     background: #f7f8fc;
@@ -156,49 +220,52 @@ const StyleDuplicate = styled(Duplicate)`
     color: #545d7a;
     font-weight: 600;
   }
-  .input-question {
-    margin: 1rem;
-    width: 80%;
-    min-width: 80%;
-    max-width: 80%;
-    height: 200px;
-    font-size: 18px;
-    border-radius: 10px;
-    padding: 10px;
-    border: 2px solid #dae1f5;
+  .duplicate-icon{
+    color:#303f9f;
+    margin: 0 5px;
   }
-  .btn {
-    width: 100px;
-    height: 40px;
-    border: none;
-    margin: 20px;
-    color: #fff;
-    font-weight: bold;
+  .guide-line {
+    margin: 50px 20px;
+    text-align: start;
   }
-  .btn:hover {
-    background-color: #306bf3;
+  .guide-line p {
+    width: 60%;
+    margin: 10px 0px 0px 100px;
+    font-size: 16px;
+    color: #545d7a;
   }
-  .btn-check {
-    background-color: #10182f;
+  .button-group {
+    width: 30%;
+    margin: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
   }
-  .btn-clear {
-    background-color: #21774f;
+  .control-right {
+    width: 100%;
+    max-width: 100%;
   }
   .result {
-    margin: 1rem;
-    font-weight: 450;
-    padding: 10px 0;
-    background-color: #f0f2fb;
+    margin: 40px;
+    background-color: #F0F2FB;
   }
   @media screen and (max-width: 600px) {
     .container {
       display: flex;
       flex-direction: column;
+      justify-content: center;
       height: auto;
+    }
+    .control-left {
+      width: 100%;
     }
     .control-right {
       width: 100%;
       max-width: 100%;
+    }
+    .button-group {
+      display: flex;
+      flex-direction: column;
     }
     .input-question {
       width: 100%;

@@ -10,12 +10,32 @@ import Profile from '../screen/profile'
 import Login from '../screen/login'
 import CreateExam from '../screen/create-exam'
 import { AccountContextProvider } from '../contexts/account-context'
+import ManageStaffs from '../screen/manage-staffs'
+import ViewHistory from '../screen/view-history'
+import ChangePassword from '../screen/change-password'
 
 function App(props: any) {
+
+  // const [Account, setAccount] = useState<Object>({});
+  let Account = {
+
+  }
+
+  function handleTakeAccount(values: any) {
+    // setAccount(values)
+    // return Account;
+    Account = values;
+    console.log('value kakak ', Account);
+  }
+
   return (
     <Router>
       <AccountContextProvider>
         <Switch>
+          <Route exact path="/">
+            <Header />
+            <HomePage />
+          </Route>
           <Route exact path="/home">
             <Header />
             <HomePage />
@@ -32,6 +52,17 @@ function App(props: any) {
             <Header />
             <Profile />
           </Route>
+          <Route exact path="/history" component={Profile} >
+            <Header />
+            <ViewHistory />
+          </Route>
+          <Route exact path="/changePassword" component={Profile} >
+            <ChangePassword />
+          </Route>
+          <Route exact path="/admin/manage-staffs">
+            <Header />
+            <ManageStaffs />
+          </Route>
           <Route exact path="/login" component={Login} />
           <Route exact path="/create-exam">
             <Header />
@@ -40,6 +71,7 @@ function App(props: any) {
         </Switch>
       </AccountContextProvider>
     </Router>
+
   )
 }
 

@@ -17,5 +17,6 @@ export interface Profile {
   email?: string,
   phone?: string,
   dateofbirth?: string,
-  img?: string
+  avatar?: string,
+  address?: string
 }
