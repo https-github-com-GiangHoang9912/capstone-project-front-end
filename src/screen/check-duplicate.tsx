@@ -142,7 +142,7 @@ function Duplicate(props: any) {
           {visibleResult ? (
             <div>
              {result.map((item, i) => (
-                <p className="result" key={i}>❗❗ Existing question: {item.question} | Duplicate score: {item.point.toFixed(2)}%</p>
+                <p className="result" key={i}>❗❗ Existing question: {item.question} | Duplicate score: {item.point.toFixed(2)}</p>
               ))}
             <p className="result">✅ Does not duplicate with question in the bank  | <a href="#"> Add to question bank</a></p>
              </div>
