@@ -111,6 +111,22 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
     'z-index': 2,
   },
+  'input:focus': {
+    animation: 'pulse-animation 1.5s infinite'
+  },
+  '@media (max-width: 992px)': {
+    loginAreaForm: {
+      width: '50%'
+    }
+  },
+  '@media (max-width: 890px)': {
+    imgShow: {
+      display: 'none'
+    },
+    loginAreaForm: {
+      width: '100%'
+    }
+  }
 }))
 
 function Login(props: IProps) {
@@ -158,7 +174,7 @@ function Login(props: IProps) {
   }
 
   const responseGoogle = (googleRes?: any) => {
-    if (container.current) {
+    if (container.current && googleRes.profileObj) {
       container.current.style.display = 'block'
       lottie.loadAnimation({
         container: container.current,
@@ -230,7 +246,7 @@ function Login(props: IProps) {
               </div>
               <div className={classes.loginGoogle}>
                 <GoogleLogin
-                  clientId={CONSTANT.GOOGLE_CLIENT_ID_LOCAL}
+                  clientId={CONSTANT.GOOGLE_CLIENT_ID}
                   buttonText="FPT.EDU.VN"
                   onSuccess={responseGoogle}
                   onFailure={responseGoogle}
@@ -252,33 +268,5 @@ function Login(props: IProps) {
   )
 }
 
-const StyledLogin = styled(Login)`
-  input:focus {
-    animation: pulse-animation 1.5s infinite;
-  }
-  @keyframes pulse-animation {
-    0% {
-      box-shadow: 0 0 0 0px rgba(32, 182, 45, 0.527);
-    }
-    100% {
-      box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
-    }
-  }
-
-  @media (max-width: 992px) {
-    .makeStyles-loginAreaForm-9 {
-      width: 50%;
-    }
-  }
-
-  @media (max-width: 890px) {
-    .makeStyles-imgShow-8 {
-      display: none;
-    }
-
-    .makeStyles-loginAreaForm-9 {
-      width: 100%;
-    }
-  }
-`
+const StyledLogin = styled(Login)``
 export default StyledLogin

@@ -1,6 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import { makeStyles } from '@material-ui/core/styles'
+import axios from 'axios'
+import * as CONSTANT from '../const'
 
 Duplicate.propTypes = {
   className: PropTypes.string,
@@ -14,8 +21,15 @@ interface IBank {
   title: string
   code: string
 }
+const useStyles = makeStyles((theme) => ({
+  root: {},
+  inputQuestion: {
+    width: '80%',
+  },
+}))
 function Duplicate(props: any) {
   const { className } = props
+  const classes = useStyles()
   const [fileName, setFileName] = useState<string>('')
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const [question, setQuestion] = useState<string>('')
@@ -45,7 +59,15 @@ function Duplicate(props: any) {
   function handleFileChange(e: any) {
     setFileName(e.target.value)
   }
-  function handleCheck() {
+  async function handleCheck() {
+    const response = await axios
+    .post(CONSTANT.MODEL_CHECK_DUPLICATE_URL, {
+      question: question,
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    console.log(response)
     setVisibleResult(true)
   }
   function handleInputQuestion(e: any) {
@@ -74,13 +96,47 @@ function Duplicate(props: any) {
         </div>
         <div className="control-right">
           <h2>Enter your question here:</h2>
-          <textarea className="input-question" value={question} onChange={handleInputQuestion}/>
-          <div>
-          <button className="btn btn-check" onClick={handleCheck}>Check</button>
-          <button className="btn btn-clear" onClick={handleClear}>Clear</button>
+          <TextField
+            id="outlined-multiline-static"
+            multiline
+            rowsMax={6}
+            variant="outlined"
+            label="Question"
+            value={question}
+            onChange={handleInputQuestion}
+            className={classes.inputQuestion}
+          />
+          <div className="guide-line">
+            <p>
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Enter the question in the Question box
+              then press Check button. Processing will take a couple of time.
+            </p>
+            <p>
+              {' '}
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> If the results returned to the question
+              is not duplicated with question in the bank, you can add them to your bank.{' '}
+            </p>
+            <p>
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Only Staff and Admin can input question
+              bank, dataset to system.
+            </p>
           </div>
-          {visibleResult ? <p className="result">❗❗ Existing question.... ... ? | Duplicate score</p> : ' ' }
-          
+          <div className="button-group">
+            <Button variant="contained" color="primary" onClick={handleCheck}>
+              Check
+            </Button>
+            <Button variant="contained" color="secondary" onClick={handleClear}>
+              Clear
+            </Button>
+          </div>
+          {visibleResult ? (
+            <div>
+             <p className="result"> ❗❗ Existing question.... ................ ? | Duplicate score</p>
+            <p className="result">✅ Does not duplicate with question in the bank  | <a href="#"> Add to question bank</a></p>
+             </div>
+          ) : (
+            ' '
+          )}
         </div>
       </div>
     </div>
@@ -96,123 +152,112 @@ const StyleDuplicate = styled(Duplicate)`
     margin: auto;
     display: flex;
     justify-content: center;
-    background: linear-gradient(#141e30, #243b55);
+    background-color: #303f9f;
     text-align: center;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
       rgba(17, 17, 26, 0.1) 0px 16px 56px;
   }
-  
-      .container{
-        width: 90%;
-        margin: auto;
-        display: flex;
-        justify-content: center;
-        background: linear-gradient(#141E30,#243B55);
-        text-align: center;
-        box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
-      }
-      .control-left{
-        width: 30%;
-        height: 100%;
-   
-      }
-      .control-right{
-        width: 70%;
-        max-width: 70%;
-        min-height: 500px;
-        background: #F7F8FC;
-      }
-      .control-right h2{
-        padding: 1rem;
-      }
-      .input-bank::-webkit-file-upload-button {
-          visibility: hidden;
-        }
-      .input-bank::before{
-        content: "Import your bank";
-        display: inline-block;
-        font-size:20px;
-        padding: 10px 20px;
-        color: #000;
-        background-color:#F0F2FB;
-        font-weight: 600;
-        margin-left: 1rem;
-      }
-      .input-bank:hover{
-        background-color:#F0F2FB;
-      }
-      .bank-name{
-        padding-top: 20px;
-        color: #fff;
-        font-size: 18px;
-        font-weight: 600;
-      }
-      .select{
-        color: #F9FBFF;
-        margin-top: 2rem;
-        padding: 20px;
-      }
-      .input-select{
-        outline: none;
-        display: inline-block;
-        font-size: 16px;
-        padding: 5px 15px;
-        margin: 20px;
-        border: none;
-        color: #545D7A;
-        font-weight: 600;
-      }
-      .input-question{
-        margin: 1rem;
-        width: 80%;
-        min-width: 80%;
-        max-width: 80%;
-        height: 300px;
-        font-size: 18px;
-        border-radius: 10px;
-        padding:10px;
-        border: 2px solid #DAE1F5;
-      }
-      .btn{
-        width: 100px;
-        height: 40px;
-        border: none;
-        margin: 20px;
-        color: #fff;
-        font-weight: bold;
-      }
-    .btn:hover{
-      background-color: #306BF3;
+
+  .control-left {
+    width: 30%;
+    height: 100%;
+  }
+  .control-right {
+    width: 70%;
+    max-width: 70%;
+    min-height: 500px;
+    background: #f7f8fc;
+  }
+  .control-right h2 {
+    padding: 1rem;
+  }
+  .input-bank::-webkit-file-upload-button {
+    visibility: hidden;
+  }
+  .input-bank::before {
+    content: 'Import your bank';
+    display: inline-block;
+    font-size: 20px;
+    padding: 10px 20px;
+    color: #000;
+    background-color: #f0f2fb;
+    font-weight: 600;
+    margin-left: 1rem;
+  }
+  .input-bank:hover {
+    background-color: #f0f2fb;
+  }
+  .bank-name {
+    padding-top: 20px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .select {
+    color: #f9fbff;
+    margin-top: 2rem;
+    padding: 20px;
+  }
+  .input-select {
+    outline: none;
+    display: inline-block;
+    font-size: 16px;
+    padding: 5px 15px;
+    margin: 20px;
+    border: none;
+    color: #545d7a;
+    font-weight: 600;
+  }
+  .duplicate-icon{
+    color:#303f9f;
+    margin: 0 5px;
+  }
+  .guide-line {
+    margin: 50px 20px;
+    text-align: start;
+  }
+  .guide-line p {
+    width: 60%;
+    margin: 10px 0px 0px 100px;
+    font-size: 16px;
+    color: #545d7a;
+  }
+  .button-group {
+    width: 30%;
+    margin: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .control-right {
+    width: 100%;
+    max-width: 100%;
+  }
+  .result {
+    margin: 40px;
+    background-color: #F0F2FB;
+  }
+  @media screen and (max-width: 600px) {
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: auto;
     }
-    .btn-check{
-      background-color: #10182F;
-    }
-    .btn-clear{
-      background-color: #21774F;
+    .control-left {
+      width: 100%;
     }
     .control-right {
       width: 100%;
       max-width: 100%;
     }
-    @media screen and (max-width:600px){
-      .container{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        height: auto;
-      }
-      .control-left{
-        width:100%
-      }
-      .control-right{
-        width:100%;
-        max-width: 100%;
-      }
-      .input-question{
-        width: 100%;
-      }
-    
+    .button-group {
+      display: flex;
+      flex-direction: column;
     }
-  
+    .input-question {
+      width: 100%;
+    }
+  }
 `
 export default StyleDuplicate
