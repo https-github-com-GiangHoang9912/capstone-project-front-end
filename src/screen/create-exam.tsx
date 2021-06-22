@@ -18,7 +18,8 @@ const useStyles = makeStyles({
   styleBtn: {
     width: 150,
     height: 50,
-    backgroundColor: '#1e90ff'
+    backgroundColor: '#1e90ff',
+    cursor: 'pointer',
   }
 })
 
@@ -81,21 +82,28 @@ function CreateExam(props: any) {
         </div>
         <div className="container-button">
           <div>
-            <button className="btn">Random</button>
-          </div>
-          <div>
-            <button className="btn">Save</button>
-          </div>
-          {/* <div>
             <Button variant="contained"
               color="primary"
               className={classes.styleBtn}
             >
-              Primary
+              Random
             </Button>
-          </div> */}
+          </div>
           <div>
-            <button className="btn">Reset</button>
+            <Button variant="contained"
+              color="primary"
+              className={classes.styleBtn}
+            >
+              Save
+            </Button>
+          </div>
+          <div>
+            <Button variant="contained"
+              color="primary"
+              className={classes.styleBtn}
+            >
+              Reset
+            </Button>
           </div>
         </div>
       </div>
@@ -107,7 +115,6 @@ const StyledLogin = styled(CreateExam)`
   height: 100vh;
   font-family: Poppins-Regular, sans-serif;
   background-color: #f7f8fb;
-
 //* Css for button */
 .container-button {
     margin-bottom: 10px;
@@ -115,37 +122,17 @@ const StyledLogin = styled(CreateExam)`
     display: flex;
     justify-content: space-around;
 }
-
-.btn {
-    font-family: Helvetica;
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 1.5;
-    color: #fff;
-    width: 150px;
-    height: 50px;
-    background: #1e90ff;
-    outline: none;
-    border:none;
-    cursor: pointer;
-  
-  }
-.btn:hover {
- background-color: #094a8a;
-}
 //* Css for area create exam and bank */
-
 .create-exam {
   height: auto;
   width: 100%;
-  /* background: linear-gradient(#141e30, #243b55); */
 }
 .container-exam {
   height: auto;
   display:flex;
   justify-content: space-around;
   padding:  0px 100px 10px 100px;
-  text-align:center;
+  text-align: center;
 }
 .content-exam, .content-bank {
   flex: 1;
@@ -186,6 +173,10 @@ const StyledLogin = styled(CreateExam)`
   }
   .content-exam, .content-bank {
     width: 100%;
+  } 
+  .forward {
+    margin: 50px;
+    
   }
 }
 `
