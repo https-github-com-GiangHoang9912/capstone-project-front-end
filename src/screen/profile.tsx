@@ -102,7 +102,6 @@ const styleProfile = styled(Profile)`
   width: 100%;
   min-height: 100vh;
   background-color: #f7f8fc;
-  padding: 20px 0;
   .info-container {
     width: 90%;
     margin: auto;

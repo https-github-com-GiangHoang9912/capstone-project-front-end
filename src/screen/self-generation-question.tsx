@@ -106,7 +106,7 @@ const SelfStyle = styled(SelfGenerate)`
   background: #f7f8fc;
   min-height: 100vh;
   margin: auto;
-  padding: 20px;
+  
   .form-container {
     width: 80%;
     margin: auto;

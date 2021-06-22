@@ -137,7 +137,7 @@ const HomeStyled = styled(HomePage)`
   
   
 
-  @media screen and (max-width: 780px) {
+  @media screen and (max-width: 1024px) {
     .function {
       display: flex;
       flex-direction: column;
