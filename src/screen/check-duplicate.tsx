@@ -21,6 +21,12 @@ interface IBank {
   title: string
   code: string
 }
+
+interface IQuestion {
+  question: string
+  point: number
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {},
   inputQuestion: {
@@ -33,6 +39,7 @@ function Duplicate(props: any) {
   const [fileName, setFileName] = useState<string>('')
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const [question, setQuestion] = useState<string>('')
+  const [result, setResult] = useState<IQuestion[]>([])
   const [listBank, setListBank] = useState<IBank[]>([
     {
       id: 1,
@@ -62,13 +69,16 @@ function Duplicate(props: any) {
   async function handleCheck() {
     const response = await axios
     .post(CONSTANT.MODEL_CHECK_DUPLICATE_URL, {
-      question: question,
+      question,
     })
     .catch((err) => {
       console.log(err)
     })
     console.log(response)
-    setVisibleResult(true)
+    if (response && response.data) {
+      setResult(response.data)
+      setVisibleResult(true)
+    }
   }
   function handleInputQuestion(e: any) {
     setQuestion(e.target.value)
@@ -131,7 +141,9 @@ function Duplicate(props: any) {
           </div>
           {visibleResult ? (
             <div>
-             <p className="result"> ❗❗ Existing question.... ................ ? | Duplicate score</p>
+             {result.map((item, i) => (
+                <p className="result" key={i}>❗❗ Existing question: {item.question} | Duplicate score: {item.point.toFixed(2)}%</p>
+              ))}
             <p className="result">✅ Does not duplicate with question in the bank  | <a href="#"> Add to question bank</a></p>
              </div>
           ) : (
