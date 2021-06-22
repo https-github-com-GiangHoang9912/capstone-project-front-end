@@ -1,5 +1,5 @@
 export const BASE_URL = 'https://ddsgq.xyz/api'
-export const MODEL_URL = 'https://ddsgq.xyz/duplicate/find-duplicate'
+export const MODEL_CHECK_DUPLICATE_URL = 'https://ddsgq.xyz/duplicate/find-duplicate'
 export const GOOGLE_CLIENT_ID =
   '827399353225-mcijnq4m11fumgle6f14o8jfre24t9e7.apps.googleusercontent.com'
 export const GOOGLE_CLIENT_ID_LOCAL =

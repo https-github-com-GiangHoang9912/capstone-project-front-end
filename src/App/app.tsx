@@ -10,6 +10,8 @@ import Profile from '../screen/profile'
 import Login from '../screen/login'
 import { AccountContextProvider } from '../contexts/account-context'
 import ManageStaffs from '../screen/manage-staffs'
+import ViewHistory from '../screen/view-history'
+import ChangePassword from '../screen/change-password'
 
 function App(props: any) {
 
@@ -29,6 +31,10 @@ function App(props: any) {
     <Router>
       <AccountContextProvider>
         <Switch>
+          <Route exact path="/">
+            <Header />
+            <HomePage />
+          </Route>
           <Route exact path="/home">
             <Header />
             <HomePage />
@@ -45,6 +51,13 @@ function App(props: any) {
             <Header />
             <Profile />
           </Route>
+          <Route exact path="/history" component={Profile} >
+            <Header />
+            <ViewHistory />
+          </Route>
+          <Route exact path="/changePassword" component={Profile} >
+            <ChangePassword />
+          </Route>
           <Route exact path="/admin/manage-staffs">
             <Header />
             <ManageStaffs />
@@ -53,7 +66,7 @@ function App(props: any) {
         </Switch>
       </AccountContextProvider>
     </Router>
-    
+
   )
 }
 
