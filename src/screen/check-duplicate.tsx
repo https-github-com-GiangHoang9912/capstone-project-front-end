@@ -8,6 +8,7 @@ import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
 import * as CONSTANT from '../const'
+import Dialog from '../common/dialog'
 
 Duplicate.propTypes = {
   className: PropTypes.string,
@@ -32,10 +33,14 @@ const useStyles = makeStyles((theme) => ({
   inputQuestion: {
     width: '80%',
   },
+  btnDup: {
+    marginTop: 15,
+  }
 }))
 function Duplicate(props: any) {
   const { className } = props
   const classes = useStyles()
+  const [isOpen, setIsOpen] = useState(false);
   const [fileName, setFileName] = useState<string>('')
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const [question, setQuestion] = useState<string>('')
@@ -64,8 +69,9 @@ function Duplicate(props: any) {
   ])
 
   function handleFileChange(e: any) {
-    setFileName(e.target.value)
+    setFileName(e.target.files[0].name);
   }
+  
   async function handleCheck() {
     const response = await axios
     .post(CONSTANT.MODEL_CHECK_DUPLICATE_URL, {
@@ -83,9 +89,17 @@ function Duplicate(props: any) {
   function handleInputQuestion(e: any) {
     setQuestion(e.target.value)
   }
+
   function handleClear() {
+    setIsOpen(true);
+  }
+  const handleAcceptClear = () =>{
     setVisibleResult(false)
     setQuestion('')
+    setIsOpen(false);
+  }
+  const handleDialogClose = () =>{
+    setIsOpen(false);
   }
   return (
     <div className={className}>
@@ -93,8 +107,13 @@ function Duplicate(props: any) {
       <div className="container">
         <div className="control control-left">
           <h2 className="select">Import a new Bank</h2>
-          <input type="file" className="input-bank" value={fileName} onChange={handleFileChange} />
+          <input type="file" accept=".csv" className="input-bank" onChange={handleFileChange} />
+          <p className="file-rule">Bank input must be .csv file</p>
           <p className="bank-name">Bank name: {fileName}</p>
+          {fileName.includes(".csv") ?  <Button variant="contained" color="secondary" className={classes.btnDup}>
+              Add Bank
+            </Button>: " "}
+         
           <h2 className="select">Select Imported Bank</h2>
           <select className="input-select">
             {listBank.map((bank) => (
@@ -138,19 +157,28 @@ function Duplicate(props: any) {
             </p>
           </div>
           <div className="button-group">
-            <Button variant="contained" color="primary" onClick={handleCheck}>
+            <Button variant="contained" color="primary" onClick={handleCheck} className={classes.btnDup}>
               Check
             </Button>
-            <Button variant="contained" color="secondary" onClick={handleClear}>
+            <Button variant="contained" color="secondary" onClick={handleClear} className={classes.btnDup}>
               Clear
             </Button>
+            <Dialog
+              title="Clear all text"
+              message="Do you want to clear all the text"
+              buttonAccept="Yes"
+              buttonCancel="No"
+              isOpen= {isOpen}
+              handleAccept = {handleAcceptClear}
+              handleClose ={handleDialogClose}
+            />
           </div>
           {visibleResult ? (
-            <div>
+            <div className="result-contain">
              {result.map((item, i) => (
-                <p className="result" key={i}>❗❗ Existing question: {item.question} | Duplicate score: {item.point.toFixed(2)}</p>
+                <p className="result" key={i}>❗❗ <b>Existing question</b>: {item.question} | <b>Duplicate score</b>: {item.point.toFixed(2)}</p>
               ))}
-            <p className="result">✅ Does not duplicate with question in the bank  | <a href="#"> Add to question bank</a></p>
+            <p className="result">✅ <a href="#"> Add to question bank</a></p>
              </div>
           ) : (
             ' '
@@ -221,6 +249,9 @@ const StyleDuplicate = styled(Duplicate)`
   .input-bank:hover::before{
     background-color: #2727a1;
   }
+  .file-rule{
+    color: #8c95ad;
+  }
   .bank-name {
     padding-top: 20px;
     color: #10182F;
@@ -271,6 +302,9 @@ const StyleDuplicate = styled(Duplicate)`
   .control-right {
     width: 100%;
     max-width: 100%;
+  }
+  .result-contain{
+    text-align: start;
   }
   .result {
     margin: 40px;

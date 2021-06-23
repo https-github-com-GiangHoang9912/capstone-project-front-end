@@ -1,17 +1,15 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles'
+import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Progress from '../common/progress'
 import Dialog from '../common/dialog'
 
-
-
 const useStyles = makeStyles((theme) => ({
   root: {},
   btnGen: {
-    margin: "20px 10px",
+    margin: '20px 10px',
   },
 }))
 const SelfGenerate = ({ className = '' }) => {
@@ -36,14 +34,13 @@ const SelfGenerate = ({ className = '' }) => {
           <br />
           <p className="label">Input Answers</p>
           <TextField
-          id="standard-full-width"
-          style={{ margin: 8 }}
-          placeholder="Input answer"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          
-        />
+            id="standard-full-width"
+            style={{ margin: 8 }}
+            placeholder="Input answer"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+          />
           <br />
           {/* Nhap doan van hoac ideal */}
           <p className="label">Context</p>
@@ -54,7 +51,6 @@ const SelfGenerate = ({ className = '' }) => {
             rowsMax={10}
             fullWidth
             variant="outlined"
-            
           />
           <br />
           <p className="note-box">
@@ -75,27 +71,31 @@ const SelfGenerate = ({ className = '' }) => {
             ''
           )}
           {/* Generate cau hoi */}
-          <Button variant="contained" color="primary"  onClick={handleProgress} className={classes.btnGen} >
-              Generate
-            </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleProgress}
+            className={classes.btnGen}
+          >
+            Generate
+          </Button>
           <br />
           {/* call components ProgressBar */}
           {showProgress ? <Progress percentage={60} /> : ''}
           {/* Display question generated */}
           <p className="label">Question generated</p>
-          <TextField
-            multiline
-            style={{ margin: 8 }}
-            rowsMax={10}
-            fullWidth
-            variant="outlined"
-          />
-          <Button variant="contained" color="primary" onClick={handleDialog}  className={classes.btnGen}>
-              Check Duplicate
-            </Button>
-            <p className="note-box">
+          <TextField multiline style={{ margin: 8 }} rowsMax={10} fullWidth variant="outlined" />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleDialog}
+            className={classes.btnGen}
+          >
+            Check Duplicate
+          </Button>
+          <p className="note-box">
             Go to the duplicate detection page to check the newly created question.
-            </p>
+          </p>
         </form>
       </div>
     </div>
@@ -103,10 +103,10 @@ const SelfGenerate = ({ className = '' }) => {
 }
 
 const SelfStyle = styled(SelfGenerate)`
-  background: #f7f8fc;
+  background: #f7f8fb;
   min-height: 100vh;
   margin: auto;
-  
+
   .form-container {
     width: 80%;
     margin: auto;
@@ -130,6 +130,5 @@ const SelfStyle = styled(SelfGenerate)`
     color: #545d7a;
     margin: 10px;
   }
- 
 `
 export default SelfStyle

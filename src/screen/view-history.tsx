@@ -14,16 +14,16 @@ ViewHistory.defaultProps = {
 function ViewHistory(props: any){
   const { className } = props;
   const [activity, setActivity] = useState<any>([
-    {id: 1,
+    { id: 1,
      title: "Self-Generation"
     },
-    {id: 2,
+    { id: 2,
       title: "Duplicate Detection"
      },
-     {id: 3,
+     { id: 3,
       title: "Update Profile"
      },
-     {id: 4,
+     { id: 4,
       title: "Change password"
      },
   ])

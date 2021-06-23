@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types';
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope, faUser, faPhone, faAddressBook, faCalendar } from '@fortawesome/free-solid-svg-icons'
 import { AccountContext } from '../contexts/account-context'
@@ -20,7 +20,7 @@ interface IImage {
   url: string
 }
 function Profile(props: any) {
-  const { className} = props
+  const { className } = props
   const [editStatus, setEditStatus] = useState<boolean>(true)
   
   const { accountContextData } = useContext(AccountContext);
@@ -101,7 +101,7 @@ function Profile(props: any) {
 const styleProfile = styled(Profile)`
   width: 100%;
   min-height: 100vh;
-  background-color: #f7f8fc;
+  background-color: #f7f8fb;
   .info-container {
     width: 90%;
     margin: auto;
