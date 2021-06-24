@@ -60,16 +60,7 @@ const SelfGenerate = ({ className = '' }) => {
             Processing will take a couple of time
           </p>
 
-          {showDialog ? (
-            <Dialog
-              title="Self"
-              message="Do you want to add this question to the bank"
-              buttonAccept="Yes"
-              buttonCancel="No"
-            />
-          ) : (
-            ''
-          )}
+         
           {/* Generate cau hoi */}
           <Button
             variant="contained"
@@ -88,7 +79,6 @@ const SelfGenerate = ({ className = '' }) => {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleDialog}
             className={classes.btnGen}
           >
             Check Duplicate

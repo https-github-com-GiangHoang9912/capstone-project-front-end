@@ -28,7 +28,7 @@ function Profile(props: any) {
   const account = accountContextData
 
   const [image, setImage] = useState<IImage>({
-    url: account.profile.avatar?account.profile.avatar:''
+    url: account.profile.avatar?account.profile.avatar:'avatar2.png'
   })
   function handleEdit() {
     setEditStatus(!editStatus)
@@ -133,7 +133,7 @@ const styleProfile = styled(Profile)`
     margin: 30px;
   }
   img {
-    width: 250px;
+    width: 200px;
   }
   .form-info {
     width: 80%;
