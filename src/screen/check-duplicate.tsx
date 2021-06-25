@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
 import * as CONSTANT from '../const'
 import Dialog from '../common/dialog'
+import Table from '../common/table'
 
 Duplicate.propTypes = {
   className: PropTypes.string,
@@ -174,15 +175,11 @@ function Duplicate(props: any) {
             />
           </div>
           {visibleResult ? (
-            <div className="result-contain">
-             {result.map((item, i) => (
-                <p className="result" key={i}>❗❗ <b>Existing question</b>: {item.question} | <b>Duplicate score</b>: {item.point.toFixed(2)}</p>
-              ))}
-            <p className="result">✅ <a href="#"> Add to question bank</a></p>
-             </div>
+             <Table results={result}/>
           ) : (
             ' '
           )}
+         
         </div>
       </div>
     </div>

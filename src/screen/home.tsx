@@ -77,11 +77,11 @@ const HomeStyled = styled(HomePage)`
   .container {
     width: 100%;
     min-height: 100vh;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)),
       url('https://vcdn-vnexpress.vnecdn.net/2020/03/22/b-JPG-4063-1584888577.jpg');
     background-repeat: no-repeat;
     background-size: cover;
-    filter: grayscale(50%);
+    filter: grayscale(20%);
     padding: 20px 0;
   }
   .introduction {
