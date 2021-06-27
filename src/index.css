@@ -8,6 +8,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.main-content {
+  margin-top: 64px;
+}
+
+#root {
+  display: flex;
+  flex-direction: row;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
