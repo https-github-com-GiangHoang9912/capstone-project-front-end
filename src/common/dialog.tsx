@@ -1,5 +1,14 @@
+import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+
+
 
 DialogComponent.propTypes = {
   className: PropTypes.string,
@@ -7,8 +16,8 @@ DialogComponent.propTypes = {
   message: PropTypes.string.isRequired,
   buttonAccept: PropTypes.string.isRequired,
   buttonCancel: PropTypes.string.isRequired,
-  isValid: PropTypes.bool.isRequired,
-  handleDialogChoice: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
 }
 
 DialogComponent.defaultProps = {
@@ -16,104 +25,41 @@ DialogComponent.defaultProps = {
 }
 
 function DialogComponent(props: any) {
-  const { 
-    className, 
-    title, 
-    message, 
-    buttonAccept, 
-    buttonCancel, 
-    isValid, 
-    handleDialogChoice } = props
-
-  let classOfTitle = 'title-valid'
-  if (!isValid) {
-    classOfTitle = 'title-duplicate'
-  }
-
-  function handleChoice(choice: boolean) {
-    handleDialogChoice(choice)
-  }
-
+  const { className, title, message, buttonAccept, buttonCancel, isOpen,handleAccept, handleClose } = props
+  
+  
   return (
     <div className={className}>
-      <div className="container">
-        <div className={classOfTitle}>{title}</div>
-        <div className="message">{message}</div>
-        <div className="div-button">
-          <button className="button buttonAccept" onClick={() => handleChoice(true)}>
+      <Dialog
+        open={isOpen}
+        
+        keepMounted
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            {message}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAccept} color="primary">
             {buttonAccept}
-          </button>
-          <button className="button buttonCancel" onClick={() => handleChoice(false)}>
-            {buttonCancel}
-          </button>
-        </div>
-      </div>
+          </Button>
+          <Button onClick={handleClose} color="primary">
+           {buttonCancel}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }
 
 const StyledDialog = styled(DialogComponent)`
-  position: absolute;
-  left: 50%;
-  font-weight: bold;
-
-  .container {
-    position: relative;
-    left: -50%;
-    border: 1px solid gray;
-    width: 400px;
-    box-shadow: 6px 12px 12px #aba2a2;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-  }
-
-  .title-valid {
-    background-color: rgb(254, 251, 227);
-    text-align: center;
-    border-bottom: 1px solid gray;
-    height: 50px;
-    line-height: 50px;
-    color: green;
-  }
-
-  .message {
-    height: 150px;
-    text-align: center;
-    line-height: 150px;
-  }
-
-  .title-duplicate {
-    background-color: rgb(254, 251, 227);
-    text-align: center;
-    border-bottom: 1px solid gray;
-    height: 50px;
-    line-height: 50px;
-    color: red;
-  }
-
-  .div-button {
-    display: flex;
-    justify-content: space-evenly;
-    padding-bottom: 15px;
-  }
-
-  .button {
-    border: none;
-    padding: 12px 37px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-
-  .buttonAccept {
-    background-color: rgb(215, 227, 250);
-  }
-
-  .buttonCancel {
-    background-color: rgb(237, 104, 92);
-  }
+  
+ 
 `
 
 export default StyledDialog
