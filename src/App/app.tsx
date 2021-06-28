@@ -8,24 +8,16 @@ import SelfGenerate from '../screen/self-generation-question'
 import Header from '../common/header'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
+import CreateExam from '../screen/create-exam'
 import { AccountContextProvider } from '../contexts/account-context'
 import ManageStaffs from '../screen/manage-staffs'
 import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
+import ForgotPassword from '../screen/forgot-password'
+import UpdateExam from '../screen/update-exam'
 
 function App(props: any) {
 
-  // const [Account, setAccount] = useState<Object>({});
-  let Account = {
-
-  }
-
-  function handleTakeAccount(values: any) {
-    // setAccount(values)
-    // return Account;
-    Account = values;
-    console.log('value kakak ', Account);
-  }
 
   return (
     <Router>
@@ -63,6 +55,17 @@ function App(props: any) {
             <ManageStaffs />
           </Route>
           <Route exact path="/login" component={Login} />
+          <Route exact path="/create-exam">
+            <Header />
+            <CreateExam />
+          </Route>
+          <Route exact path="/update-exam">
+            <Header />
+            <UpdateExam />
+          </Route>
+          <Route exact path="/forgot">
+            <ForgotPassword />
+          </Route>
         </Switch>
       </AccountContextProvider>
     </Router>
