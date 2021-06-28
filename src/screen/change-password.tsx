@@ -195,7 +195,7 @@ const StyledForgotPassword = styled(ChangePassword)`
   .detail-rules .checked {
     color: #2980b9;
   }
-  /* Input css */
+  //* Input css */
   .input-pass {
     outline: none;
     border: none;
@@ -204,6 +204,7 @@ const StyledForgotPassword = styled(ChangePassword)`
     animation: pulse-animation 1.5s infinite;
   }
 
+ //** animation for input */
   @keyframes pulse-animation {
     0% {
       box-shadow: 0 0 0 0px rgba(32, 182, 45, 0.527);
@@ -212,6 +213,7 @@ const StyledForgotPassword = styled(ChangePassword)`
       box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
     }
   }
+
   .password {
     position: relative;
     width: 100%;
