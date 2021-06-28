@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
+import { useHistory } from 'react-router-dom'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Progress from '../common/progress'
@@ -14,16 +15,21 @@ const useStyles = makeStyles((theme) => ({
 }))
 const SelfGenerate = ({ className = '' }) => {
   const [showProgress, setShowProgress] = useState<Boolean>(false)
-  const [showDialog, setShowDialog] = useState<Boolean>(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const history = useHistory()
   const classes = useStyles()
   function handleProgress(e: any) {
     e.preventDefault()
     setShowProgress(!showProgress)
   }
-
-  function handleDialog(e: any) {
-    e.preventDefault()
-    setShowDialog(!showDialog)
+  const handleDialogOpen = () =>{
+    setIsOpen(true);
+  }
+  const handleDialogClose = () =>{
+    setIsOpen(false);
+  }
+  const handleAccept = () =>{
+    history.push('/check-duplicate')
   }
   return (
     <div className={className}>
@@ -80,9 +86,19 @@ const SelfGenerate = ({ className = '' }) => {
             variant="contained"
             color="primary"
             className={classes.btnGen}
+            onClick={handleDialogOpen}
           >
-            Check Duplicate
+            Check duplicate for this question
           </Button>
+          <Dialog
+              title="Go to Duplicate Detection"
+              message="Check duplicate this question with questions in the bank ?"
+              buttonAccept="Yes"
+              buttonCancel="No"
+              isOpen= {isOpen}
+              handleAccept = {handleAccept}
+              handleClose ={handleDialogClose}
+            />
           <p className="note-box">
             Go to the duplicate detection page to check the newly created question.
           </p>
@@ -96,12 +112,12 @@ const SelfStyle = styled(SelfGenerate)`
   background: #f7f8fb;
   min-height: 100vh;
   margin: auto;
-
+  padding-bottom: 20px;
   .form-container {
     width: 80%;
     margin: auto;
     border-radius: 5px;
-    background: #f7f8fc;
+    background: #fff;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
       rgba(17, 17, 26, 0.1) 0px 16px 56px;
   }
