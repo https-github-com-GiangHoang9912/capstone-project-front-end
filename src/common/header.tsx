@@ -1,7 +1,12 @@
 import { FC,  useContext} from 'react'
 
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
+// MUI
+import { Typography, IconButton, AppBar, Toolbar, Button } from '@material-ui/core'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import MenuIcon from '@material-ui/icons/Menu';
+
 import { AccountContext } from '../contexts/account-context'
 
 interface Styled {
@@ -12,101 +17,64 @@ type MyParams = {
   id: string
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    title: {
+      flexGrow: 1,
+    },
+  }),
+);
+
 const Header: FC<HeaderProps> = (props) => {
   const { className } = props
-  const { id } = useParams<MyParams>()
-  // console.log(id)
+  const { accountContextData } = useContext(AccountContext);
 
-    const { accountContextData } = useContext(AccountContext);
-    // eslint-disable-next-line no-console
-    console.log('hhaa: ', accountContextData)
-    // eslint-disable-next-line no-console
-    console.log('Tyof : ',typeof accountContextData);
-
+  const classes = useStyles();
   return (
-    <header className={className}>
-      <div className="menu">
-        <ul>
-          <li>
-            <NavLink to="/home" activeClassName="active-li">
-              🏡 HomePage
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/check-duplicate" activeClassName="active-li">
-              {' '}
-              🍣 Check Duplicate
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/self-generate" activeClassName="active-li">
-              {' '}
-              🎰 Self-generate Question
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/admin/manage-staffs" activeClassName="active-li">
-              {' '}
-              ⛑ Manage Staffs
-            </NavLink>
-          </li>
-        </ul>
-      </div>
-      <div className="account-box">
-        <NavLink to="/profile" className="right-menu user">
-          <div className="avt">
-            <img
-              src="https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png"
-              alt="avt"
-            />
-          </div>
-          <div className="txt">Hello, {accountContextData.username}</div>
-          <span className="tooltiptext">Edit Profile</span>
-        </NavLink>
-        <NavLink to="/login" className="right-menu log-out">
-          <div className="avt">
-            <img
-              src="https://i.pinimg.com/originals/24/2d/c2/242dc2fd066c6c8e36eff57b81275619.png"
-              alt="logout-img"
-            />
-          </div>
-          <div className="txt">Logout</div>
-        </NavLink>
-      </div>
-    </header>
+    <AppBar 
+      color='inherit'
+      className={className}
+    >
+      <Toolbar>
+        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <MenuIcon />
+        </IconButton>
+        <div className={classes.title}>
+          <img src="https://cmshn.fpt.edu.vn/pluginfile.php/1/core_admin/logocompact/0x70/1597744132/2020-FPTU-Eng.png" alt=""/>
+        </div>
+        <div className="account-box">
+          <NavLink to="/profile" className="right-menu user">
+            <div className="avt">
+              <img
+                src="https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png"
+                alt="avt"
+              />
+            </div>
+            <div className="txt">Hello, {accountContextData.username}</div>
+            <span className="tooltiptext">Edit Profile</span>
+          </NavLink>
+          <NavLink to="/login" className="right-menu log-out">
+            <div className="avt">
+              <img
+                src="https://i.pinimg.com/originals/24/2d/c2/242dc2fd066c6c8e36eff57b81275619.png"
+                alt="logout-img"
+              />
+            </div>
+            <div className="txt">Logout</div>
+          </NavLink>
+        </div>
+      </Toolbar>
+    </AppBar>
   )
 }
 const StyledHeader = styled(Header)`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  border-bottom: 1px solid gray;
-  background-color: white;
-  padding: 5px 50px;
-
-  .menu ul {
-    background-color: whitesmoke;
-    color: #3f3333;
-    list-style-type: none;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 5px 10px 2px 20px;
-    border-radius: 20px;
-  }
-
-  ul li {
-    margin-right: 10px;
-    border-bottom: 5px solid gray;
-    border-radius: 5px;
-    font-size: 20px;
-  }
-
-  .active-li {
-    border-bottom: 5px solid #7171f1;
-    border-radius: 5px;
-  }
-
+  z-index: 999;
   .account-box {
     display: flex;
     flex-direction: row;
@@ -121,6 +89,7 @@ const StyledHeader = styled(Header)`
 
   .user {
     margin-right: 15px;
+    min-width: 90px;
   }
 
   .user .tooltiptext {
