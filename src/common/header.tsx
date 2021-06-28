@@ -45,9 +45,9 @@ const Header: FC<HeaderProps> = (props) => {
         <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" className={classes.title}>
-          News
-        </Typography>
+        <div className={classes.title}>
+          <img src="https://cmshn.fpt.edu.vn/pluginfile.php/1/core_admin/logocompact/0x70/1597744132/2020-FPTU-Eng.png" alt=""/>
+        </div>
         <div className="account-box">
           <NavLink to="/profile" className="right-menu user">
             <div className="avt">
