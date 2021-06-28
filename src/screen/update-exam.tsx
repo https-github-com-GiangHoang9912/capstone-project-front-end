@@ -1,39 +1,96 @@
-import React from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { Button, makeStyles } from '@material-ui/core'
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import { Button, FormHelperText, makeStyles } from '@material-ui/core'
 
 
 import styled from 'styled-components'
 
-CreateExam.propTypes = {
+UpdateExam.propTypes = {
   className: PropTypes.string,
 };
-CreateExam.defaultProps = {
+
+UpdateExam.defaultProps = {
   className: '',
 };
-
 const useStyles = makeStyles({
+  formControl: {
+    marginTop: 20,
+    minWidth: 200,
+    marginBottom: 15,
+    backgroundColor: "#ffffff"
+  },
+
+  selectEmpty: {
+    // marginTop: theme.spacing(2),
+  },
+  selectedSubject: {
+    backgroundColor: "#ffffff",
+    color: "#57606f"
+  }
+  ,
+  textFliedSubject: {
+    fontSize: 20,
+    marginRight: 10,
+    color: "black",
+    padding: 10
+  },
+
   styleBtn: {
     width: 150,
     height: 50,
     backgroundColor: '#1e90ff',
     cursor: 'pointer'
-  }
-})
+  },
+});
 
-function CreateExam(props: any) {
+function UpdateExam(props: any) {
   const { className } = props;
   const classes = useStyles();
+  const [selected, setSelected] = useState('');
+  const [nameBank, setNameBank] = useState('');
+  const selectionChangeHandler = (event: any) => {
+    setSelected(event.target.value)
+  };
+  const selectionBankHandler = (event: any) => {
+    setNameBank(event.target.value)
+  };
   return (
     <div className={className}>
       <div className="create-exam">
         <div className="container-exam">
           <div className="exam">
-            <span className="title-exam">
+            <div className="contain-select-subjects">
+              <div className="text-subject">
+                <FormHelperText
+                  className={classes.textFliedSubject}>
+                  <h3>Select a subject to update: </h3></FormHelperText>
+              </div>
+              <div className="select-subjects">
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel>Subjects</InputLabel>
+                  <Select
+                    className={classes.selectedSubject}
+                    label="Subjects"
+                    displayEmpty
+                    value={selected}
+                    native
+                    onChange={selectionChangeHandler}
+                  >
+                    <option className={classes.selectedSubject} value='SSC101'>SSC101</option>
+                    <option className={classes.selectedSubject} value='MAE101'>MAE101</option>
+                    <option className={classes.selectedSubject} value='MLN201'>MLN201</option>
+                    <option className={classes.selectedSubject} value='CSD201'>CSD201</option>
+                    <option className={classes.selectedSubject} value='HCI301'>HCI301</option>
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
+            {/* <span className="title-exam">
               New Exam
-            </span>
+            </span> */}
             <div className="content-exam" >
               <p>1. In which region does Asia have a lot of oil and gas?</p>
               <p>2. Asia is a continent?</p>
@@ -43,13 +100,33 @@ function CreateExam(props: any) {
                 systems of Asia concentrated?</p>
             </div>
           </div>
-          <div className="icon">
-            <FontAwesomeIcon className="forward" icon={faArrowLeft} />
-          </div>
           <div className="bank">
-            <span className="title-exam">
-              Exam Bank
-            </span>
+            <div className="contain-select-subjects">
+              <div className="text-subject">
+                <FormHelperText
+                  className={classes.textFliedSubject}>
+                  <h3>Choose a subject bank: </h3></FormHelperText>
+              </div>
+              <div className="select-subjects">
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel>Banks</InputLabel>
+                  <Select
+                    className={classes.selectedSubject}
+                    label="Subjects"
+                    displayEmpty
+                    value={nameBank}
+                    native
+                    onChange={selectionBankHandler}
+                  >
+                    <option className={classes.selectedSubject} value='SSC101'>SSC101</option>
+                    <option className={classes.selectedSubject} value='MAE101'>MAE101</option>
+                    <option className={classes.selectedSubject} value='MLN201'>MLN201</option>
+                    <option className={classes.selectedSubject} value='CSD201'>CSD201</option>
+                    <option className={classes.selectedSubject} value='HCI301'>HCI301</option>
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
             <div className="content-bank" >
               <p>1. In which region does Asia have a lot of oil and gas?</p>
               <p>2. Asia is a continent?</p>
@@ -110,12 +187,21 @@ function CreateExam(props: any) {
     </div>
   );
 }
-const StyledCreateExam = styled(CreateExam)`
+
+const StyledUpdateExam = styled(UpdateExam)`
 
   height: 100vh;
   font-family: Poppins-Regular, sans-serif;
   background-color: #f7f8fb;
+  
+.contain-select-subjects {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 //* Css for button */
+
 .container-button {
     margin-bottom: 10px;
     margin-top: 15px;
@@ -193,5 +279,4 @@ const StyledCreateExam = styled(CreateExam)`
   }
 }
 `
-
-export default StyledCreateExam;
+export default StyledUpdateExam;

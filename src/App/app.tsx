@@ -14,6 +14,7 @@ import ManageStaffs from '../screen/manage-staffs'
 import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
 import ForgotPassword from '../screen/forgot-password'
+import UpdateExam from '../screen/update-exam'
 
 function App(props: any) {
 
@@ -57,6 +58,10 @@ function App(props: any) {
           <Route exact path="/create-exam">
             <Header />
             <CreateExam />
+          </Route>
+          <Route exact path="/update-exam">
+            <Header />
+            <UpdateExam />
           </Route>
           <Route exact path="/forgot">
             <ForgotPassword />
