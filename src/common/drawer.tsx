@@ -107,8 +107,10 @@ export default styled(PersistentDrawerLeft) `
   margin-top: 77px;
   border-top: 0;
   .active-li {
-    background: lightgray;
+    background: #cdcdcd;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgb(234,234,234)), color-stop(1, rgb(177,177,177)));
     font-weight: bold;
+    border-radius: 5px;
   }
   li {
     height: 70px;
@@ -121,5 +123,9 @@ export default styled(PersistentDrawerLeft) `
       padding: 0 10px;
       text-decoration: none;
     }
+  }
+  li:hover {
+    background-color: #f5f5f5;
+    border-radius: 5px;
   }
 `
