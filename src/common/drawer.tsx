@@ -13,7 +13,7 @@ import ListItem from '@material-ui/core/ListItem';
 import MailIcon from '@material-ui/icons/Mail';
 
 
-const drawerWidth = '14.5rem';
+const drawerWidth = '13.5rem';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,23 +47,33 @@ function PersistentDrawerLeft(props: any) {
   const menuItems = [
     {
       key: 1,
-      text: '🏡  Home',
+      text: '🏡 Home',
       link: '/home',
     },
     {
       key: 2,
-      text: '🍣  Check Duplicate',
+      text: '🍣 Check Duplicate',
       link: '/check-duplicate',
     },
     {
       key: 3,
-      text: '🎰  Self-generate Question',
+      text: '🎰 Self-generate Question',
       link: '/self-generate',
     },
     {
       key: 4,
-      text: '⛑  Manage Staffs',
+      text: '⛑ Manage Staffs',
       link: '/admin/manage-staffs',
+    },
+    {
+      key: 5,
+      text: '🔨 Create Exam',
+      link: '/create-exam',
+    },
+    {
+      key: 6,
+      text: '📝 Update Exam',
+      link: '/update-exam',
     },
   ]
 
@@ -73,7 +83,7 @@ function PersistentDrawerLeft(props: any) {
         className={className}
         variant="persistent"
         anchor="left"
-        open={true}
+        open={isOpen}
       >
         <List>
           {menuItems.map((item) => (
@@ -97,19 +107,25 @@ export default styled(PersistentDrawerLeft) `
   margin-top: 77px;
   border-top: 0;
   .active-li {
-    background: lightgray;
+    background: #cdcdcd;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgb(234,234,234)), color-stop(1, rgb(177,177,177)));
     font-weight: bold;
+    border-radius: 5px;
   }
   li {
     height: 70px;
     line-height: 70px;
     padding: 0;
-    font-size: 1rem;
+    font-size: 0.9rem;
     a {
       width: 100%;
       height: 100%;
       padding: 0 10px;
       text-decoration: none;
     }
+  }
+  li:hover {
+    background-color: #f5f5f5;
+    border-radius: 5px;
   }
 `

@@ -11,6 +11,14 @@ body {
 .main-content {
   margin-top: 64px;
   width: 100%;
+  min-width: 40rem;
+}
+
+.menu-open {
+  margin-left: 0;
+}
+.menu-close {
+  margin-left: -13.5rem;
 }
 
 #root {
