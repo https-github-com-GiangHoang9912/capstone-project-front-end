@@ -13,6 +13,13 @@ body {
   width: 100%;
 }
 
+.menu-open {
+  margin-left: 0;
+}
+.menu-close {
+  margin-left: -13.5rem;
+}
+
 #root {
   display: flex;
   flex-direction: row;
