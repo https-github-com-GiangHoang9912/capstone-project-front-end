@@ -21,17 +21,21 @@ const useStyles = makeStyles((theme) => ({
   },
   btnDuplicate:{
     color: "white",
+    width: 250,
     height: 48,
     padding: "0 30px",
-    margin: "10px 0",
+    fontSize: "0.8rem",
+    margin: "1rem 1rem",
     boxShadow: "0 3px 5px 2px rgba(0, 0, 0, .3)",
    
   },
   btnSelf:{
     color: "white",
+    width: 250,
     height: 48,
     boxShadow: "0 3px 5px 2px rgba(0, 0, 0, .3)",
-    margin: "10px 0",
+    fontSize: "0.8rem",
+    margin: "1rem 1rem",
     background: "#030a45",
   }
 }));
@@ -132,7 +136,7 @@ const HomeStyled = styled(HomePage)`
     margin: auto;
     padding: 60px 0;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
   }
   
   
