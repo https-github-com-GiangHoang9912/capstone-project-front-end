@@ -47,23 +47,33 @@ function PersistentDrawerLeft(props: any) {
   const menuItems = [
     {
       key: 1,
-      text: '🏡  Home',
+      text: '🏡 Home',
       link: '/home',
     },
     {
       key: 2,
-      text: '🍣  Check Duplicate',
+      text: '🍣 Check Duplicate',
       link: '/check-duplicate',
     },
     {
       key: 3,
-      text: '🎰  Self-generate Question',
+      text: '🎰 Self-generate Question',
       link: '/self-generate',
     },
     {
       key: 4,
-      text: '⛑  Manage Staffs',
+      text: '⛑ Manage Staffs',
       link: '/admin/manage-staffs',
+    },
+    {
+      key: 5,
+      text: '🔨 Create Exam',
+      link: '/create-exam',
+    },
+    {
+      key: 6,
+      text: '📝 Update Exam',
+      link: '/update-exam',
     },
   ]
 

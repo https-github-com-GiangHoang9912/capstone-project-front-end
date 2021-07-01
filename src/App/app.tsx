@@ -22,12 +22,14 @@ import UpdateExam from '../screen/update-exam'
 
 function App(props: any) {
   const [isOpen, setIsOpen] = useState(true);
+
+  const toggleClass = isOpen ? 'menu-open' : 'menu-close'
   return (
     <Router>
       <AccountContextProvider>
         <Header isOpen={isOpen} setIsOpen={setIsOpen}/>
         <PersistentDrawerLeft isOpen={isOpen}/>
-        <div className="main-content">
+        <div className={`main-content ${toggleClass}`}>
           <Switch>
             <Route exact path="/">
               <HomePage />
@@ -63,5 +65,5 @@ function App(props: any) {
 }
 
 export default styled(App) `
-  
+
 `

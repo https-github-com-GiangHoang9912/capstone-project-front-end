@@ -59,7 +59,7 @@ const Header: FC<HeaderProps> = (props) => {
         </IconButton>
         <div className={classes.title}>
           <NavLink to='/home'>
-            <img src="https://cmshn.fpt.edu.vn/pluginfile.php/1/core_admin/logocompact/0x70/1597744132/2020-FPTU-Eng.png" alt=""/>
+            <img className="cmsIcon" src="https://cmshn.fpt.edu.vn/pluginfile.php/1/core_admin/logocompact/0x70/1597744132/2020-FPTU-Eng.png" alt=""/>
           </NavLink>
         </div>
         <div className="account-box">
@@ -92,6 +92,10 @@ const StyledHeader = styled(Header)`
   .account-box {
     display: flex;
     flex-direction: row;
+  }
+
+  .cmsIcon {
+    transform: scale(0.9);
   }
 
   .right-menu {
