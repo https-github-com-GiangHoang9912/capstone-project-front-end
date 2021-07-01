@@ -11,6 +11,7 @@ body {
 .main-content {
   margin-top: 64px;
   width: 100%;
+  min-width: 40rem;
 }
 
 .menu-open {
