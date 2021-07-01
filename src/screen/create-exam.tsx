@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { Button, makeStyles } from '@material-ui/core'
-
+import { v4 } from 'uuid';
 
 import styled from 'styled-components'
 
@@ -24,6 +24,64 @@ const useStyles = makeStyles({
 })
 
 function CreateExam(props: any) {
+  const listExamBank = [
+    {
+      id: v4(),
+      nameSubject: 'MAE101',
+      question: 'In which region does Asia have a lot of oil and gas?',
+      answer: [
+        {
+          id: 1,
+          ans: 'VN',
+          status: true
+        },
+        {
+          id: 2,
+          ans: 'Campuchia',
+          status: false
+        },
+        {
+          id: 3,
+          ans: 'Lao',
+          status: false
+        },
+        {
+          id: 4,
+          ans: 'China',
+          status: false
+        },
+      ]
+    },
+    {
+      id: v4(),
+      nameSubject: 'SSC',
+      question: `In adapting to language differences in another country,
+                which of the following behaviors are NOT good practices?`,
+      answer: [
+        {
+          id: 1,
+          ans: 'Learn as much as you can of the native language.',
+          status: false
+        },
+        {
+          id: 2,
+          ans: 'Observe and learn language patterns and nonverbal communication.',
+          status: false
+        },
+        {
+          id: 3,
+          ans: `Regardless of your receiver's communication style preference and cultural values, 
+          express your main message content as you normally would.`,
+          status: true
+        },
+        {
+          id: 4,
+          ans: 'Show respect for the cultural values in that country',
+          status: false
+        },
+      ]
+    }
+  ]
   const { className } = props;
   const classes = useStyles();
   return (
@@ -52,7 +110,34 @@ function CreateExam(props: any) {
             </span>
             <div className="content-bank" >
               <p>1. In which region does Asia have a lot of oil and gas?</p>
-              <p>2. Asia is a continent?</p>
+              <div className="list-answer">
+                <span className="answer">A.VN</span>
+                <span className='answer'>B.China</span>
+                <span className="answer">C.Campuchia</span>
+                <span className="answer">D.Lao</span>
+              </div>
+              <div className="child">
+                <p>2.In which region are the mountain and plateau systems
+                  of Asia concentrated?</p>
+                <div className="list-answer">
+                  <span className="answer">A.VN</span>
+                  <span className='answer'>B.China</span>
+                  <span className="answer">C.Campuchia</span>
+                  <span className="answer">D.Lao</span>
+                </div>
+              </div>
+              <div className="child">
+                <p>3.In which region are the mountain and plateau
+                  systems of Asia concentrated?</p>
+                <div className="list-answer">
+                  <span className="answer">A.VN</span>
+                  <span className='answer'>B.China</span>
+                  <span className="answer">C.Campuchia</span>
+                  <span className="answer">D.Lao</span>
+                </div>
+              </div>
+
+              {/* <p>2. Asia is a continent?</p>
               <p>3. Asia has a land area about approx?</p>
               <p>4. Which continent is bordered by Asia?</p>
               <p>5. Which ocean does Asia not border?</p>
@@ -76,7 +161,7 @@ function CreateExam(props: any) {
               <p>18. In which region are the mountain and plateau systems
                 of Asia concentrated?</p>
               <p>19. In which direction does the mountain and plateau
-                system run?</p>
+                system run?</p> */}
             </div>
           </div>
         </div>
@@ -115,6 +200,15 @@ const StyledCreateExam = styled(CreateExam)`
   height: 100vh;
   font-family: Poppins-Regular, sans-serif;
   background-color: #f7f8fb;
+.list-answer {
+  display: flex;
+  padding-left: 1rem;
+  align-items: start;
+  flex-direction: column;
+  font-size: 18px;
+  line-height: 2rem;
+}
+
 //* Css for button */
 .container-button {
     margin-bottom: 10px;
