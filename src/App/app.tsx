@@ -26,7 +26,7 @@ function App(props: any) {
     <Router>
       <AccountContextProvider>
         <Header />
-        <PersistentDrawerLeft isOpen={true}/>
+        <PersistentDrawerLeft isOpen={true} />
         <div className="main-content">
           <Switch>
             <Route exact path="/">
@@ -50,6 +50,12 @@ function App(props: any) {
             <Route exact path="/changePassword" component={Profile} >
               <ChangePassword />
             </Route>
+            <Route exact path="/create-exam" component={Profile} >
+              <CreateExam />
+            </Route>
+            <Route exact path="/update-exam" component={Profile} >
+              <UpdateExam />
+            </Route>
             <Route exact path="/admin/manage-staffs">
               <ManageStaffs />
             </Route>
@@ -62,6 +68,6 @@ function App(props: any) {
   )
 }
 
-export default styled(App) `
+export default styled(App)`
   
 `

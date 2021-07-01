@@ -118,7 +118,7 @@ const StyledCreateExam = styled(CreateExam)`
 //* Css for button */
 .container-button {
     margin-bottom: 10px;
-    margin-top: 15px;
+    margin-top: 25px;
     display: flex;
     justify-content: space-around;
 }
@@ -131,7 +131,7 @@ const StyledCreateExam = styled(CreateExam)`
   height: auto;
   display:flex;
   justify-content: space-around;
-  padding:  0px 100px 10px 100px;
+  padding:  25px 100px 10px 100px;
   text-align: center;
 }
 .content-exam, .content-bank {

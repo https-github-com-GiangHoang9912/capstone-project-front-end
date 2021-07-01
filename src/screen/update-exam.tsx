@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import Select from '@material-ui/core/Select';
 import { Button, FormHelperText, makeStyles } from '@material-ui/core'
 
@@ -17,7 +19,7 @@ UpdateExam.defaultProps = {
 };
 const useStyles = makeStyles({
   formControl: {
-    marginTop: 20,
+    marginTop: 25,
     minWidth: 200,
     marginBottom: 15,
     backgroundColor: "#ffffff"
@@ -88,9 +90,7 @@ function UpdateExam(props: any) {
                 </FormControl>
               </div>
             </div>
-            {/* <span className="title-exam">
-              New Exam
-            </span> */}
+
             <div className="content-exam" >
               <p>1. In which region does Asia have a lot of oil and gas?</p>
               <p>2. Asia is a continent?</p>
@@ -99,6 +99,9 @@ function UpdateExam(props: any) {
               <p>7. In which region are the mountain and plateau
                 systems of Asia concentrated?</p>
             </div>
+          </div>
+          <div className="icon">
+            <FontAwesomeIcon className="forward" icon={faArrowLeft} />
           </div>
           <div className="bank">
             <div className="contain-select-subjects">
