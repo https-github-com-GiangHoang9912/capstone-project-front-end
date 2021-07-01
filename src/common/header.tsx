@@ -1,4 +1,4 @@
-import { FC,  useContext} from 'react'
+import { Dispatch, FC,  SetStateAction,  useContext} from 'react'
 
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
@@ -10,7 +10,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { AccountContext } from '../contexts/account-context'
 
 interface Styled {
-  className?: string
+  className?: string,
+  isOpen?: Boolean,
+  setIsOpen?: Dispatch<SetStateAction<boolean>>
 }
 type HeaderProps = {} & Styled
 type MyParams = {
@@ -32,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Header: FC<HeaderProps> = (props) => {
-  const { className } = props
+  const { className, isOpen, setIsOpen } = props
   const { accountContextData } = useContext(AccountContext);
 
   const classes = useStyles();
@@ -42,11 +44,23 @@ const Header: FC<HeaderProps> = (props) => {
       className={className}
     >
       <Toolbar>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+        <IconButton
+          edge="start"
+          className={classes.menuButton}
+          color="inherit"
+          aria-label="menu"
+          onClick={() => {
+            console.log(isOpen)
+            setIsOpen?.(!isOpen)
+            console.log(isOpen)
+          }}
+        >
           <MenuIcon />
         </IconButton>
         <div className={classes.title}>
-          <img src="https://cmshn.fpt.edu.vn/pluginfile.php/1/core_admin/logocompact/0x70/1597744132/2020-FPTU-Eng.png" alt=""/>
+          <NavLink to='/home'>
+            <img src="https://cmshn.fpt.edu.vn/pluginfile.php/1/core_admin/logocompact/0x70/1597744132/2020-FPTU-Eng.png" alt=""/>
+          </NavLink>
         </div>
         <div className="account-box">
           <NavLink to="/profile" className="right-menu user">

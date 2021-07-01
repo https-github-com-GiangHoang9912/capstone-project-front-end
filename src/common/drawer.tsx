@@ -13,7 +13,7 @@ import ListItem from '@material-ui/core/ListItem';
 import MailIcon from '@material-ui/icons/Mail';
 
 
-const drawerWidth = '14.5rem';
+const drawerWidth = '13.5rem';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,7 +73,7 @@ function PersistentDrawerLeft(props: any) {
         className={className}
         variant="persistent"
         anchor="left"
-        open={true}
+        open={isOpen}
       >
         <List>
           {menuItems.map((item) => (
@@ -104,7 +104,7 @@ export default styled(PersistentDrawerLeft) `
     height: 70px;
     line-height: 70px;
     padding: 0;
-    font-size: 1rem;
+    font-size: 0.9rem;
     a {
       width: 100%;
       height: 100%;

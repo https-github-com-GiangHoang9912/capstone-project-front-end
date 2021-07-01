@@ -21,12 +21,12 @@ import ForgotPassword from '../screen/forgot-password'
 import UpdateExam from '../screen/update-exam'
 
 function App(props: any) {
-
+  const [isOpen, setIsOpen] = useState(true);
   return (
     <Router>
       <AccountContextProvider>
-        <Header />
-        <PersistentDrawerLeft isOpen={true}/>
+        <Header isOpen={isOpen} setIsOpen={setIsOpen}/>
+        <PersistentDrawerLeft isOpen={isOpen}/>
         <div className="main-content">
           <Switch>
             <Route exact path="/">
