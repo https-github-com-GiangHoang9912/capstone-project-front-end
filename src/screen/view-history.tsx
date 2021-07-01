@@ -76,7 +76,7 @@ function ViewHistory(props: any){
     <div className={className}>
         <div className="container">
           <div className="main-left">
-            <span className="text">Clear all activity history  <FontAwesomeIcon icon={faTrash}/> </span>
+            <span className="text">Clear all activity history ❌</span>
             <p className = "text">Filter by Activity </p>
             <select className="filter-select">
             <option key="all" value="all">All</option>
@@ -117,15 +117,14 @@ function ViewHistory(props: any){
 const StyleViewHistory = styled(ViewHistory)`
     width: 100%;
     height: 100vh;
-    background-color: #f7f8fc;
+    background-color: #f7f8fb;
    .container{
-     width: 90%;
-     margin:auto;
+     margin:0.5rem;
      display: flex;
-     justify-content: space-between;
+     justify-content: space-around;
    }
    .main-left{
-     width: 20%;
+     width: 25%;
      margin: 40px 0;
    }
    .main-left .text{
@@ -152,7 +151,7 @@ const StyleViewHistory = styled(ViewHistory)`
    .main-right{
      width: 70%;
      height: auto;
-     box-shadow:  rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+     border: 1px solid #DAE1F5;
      margin: 20px 0;
      border-radius: 5px;
      background: #fff;
