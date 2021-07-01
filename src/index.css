@@ -8,6 +8,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.main-content {
+  margin-top: 64px;
+  width: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: row;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
@@ -23,6 +33,10 @@ code {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+a, a:visited {
+  text-decoration: none;
+  color: black;
 }
 .title-task {
   color: #10182f;
