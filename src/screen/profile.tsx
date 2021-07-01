@@ -46,7 +46,6 @@ function Profile(props: any) {
   return (
     <div className={className}>
       <div className="info-container">
-        <h2 className="title-task"> Your Profile</h2>
         <div className="contain">
           <div className="form-contain">
             <h3 id="information">Information</h3>
@@ -153,8 +152,7 @@ const styleProfile = styled(Profile)`
   background-color: #f7f8fb;
   padding-bottom: 20px;
   .info-container {
-    width: 90%;
-    margin: auto;
+    margin: 2rem;
     text-align: center;
     border-radius: 5px;
   }
@@ -165,8 +163,7 @@ const styleProfile = styled(Profile)`
     justify-content: space-between;
     background-color: #fff;
     border-radius: 5px;
-    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
-      rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   }
   .form-contain {
     width: 100%;
