@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -7,9 +7,12 @@ import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
+import Cookies from 'universal-cookie/es6'
 import * as CONSTANT from '../const'
+import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
 import Table from '../common/table'
+import { AccountContext } from '../contexts/account-context'
 
 Duplicate.propTypes = {
   className: PropTypes.string,
@@ -17,6 +20,11 @@ Duplicate.propTypes = {
 Duplicate.defaultProps = {
   className: '',
 }
+
+const cookies = new Cookies()
+axios.defaults.withCredentials = true
+const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
+const REFRESH_JWT_TOKEN = `${CONSTANT.BASE_URL}/refresh-token`
 
 interface IBank {
   id: number
@@ -36,14 +44,16 @@ const useStyles = makeStyles((theme) => ({
   },
   btnDup: {
     marginTop: 15,
-  }
+  },
 }))
 function Duplicate(props: any) {
   const { className } = props
   const classes = useStyles()
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
   const [fileName, setFileName] = useState<string>('')
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
+  const { accountContextData } = useContext(AccountContext)
+  const account = accountContextData
   const [question, setQuestion] = useState<string>('')
   const [result, setResult] = useState<IQuestion[]>([])
   const [listBank, setListBank] = useState<IBank[]>([
@@ -70,18 +80,17 @@ function Duplicate(props: any) {
   ])
 
   function handleFileChange(e: any) {
-    setFileName(e.target.files[0].name);
+    setFileName(e.target.files[0].name)
   }
-  
+
   async function handleCheck() {
     const response = await axios
-    .post(CONSTANT.MODEL_CHECK_DUPLICATE_URL, {
-      question,
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-    console.log(response)
+      .post(MODEL_CHECK_DUPLICATE_URL, {
+        question,
+      })
+      .catch(async (error) => {
+        refreshToken(error, account.id)
+      })
     if (response && response.data) {
       setResult(response.data)
       setVisibleResult(true)
@@ -92,15 +101,15 @@ function Duplicate(props: any) {
   }
 
   function handleClear() {
-    setIsOpen(true);
+    setIsOpen(true)
   }
-  const handleAcceptClear = () =>{
+  const handleAcceptClear = () => {
     setVisibleResult(false)
     setQuestion('')
-    setIsOpen(false);
+    setIsOpen(false)
   }
-  const handleDialogClose = () =>{
-    setIsOpen(false);
+  const handleDialogClose = () => {
+    setIsOpen(false)
   }
   return (
     <div className={className}>
@@ -111,10 +120,14 @@ function Duplicate(props: any) {
           <input type="file" accept=".csv" className="input-bank" onChange={handleFileChange} />
           <p className="file-rule">Bank input must be .csv file</p>
           <p className="bank-name">Bank name: {fileName}</p>
-          {fileName.includes(".csv") ?  <Button variant="contained" color="secondary" className={classes.btnDup}>
+          {fileName.includes('.csv') ? (
+            <Button variant="contained" color="secondary" className={classes.btnDup}>
               Add Bank
-            </Button>: " "}
-         
+            </Button>
+          ) : (
+            ' '
+          )}
+
           <h2 className="select">Select Imported Bank</h2>
           <select className="input-select">
             {listBank.map((bank) => (
@@ -124,11 +137,11 @@ function Duplicate(props: any) {
             ))}
           </select>
           <div className="guide-line">
-          <p id="gl-left">
-            <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Only Staff and Admin can input question
-            bank, dataset to system.
+            <p id="gl-left">
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Only Staff
+              and Admin can input question bank, dataset to system.
             </p>
-            </div>
+          </div>
         </div>
         <div className="control control-right">
           <h2>Enter your question here:</h2>
@@ -144,24 +157,36 @@ function Duplicate(props: any) {
           />
           <div className="guide-line">
             <p>
-              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Enter the question in the Question box
-              then press Check button. Processing will take a couple of time.
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Enter the
+              question in the Question box then press Check button. Processing will take a couple of
+              time.
             </p>
             <p>
-              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Input questions should
-               be grammatically correct to get the best results   
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Input
+              questions should be grammatically correct to get the best results
             </p>
             <p>
               {' '}
-              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> If the results returned to the question
-              is not duplicated with question in the bank, you can add them to your bank.{' '}
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> If the
+              results returned to the question is not duplicated with question in the bank, you can
+              add them to your bank.{' '}
             </p>
           </div>
           <div className="button-group">
-            <Button variant="contained" color="primary" onClick={handleCheck} className={classes.btnDup}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCheck}
+              className={classes.btnDup}
+            >
               Check
             </Button>
-            <Button variant="contained" color="secondary" onClick={handleClear} className={classes.btnDup}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleClear}
+              className={classes.btnDup}
+            >
               Clear
             </Button>
             <Dialog
@@ -169,17 +194,12 @@ function Duplicate(props: any) {
               message="Do you want to clear all the text"
               buttonAccept="Yes"
               buttonCancel="No"
-              isOpen= {isOpen}
-              handleAccept = {handleAcceptClear}
-              handleClose ={handleDialogClose}
+              isOpen={isOpen}
+              handleAccept={handleAcceptClear}
+              handleClose={handleDialogClose}
             />
           </div>
-          {visibleResult ? (
-             <Table results={result}/>
-          ) : (
-            ' '
-          )}
-         
+          {visibleResult ? <Table results={result} /> : ' '}
         </div>
       </div>
     </div>
@@ -203,24 +223,24 @@ const StyleDuplicate = styled(Duplicate)`
     /* box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
       rgba(17, 17, 26, 0.1) 0px 16px 56px; */
   }
-  .control{
+  .control {
     flex: 1 1 auto;
     padding: 10px;
     margin: 10px;
     background-color: #fff;
     border-radius: 5px;
-    border: 1px solid #DAE1F5;
+    border: 1px solid #dae1f5;
   }
   .control-left {
     width: 35%;
     height: 100%;
   }
-  .control-left h2{
+  .control-left h2 {
     width: 90%;
-    margin:auto;
+    margin: auto;
     font-size: 20px;
-    color: #10182F;
-    border-bottom: 1px solid #DAE1F5;
+    color: #10182f;
+    border-bottom: 1px solid #dae1f5;
   }
   .control-right {
     width: 50%;
@@ -241,17 +261,16 @@ const StyleDuplicate = styled(Duplicate)`
     background-color: #303f9f;
     font-weight: 600;
     margin: 1em 0 0 2em;
-    
   }
-  .input-bank:hover::before{
+  .input-bank:hover::before {
     background-color: #2727a1;
   }
-  .file-rule{
+  .file-rule {
     color: #8c95ad;
   }
   .bank-name {
     padding-top: 20px;
-    color: #10182F;
+    color: #10182f;
     font-size: 18px;
     font-weight: 600;
   }
@@ -271,8 +290,8 @@ const StyleDuplicate = styled(Duplicate)`
     color: #545d7a;
     font-weight: 600;
   }
-  .duplicate-icon{
-    color:#303f9f;
+  .duplicate-icon {
+    color: #303f9f;
     margin: 0 5px;
   }
   .guide-line {
@@ -285,7 +304,7 @@ const StyleDuplicate = styled(Duplicate)`
     font-size: 16px;
     color: #545d7a;
   }
-  #gl-left{
+  #gl-left {
     width: 100%;
     margin: 0;
   }
@@ -300,12 +319,12 @@ const StyleDuplicate = styled(Duplicate)`
     width: 100%;
     max-width: 100%;
   }
-  .result-contain{
+  .result-contain {
     text-align: start;
   }
   .result {
     margin: 40px;
-    background-color: #F0F2FB;
+    background-color: #f0f2fb;
   }
   @media screen and (max-width: 600px) {
     .container {
@@ -328,7 +347,7 @@ const StyleDuplicate = styled(Duplicate)`
     .input-question {
       width: 100%;
     }
-    .guide-line p{
+    .guide-line p {
       width: 80%;
       margin: 20px 40px;
     }
