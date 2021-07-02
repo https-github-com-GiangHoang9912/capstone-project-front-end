@@ -21,13 +21,15 @@ import ForgotPassword from '../screen/forgot-password'
 import UpdateExam from '../screen/update-exam'
 
 function App(props: any) {
+  const [isOpen, setIsOpen] = useState(true);
 
+  const toggleClass = isOpen ? 'menu-open' : 'menu-close'
   return (
     <Router>
       <AccountContextProvider>
-        <Header />
-        <PersistentDrawerLeft isOpen={true}/>
-        <div className="main-content">
+        <Header isOpen={isOpen} setIsOpen={setIsOpen}/>
+        <PersistentDrawerLeft isOpen={isOpen}/>
+        <div className={`main-content ${toggleClass}`}>
           <Switch>
             <Route exact path="/">
               <HomePage />
@@ -50,6 +52,12 @@ function App(props: any) {
             <Route exact path="/changePassword" component={Profile} >
               <ChangePassword />
             </Route>
+            <Route exact path="/create-exam" component={Profile} >
+              <CreateExam />
+            </Route>
+            <Route exact path="/update-exam" component={Profile} >
+              <UpdateExam />
+            </Route>
             <Route exact path="/admin/manage-staffs">
               <ManageStaffs />
             </Route>
@@ -63,5 +71,5 @@ function App(props: any) {
 }
 
 export default styled(App) `
-  
+
 `

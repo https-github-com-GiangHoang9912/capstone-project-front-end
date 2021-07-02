@@ -183,11 +183,6 @@ const StyledAdmin = styled(ManageStaffs)`
     justify-content: center;
     align-items: center;
     padding: 15px;
-    background: #9053c7;
-    background: -webkit-linear-gradient(-135deg, #50c8c2f8, #e24c4c);
-    background: -o-linear-gradient(-135deg, #50c8c2f8, #e24c9f);
-    background: -moz-linear-gradient(-135deg, #50c8c2f8, #e24c9f);
-    background: linear-gradient(-135deg, #50c8c2f8, #e24c9f);
   }
   .main {
     background: #fff;

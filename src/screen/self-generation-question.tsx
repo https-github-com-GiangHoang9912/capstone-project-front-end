@@ -33,7 +33,6 @@ const SelfGenerate = ({ className = '' }) => {
   }
   return (
     <div className={className}>
-      <h2 className="title-task">Self-generation</h2>
       <div className="form-container">
         <form>
           {/* Nhap cau tra loi */}
@@ -114,17 +113,15 @@ const SelfStyle = styled(SelfGenerate)`
   margin: auto;
   padding-bottom: 20px;
   .form-container {
-    width: 80%;
-    margin: auto;
+    margin: 2rem;
     border-radius: 5px;
     background: #fff;
-    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
-      rgba(17, 17, 26, 0.1) 0px 16px 56px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   }
   form {
     width: 80%;
     margin: auto;
-    padding-bottom: 2rem;
+    padding-bottom: 1rem;
   }
   .label {
     font-size: 18px;

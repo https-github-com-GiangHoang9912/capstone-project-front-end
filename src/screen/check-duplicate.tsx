@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     width: '80%',
   },
   btnDup: {
-    marginTop: 15,
+    margin: 10,
   },
 }))
 function Duplicate(props: any) {
@@ -56,28 +56,6 @@ function Duplicate(props: any) {
   const account = accountContextData
   const [question, setQuestion] = useState<string>('')
   const [result, setResult] = useState<IQuestion[]>([])
-  const [listBank, setListBank] = useState<IBank[]>([
-    {
-      id: 1,
-      title: 'Data Warehouse',
-      code: 'DBW391',
-    },
-    {
-      id: 2,
-      title: 'Japanese',
-      code: 'JPN101',
-    },
-    {
-      id: 3,
-      title: 'English',
-      code: 'ENM101',
-    },
-    {
-      id: 4,
-      title: 'Software Engineering',
-      code: 'SWE102',
-    },
-  ])
 
   function handleFileChange(e: any) {
     setFileName(e.target.files[0].name)
@@ -113,34 +91,35 @@ function Duplicate(props: any) {
   }
   return (
     <div className={className}>
-      <h2 className="title-task">Duplicate Detection</h2>
       <div className="container">
         <div className="control control-left">
-          <h2 className="select">Import a new Bank</h2>
-          <input type="file" accept=".csv" className="input-bank" onChange={handleFileChange} />
-          <p className="file-rule">Bank input must be .csv file</p>
-          <p className="bank-name">Bank name: {fileName}</p>
-          {fileName.includes('.csv') ? (
-            <Button variant="contained" color="secondary" className={classes.btnDup}>
-              Add Bank
-            </Button>
-          ) : (
-            ' '
-          )}
-
-          <h2 className="select">Select Imported Bank</h2>
-          <select className="input-select">
-            {listBank.map((bank) => (
-              <option key={bank.id} value={bank.id}>
-                {bank.code} - {bank.title}
-              </option>
-            ))}
-          </select>
-          <div className="guide-line">
-            <p id="gl-left">
-              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Only Staff
-              and Admin can input question bank, dataset to system.
-            </p>
+          <div className="import-bank">
+            <h2 className="select">Import a new Bank</h2>
+            <input type="file" accept=".csv" className="input-bank" onChange={handleFileChange} />
+            <p className="file-rule">Bank input must be .csv file</p>
+            <p className="bank-name">Bank name: {fileName}</p>
+            {fileName.includes('.csv') ? (
+              <Button variant="contained" color="secondary" className={classes.btnDup}>
+                Add Bank
+              </Button>
+            ) : (
+              ' '
+            )}
+            <div className="guide-line">
+              <p id="gl-left">
+                <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Only Staff
+                and Admin can input question bank, dataset to system.
+              </p>
+            </div>
+          </div>
+          <div className="convert-csv">
+            <img src="csv.png" />
+            <div className="csv-link">
+              <a href="https://convertio.co/vn/doc-csv/" target="_blank">
+                <h3>Convert file to CSV</h3>
+              </a>
+              <p>Go to CSV convert page and convert your file to CSV format</p>
+            </div>
           </div>
         </div>
         <div className="control control-right">
@@ -211,8 +190,7 @@ const StyleDuplicate = styled(Duplicate)`
   height: 100vh;
   background-color: #f7f8fb;
   .container {
-    width: 100%;
-    margin: auto;
+    margin: 0.5rem;
     padding: 10px;
     font-size: 16px;
     display: flex;
@@ -225,15 +203,15 @@ const StyleDuplicate = styled(Duplicate)`
   }
   .control {
     flex: 1 1 auto;
-    padding: 10px;
     margin: 10px;
     background-color: #fff;
     border-radius: 5px;
-    border: 1px solid #dae1f5;
+  
   }
   .control-left {
     width: 35%;
     height: 100%;
+    background-color: #f7f8fb;
   }
   .control-left h2 {
     width: 90%;
@@ -242,9 +220,39 @@ const StyleDuplicate = styled(Duplicate)`
     color: #10182f;
     border-bottom: 1px solid #dae1f5;
   }
+  .import-bank{
+    width: 100%;
+    border: 1px solid #DAE1F5;
+    background-color: #fff;
+    border-radius: 5px;
+  }
+  .convert-csv{
+    display: flex;
+    padding: 1em;
+    margin-top: 1em;
+    border: 1px solid #DAE1F5;
+    background-color: #fff;
+    text-align: start;
+    border-radius: 5px;
+  }
+  .convert-csv img{
+    width: 20%;
+  }
+  .csv-link{
+    margin-left: 1rem;
+  }
+  .csv-link h3{
+    font-size: 17px;
+  }
+  .csv-link p{
+    color: #545d7a;
+    padding: 0.2em;
+    font-size: 16px;
+  }
   .control-right {
     width: 50%;
     min-height: 500px;
+    border: 1px solid #DAE1F5;
   }
   .control-right h2 {
     padding: 1rem;
@@ -279,19 +287,8 @@ const StyleDuplicate = styled(Duplicate)`
     margin-top: 2rem;
     padding: 20px;
   }
-  .input-select {
-    outline: none;
-    width: 90%;
-    display: inline-block;
-    font-size: 16px;
-    padding: 5px 15px;
-    margin: 20px;
-    border: none;
-    color: #545d7a;
-    font-weight: 600;
-  }
-  .duplicate-icon {
-    color: #303f9f;
+  .duplicate-icon{
+    color:#303f9f;
     margin: 0 5px;
   }
   .guide-line {
@@ -329,7 +326,7 @@ const StyleDuplicate = styled(Duplicate)`
   @media screen and (max-width: 600px) {
     .container {
       display: flex;
-      flex-direction: column;
+      flex-direction: column-reverse;
       justify-content: center;
       height: auto;
     }
@@ -355,7 +352,7 @@ const StyleDuplicate = styled(Duplicate)`
   @media screen and (max-width: 1024px) {
     .container {
       display: flex;
-      flex-direction: column;
+      flex-direction: column-reverse;
       justify-content: center;
       height: auto;
     }
