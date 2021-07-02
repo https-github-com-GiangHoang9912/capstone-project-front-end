@@ -6,6 +6,7 @@ export interface AccountContextProps {
 
 
 export interface Account {
+  id: number,
   username: string,
   role: number,
   profile: Profile
