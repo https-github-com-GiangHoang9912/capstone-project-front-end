@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
 import lottie from 'lottie-web'
+import Cookies from 'universal-cookie'
 import location from '../location.json'
 import * as CONSTANT from '../const'
 import { AccountContext } from '../contexts/account-context'
@@ -18,6 +19,7 @@ interface IProps {
 }
 type LoginProps = {} & IProps
 
+const cookies = new Cookies()
 const LOGIN_WITH_USERNAME_API = `${CONSTANT.BASE_URL}/auth/login`
 const LOGIN_WITH_GOOGLE_API = `${CONSTANT.BASE_URL}/google-auth/login`
 
@@ -111,21 +113,21 @@ const useStyles = makeStyles((theme) => ({
     'z-index': 2,
   },
   'input:focus': {
-    animation: 'pulse-animation 1.5s infinite'
+    animation: 'pulse-animation 1.5s infinite',
   },
   '@media (max-width: 992px)': {
     loginAreaForm: {
-      width: '50%'
-    }
+      width: '50%',
+    },
   },
   '@media (max-width: 890px)': {
     imgShow: {
-      display: 'none'
+      display: 'none',
     },
     loginAreaForm: {
-      width: '100%'
-    }
-  }
+      width: '100%',
+    },
+  },
 }))
 
 const Login:FC<LoginProps> = (props) => {
@@ -158,18 +160,25 @@ const Login:FC<LoginProps> = (props) => {
       })
       setTimeout(async () => {
         const response = await axios
-          .post(LOGIN_WITH_USERNAME_API, {
-            username: userName,
-            password,
-          })
+          .post(
+            LOGIN_WITH_USERNAME_API,
+            {
+              username: userName,
+              password,
+            },
+            {
+              withCredentials: true,
+            }
+          )
           .catch((err) => {
             console.log(err)
             stopLoading()
           })
         if (response && response.data) {
-          setInformation(response.data.account)
+          setInformation(response.data)
           console.log(response.data)
           stopLoading()
+          console.log(cookies.getAll())
           history.push('/Home')
         }
       }, 2000)
@@ -188,13 +197,15 @@ const Login:FC<LoginProps> = (props) => {
       })
       setTimeout(async () => {
         const response = await axios
-          .post(LOGIN_WITH_GOOGLE_API, googleRes.profileObj)
+          .post(LOGIN_WITH_GOOGLE_API, googleRes.profileObj, {
+            withCredentials: true,
+          })
           .catch((err) => {
             console.log(err)
             stopLoading()
           })
         if (response && response.data) {
-          setInformation(response.data.account)
+          setInformation(response.data)
           console.log(response.data)
           stopLoading()
           history.push('/Home')
@@ -249,7 +260,7 @@ const Login:FC<LoginProps> = (props) => {
               </div>
               <div className={classes.loginGoogle}>
                 <GoogleLogin
-                  clientId={CONSTANT.GOOGLE_CLIENT_ID}
+                  clientId={CONSTANT.GOOGLE_CLIENT_ID_LOCAL}
                   buttonText="FPT.EDU.VN"
                   onSuccess={responseGoogle}
                   onFailure={responseGoogle}
