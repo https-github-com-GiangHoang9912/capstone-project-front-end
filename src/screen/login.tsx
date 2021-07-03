@@ -1,5 +1,5 @@
 import GoogleLogin from 'react-google-login'
-import { useContext, useState, useEffect, useRef } from 'react'
+import { FC, Dispatch, SetStateAction, useContext, useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
@@ -13,15 +13,11 @@ import location from '../location.json'
 import * as CONSTANT from '../const'
 import { AccountContext } from '../contexts/account-context'
 
-axios.defaults.withCredentials = true
-
-Login.propTypes = {
-  className: PropTypes.string,
-}
-
 interface IProps {
-  className: ''
+  className?: string,
+  setIsLogin?: Dispatch<SetStateAction<boolean>>
 }
+type LoginProps = {} & IProps
 
 const cookies = new Cookies()
 const LOGIN_WITH_USERNAME_API = `${CONSTANT.BASE_URL}/auth/login`
@@ -32,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiTextField-root': {
       width: '100%',
     },
+    marginTop: '-74px'
   },
   loginGoogle: {
     '& button': {
@@ -133,14 +130,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-function Login(props: IProps) {
-  const { className } = props
+const Login:FC<LoginProps> = (props) => {
+  const { className, setIsLogin } = props
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const classes = useStyles()
   const history = useHistory()
   const { setInformation } = useContext(AccountContext)
   const container = useRef<HTMLDivElement>(null)
+
+  useEffect(()=>{
+    setIsLogin?.(true);
+  },[])
 
   const stopLoading = () => {
     if (container.current) container.current.style.display = 'none'

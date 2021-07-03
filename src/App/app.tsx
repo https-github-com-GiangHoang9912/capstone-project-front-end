@@ -22,13 +22,21 @@ import UpdateExam from '../screen/update-exam'
 
 function App(props: any) {
   const [isOpen, setIsOpen] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
 
   const toggleClass = isOpen ? 'menu-open' : 'menu-close'
   return (
     <Router>
       <AccountContextProvider>
-        <Header isOpen={isOpen} setIsOpen={setIsOpen}/>
-        <PersistentDrawerLeft isOpen={isOpen}/>
+        <Header
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          className={isLogin ? 'hidden-component' : ''}
+        />
+        <PersistentDrawerLeft
+          isOpen={isOpen}
+          className={isLogin ? 'hidden-component' : ''}
+        />
         <div className={`main-content ${toggleClass}`}>
           <Switch>
             <Route exact path="/">
@@ -61,15 +69,16 @@ function App(props: any) {
             <Route exact path="/admin/manage-staffs">
               <ManageStaffs />
             </Route>
-            <Route exact path="/login" component={Login} />
+            <Route exact path="/login" component={Login}>
+              <Login setIsLogin={setIsLogin} />
+            </Route>
           </Switch>
         </div>
-
       </AccountContextProvider>
     </Router>
   )
 }
 
-export default styled(App) `
+export default styled(App)`
 
 `
