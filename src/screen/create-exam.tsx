@@ -273,7 +273,7 @@ const StyledCreateExam = styled(CreateExam)`
   cursor: pointer;
 }
 //* Responsive */
-@media (max-width: 768px) { 
+@media (max-width: 1200px) { 
   .container-exam {
     flex-direction: column;
     padding: 10px;

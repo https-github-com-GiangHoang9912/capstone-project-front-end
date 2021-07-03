@@ -19,6 +19,8 @@ import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
 import ForgotPassword from '../screen/forgot-password'
 import UpdateExam from '../screen/update-exam'
+import ViewExam from '../screen/view-exam'
+
 
 function App(props: any) {
   const [isOpen, setIsOpen] = useState(true);
@@ -49,14 +51,20 @@ function App(props: any) {
             <Route exact path="/history" component={Profile} >
               <ViewHistory />
             </Route>
-            <Route exact path="/changePassword" component={Profile} >
+            <Route exact path="/change-password" component={Profile} >
               <ChangePassword />
+            </Route>
+            <Route exact path="/forgot-password" component={Profile} >
+              <ForgotPassword />
             </Route>
             <Route exact path="/create-exam" component={Profile} >
               <CreateExam />
             </Route>
             <Route exact path="/update-exam" component={Profile} >
               <UpdateExam />
+            </Route>
+            <Route exact path="/view-exam" component={Profile} >
+              <ViewExam />
             </Route>
             <Route exact path="/admin/manage-staffs">
               <ManageStaffs />
