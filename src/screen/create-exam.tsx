@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { Button, makeStyles } from '@material-ui/core'
-import { v4 } from 'uuid';
+// import { v4 } from 'uuid';
 
 import styled from 'styled-components'
 
@@ -24,64 +24,64 @@ const useStyles = makeStyles({
 })
 
 function CreateExam(props: any) {
-  const listExamBank = [
-    {
-      id: v4(),
-      nameSubject: 'MAE101',
-      question: 'In which region does Asia have a lot of oil and gas?',
-      answer: [
-        {
-          id: 1,
-          ans: 'VN',
-          status: true
-        },
-        {
-          id: 2,
-          ans: 'Campuchia',
-          status: false
-        },
-        {
-          id: 3,
-          ans: 'Lao',
-          status: false
-        },
-        {
-          id: 4,
-          ans: 'China',
-          status: false
-        },
-      ]
-    },
-    {
-      id: v4(),
-      nameSubject: 'SSC',
-      question: `In adapting to language differences in another country,
-                which of the following behaviors are NOT good practices?`,
-      answer: [
-        {
-          id: 1,
-          ans: 'Learn as much as you can of the native language.',
-          status: false
-        },
-        {
-          id: 2,
-          ans: 'Observe and learn language patterns and nonverbal communication.',
-          status: false
-        },
-        {
-          id: 3,
-          ans: `Regardless of your receiver's communication style preference and cultural values, 
-          express your main message content as you normally would.`,
-          status: true
-        },
-        {
-          id: 4,
-          ans: 'Show respect for the cultural values in that country',
-          status: false
-        },
-      ]
-    }
-  ]
+  // const listExamBank = [
+  //   {
+  //     id: v4(),
+  //     nameSubject: 'MAE101',
+  //     question: 'In which region does Asia have a lot of oil and gas?',
+  //     answer: [
+  //       {
+  //         id: 1,
+  //         ans: 'VN',
+  //         status: true
+  //       },
+  //       {
+  //         id: 2,
+  //         ans: 'Campuchia',
+  //         status: false
+  //       },
+  //       {
+  //         id: 3,
+  //         ans: 'Lao',
+  //         status: false
+  //       },
+  //       {
+  //         id: 4,
+  //         ans: 'China',
+  //         status: false
+  //       },
+  //     ]
+  //   },
+  //   {
+  //     id: v4(),
+  //     nameSubject: 'SSC',
+  //     question: `In adapting to language differences in another country,
+  //               which of the following behaviors are NOT good practices?`,
+  //     answer: [
+  //       {
+  //         id: 1,
+  //         ans: 'Learn as much as you can of the native language.',
+  //         status: false
+  //       },
+  //       {
+  //         id: 2,
+  //         ans: 'Observe and learn language patterns and nonverbal communication.',
+  //         status: false
+  //       },
+  //       {
+  //         id: 3,
+  //         ans: `Regardless of your receiver's communication style preference and cultural values, 
+  //         express your main message content as you normally would.`,
+  //         status: true
+  //       },
+  //       {
+  //         id: 4,
+  //         ans: 'Show respect for the cultural values in that country',
+  //         status: false
+  //       },
+  //     ]
+  //   }
+  // ]
   const { className } = props;
   const classes = useStyles();
   return (

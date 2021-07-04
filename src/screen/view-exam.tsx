@@ -46,6 +46,9 @@ const StyledTableRow = withStyles((theme: Theme) =>
       '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.action.hover,
       },
+      '&:nth-of-type(even)': {
+        backgroundColor: '#fffff',
+      },
     },
   }),
 )(TableRow);
@@ -54,7 +57,7 @@ const StyledTableRow = withStyles((theme: Theme) =>
 const useStyles = makeStyles({
   table: {
     maxWidth: 900,
-    marginTop: 150,
+    marginTop: '10%',
     // marginLeft: 450
     // marginBottom: 100
 
@@ -100,48 +103,43 @@ function ViewExam(props: any) {
 
   return (
     <div className={className}>
-        <Box display="flex"
-            justifyContent="center"
-        >
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>STT</StyledTableCell>
-                <StyledTableCell>Exam Name</StyledTableCell>
-                <StyledTableCell>View</StyledTableCell>
-                <StyledTableCell>Update</StyledTableCell>
+      <TableContainer className="kaka">
+        <Table className={classes.table} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>STT</StyledTableCell>
+              <StyledTableCell>Exam Name</StyledTableCell>
+              <StyledTableCell>View</StyledTableCell>
+              <StyledTableCell>Update</StyledTableCell>
 
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {results.map((item: any, i: number) => (
-                <StyledTableRow key={i}>
-                  <StyledTableCell component="th" scope="row" width={20}>
-                    {i}
-                  </StyledTableCell>
-                  <StyledTableCell width={200}>{item.name}</StyledTableCell>
-                  <StyledTableCell width={20}><span><FontAwesomeIcon className="view-exam" icon={faEye} /></span>
-                  </StyledTableCell>
-                  <StyledTableCell width={380}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.styleBtn}>Edit</Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.styleBtn}>Delete</Button>
-                  </StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {results.map((item: any, i: number) => (
+              <StyledTableRow key={i}>
+                <StyledTableCell component="th" scope="row" width={20}>
+                  {i}
+                </StyledTableCell>
+                <StyledTableCell width={200}>{item.name}</StyledTableCell>
+                <StyledTableCell width={20}><span><FontAwesomeIcon className="view-exam" icon={faEye} /></span>
+                </StyledTableCell>
+                <StyledTableCell width={300}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.styleBtn}>Edit</Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.styleBtn}>Delete</Button>
+                </StyledTableCell>
 
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        </Box>
-      </div>
-
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
 const StyleViewExam = styled(ViewExam)`
@@ -150,6 +148,8 @@ const StyleViewExam = styled(ViewExam)`
 .kaka {
   display: flex;
   justify-content: center;
+  height: auto;
 }
+
 `
 export default StyleViewExam;
