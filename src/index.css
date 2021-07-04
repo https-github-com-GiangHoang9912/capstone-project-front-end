@@ -9,8 +9,16 @@ body {
 }
 
 .main-content {
-  margin-top: 64px;
+  margin-top: 74px;
   width: 100%;
+  min-width: 40rem;
+}
+
+.menu-open {
+  margin-left: 0;
+}
+.menu-close {
+  margin-left: -13.5rem;
 }
 
 #root {
@@ -29,6 +37,11 @@ code {
 .hidden-dialog {
   display: none !important;
 }
+
+.hidden-component {
+  display: none !important;
+}
+
 * {
   margin: 0;
   padding: 0;
