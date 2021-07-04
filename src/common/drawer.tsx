@@ -7,11 +7,15 @@ import { makeStyles, useTheme, Theme, createStyles, createMuiTheme, ThemeProvide
 
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import MailIcon from '@material-ui/icons/Mail';
 
+import {
+  Home as HomeIcon,
+  Filter2 as Filter2Icon,
+  SupervisorAccount as SupervisorAccountIcon,
+  ContactSupport as ContactSupportIcon
+} from '@material-ui/icons';
 
 const drawerWidth = '13.5rem';
 
@@ -47,22 +51,26 @@ function PersistentDrawerLeft(props: any) {
   const menuItems = [
     {
       key: 1,
-      text: '🏡 Home',
+      icon: <HomeIcon />,
+      text: 'Home',
       link: '/home',
     },
     {
       key: 2,
-      text: '🍣 Check Duplicate',
+      icon: <Filter2Icon />,
+      text: 'Check Duplicate',
       link: '/check-duplicate',
     },
     {
       key: 3,
-      text: '🎰 Self-generate Question',
+      icon: <ContactSupportIcon />,
+      text: 'Self-generate Question',
       link: '/self-generate',
     },
     {
       key: 4,
-      text: '⛑ Manage Staffs',
+      icon: <SupervisorAccountIcon />,
+      text: 'Manage Staffs',
       link: '/admin/manage-staffs',
     },
     {
@@ -89,6 +97,7 @@ function PersistentDrawerLeft(props: any) {
           {menuItems.map((item) => (
             <ListItem key={item.key}>
               <NavLink to={item.link} activeClassName="active-li">
+                {item.icon}
                 {item.text}
               </NavLink>
             </ListItem>
@@ -122,6 +131,11 @@ export default styled(PersistentDrawerLeft) `
       height: 100%;
       padding: 0 10px;
       text-decoration: none;
+      display: flex;
+      align-items: center;
+      svg {
+        margin-right: 0.8rem;
+      }
     }
   }
   li:hover {
