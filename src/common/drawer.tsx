@@ -14,7 +14,9 @@ import {
   Home as HomeIcon,
   Filter2 as Filter2Icon,
   SupervisorAccount as SupervisorAccountIcon,
-  ContactSupport as ContactSupportIcon
+  ContactSupport as ContactSupportIcon,
+  NoteAdd as NoteAddIcon,
+  Build as BuildIcon
 } from '@material-ui/icons';
 
 const drawerWidth = '13.5rem';
@@ -75,12 +77,14 @@ function PersistentDrawerLeft(props: any) {
     },
     {
       key: 5,
-      text: '🔨 Create Exam',
+      icon: <NoteAddIcon />,
+      text: 'Create Exam',
       link: '/create-exam',
     },
     {
       key: 6,
-      text: '📝 Update Exam',
+      icon: <BuildIcon />,
+      text: 'Update Exam',
       link: '/update-exam',
     },
   ]
