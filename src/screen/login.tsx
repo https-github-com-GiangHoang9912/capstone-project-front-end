@@ -14,7 +14,7 @@ import * as CONSTANT from '../const'
 import { AccountContext } from '../contexts/account-context'
 
 interface IProps {
-  className?: string,
+  className?: string
   setIsLogin?: Dispatch<SetStateAction<boolean>>
 }
 type LoginProps = {} & IProps
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiTextField-root': {
       width: '100%',
     },
-    marginTop: '-74px'
+    marginTop: '-74px',
   },
   loginGoogle: {
     '& button': {
@@ -130,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Login:FC<LoginProps> = (props) => {
+const Login: FC<LoginProps> = (props) => {
   const { className, setIsLogin } = props
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
@@ -139,9 +139,12 @@ const Login:FC<LoginProps> = (props) => {
   const { setInformation } = useContext(AccountContext)
   const container = useRef<HTMLDivElement>(null)
 
-  useEffect(()=>{
-    setIsLogin?.(true);
-  },[])
+  useEffect(() => {
+    setIsLogin?.(true)
+    return () => {
+      setIsLogin?.(false)
+    }
+  }, [])
 
   const stopLoading = () => {
     if (container.current) container.current.style.display = 'none'
