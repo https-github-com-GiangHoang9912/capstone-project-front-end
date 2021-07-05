@@ -5,12 +5,14 @@
   "dependencies": {
     "@ahooksjs/next-form-table": "^0.2.3",
     "@alifd/next": "^1.23.11",
+    "@atlaskit/field-text": "^11.0.5",
     "@formily/next-components": "^1.3.17",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.58",
     "@ramonak/react-progress-bar": "^3.1.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -23,6 +25,8 @@
     "@types/styled-components": "^4.4.3",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0",
+    "lodash": "^4.17.21",
+    "lodash.range": "^3.2.0",
     "lottie-web": "^5.7.11",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
@@ -35,12 +39,12 @@
     "reactstrap": "^8.9.0",
     "styled-components": "^4.4.1",
     "typescript": "^4.2.4",
-    "uuid": "^8.3.2",
     "universal-cookie": "^4.0.4",
+    "uuid": "^8.3.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -68,6 +72,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.170",
     "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",

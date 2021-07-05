@@ -11,7 +11,7 @@ import Cookies from 'universal-cookie/es6'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
-import Table from '../common/table'
+import { TableCheckDuplicate } from '../common/table'
 import { AccountContext } from '../contexts/account-context'
 
 Duplicate.propTypes = {
@@ -115,7 +115,7 @@ function Duplicate(props: any) {
           <div className="convert-csv">
             <img src="csv.png" />
             <div className="csv-link">
-              <a href="https://convertio.co/vn/doc-csv/" target="_blank">
+              <a href="https://convertio.co/vn/doc-csv/" target="_blank" rel="noreferrer">
                 <h3>Convert file to CSV</h3>
               </a>
               <p>Go to CSV convert page and convert your file to CSV format</p>
@@ -178,7 +178,7 @@ function Duplicate(props: any) {
               handleClose={handleDialogClose}
             />
           </div>
-          {visibleResult ? <Table results={result} /> : ' '}
+          {visibleResult ? <TableCheckDuplicate results={result} /> : ' '}
         </div>
       </div>
     </div>
