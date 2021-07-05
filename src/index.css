@@ -9,7 +9,7 @@ body {
 }
 
 .main-content {
-  margin-top: 64px;
+  margin-top: 74px;
   width: 100%;
   min-width: 40rem;
 }
@@ -37,6 +37,11 @@ code {
 .hidden-dialog {
   display: none !important;
 }
+
+.hidden-component {
+  display: none !important;
+}
+
 * {
   margin: 0;
   padding: 0;

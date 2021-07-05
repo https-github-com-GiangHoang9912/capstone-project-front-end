@@ -2,7 +2,8 @@ import { createContext, useState } from 'react'
 import { AccountContextProps, Account } from '../interface/acc'
 
 const accountDefault: Account = {
-  username: '',
+  id: 0,
+  username: 'admin',
   role: 0,
   profile: {
     firstname: '',

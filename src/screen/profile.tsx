@@ -10,6 +10,7 @@ import {
   faAddressBook,
   faCalendar,
 } from '@fortawesome/free-solid-svg-icons'
+import Dialog from '../common/dialog'
 import { AccountContext } from '../contexts/account-context'
 
 Profile.propTypes = {
@@ -25,6 +26,7 @@ interface IImage {
 function Profile(props: any) {
   const { className } = props
   const [editStatus, setEditStatus] = useState<boolean>(true)
+  const [isOpen, setIsOpen] = useState(false);
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
   const [image, setImage] = useState<IImage>({
@@ -38,7 +40,16 @@ function Profile(props: any) {
     setEditStatus(!editStatus)
     console.log(editStatus)
   }
+  function handleEditProfile(){
+    setIsOpen(true);
+    setEditStatus(!editStatus);
+  }
+  const handleDialogClose = () =>{
+    setIsOpen(false);
+  }
+  const handleAccept = () =>{
 
+  }
   function handleFileChange(e: any) {
     setImage({ url: URL.createObjectURL(e.target.files[0]) })
   }
@@ -113,9 +124,18 @@ function Profile(props: any) {
                 disabled={editStatus}
               />
             </div>
-            <button className="btn-edit" onClick={handleEdit}>
-              {editStatus ? 'Edit profile' : 'Save'}
-            </button>
+            
+              {editStatus ? <button className="btn-edit" onClick={handleEdit}>Edit Profile</button> :
+               <button className="btn-edit" onClick={handleEditProfile}>Save </button>}
+           <Dialog
+              title="Update profile"
+              message="Save all profile infomation changes"
+              buttonAccept="Yes"
+              buttonCancel="No"
+              isOpen= {isOpen}
+              handleAccept = {handleAccept}
+              handleClose ={handleDialogClose}
+            />
             <h3>Change Password</h3>
             <NavLink to="/changePassword">
               <button className="btn btn-change">Go to change password</button>
