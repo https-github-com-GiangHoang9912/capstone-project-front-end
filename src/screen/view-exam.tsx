@@ -6,10 +6,16 @@ import TextField from '@material-ui/core/TextField';
 import { useCallback, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 import _ from 'lodash';
 import { TableViewExam } from '../common/table'
 
+interface IExam {
+  id: number,
+  name: string
+}
 
 ViewExam.propTypes = {
   className: PropTypes.string,
@@ -33,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 function ViewExam(props: any) {
   const { className } = props;
   const classes = useStyles();
-  const result = [
+  const [result, setResult] = useState<IExam[]>([
     {
       id: 1,
       name: 'SSC101 Chapter 123',
@@ -112,7 +118,7 @@ function ViewExam(props: any) {
       id: 20,
       name: 'VNR205 Chapter 10',
     }
-  ]
+  ])
   const [textInput, setTextInput] = useState<string>('');
   const [paginated, setPaginated] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -128,22 +134,57 @@ function ViewExam(props: any) {
     setPaginated(result.slice(0, pageSize));
   }, []);
 
+
+  // const childResult = Array<IExam[]>([]);
+
+  const handleSearchExam = function (content: string) {
+    return result.filter(item => item.name.includes(content.trim()));
+  }
+
+  console.log(handleSearchExam('SSC101'));
+
+  // console.log(childResult)
   const pagination = (pageNo: number) => {
     setCurrentPage(pageNo);
     const startIndex = (pageNo - 1) * pageSize;
     console.log('index start', startIndex);
     const paginatedPost = result.slice(startIndex, pageSize * pageNo);
-
     console.log('current', pageNo);
     console.log('post', paginatedPost);
-
     setPaginated(paginatedPost);
     console.log(paginated);
   }
 
+  const nextPagination = (pageNo: number) => {
+    console.log('current', pageNo);
+    const newCurrentPage = pageNo + 1;
+    setCurrentPage(newCurrentPage);
+    console.log('new current', newCurrentPage);
+    const startIndex = (newCurrentPage - 1) * pageSize;
+    console.log('start Index', startIndex);
+    const paginatedPost = result.slice(startIndex, pageSize * newCurrentPage);
+    setPaginated(paginatedPost);
+    console.log(paginated);
+  }
+
+  const prevPagination = (pageNo: number) => {
+    console.log('current', pageNo);
+    const newCurrentPage = pageNo - 1;
+    setCurrentPage(newCurrentPage);
+    console.log('new current', newCurrentPage);
+    const startIndex = (newCurrentPage - 1) * pageSize;
+    console.log('start Index', startIndex);
+    const paginatedPost = result.slice(startIndex, pageSize * newCurrentPage);
+    setPaginated(paginatedPost);
+    console.log(paginated);
+  }
+
+
   const onTextInputChange = useCallback((e) => {
     setTextInput(e.target.value);
   }, []);
+
+
 
   return (
     <div className={className}>
@@ -161,13 +202,24 @@ function ViewExam(props: any) {
             className="btn-search"
             variant="contained"
             disabled={!textInput}
+            // onClick={() => handleSearchExam(textInput)}
             color="primary"> Search </Button>
         </div>
         <TableViewExam results={paginated} />
 
         <div className="pagination-area">
           <div className="border-icon">
-            <FontAwesomeIcon className="prev-next" icon={faChevronLeft} />
+            <ArrowBackIosIcon
+              className="prev-next"
+              fontSize="small"
+              onClick={() => prevPagination(currentPage)}
+            />
+
+            {/* <FontAwesomeIcon
+              className="prev-next"
+              icon={faChevronLeft}
+
+            /> */}
           </div>
           {
             showPages.map((page, index) => (
@@ -183,7 +235,15 @@ function ViewExam(props: any) {
             ))
           }
           <div className="border-icon">
-            <FontAwesomeIcon className="prev-next" icon={faChevronRight} />
+            <ArrowForwardIosIcon
+              className="prev-next"
+              fontSize="small"
+              onClick={() => nextPagination(currentPage)}
+            />
+            {/* <FontAwesomeIcon className="prev-next"
+              icon={faChevronRight}
+              onClick={() => nextPagination(currentPage)}
+            /> */}
           </div>
         </div>
       </div>
@@ -214,6 +274,7 @@ box-sizing: border-box;
   cursor: pointer;
 }
 .prev-next {
+  font-size: 13px;
   margin: auto;
 }
 

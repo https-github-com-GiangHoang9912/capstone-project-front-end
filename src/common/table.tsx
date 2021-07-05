@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import { Button, makeStyles } from '@material-ui/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye } from '@fortawesome/free-solid-svg-icons'
+import Dialog from './dialog';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -43,7 +44,6 @@ const useStyles = makeStyles({
   styleBtn: {
     width: 75,
     height: 40,
-    backgroundColor: '#1e90ff',
     cursor: 'pointer',
     marginLeft: '1rem',
     marginBottom: '5px',
@@ -100,6 +100,16 @@ export function TableCheckDuplicate(props: any) {
 export function TableViewExam(props: any) {
   const classes = useStyles();
   const { results } = props;
+  const [isOpen, setIsOpen] = useState(false)
+  function handleDelete() {
+    setIsOpen(true)
+  }
+  const handleAcceptDelete = () => {
+    setIsOpen(false)
+  }
+  const handleDialogClose = () => {
+    setIsOpen(false)
+  }
   return (
     <TableContainer className={classes.viewExam}>
       <Table className={classes.tableView} aria-label="customized table">
@@ -128,8 +138,19 @@ export function TableViewExam(props: any) {
                   className={classes.styleBtn}>Edit</Button>
                 <Button
                   variant="contained"
-                  color="primary"
-                  className={classes.styleBtn}>Delete</Button>
+                  color="secondary"
+                  onClick={handleDelete}
+                  className={classes.styleBtn}
+                  >Delete</Button>
+                <Dialog
+                  title="Delete Exam"
+                  message="Do you want delete this exam???"
+                  buttonAccept="Yes"
+                  buttonCancel="No"
+                  isOpen={isOpen}
+                  handleAccept={handleAcceptDelete}
+                  handleClose={handleDialogClose}
+                />
               </StyledTableCell>
 
             </StyledTableRow>
