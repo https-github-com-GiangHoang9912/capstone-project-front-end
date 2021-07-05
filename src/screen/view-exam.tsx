@@ -37,7 +37,8 @@ function ViewExam(props: any) {
     {
       id: 1,
       name: 'SSC101 Chapter 123',
-    },
+    }
+    ,
     {
       id: 2,
       name: 'MEA201 Chapter 789',
@@ -116,13 +117,11 @@ function ViewExam(props: any) {
   const [paginated, setPaginated] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState(5);
-
+  let pages = 1;
 
   const totalPage = Math.ceil(result.length / pageSize);
-  // if (totalPage === 1) return null;
-  const pages = _.range(1, totalPage + 1);
-
-
+  pages = result.length && pageSize === 0 ? totalPage : totalPage + 1;
+  const showPages = _.range(1, pages);
 
 
   useEffect(() => {
@@ -165,7 +164,127 @@ function ViewExam(props: any) {
             color="primary"> Search </Button>
         </div>
         <TableViewExam results={paginated} />
-        <ul className="pagination">
+
+        <div className="pagination-area">
+          <div className="border-icon">
+            <FontAwesomeIcon className="prev-next" icon={faChevronLeft} />
+          </div>
+          {
+            showPages.map((page, index) => (
+              <button
+                key={index}
+                className={
+                  page === currentPage ? "btn active" : "btn"
+                }
+                onClick={() => pagination(page)}
+              >
+                {page}
+              </button>
+            ))
+          }
+          <div className="border-icon">
+            <FontAwesomeIcon className="prev-next" icon={faChevronRight} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+const StyleViewExam = styled(ViewExam)`
+
+box-sizing: border-box;
+.show-page {
+  width: 100%;
+  height: 100%;
+}
+
+//** icon prev next/
+.border-icon {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  border-radius:50%;
+  outline: none;
+  font-size: 10px;
+  background-color: #FFFFFF;
+  border: 1px solid #bad4f0;
+}
+.border-icon:hover {
+  background-color: #e0e0e079;
+  cursor: pointer;
+}
+.prev-next {
+  margin: auto;
+}
+
+//* container paging /
+.pagination-area {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+//** button paging/
+.btn {
+  outline: none;
+  background-color: #FFFFFF;
+  border: 1px solid #bad4f0;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  border-radius:50%;
+  margin: 0 3px;
+}
+.btn:hover {
+  cursor: pointer;
+}
+.active {
+  background-color: rgb(229,231,245) !important;
+  color: #5e6bd3;
+}
+.pagination-area button:hover:not(.active) {
+  background-color: #e0e0e079;
+  cursor: pointer;
+}
+
+//* are search exam/
+.search-exam {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2%;
+}
+.btn-search {
+  width: 120px;
+  height: 50px;
+  margin-left: 10px;
+}
+/* Hide scrollbar for IE, Edge add Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+`
+export default StyleViewExam;
+
+
+
+// .pagination {
+//   margin-top: 20px;
+//   margin-bottom: 20px;
+//   display: inline-block;
+//   display: flex;
+//   justify-content: center;
+{/* <ul className="pagination">
           <li className="page-link"><FontAwesomeIcon icon={faChevronLeft} /></li>
           {
             pages.map((page, index) => (
@@ -185,71 +304,14 @@ function ViewExam(props: any) {
             ))
           }
           <li className="page-link"><FontAwesomeIcon icon={faChevronRight} /></li>
-        </ul>
-      </div>
-    </div>
-  );
-}
-const StyleViewExam = styled(ViewExam)`
-box-sizing: border-box;
+        </ul> */}
+        /* .page-link{
+border: 1px solid red;
+padding: 5px 12px;
+border: 1px solid #ddd;
+transition: background-color .3s;
+list-style: none;
+font-size: 1.4rem;
+align-items: center;
 
-.active {
-  background-color: #4CAF50;
-  color: white;
-  border: 1px solid #4CAF50;
-}
-.show-page {
-  width: 100%;
-  height: 100%;
-}
-.btn {
-  border: none;
-  outline: none;
-  background-color: #ddd;
-}
-.page-link{
-  border: 1px solid red;
-  padding: 5px 12px;
-  border: 1px solid #ddd;
-  transition: background-color .3s;
-  list-style: none;
-  font-size: 1.4rem;
-  align-items: center;
-
-}
-.pagination li:hover:not(.active) {
-  background-color: #ddd;
-  cursor: pointer;
-}
-.pagination {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  display: inline-block;
-  display: flex;
-  justify-content: center;
-}
-.search-exam {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 2%;
-}
-.btn-search {
-  width: 120px;
-  height: 50px;
-  margin-left: 10px;
-}
-
-/* Hide scrollbar for IE, Edge add Firefox */
-.scrollbar-hidden {
-  -ms-overflow-style: none;
-  scrollbar-width: none; /* Firefox */
-}
-/* Hide scrollbar for Chrome, Safari and Opera */
-.scrollbar-hidden::-webkit-scrollbar {
-  display: none;
-}
-
-
-`
-export default StyleViewExam;
+} */
