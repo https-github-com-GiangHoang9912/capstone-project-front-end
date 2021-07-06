@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     width: 150,
     height: 50,
     backgroundColor: '#1e90ff',
-    cursor: 'pointer'
+    cursor: 'pointer',
   }
 })
 
@@ -136,32 +136,6 @@ function CreateExam(props: any) {
                   <span className="answer">D.Lao</span>
                 </div>
               </div>
-
-              {/* <p>2. Asia is a continent?</p>
-              <p>3. Asia has a land area about approx?</p>
-              <p>4. Which continent is bordered by Asia?</p>
-              <p>5. Which ocean does Asia not border?</p>
-              <p>6. Which of the following plains is not part of Asia?</p>
-              <p>7. In which region are the mountain and plateau systems of Asia
-                concentrated?</p>
-              <p>8. In which direction does the mountain and plateau
-                system run?</p>
-              <p>9. In which region does Asia have a lot of oil and gas?</p>
-              <p>10. Asia is a continent?</p>
-              <p>11. Asia has a land area about approx?</p>
-              <p>12. Which continent is bordered by Asia?</p>
-              <p>13. Which ocean does Asia not border?</p>
-              <p>14. Which of the following plains is not part of Asia?</p>
-              <p>15. In which region are the mountain and plateau systems
-                of Asia concentrated?</p>
-              <p>16. In which region are the mountain and plateau systems
-                of Asia concentrated?</p>
-              <p>17. In which direction does the mountain and plateau
-                system run?</p>
-              <p>18. In which region are the mountain and plateau systems
-                of Asia concentrated?</p>
-              <p>19. In which direction does the mountain and plateau
-                system run?</p> */}
             </div>
           </div>
         </div>

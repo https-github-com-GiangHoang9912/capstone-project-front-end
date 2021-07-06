@@ -17,11 +17,11 @@ interface IExam {
   name: string
 }
 
-ViewExam.propTypes = {
+ListExam.propTypes = {
   className: PropTypes.string,
 };
 
-ViewExam.defaultProps = {
+ListExam.defaultProps = {
   className: '',
 };
 
@@ -31,12 +31,13 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(3),
       display: 'flex',
       justifyContent: 'center',
+      height: 'auto'
     },
   },
 
 }));
 
-function ViewExam(props: any) {
+function ListExam(props: any) {
   const { className } = props;
   const classes = useStyles();
   const [result, setResult] = useState<IExam[]>([
@@ -141,7 +142,7 @@ function ViewExam(props: any) {
     return result.filter(item => item.name.includes(content.trim()));
   }
 
-  console.log(handleSearchExam('SSC101'));
+  console.log('search neeee', handleSearchExam('SSC101'));
 
   // console.log(childResult)
   const pagination = (pageNo: number) => {
@@ -214,12 +215,6 @@ function ViewExam(props: any) {
               fontSize="small"
               onClick={() => prevPagination(currentPage)}
             />
-
-            {/* <FontAwesomeIcon
-              className="prev-next"
-              icon={faChevronLeft}
-
-            /> */}
           </div>
           {
             showPages.map((page, index) => (
@@ -232,6 +227,12 @@ function ViewExam(props: any) {
               >
                 {page}
               </button>
+              // <Pagination
+              //   count={totalPage}
+              //   onClick={() => pagination(currentPage)}
+              //   color="primary"
+              // />
+
             ))
           }
           <div className="border-icon">
@@ -240,17 +241,13 @@ function ViewExam(props: any) {
               fontSize="small"
               onClick={() => nextPagination(currentPage)}
             />
-            {/* <FontAwesomeIcon className="prev-next"
-              icon={faChevronRight}
-              onClick={() => nextPagination(currentPage)}
-            /> */}
           </div>
         </div>
       </div>
     </div>
   );
 }
-const StyleViewExam = styled(ViewExam)`
+const StyleListExam = styled(ListExam)`
 
 box-sizing: border-box;
 .show-page {
@@ -335,7 +332,7 @@ box-sizing: border-box;
 }
 
 `
-export default StyleViewExam;
+export default StyleListExam;
 
 
 

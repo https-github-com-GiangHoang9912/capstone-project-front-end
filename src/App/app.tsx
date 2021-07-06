@@ -19,7 +19,7 @@ import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
 import ForgotPassword from '../screen/forgot-password'
 import UpdateExam from '../screen/update-exam'
-import ViewExam from '../screen/view-exam'
+import ListExam from '../screen/list-exam'
 
 
 function App(props: any) {
@@ -71,8 +71,8 @@ function App(props: any) {
             <Route exact path="/update-exam" component={Profile} >
               <UpdateExam />
             </Route>
-            <Route exact path="/view-exam" component={Profile} >
-              <ViewExam />
+            <Route exact path="/list-exam" component={Profile} >
+              <ListExam />
             </Route>
             <Route exact path="/admin/manage-staffs">
               <ManageStaffs />
