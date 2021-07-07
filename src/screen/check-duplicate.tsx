@@ -187,7 +187,7 @@ function Duplicate(props: any) {
 
 const StyleDuplicate = styled(Duplicate)`
   width: 100%;
-  height: 100vh;
+  height: auto;
   background-color: #f7f8fb;
   .container {
     margin: 0.5rem;

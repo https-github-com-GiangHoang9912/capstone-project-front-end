@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Checkbox } from '@material-ui/core'
 import styled from 'styled-components'
+import Table from '../common/tableReact'
 
 Staff.propTypes = {
   className: PropTypes.string,
@@ -76,8 +77,43 @@ function ManageStaffs(props: any) {
       name: 'Pham Nhat Anh',
       mail: 'anhpn@fe.edu.vn'
     }
+    ,
+    {
+      id: 102,
+      name: 'Tran Van Toan',
+      mail: 'toantv@fe.edu.vn'
+    },
+    {
+      id: 201,
+      name: 'Pham Nhat Anh',
+      mail: 'anhpn@fe.edu.vn'
+    }
+    ,
+    {
+      id: 102,
+      name: 'Tran Van Toan',
+      mail: 'toantv@fe.edu.vn'
+    },
+    {
+      id: 201,
+      name: 'Pham Nhat Anh',
+      mail: 'anhpn@fe.edu.vn'
+    }
   ]
-
+  const columns = [
+    {
+      Header: "ID",
+      accessor: "id",
+    },
+    {
+      Header: "Full Name",
+      accessor: "name",
+    },
+    {
+      Header: "Email",
+      accessor: "mail",
+    },
+  ]
   let StaffsComponents:any = []
 
   try {
@@ -120,7 +156,8 @@ function ManageStaffs(props: any) {
                   />
                 </div>
               </div>
-              { StaffsComponents }
+              
+              <Table columns ={columns} data={staffs} isPagination = {true} />
             </div>
           </div>
         </div>
