@@ -157,7 +157,7 @@ function ManageStaffs(props: any) {
                 </div>
               </div>
               
-              <Table columns ={columns} data={staffs} />
+              <Table columns ={columns} data={staffs} isPagination = {true} />
             </div>
           </div>
         </div>
