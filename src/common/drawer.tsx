@@ -113,9 +113,7 @@ function PersistentDrawerLeft(props: any) {
         </List>
         <Divider />
       </Drawer>
-  
     </ThemeProvider>
-
   );
 }
 

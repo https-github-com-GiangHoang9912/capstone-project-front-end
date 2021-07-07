@@ -13,6 +13,8 @@ body {
   margin-top: 74px;
   width: 100%;
   min-width: 40rem;
+  transition: margin 500ms;
+
 }
 
 .menu-open {
