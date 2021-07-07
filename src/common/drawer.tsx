@@ -19,7 +19,7 @@ import {
   Build as BuildIcon
 } from '@material-ui/icons';
 
-const drawerWidth = '13.5rem';
+const drawerWidth = '14rem';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,8 +41,11 @@ const customTheme = createMuiTheme({
       paper: {
         // Some CSS
         width: drawerWidth,
-        marginTop: '66px',
-        zIndex: 1
+        marginTop: '73px',
+        zIndex: 1,
+        backgroundColor: '#1f2937',
+        color: '#c5c5c5',
+        padding: '0 0.5rem',
       },
     },
   },
@@ -53,37 +56,37 @@ function PersistentDrawerLeft(props: any) {
   const menuItems = [
     {
       key: 1,
-      icon: <HomeIcon />,
+      icon: <HomeIcon fontSize='small'/>,
       text: 'Home',
       link: '/home',
     },
     {
       key: 2,
-      icon: <Filter2Icon />,
+      icon: <Filter2Icon fontSize='small'/>,
       text: 'Check Duplicate',
       link: '/check-duplicate',
     },
     {
       key: 3,
-      icon: <ContactSupportIcon />,
+      icon: <ContactSupportIcon fontSize='small'/>,
       text: 'Self-generate Question',
       link: '/self-generate',
     },
     {
       key: 4,
-      icon: <SupervisorAccountIcon />,
+      icon: <SupervisorAccountIcon fontSize='small'/>,
       text: 'Manage Staffs',
       link: '/admin/manage-staffs',
     },
     {
       key: 5,
-      icon: <NoteAddIcon />,
+      icon: <NoteAddIcon fontSize='small'/>,
       text: 'Create Exam',
       link: '/create-exam',
     },
     {
       key: 6,
-      icon: <BuildIcon />,
+      icon: <BuildIcon fontSize='small'/>,
       text: 'Update Exam',
       link: '/update-exam',
     },
@@ -95,6 +98,7 @@ function PersistentDrawerLeft(props: any) {
         className={className}
         variant="persistent"
         anchor="left"
+        transitionDuration={500}
         open={isOpen}
       >
         <List>
@@ -120,10 +124,10 @@ export default styled(PersistentDrawerLeft) `
   margin-top: 77px;
   border-top: 0;
   .active-li {
-    background: #cdcdcd;
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgb(234,234,234)), color-stop(1, rgb(177,177,177)));
+    background: #374151;
     font-weight: bold;
-    border-radius: 5px;
+    color: #f2f4f6;
+    border-radius: 10px;
   }
   li {
     height: 70px;
@@ -143,7 +147,7 @@ export default styled(PersistentDrawerLeft) `
     }
   }
   li:hover {
-    background-color: #f5f5f5;
-    border-radius: 5px;
+    background-color: #374151;
+    border-radius: 10px;
   }
 `
