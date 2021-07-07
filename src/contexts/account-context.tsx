@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { createContext, useState } from 'react'
 import { AccountContextProps, Account } from '../interface/acc'
 

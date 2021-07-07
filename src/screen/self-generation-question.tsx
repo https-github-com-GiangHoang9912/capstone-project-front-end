@@ -109,11 +109,11 @@ const SelfGenerate = ({ className = '' }) => {
 
 const SelfStyle = styled(SelfGenerate)`
   background: #f7f8fb;
-  min-height: 100vh;
+  min-height: auto;
   margin: auto;
   padding-bottom: 20px;
   .form-container {
-    margin: 2rem;
+    margin: 1rem ;
     border-radius: 5px;
     background: #fff;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;

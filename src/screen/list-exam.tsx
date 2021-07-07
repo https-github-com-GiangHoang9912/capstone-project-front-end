@@ -1,11 +1,12 @@
 import styled from 'styled-components'
+import * as React from "react";
+
+import { useCallback, useEffect, useState } from 'react';
 import { Pagination } from '@material-ui/lab';
 import { Button, makeStyles } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
-import { useCallback, useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+// import {  } from 'react';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
@@ -333,43 +334,3 @@ box-sizing: border-box;
 
 `
 export default StyleListExam;
-
-
-
-// .pagination {
-//   margin-top: 20px;
-//   margin-bottom: 20px;
-//   display: inline-block;
-//   display: flex;
-//   justify-content: center;
-{/* <ul className="pagination">
-          <li className="page-link"><FontAwesomeIcon icon={faChevronLeft} /></li>
-          {
-            pages.map((page, index) => (
-              <li
-                className={
-                  page === currentPage ? "page-link active" : "page-link"
-                }
-                key={index}
-              >
-                <button
-                  className="btn"
-                  onClick={() => pagination(page)}
-                >
-                  {page}
-                </button>
-              </li>
-            ))
-          }
-          <li className="page-link"><FontAwesomeIcon icon={faChevronRight} /></li>
-        </ul> */}
-        /* .page-link{
-border: 1px solid red;
-padding: 5px 12px;
-border: 1px solid #ddd;
-transition: background-color .3s;
-list-style: none;
-font-size: 1.4rem;
-align-items: center;
-
-} */

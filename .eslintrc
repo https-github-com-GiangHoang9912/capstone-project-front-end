@@ -23,6 +23,11 @@
         "args": "none"
       }
     ],
+   
+      // note you must disable the base rule as it can report incorrect errors
+      "no-shadow": "off",
+      "@typescript-eslint/no-shadow": ["error"],
+  
     "@typescript-eslint/semi": [
       "off"
     ],
@@ -54,7 +59,8 @@
         "allowForLoopAfterthoughts": true
       }
     ],
-    "react/jsx-key": "error",
+    
+    "react/jsx-key": "off",
     "react/jsx-props-no-spreading": "off",
     "import/prefer-default-export": "off",
     "react/jsx-boolean-value": "off",
@@ -69,4 +75,6 @@
     "react/jsx-filename-extension": "off",
     "react/no-array-index-key": "off"
   }
+  
+  
 }

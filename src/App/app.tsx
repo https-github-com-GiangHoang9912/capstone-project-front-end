@@ -1,8 +1,10 @@
 // lib
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { useState } from 'react'
+
 
 import styled from 'styled-components'
+import React from 'react'
+
 
 // components
 import HomePage from '../screen/home'
@@ -23,8 +25,8 @@ import ListExam from '../screen/list-exam'
 
 
 function App(props: any) {
-  const [isOpen, setIsOpen] = useState(true);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isOpen, setIsOpen] = React.useState(true);
+  const [isLogin, setIsLogin] = React.useState(false);
 
   const toggleClass = isOpen ? 'menu-open' : 'menu-close'
   return (

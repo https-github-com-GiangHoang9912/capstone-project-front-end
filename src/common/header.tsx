@@ -1,12 +1,12 @@
-import { Dispatch, FC,  SetStateAction,  useContext } from 'react'
+import * as React from "react";
 
+import { Dispatch, FC,  SetStateAction,  useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 // MUI
 import { Typography, IconButton, AppBar, Toolbar, Button } from '@material-ui/core'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu';
-
 import { AccountContext } from '../contexts/account-context'
 
 interface Styled {
@@ -66,11 +66,11 @@ const Header: FC<HeaderProps> = (props) => {
           <NavLink to="/profile" className="right-menu user">
             <div className="avt">
               <img
-                src="https://static.wikia.nocookie.net/plantsvszombies/images/8/87/Giant_Sunflower1.png"
+                src="avatar2.png"
                 alt="avt"
               />
             </div>
-            <div className="txt">Hello, {accountContextData.username}</div>
+            <div className="txt">Hello {accountContextData.username}</div>
             <span className="tooltiptext">Edit Profile</span>
           </NavLink>
           <NavLink to="/login" className="right-menu log-out">
@@ -104,7 +104,9 @@ const StyledHeader = styled(Header)`
   .right-menu:hover {
     background-color: whitesmoke;
   }
-
+  .txt{
+    text-align: center;
+  }
   .user {
     margin-right: 15px;
     min-width: 90px;
