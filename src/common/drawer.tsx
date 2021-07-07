@@ -7,13 +7,19 @@ import { makeStyles, useTheme, Theme, createStyles, createMuiTheme, ThemeProvide
 
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
-import MailIcon from '@material-ui/icons/Mail';
 
+import {
+  Home as HomeIcon,
+  Filter2 as Filter2Icon,
+  SupervisorAccount as SupervisorAccountIcon,
+  ContactSupport as ContactSupportIcon,
+  NoteAdd as NoteAddIcon,
+  Build as BuildIcon
+} from '@material-ui/icons';
 
-const drawerWidth = '13.5rem';
+const drawerWidth = '14rem';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,8 +41,11 @@ const customTheme = createMuiTheme({
       paper: {
         // Some CSS
         width: drawerWidth,
-        marginTop: '66px',
-        zIndex: 1
+        marginTop: '73px',
+        zIndex: 1,
+        backgroundColor: '#1f2937',
+        color: '#c5c5c5',
+        padding: '0 0.5rem',
       },
     },
   },
@@ -47,32 +56,38 @@ function PersistentDrawerLeft(props: any) {
   const menuItems = [
     {
       key: 1,
-      text: '🏡 Home',
+      icon: <HomeIcon fontSize='small'/>,
+      text: 'Home',
       link: '/home',
     },
     {
       key: 2,
-      text: '🍣 Check Duplicate',
+      icon: <Filter2Icon fontSize='small'/>,
+      text: 'Check Duplicate',
       link: '/check-duplicate',
     },
     {
       key: 3,
-      text: '🎰 Self-generate Question',
+      icon: <ContactSupportIcon fontSize='small'/>,
+      text: 'Self-generate Question',
       link: '/self-generate',
     },
     {
       key: 4,
-      text: '⛑ Manage Staffs',
+      icon: <SupervisorAccountIcon fontSize='small'/>,
+      text: 'Manage Staffs',
       link: '/admin/manage-staffs',
     },
     {
       key: 5,
-      text: '🔨 Create Exam',
+      icon: <NoteAddIcon fontSize='small'/>,
+      text: 'Create Exam',
       link: '/create-exam',
     },
     {
       key: 6,
-      text: '📝 Update Exam',
+      icon: <BuildIcon fontSize='small'/>,
+      text: 'Update Exam',
       link: '/update-exam',
     },
   ]
@@ -83,12 +98,14 @@ function PersistentDrawerLeft(props: any) {
         className={className}
         variant="persistent"
         anchor="left"
+        transitionDuration={500}
         open={isOpen}
       >
         <List>
           {menuItems.map((item) => (
             <ListItem key={item.key}>
               <NavLink to={item.link} activeClassName="active-li">
+                {item.icon}
                 {item.text}
               </NavLink>
             </ListItem>
@@ -96,9 +113,7 @@ function PersistentDrawerLeft(props: any) {
         </List>
         <Divider />
       </Drawer>
-  
     </ThemeProvider>
-
   );
 }
 
@@ -107,10 +122,10 @@ export default styled(PersistentDrawerLeft) `
   margin-top: 77px;
   border-top: 0;
   .active-li {
-    background: #cdcdcd;
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgb(234,234,234)), color-stop(1, rgb(177,177,177)));
+    background: #374151;
     font-weight: bold;
-    border-radius: 5px;
+    color: #f2f4f6;
+    border-radius: 10px;
   }
   li {
     height: 70px;
@@ -122,10 +137,15 @@ export default styled(PersistentDrawerLeft) `
       height: 100%;
       padding: 0 10px;
       text-decoration: none;
+      display: flex;
+      align-items: center;
+      svg {
+        margin-right: 0.8rem;
+      }
     }
   }
   li:hover {
-    background-color: #f5f5f5;
-    border-radius: 5px;
+    background-color: #374151;
+    border-radius: 10px;
   }
 `
