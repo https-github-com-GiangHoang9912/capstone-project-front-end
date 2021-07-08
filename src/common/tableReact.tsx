@@ -20,7 +20,6 @@ function TableReact(props: any) {
   })
   console.log(columns)
   console.log(data)
-  const tableInstance = useTable({ columns, data }, usePagination)
   const {
     getTableProps,
     getTableBodyProps,
