@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
@@ -10,8 +10,11 @@ import {
   faAddressBook,
   faCalendar,
 } from '@fortawesome/free-solid-svg-icons'
+import axios from 'axios'
 import Dialog from '../common/dialog'
 import { AccountContext } from '../contexts/account-context'
+import * as CONSTANT from '../const'
+import { refreshToken } from '../services/services'
 
 Profile.propTypes = {
   className: PropTypes.string,
@@ -19,19 +22,18 @@ Profile.propTypes = {
 Profile.defaultProps = {
   className: '',
 }
-interface IImage {
-  url: string
-}
+
+const GET_INFORMATION_URL = `${CONSTANT.BASE_URL}/user/get-information`
 
 function Profile(props: any) {
   const { className } = props
   const [editStatus, setEditStatus] = useState<boolean>(true)
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
-  const [image, setImage] = useState<IImage>({
-    url: account.profile.avatar ? account.profile.avatar : 'avatar2.png',
-  })
+  const [image, setImage] = useState<string>('avatar2.png')
+  const [firstName, setFirstName] = useState<any>(account.profile.firstname)
+  const [lastName, setLastName] = useState<any>(account.profile.lastname)
   const [dob, setDob] = useState<any>(account.profile.dateofbirth)
   const [address, setAddress] = useState<any>(account.profile.address)
   const [phone, setPhone] = useState<any>(account.profile.phone)
@@ -40,19 +42,40 @@ function Profile(props: any) {
     setEditStatus(!editStatus)
     console.log(editStatus)
   }
-  function handleEditProfile(){
-    setIsOpen(true);
-    setEditStatus(!editStatus);
+  function handleEditProfile() {
+    setIsOpen(true)
+    setEditStatus(!editStatus)
   }
-  const handleDialogClose = () =>{
-    setIsOpen(false);
+  const handleDialogClose = () => {
+    setIsOpen(false)
   }
-  const handleAccept = () =>{
-
-  }
+  const handleAccept = () => {}
   function handleFileChange(e: any) {
-    setImage({ url: URL.createObjectURL(e.target.files[0]) })
+    setImage(URL.createObjectURL(e.target.files[0]))
+    console.log(e.target.files[0])
   }
+
+  useEffect(() => {
+    const username = localStorage.getItem('username')
+    const id = localStorage.getItem('id')
+    console.log(username)
+    axios.post(GET_INFORMATION_URL, {
+        username,
+      })
+      .then((response) => {
+        console.log(response.data)
+        setFirstName(response.data.firstName)
+        setLastName(response.data.lastName)
+        setEmail(response.data.email)
+        setAddress(response.data.address)
+        setPhone(response.data.phone)
+        setDob(response.data.dateOfBirth)
+        setImage(response.data.avatar)
+      })
+      .catch(async (error) => {
+        refreshToken(error, id ? Number(id) : account.id)
+      })
+  }, [])
 
   return (
     <div className={className}>
@@ -62,13 +85,27 @@ function Profile(props: any) {
             <h3 id="information">Information</h3>
             <div className="form-info">
               <span>
-                ‍<FontAwesomeIcon icon={faUser} /> Username
+                ‍<FontAwesomeIcon icon={faUser} /> First Name
               </span>
               <input
                 type="text"
                 id="username"
                 className="input-bar"
-                value={account.username}
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                disabled={editStatus}
+              />
+            </div>
+            <div className="form-info">
+              <span>
+                ‍<FontAwesomeIcon icon={faUser} /> Last Name
+              </span>
+              <input
+                type="text"
+                id="username"
+                className="input-bar"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
                 disabled={editStatus}
               />
             </div>
@@ -124,17 +161,24 @@ function Profile(props: any) {
                 disabled={editStatus}
               />
             </div>
-            
-              {editStatus ? <button className="btn-edit" onClick={handleEdit}>Edit Profile</button> :
-               <button className="btn-edit" onClick={handleEditProfile}>Save </button>}
-           <Dialog
+
+            {editStatus ? (
+              <button className="btn-edit" onClick={handleEdit}>
+                Edit Profile
+              </button>
+            ) : (
+              <button className="btn-edit" onClick={handleEditProfile}>
+                Save{' '}
+              </button>
+            )}
+            <Dialog
               title="Update profile"
               message="Save all profile infomation changes"
               buttonAccept="Yes"
               buttonCancel="No"
-              isOpen= {isOpen}
-              handleAccept = {handleAccept}
-              handleClose ={handleDialogClose}
+              isOpen={isOpen}
+              handleAccept={handleAccept}
+              handleClose={handleDialogClose}
             />
             <h3>Change Password</h3>
             <NavLink to="/changePassword">
@@ -148,7 +192,7 @@ function Profile(props: any) {
           <div className="img-avt">
             <img
               // eslint-disable-next-line max-len
-              src={image.url}
+              src={image}
               alt=""
             />
             <input
@@ -191,20 +235,20 @@ const styleProfile = styled(Profile)`
     border-radius: 20px 0px 0 20px;
     margin: 10px 0;
     text-align: center;
-    border-right: 1px dotted #DAE1F5;
+    border-right: 1px dotted #dae1f5;
   }
   .form-contain h3 {
     margin: 2rem;
     color: #545d7a;
     font-size: 20px;
   }
-  #information{
+  #information {
     margin: 0 0 2em 0;
   }
   .img-avt {
     padding: 20px;
-    margin:10px 5px;
-    border-left: 1px dotted #DAE1F5;
+    margin: 10px 5px;
+    border-left: 1px dotted #dae1f5;
   }
   img {
     width: 200px;
@@ -264,13 +308,14 @@ const styleProfile = styled(Profile)`
   .form-contain {
     border-radius: 0px;
   }
-  @media screen and (max-width: 782px){
-    .contain{
-      display: flex; 
+  @media screen and (max-width: 782px) {
+    .contain {
+      display: flex;
       flex-direction: column-reverse;
       border: none;
     }
-    .form-contain, .img-avt{
+    .form-contain,
+    .img-avt {
       border: none;
     }
   }

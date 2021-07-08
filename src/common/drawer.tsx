@@ -1,9 +1,7 @@
-import React from 'react';
-
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom'
 
-import { makeStyles, useTheme, Theme, createStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -19,9 +17,9 @@ import {
   Build as BuildIcon
 } from '@material-ui/icons';
 
-const drawerWidth = '14rem';
+const drawerWidth = '15rem';
 
-const useStyles = makeStyles((theme: Theme) =>
+makeStyles((theme: Theme) =>
   createStyles({
     hide: {
       display: 'none',

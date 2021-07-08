@@ -182,6 +182,12 @@ const Login: FC<LoginProps> = (props) => {
           console.log(response.data)
           stopLoading()
           console.log(cookies.getAll())
+
+          localStorage.setItem('username', response.data.username)
+          localStorage.setItem(
+            'avatar',
+            response.data.profile.avatar ? response.data.profile.avatar : 'avatar2.png'
+          )
           history.push('/Home')
         }
       }, 2000)
@@ -211,6 +217,12 @@ const Login: FC<LoginProps> = (props) => {
           setInformation(response.data)
           console.log(response.data)
           stopLoading()
+          localStorage.setItem('id', response.data.id)
+          localStorage.setItem('username', response.data.username)
+          localStorage.setItem(
+            'avatar',
+            response.data.profile.avatar ? response.data.profile.avatar : 'avatar2.png'
+          )
           history.push('/Home')
         }
       }, 2000)

@@ -8,8 +8,6 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
-
-
 DialogComponent.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string.isRequired,
@@ -25,14 +23,21 @@ DialogComponent.defaultProps = {
 }
 
 function DialogComponent(props: any) {
-  const { className, title, message, buttonAccept, buttonCancel, isOpen,handleAccept, handleClose } = props
-  
-  
+  const {
+    className,
+    title,
+    message,
+    buttonAccept,
+    buttonCancel,
+    isOpen,
+    handleAccept,
+    handleClose,
+  } = props
+
   return (
     <div className={className}>
       <Dialog
         open={isOpen}
-        
         keepMounted
         onClose={handleClose}
         aria-labelledby="alert-dialog-slide-title"
@@ -40,16 +45,14 @@ function DialogComponent(props: any) {
       >
         <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            {message}
-          </DialogContentText>
+          <DialogContentText id="alert-dialog-slide-description">{message}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAccept} color="primary">
             {buttonAccept}
           </Button>
           <Button onClick={handleClose} color="primary">
-           {buttonCancel}
+            {buttonCancel}
           </Button>
         </DialogActions>
       </Dialog>
@@ -57,9 +60,6 @@ function DialogComponent(props: any) {
   )
 }
 
-const StyledDialog = styled(DialogComponent)`
-  
- 
-`
+const StyledDialog = styled(DialogComponent)``
 
 export default StyledDialog
