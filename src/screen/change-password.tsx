@@ -1,11 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable max-len */
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
-
-import { Link } from 'react-router-dom'
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faLock, faEye } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components'

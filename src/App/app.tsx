@@ -17,10 +17,9 @@ import { AccountContextProvider } from '../contexts/account-context'
 import ManageStaffs from '../screen/manage-staffs'
 import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
-import ForgotPassword from '../screen/forgot-password'
 import UpdateExam from '../screen/update-exam'
 
-function App(props: any) {
+function App() {
   const [isOpen, setIsOpen] = useState(true);
   const [isLogin, setIsLogin] = useState(false);
 
