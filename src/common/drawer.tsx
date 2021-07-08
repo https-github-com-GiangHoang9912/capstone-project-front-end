@@ -81,8 +81,8 @@ function PersistentDrawerLeft(props: any) {
     {
       key: 5,
       icon: <NoteAddIcon fontSize='small'/>,
-      text: 'Create Exam',
-      link: '/create-exam',
+      text: 'List Exam',
+      link: '/list-exam',
     },
     {
       key: 6,

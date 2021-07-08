@@ -1,8 +1,10 @@
 // lib
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import { useState } from 'react'
+
 
 import styled from 'styled-components'
+import React from 'react'
+
 
 // components
 import HomePage from '../screen/home'
@@ -19,10 +21,12 @@ import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
 import ForgotPassword from '../screen/forgot-password'
 import UpdateExam from '../screen/update-exam'
+import ListExam from '../screen/list-exam'
+
 
 function App(props: any) {
-  const [isOpen, setIsOpen] = useState(true);
-  const [isLogin, setIsLogin] = useState(false);
+  const [isOpen, setIsOpen] = React.useState(true);
+  const [isLogin, setIsLogin] = React.useState(false);
 
   const toggleClass = isOpen ? 'menu-open' : 'menu-close'
   return (
@@ -57,14 +61,20 @@ function App(props: any) {
             <Route exact path="/history" component={Profile} >
               <ViewHistory />
             </Route>
-            <Route exact path="/changePassword" component={Profile} >
+            <Route exact path="/change-password" component={Profile} >
               <ChangePassword />
+            </Route>
+            <Route exact path="/forgot-password" component={Profile} >
+              <ForgotPassword />
             </Route>
             <Route exact path="/create-exam" component={Profile} >
               <CreateExam />
             </Route>
             <Route exact path="/update-exam" component={Profile} >
               <UpdateExam />
+            </Route>
+            <Route exact path="/list-exam" component={Profile} >
+              <ListExam />
             </Route>
             <Route exact path="/admin/manage-staffs">
               <ManageStaffs />

@@ -1,12 +1,12 @@
-import { Dispatch, FC,  SetStateAction,  useContext} from 'react'
+import * as React from "react";
 
+import { Dispatch, FC,  SetStateAction,  useContext } from 'react'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 // MUI
 import { Typography, IconButton, AppBar, Toolbar, Button } from '@material-ui/core'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu';
-
 import { AccountContext } from '../contexts/account-context'
 
 interface Styled {

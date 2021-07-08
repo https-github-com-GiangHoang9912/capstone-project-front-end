@@ -86,8 +86,7 @@ const SelfGenerate = ({ className = '' }) => {
           {/* Nhap cau tra loi */}
           <br />
           
-          
-          <Carousel className="carousel">
+          <Carousel isRTL className="carousel">
             {items.map((item) => (
               <div className="item-input">
                 <p className="label">Input Answers {item}</p>
@@ -186,13 +185,13 @@ const SelfStyle = styled(SelfGenerate)`
     font-weight: 600;
     color: #545d7a;
     padding: 10px 0;
+    float: left;
   }
   .note-box {
     color: #545d7a;
     margin: 10px;
   }
   .item-input {
-    text-align: start;
     border: 1px solid #DAE1F5;
     padding: 1rem 2rem;
     border-radius: 5px;
