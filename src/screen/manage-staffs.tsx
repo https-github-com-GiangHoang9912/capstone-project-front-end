@@ -146,7 +146,7 @@ function ManageStaffs(props: any) {
               </div>
             </div>
             <div className="manage">
-              <Table columns ={columns} data={staffs} isPagination = {true} />
+              <Table className="table-wrapper" columns ={columns} data={staffs} isPagination = {true} />
             </div>
           </div>
         </div>
@@ -215,16 +215,33 @@ const StyledAdmin = styled(ManageStaffs)`
     border-radius: 10px;
     overflow: auto;
     align-items: center;
-    padding: 10px;
+    padding: 10px 30px;
     width: 70%;
     min-width: 690px;
   }
+
+  .manage {
+    height: 30rem;
+    .table-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+  }
+
+  table {
+    overflow: auto;
+    table-layout: auto;
+  }
+
   th {
     text-align: left !important;
   }
 
   /** css for area contain search */
   .search {
+    position: relative;
     display: flex;
     margin: auto;
     margin-bottom: 10px;
@@ -244,14 +261,14 @@ const StyledAdmin = styled(ManageStaffs)`
     height: 50px;
     border-radius: 10px;
     padding: 0 30px 0 30px;
-    cursor: pointer;
+    cursor: auto;
     padding: 0 30px 0 65px;
-    cursor: pointer;
   }
   /** icon search */
   .icon-search {
     display: flex;
     align-items: center;
+    position: absolute;
     bottom: 0;
     left: 0;
     height: 100%;
