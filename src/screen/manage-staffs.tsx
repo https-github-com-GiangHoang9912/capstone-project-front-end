@@ -233,14 +233,11 @@ const StyledAdmin = styled(ManageStaffs)`
     border-radius: 5px;
     overflow: auto;
     align-items: center;
-<<<<<<< HEAD
     padding: 10px;
     margin: 1rem;
     width: 100%;
-=======
     padding: 10px 30px;
     width: 70%;
->>>>>>> 1215a7b52401da38a32fc29581f1f1f9a37a9819
     min-width: 690px;
   }
 
