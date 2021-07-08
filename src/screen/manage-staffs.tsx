@@ -145,18 +145,7 @@ function ManageStaffs(props: any) {
                 <p className="btn btn-white btn-animate">Cancel</p>
               </div>
             </div>
-            <hr className="display" />
             <div className="manage">
-              <div className="select-all">
-                <div className="checkbox">
-                  <Checkbox
-                    defaultChecked={checked}
-                    color="primary"
-                    inputProps={{ 'aria-label': 'secondary checkbox' }}
-                  />
-                </div>
-              </div>
-              
               <Table columns ={columns} data={staffs} isPagination = {true} />
             </div>
           </div>
@@ -209,7 +198,7 @@ const StyledAdmin = styled(ManageStaffs)`
   }
   .container {
     width: 100%;
-    min-height: 100vh;
+    height: auto;
     overflow: auto;
     display: -webkit-box;
     display: -webkit-flex;
@@ -225,16 +214,17 @@ const StyledAdmin = styled(ManageStaffs)`
     background: #fff;
     border-radius: 10px;
     overflow: auto;
-    position: absolute;
     align-items: center;
     padding: 10px;
     width: 70%;
     min-width: 690px;
   }
+  th {
+    text-align: left !important;
+  }
 
   /** css for area contain search */
   .search {
-    position: relative;
     display: flex;
     margin: auto;
     margin-bottom: 10px;
@@ -262,7 +252,6 @@ const StyledAdmin = styled(ManageStaffs)`
   .icon-search {
     display: flex;
     align-items: center;
-    position: absolute;
     bottom: 0;
     left: 0;
     height: 100%;
@@ -304,7 +293,6 @@ const StyledAdmin = styled(ManageStaffs)`
     width: 45%;
     align-items: center;
     margin-top: 40px;
-    position: absolute;
     left: 50%;
     transform: translateX(-50%);
   }
