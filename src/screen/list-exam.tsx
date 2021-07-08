@@ -127,31 +127,35 @@ function ListExam(props: any) {
 
   const columns = [
     {
-      width: '5%',
       Header: "ID",
       accessor: "id",
     },
     {
-      width: '55%',
       Header: "Exam Name",
       accessor: "name",
     },
     {
-      width: '5%',
       Header: "View",
       Cell: (cell: any) => (
         <FontAwesomeIcon className='detailExam' icon={faEye} />
       )
     },
     {
-      width: '35%',
       Header: "Update",
-      Cell: (cell: any) => (
-        <Button
-          variant="contained"
-          color="primary"
-          className='styleBtn'>Edit</Button>
+      Cell: (row: any) =>
+      (
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            className='style-btn'>Edit</Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            className='style-btn'>Delete</Button>
+        </div>
       )
+
     },
   ]
 
@@ -242,36 +246,8 @@ function ListExam(props: any) {
             disabled={!textInput}
             color="primary"> Search </Button>
         </div>
-        <TableViewExam results={paginated} />
-
-        <div className="pagination-area">
-          <div className="border-icon">
-            <ArrowBackIosIcon
-              className="prev-next"
-              fontSize="small"
-              onClick={() => prevPagination(currentPage)}
-            />
-          </div>
-          {
-            showPages.map((page: any, index: any) => (
-              <button
-                key={index}
-                className={
-                  page === currentPage ? "btn active" : "btn"
-                }
-                onClick={() => pagination(page)}
-              >
-                {page}
-              </button>
-            ))
-          }
-          <div className="border-icon">
-            <ArrowForwardIosIcon
-              className="prev-next"
-              fontSize="small"
-              onClick={() => nextPagination(currentPage)}
-            />
-          </div>
+        <div className="tbl-exams">
+          <Table columns={columns} data={result} isPagination={true} />
         </div>
       </div>
     </div>
@@ -284,7 +260,14 @@ box-sizing: border-box;
   width: 100%;
   height: 100%;
 }
-
+.style-btn {
+  width: 75;
+  height: 40;
+  cursor: pointer;
+  margin-left: 1rem;
+  margin-bottom: 5px;
+  font-size: 1;
+}
 //** icon prev next/
 .border-icon {
   display: flex;

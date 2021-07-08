@@ -132,8 +132,6 @@ const StyleTable = styled(TableReact)`
     font-size: 16px;
     background-color: #303f9f;
     padding: 0.6rem 0.3rem;
-    /* width: 33.33%; */
-    /* position: fixed; */
   }
 
   tr:nth-child(even) {
@@ -177,5 +175,6 @@ const StyleTable = styled(TableReact)`
   .pageNumber:hover {
     background-color: #becbeb;
   }
+
 `
 export default StyleTable
