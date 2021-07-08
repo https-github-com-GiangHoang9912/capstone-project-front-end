@@ -145,19 +145,8 @@ function ManageStaffs(props: any) {
                 <p className="btn btn-white btn-animate">Cancel</p>
               </div>
             </div>
-            <hr className="display" />
             <div className="manage">
-              <div className="select-all">
-                <div className="checkbox">
-                  <Checkbox
-                    defaultChecked={checked}
-                    color="primary"
-                    inputProps={{ 'aria-label': 'secondary checkbox' }}
-                  />
-                </div>
-              </div>
-              
-              <Table columns ={columns} data={staffs} isPagination = {true} />
+              <Table className="table-wrapper" columns ={columns} data={staffs} isPagination = {true} />
             </div>
           </div>
         </div>
@@ -209,7 +198,7 @@ const StyledAdmin = styled(ManageStaffs)`
   }
   .container {
     width: 100%;
-    min-height: 100vh;
+    height: auto;
     overflow: auto;
     display: -webkit-box;
     display: -webkit-flex;
@@ -225,11 +214,29 @@ const StyledAdmin = styled(ManageStaffs)`
     background: #fff;
     border-radius: 10px;
     overflow: auto;
-    position: absolute;
     align-items: center;
-    padding: 10px;
+    padding: 10px 30px;
     width: 70%;
     min-width: 690px;
+  }
+
+  .manage {
+    height: 30rem;
+    .table-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+  }
+
+  table {
+    overflow: auto;
+    table-layout: auto;
+  }
+
+  th {
+    text-align: left !important;
   }
 
   /** css for area contain search */
@@ -254,9 +261,8 @@ const StyledAdmin = styled(ManageStaffs)`
     height: 50px;
     border-radius: 10px;
     padding: 0 30px 0 30px;
-    cursor: pointer;
+    cursor: auto;
     padding: 0 30px 0 65px;
-    cursor: pointer;
   }
   /** icon search */
   .icon-search {
@@ -304,7 +310,6 @@ const StyledAdmin = styled(ManageStaffs)`
     width: 45%;
     align-items: center;
     margin-top: 40px;
-    position: absolute;
     left: 50%;
     transform: translateX(-50%);
   }

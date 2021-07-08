@@ -128,8 +128,7 @@ export default styled(PersistentDrawerLeft) `
     border-radius: 10px;
   }
   li {
-    height: 70px;
-    line-height: 70px;
+    height: 50px;
     padding: 0;
     font-size: 0.9rem;
     a {
