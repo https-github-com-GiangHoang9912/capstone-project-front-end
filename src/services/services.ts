@@ -10,5 +10,10 @@ export const refreshToken = async (error: any, userId: number) => {
     await axios.post(REFRESH_JWT_TOKEN, {
       id: userId,
     })
+  } 
+  if (error.response == null) {
+    await axios.post(REFRESH_JWT_TOKEN, {
+      id: userId,
+    })
   }
 }
