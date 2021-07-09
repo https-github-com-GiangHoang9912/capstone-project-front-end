@@ -24,7 +24,7 @@ Profile.defaultProps = {
 }
 
 const GET_INFORMATION_URL = `${CONSTANT.BASE_URL}/user/get-information`
-
+const UPDATE_PROFILE_URL = `${CONSTANT.BASE_URL}/user/update-information`
 function Profile(props: any) {
   const { className } = props
   const [editStatus, setEditStatus] = useState<boolean>(true)
@@ -38,6 +38,10 @@ function Profile(props: any) {
   const [address, setAddress] = useState<any>(account.profile.address)
   const [phone, setPhone] = useState<any>(account.profile.phone)
   const [email, setEmail] = useState<any>(account.profile.email)
+  const [isInputValid,setIsInputValid] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<String>('');
+  const [inputError, setInputError] = useState<String>('');
+
   function handleEdit() {
     setEditStatus(!editStatus)
     console.log(editStatus)
@@ -49,7 +53,27 @@ function Profile(props: any) {
   const handleDialogClose = () => {
     setIsOpen(false)
   }
-  const handleAccept = () => {}
+  const handleAccept = async () => {
+    setIsOpen(false);
+    const response = await axios
+    .post(
+      UPDATE_PROFILE_URL,
+      {
+        firstName,
+        lastName,
+        email,
+        address,
+        phone,
+        dob,
+        image
+      },
+      {
+        withCredentials: true,
+      }
+    )
+   
+
+  }
   function handleFileChange(e: any) {
     setImage(URL.createObjectURL(e.target.files[0]))
     console.log(e.target.files[0])
@@ -77,6 +101,20 @@ function Profile(props: any) {
       })
   }, [])
 
+  const validateInput = (inputText:any, regex:any, error:String, errorType:String) => { 
+    const regexp = regex;
+    const checkingResult = regexp.exec(inputText);
+    if (checkingResult !== null) {
+        setIsInputValid(true);
+        setErrorMessage('');
+        setInputError('');
+    } else {
+      setIsInputValid(false);
+      setErrorMessage(error);
+      setInputError(errorType);
+    }
+}
+
   return (
     <div className={className}>
       <div className="info-container">
@@ -91,10 +129,12 @@ function Profile(props: any) {
                 type="text"
                 id="username"
                 className="input-bar"
+                onBlur={(e) => validateInput(e.target.value, /^(?!\s*$).+/, "Name cannot be blank","fname")}
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 disabled={editStatus}
               />
+              {inputError === "fname" ?<p className="errorMessage">{errorMessage}</p> : ''}
             </div>
             <div className="form-info">
               <span>
@@ -104,10 +144,12 @@ function Profile(props: any) {
                 type="text"
                 id="username"
                 className="input-bar"
+                onBlur={(e) => validateInput(e.target.value, /^(?!\s*$).+/, "Name cannot be blank","lname")}
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 disabled={editStatus}
               />
+              {inputError === "lname" ?<p className="errorMessage">{errorMessage}</p> : ''}
             </div>
             <div className="form-info">
               <span>
@@ -117,10 +159,12 @@ function Profile(props: any) {
                 type="text"
                 id="dob"
                 className="input-bar"
+                onBlur={(e) => validateInput(e.target.value, /^[0-9]{2}[\/][0-9]{2}[\/][0-9]{4}$/g, "Date must be in format DD/MM/YYYY","dob")}
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
                 disabled={editStatus}
               />
+              {inputError === "dob" ?<p className="errorMessage">{errorMessage}</p> : ''}
             </div>
             <div className="form-info">
               <span>
@@ -144,9 +188,11 @@ function Profile(props: any) {
                 id="phone"
                 className="input-bar"
                 value={phone}
+                onBlur={(e) => validateInput(e.target.value, /^\d{10,11}$/, "Phone must be 10-11 digits","Phone")}
                 onChange={(e) => setPhone(e.target.value)}
                 disabled={editStatus}
               />
+               {inputError === "Phone" ?<p className="errorMessage">{errorMessage}</p> : ''}
             </div>
             <div className="form-info">
               <span>
@@ -157,9 +203,12 @@ function Profile(props: any) {
                 id="email"
                 className="input-bar "
                 value={email}
+                onBlur={(e) => validateInput(e.target.value, /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/, 
+                  "Email must be in format: abcxya@gmail.com","Email")}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={editStatus}
               />
+              {inputError === "Email" ?<p className="errorMessage">{errorMessage}</p> : ''}
             </div>
 
             {editStatus ? (
@@ -250,6 +299,13 @@ const styleProfile = styled(Profile)`
     margin: 10px 5px;
     border-left: 1px dotted #dae1f5;
   }
+  .errorMessage{
+    font-size: 0.8rem;
+    color: red;
+    font-weight: 500px;
+    margin: 0 0 0.7rem 0.5rem;
+    
+  }
   img {
     width: 200px;
   }
@@ -272,6 +328,7 @@ const styleProfile = styled(Profile)`
   span {
     color: #10182f;
     font-weight: 500;
+    font-size: 0.9rem;
   }
   .btn {
     width: 250px;

@@ -237,7 +237,7 @@ const StyleDuplicate = styled(Duplicate)`
   .csv-link p{
     color: #545d7a;
     padding: 0.2em;
-    font-size: 16px;
+    font-size: 0.9rem;
   }
   .control-right {
     width: 50%;
@@ -288,7 +288,7 @@ const StyleDuplicate = styled(Duplicate)`
   .guide-line p {
     width: 60%;
     margin: 10px 0px 0px 100px;
-    font-size: 16px;
+    font-size: 0.9rem;
     color: #545d7a;
   }
   #gl-left {

@@ -3,8 +3,10 @@ import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Checkbox } from '@material-ui/core'
+import Icon from '@material-ui/core/Icon';
 import styled from 'styled-components'
 import Table from '../common/tableReact'
+
 
 Staff.propTypes = {
   className: PropTypes.string,
@@ -65,17 +67,20 @@ function ManageStaffs(props: any) {
     {
       id: 101,
       name: 'Nguyen Anh Tien',
-      mail: 'tienna@fe.edu.vn'
+      mail: 'tienna@fe.edu.vn',
+      block: true
     },
     {
       id: 102,
       name: 'Tran Van Toan',
-      mail: 'toantv@fe.edu.vn'
+      mail: 'toantv@fe.edu.vn',
+      block: false
     },
     {
       id: 201,
       name: 'Pham Nhat Anh',
-      mail: 'anhpn@fe.edu.vn'
+      mail: 'anhpn@fe.edu.vn',
+      block: false
     }
     ,
     {
@@ -113,6 +118,19 @@ function ManageStaffs(props: any) {
       Header: "Email",
       accessor: "mail",
     },
+    {
+      Header: "View Profile",
+       Cell: ( cell:any ) => (
+        <span><Icon color="primary" >visibility</Icon></span>
+      )
+    },
+    {
+      Header: "Block/Unblock",
+      acccesor: "block",
+       Cell: ( cell:any ) => (
+        <span><Icon color="secondary" >lock_circle</Icon></span>
+      )
+    }
   ]
   let StaffsComponents:any = []
 
@@ -172,7 +190,7 @@ const StyledAdmin = styled(ManageStaffs)`
     outline: none;
     border: none;
   }
-
+    
   div .checkbox {
     width: 20%;
   }
@@ -212,11 +230,13 @@ const StyledAdmin = styled(ManageStaffs)`
   }
   .main {
     background: #fff;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: auto;
     align-items: center;
+    padding: 10px;
+    margin: 1rem;
+    width: 100%;
     padding: 10px 30px;
-    width: 70%;
     min-width: 690px;
   }
 
@@ -244,12 +264,12 @@ const StyledAdmin = styled(ManageStaffs)`
     position: relative;
     display: flex;
     margin: auto;
-    margin-bottom: 10px;
     align-items: center;
     background: #cecdcd;
     padding: 10px;
     width: 500px;
   }
+  
   .value-search {
     width: 350px;
     font-family: sans-serif;
@@ -282,7 +302,7 @@ const StyledAdmin = styled(ManageStaffs)`
   .btn-white {
     margin-left: 10px;
   }
-
+  
   //** css button */
   .text-box {
     margin-left: 25px;

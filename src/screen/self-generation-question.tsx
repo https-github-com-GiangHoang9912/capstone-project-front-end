@@ -271,6 +271,7 @@ const SelfStyle = styled(SelfGenerate)`
   .note-box {
     color: #545d7a;
     margin: 10px;
+    font-size: 0.9rem;
   }
   .item-input {
     text-align: start;

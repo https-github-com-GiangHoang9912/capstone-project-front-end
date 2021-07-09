@@ -1,8 +1,10 @@
 import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import axios from 'axios'
 import { faCheck, faLock, faEye } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components'
+import * as CONSTANT from '../const'
 
 ChangePassword.propTypes = {
   className: PropTypes.string,
@@ -12,9 +14,12 @@ ChangePassword.defaultProps = {
   className: '',
 }
 
+const CHANGE_PASSWORD = `${CONSTANT.BASE_URL}/changePassword`
 function ChangePassword(props: any) {
   const { className } = props
-
+  const [oldPassword, setOldPassword] = useState<String>('');
+  const [newPassword, setNewPassword] = useState<String>('');
+  const [rePassword, setRePassword] = useState<String>('');
   const [iconList, setIconList] = useState([
     {
       id: 1,
@@ -29,7 +34,21 @@ function ChangePassword(props: any) {
       showPassword: false,
     },
   ])
+   const changePassword = async(e: any) =>{
+    e.preventDefault();
+    const response = await axios
+          .post(
+            CHANGE_PASSWORD,
+            {
+              oldPassword,
+              newPassword,
+            },
+            {
+              withCredentials: true,
+            }
+          )
 
+  }
   const onCheckBtnClick = useCallback((id) => {
     setIconList((prevState) =>
       prevState.map((icon) =>
@@ -76,8 +95,9 @@ function ChangePassword(props: any) {
                   key={iconList[0].id}
                   className="input-pass"
                   placeholder="Enter old password"
+                  onChange={(e) => setOldPassword(e.target.value)}
                   required
-                />
+                  />
                 <span className="icon-pass">
                   <FontAwesomeIcon icon={faLock} />
                 </span>
@@ -91,6 +111,7 @@ function ChangePassword(props: any) {
                   key={iconList[1].id}
                   className="input-pass"
                   placeholder="Enter new password"
+                  onChange={(e) => setNewPassword(e.target.value)}
                   required
                 />
                 <span className="icon-pass">
@@ -106,6 +127,7 @@ function ChangePassword(props: any) {
                   key={iconList[2].id}
                   className="input-pass"
                   placeholder="Re_Enter new password"
+                  onChange={(e) => setRePassword(e.target.value)}
                   required
                 />
                 <span className="icon-pass">
@@ -114,9 +136,10 @@ function ChangePassword(props: any) {
                 <span className="icon-eye">
                   <FontAwesomeIcon icon={faEye} onClick={() => onCheckBtnClick(iconList[2].id)} />
                 </span>
+                {newPassword !== rePassword ? <p className="errorPass">Re-Enter Password does not match Password</p>: ' '}
               </div>
               <div className="contain-btn">
-                <button className="btn-login">Login</button>
+                <button className="btn-login" onClick={(e)=>changePassword}>Change</button>
               </div>
               <div className="text-process">
                 <a className="cancel" href="#">
@@ -142,7 +165,7 @@ const StyledForgotPassword = styled(ChangePassword)`
     width: 100%;
     margin: 0 auto;
   }
-
+  
   .container {
     width: 100%;
     height: 100vh;
@@ -197,7 +220,11 @@ const StyledForgotPassword = styled(ChangePassword)`
   .input-pass:focus {
     animation: pulse-animation 1.5s infinite;
   }
-
+  .errorPass{
+    margin: 0 1rem;
+    color:red;
+    font-size: 0.8rem;
+  }
  //** animation for input */
   @keyframes pulse-animation {
     0% {

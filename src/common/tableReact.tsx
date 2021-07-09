@@ -18,6 +18,7 @@ function TableReact(props: any) {
     columns,
     data,
   })
+
   useTable({ columns, data }, usePagination)
   const {
     getTableProps,
@@ -119,7 +120,7 @@ const StyleTable = styled(TableReact)`
   }
 
   th {
-    text-align: center;
+    text-align: left;
     color: #fff;
     font-size: 16px;
     background-color: #303f9f;

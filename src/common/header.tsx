@@ -157,7 +157,7 @@ const StyledHeader = styled(Header)`
   }
 
   #icon {
-    width: 100%;
+    width: 90%;
   }
 `
 
