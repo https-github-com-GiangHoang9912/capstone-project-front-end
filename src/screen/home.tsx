@@ -78,7 +78,7 @@ const HomeStyled = styled(HomePage)`
     background-repeat: no-repeat;
     background-size: cover;
     filter: grayscale(20%);
-    padding: 20px 0;
+    padding: 5em 0;
   }
   .introduction {
     margin-top: 4rem;

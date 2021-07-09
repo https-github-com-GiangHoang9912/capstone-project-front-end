@@ -226,7 +226,7 @@ const StyledAdmin = styled(ManageStaffs)`
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    padding: 15px;
+    padding: 6em 15px 15px 15px;
   }
   .main {
     background: #fff;

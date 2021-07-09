@@ -181,7 +181,7 @@ const StyleDuplicate = styled(Duplicate)`
   background-color: #f7f8fb;
   .container {
     margin: 0.5rem;
-    padding: 10px;
+    padding: 5em 10px 10px 10px;
     font-size: 16px;
     display: flex;
     flex-direction: row-reverse;
