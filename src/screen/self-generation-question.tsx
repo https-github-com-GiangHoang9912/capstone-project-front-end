@@ -253,6 +253,7 @@ const SelfStyle = styled(SelfGenerate)`
     background: #fff;
     border: 1px solid #dae1f5;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    margin-top: 6em;
   }
   .form-container h2 {
     padding-top: 1.5em;

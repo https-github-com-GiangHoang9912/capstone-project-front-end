@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     width: '100%',
+    height: '108.5vh',
     minHeight: '100vh',
     display: 'flex',
     flexWrap: 'wrap',
@@ -107,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
   loadingDiv: {
     position: 'absolute',
     width: '100vw',
-    height: '100vh',
+    height: '108.5vh',
     backgroundImage: 'linear-gradient(to right, #0e252c, #0a2530, #092433, #0b2336, #102239)',
     display: 'none',
     'z-index': 2,
@@ -182,7 +183,8 @@ const Login: FC<LoginProps> = (props) => {
           console.log(response.data)
           stopLoading()
           console.log(cookies.getAll())
-
+          localStorage.setItem('id', response.data.id)
+          localStorage.setItem('role', response.data.role)
           localStorage.setItem('username', response.data.username)
           localStorage.setItem(
             'avatar',
@@ -218,6 +220,7 @@ const Login: FC<LoginProps> = (props) => {
           console.log(response.data)
           stopLoading()
           localStorage.setItem('id', response.data.id)
+          localStorage.setItem('role', response.data.role)
           localStorage.setItem('username', response.data.username)
           localStorage.setItem(
             'avatar',

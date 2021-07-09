@@ -10,18 +10,16 @@ body {
 }
 
 .main-content {
-  margin-top: 74px;
   width: 100%;
   min-width: 40rem;
   transition: margin 500ms;
-
 }
 
 .menu-open {
   margin-left: 0;
 }
 .menu-close {
-  margin-left: -13.5rem;
+  margin-left: -15rem;
 }
 
 #root {

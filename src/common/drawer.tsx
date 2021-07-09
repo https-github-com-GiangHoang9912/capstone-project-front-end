@@ -1,12 +1,18 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 
-import { makeStyles, Theme, createStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import {
+  makeStyles,
+  Theme,
+  createStyles,
+  createMuiTheme,
+  ThemeProvider,
+} from '@material-ui/core/styles'
 
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
+import Drawer from '@material-ui/core/Drawer'
+import List from '@material-ui/core/List'
+import Divider from '@material-ui/core/Divider'
+import ListItem from '@material-ui/core/ListItem'
 
 import {
   Home as HomeIcon,
@@ -14,10 +20,10 @@ import {
   SupervisorAccount as SupervisorAccountIcon,
   ContactSupport as ContactSupportIcon,
   NoteAdd as NoteAddIcon,
-  Build as BuildIcon
-} from '@material-ui/icons';
+  Build as BuildIcon,
+} from '@material-ui/icons'
 
-const drawerWidth = '15rem';
+const drawerWidth = '15rem'
 
 makeStyles((theme: Theme) =>
   createStyles({
@@ -29,7 +35,7 @@ makeStyles((theme: Theme) =>
       flexShrink: 0,
     },
   })
-);
+)
 
 const customTheme = createMuiTheme({
   overrides: {
@@ -47,44 +53,44 @@ const customTheme = createMuiTheme({
       },
     },
   },
-});
+})
 
 function PersistentDrawerLeft(props: any) {
-  const { isOpen, className } = props;
+  const { isOpen, className } = props
   const menuItems = [
     {
       key: 1,
-      icon: <HomeIcon fontSize='small'/>,
+      icon: <HomeIcon fontSize="small" />,
       text: 'Home',
       link: '/home',
     },
     {
       key: 2,
-      icon: <Filter2Icon fontSize='small'/>,
+      icon: <Filter2Icon fontSize="small" />,
       text: 'Check Duplicate',
       link: '/check-duplicate',
     },
     {
       key: 3,
-      icon: <ContactSupportIcon fontSize='small'/>,
+      icon: <ContactSupportIcon fontSize="small" />,
       text: 'Self-generate Question',
       link: '/self-generate',
     },
     {
       key: 4,
-      icon: <SupervisorAccountIcon fontSize='small'/>,
+      icon: <SupervisorAccountIcon fontSize="small" />,
       text: 'Manage Staffs',
       link: '/admin/manage-staffs',
     },
     {
       key: 5,
-      icon: <NoteAddIcon fontSize='small'/>,
+      icon: <NoteAddIcon fontSize="small" />,
       text: 'Create Exam',
       link: '/create-exam',
     },
     {
       key: 6,
-      icon: <BuildIcon fontSize='small'/>,
+      icon: <BuildIcon fontSize="small" />,
       text: 'Update Exam',
       link: '/update-exam',
     },
@@ -100,22 +106,28 @@ function PersistentDrawerLeft(props: any) {
         open={isOpen}
       >
         <List>
-          {menuItems.map((item) => (
-            <ListItem key={item.key}>
-              <NavLink to={item.link} activeClassName="active-li">
-                {item.icon}
-                {item.text}
-              </NavLink>
-            </ListItem>
-          ))}
+          {menuItems.map((item) => {
+            const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
+
+            if (item.key === 4 && role !== 1) return ""
+
+            return (
+              <ListItem key={item.key}>
+                <NavLink to={item.link} activeClassName="active-li">
+                  {item.icon}
+                  {item.text}
+                </NavLink>
+              </ListItem>
+            )
+          })}
         </List>
         <Divider />
       </Drawer>
     </ThemeProvider>
-  );
+  )
 }
 
-export default styled(PersistentDrawerLeft) `
+export default styled(PersistentDrawerLeft)`
   width: ${drawerWidth};
   margin-top: 77px;
   border-top: 0;

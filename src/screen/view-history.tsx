@@ -122,6 +122,7 @@ const StyleViewHistory = styled(ViewHistory)`
      margin:0.5rem;
      display: flex;
      justify-content: space-around;
+     padding-top: 5em;
    }
    .main-left{
      width: 25%;

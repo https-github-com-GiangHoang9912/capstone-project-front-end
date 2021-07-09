@@ -141,11 +141,6 @@ function ChangePassword(props: any) {
               <div className="contain-btn">
                 <button className="btn-login" onClick={(e)=>changePassword}>Change</button>
               </div>
-              <div className="text-process">
-                <a className="cancel" href="#">
-                  Cancel
-                </a>
-              </div>
             </form>
           </div>
         </div>
