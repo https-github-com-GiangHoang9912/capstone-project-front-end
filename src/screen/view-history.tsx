@@ -54,6 +54,7 @@ function ViewHistory(props: any) {
 
   const search = (e: any) => {
     setSelect(e.target.value)
+    if (e.target.value == '------') setHistories([])
     axios.get(`${GET_HISTORY_URL}/${id}/${e.target.value}`).then((response) => {
       console.log(response.data)
       setHistories(response.data)
@@ -67,6 +68,9 @@ function ViewHistory(props: any) {
           {/* <span className="text">Clear all activity history ❌</span> */}
           <p className="text">Filter by Activity </p>
           <select className="filter-select" onChange={search} value={typeId}>
+            <option key="------" value="------">
+              ------
+            </option>
             <option key="all" value="all">
               All
             </option>
@@ -92,7 +96,9 @@ function ViewHistory(props: any) {
               <div className="item-history" key={index}>
                 <div className="item-activity">
                   <p className="activity-title">
-                    <span className="item-date">{moment.default(item.date).format("DD/MM/YYYY")}</span>
+                    <span className="item-date">
+                      {moment.default(item.date).format('DD/MM/YYYY')}
+                    </span>
                     {item.typeId === CONSTANT.HISTORY_TYPE.DUPLICATE ? (
                       <FontAwesomeIcon icon={faCopy} className="item-icon" />
                     ) : (
