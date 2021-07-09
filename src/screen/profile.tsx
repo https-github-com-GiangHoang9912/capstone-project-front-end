@@ -11,6 +11,7 @@ import {
   faCalendar,
 } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
+import * as moment from 'moment'
 import Dialog from '../common/dialog'
 import { AccountContext } from '../contexts/account-context'
 import * as CONSTANT from '../const'
@@ -23,8 +24,10 @@ Profile.defaultProps = {
   className: '',
 }
 
+axios.defaults.withCredentials = true
 const GET_INFORMATION_URL = `${CONSTANT.BASE_URL}/user/get-information`
 const UPDATE_PROFILE_URL = `${CONSTANT.BASE_URL}/user/update-information`
+
 function Profile(props: any) {
   const { className } = props
   const [editStatus, setEditStatus] = useState<boolean>(true)
@@ -32,19 +35,18 @@ function Profile(props: any) {
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
   const [image, setImage] = useState<string>('avatar2.png')
-  const [firstName, setFirstName] = useState<any>(account.profile.firstname)
-  const [lastName, setLastName] = useState<any>(account.profile.lastname)
-  const [dob, setDob] = useState<any>(account.profile.dateofbirth)
-  const [address, setAddress] = useState<any>(account.profile.address)
-  const [phone, setPhone] = useState<any>(account.profile.phone)
-  const [email, setEmail] = useState<any>(account.profile.email)
-  const [isInputValid,setIsInputValid] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<String>('');
-  const [inputError, setInputError] = useState<String>('');
+  const [firstName, setFirstName] = useState<string>('')
+  const [lastName, setLastName] = useState<string>('')
+  const [dob, setDob] = useState<string>('a')
+  const [address, setAddress] = useState<string>('')
+  const [phone, setPhone] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
+  const [isInputValid, setIsInputValid] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [inputError, setInputError] = useState<string>('')
 
   function handleEdit() {
     setEditStatus(!editStatus)
-    console.log(editStatus)
   }
   function handleEditProfile() {
     setIsOpen(true)
@@ -54,87 +56,85 @@ function Profile(props: any) {
     setIsOpen(false)
   }
   const handleAccept = async () => {
-    setIsOpen(false);
-    const response = await axios
-    .post(
-      UPDATE_PROFILE_URL,
-      {
-        firstName,
-        lastName,
-        email,
-        address,
-        phone,
-        dob,
-        image
-      },
-      {
-        withCredentials: true,
-      }
-    )
-   
+    setIsOpen(false)
+    console.log(isInputValid)
+    const id = Number(localStorage.getItem("id"))
+    const response = await axios.put(UPDATE_PROFILE_URL, {
+      id,
+      firstName,
+      lastName,
+      email,
+      address,
+      phone,
+      dob,
+      image,
+    })
 
+    console.log(response)
   }
   function handleFileChange(e: any) {
     setImage(URL.createObjectURL(e.target.files[0]))
-    console.log(e.target.files[0])
   }
 
   useEffect(() => {
     const username = localStorage.getItem('username')
     const id = localStorage.getItem('id')
-    console.log(username)
-    axios.post(GET_INFORMATION_URL, {
+    axios
+      .post(GET_INFORMATION_URL, {
         username,
       })
       .then((response) => {
-        console.log(response.data)
-        setFirstName(response.data.firstName)
-        setLastName(response.data.lastName)
-        setEmail(response.data.email)
-        setAddress(response.data.address)
-        setPhone(response.data.phone)
-        setDob(response.data.dateOfBirth)
-        setImage(response.data.avatar)
+        const dobFormat = moment.default(response.data.dateOfBirth).format("DD/MM/YYYY")
+        setFirstName(response.data.firstName ? response.data.firstName : '')
+        setLastName(response.data.lastName ? response.data.lastName : '')
+        setEmail(response.data.email ? response.data.email : '')
+        setAddress(response.data.address ? response.data.address : '')
+        setPhone(response.data.phone ? response.data.phone : '')
+        setDob(response.data.dateOfBirth ? dobFormat : '')
+        setImage(response.data.avatar ? response.data.avatar : '')
+
       })
       .catch(async (error) => {
         refreshToken(error, id ? Number(id) : account.id)
       })
   }, [])
 
-  const validateInput = (inputText:any, regex:any, error:String, errorType:String) => { 
-    const regexp = regex;
-    const checkingResult = regexp.exec(inputText);
+  const validateInput = (inputText: any, regex: any, error: string, errorType: string) => {
+    const regexp = regex
+    const checkingResult = regexp.exec(inputText)
     if (checkingResult !== null) {
-        setIsInputValid(true);
-        setErrorMessage('');
-        setInputError('');
+      setIsInputValid(true)
+      setErrorMessage('')
+      setInputError('')
     } else {
-      setIsInputValid(false);
-      setErrorMessage(error);
-      setInputError(errorType);
+      setIsInputValid(false)
+      setErrorMessage(error)
+      setInputError(errorType)
     }
-}
+  }
 
   return (
     <div className={className}>
       <div className="info-container">
         <div className="contain">
           <div className="form-contain">
-            <h3 id="information">Information</h3>
+            <h2 id="information">Information</h2>
             <div className="form-info">
               <span>
                 ‍<FontAwesomeIcon icon={faUser} /> First Name
               </span>
               <input
                 type="text"
-                id="username"
+                id="first-name"
                 className="input-bar"
-                onBlur={(e) => validateInput(e.target.value, /^(?!\s*$).+/, "Name cannot be blank","fname")}
+                onBlur={(e) =>
+                  validateInput(e.target.value, /^(?!\s*$).+/, 'Name cannot be blank', 'fname')
+                }
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 disabled={editStatus}
               />
-              {inputError === "fname" ?<p className="errorMessage">{errorMessage}</p> : ''}
+              {inputError === 'fname' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
             <div className="form-info">
               <span>
@@ -142,14 +142,16 @@ function Profile(props: any) {
               </span>
               <input
                 type="text"
-                id="username"
+                id="last-name"
                 className="input-bar"
-                onBlur={(e) => validateInput(e.target.value, /^(?!\s*$).+/, "Name cannot be blank","lname")}
+                onBlur={(e) =>
+                  validateInput(e.target.value, /^(?!\s*$).+/, 'Name cannot be blank', 'lname')
+                }
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 disabled={editStatus}
               />
-              {inputError === "lname" ?<p className="errorMessage">{errorMessage}</p> : ''}
+              {inputError === 'lname' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
             <div className="form-info">
               <span>
@@ -159,12 +161,19 @@ function Profile(props: any) {
                 type="text"
                 id="dob"
                 className="input-bar"
-                onBlur={(e) => validateInput(e.target.value, /^[0-9]{2}[\/][0-9]{2}[\/][0-9]{4}$/g, "Date must be in format DD/MM/YYYY","dob")}
+                onBlur={(e) =>
+                  validateInput(
+                    e.target.value,
+                    /^[0-9]{2}[\/][0-9]{2}[\/][0-9]{4}$/g,
+                    'Date must be in format DD/MM/YYYY',
+                    'dob'
+                  )
+                }
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
                 disabled={editStatus}
               />
-              {inputError === "dob" ?<p className="errorMessage">{errorMessage}</p> : ''}
+              {inputError === 'dob' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
             <div className="form-info">
               <span>
@@ -187,12 +196,19 @@ function Profile(props: any) {
                 type="text"
                 id="phone"
                 className="input-bar"
+                onBlur={(e) =>
+                  validateInput(
+                    e.target.value,
+                    /^\d{10,11}$/,
+                    'Phone must be 10-11 digits',
+                    'Phone'
+                  )
+                }
                 value={phone}
-                onBlur={(e) => validateInput(e.target.value, /^\d{10,11}$/, "Phone must be 10-11 digits","Phone")}
                 onChange={(e) => setPhone(e.target.value)}
                 disabled={editStatus}
               />
-               {inputError === "Phone" ?<p className="errorMessage">{errorMessage}</p> : ''}
+              {inputError === 'Phone' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
             <div className="form-info">
               <span>
@@ -202,13 +218,19 @@ function Profile(props: any) {
                 type="text"
                 id="email"
                 className="input-bar "
+                onBlur={(e) =>
+                  validateInput(
+                    e.target.value,
+                    /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+                    'Email must be in format: abcxya@gmail.com',
+                    'Email'
+                  )
+                }
                 value={email}
-                onBlur={(e) => validateInput(e.target.value, /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/, 
-                  "Email must be in format: abcxya@gmail.com","Email")}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={editStatus}
               />
-              {inputError === "Email" ?<p className="errorMessage">{errorMessage}</p> : ''}
+              {inputError === 'Email' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
 
             {editStatus ? (
@@ -229,18 +251,23 @@ function Profile(props: any) {
               handleAccept={handleAccept}
               handleClose={handleDialogClose}
             />
-            <h3>Change Password</h3>
-            <NavLink to="/changePassword">
-              <button className="btn btn-change">Go to change password</button>
-            </NavLink>
-            <h3>View Activity History</h3>
-            <NavLink to="/history">
-              <button className="btn btn-his">View Activity History</button>
-            </NavLink>
+            <div className="footer-info">
+              <div>
+                <h3>Change Password</h3>
+                <NavLink to="/changePassword">
+                  <button className="btn btn-change">Go to change password</button>
+                </NavLink>
+              </div>
+              <div>
+                <h3>View Activity History</h3>
+                <NavLink to="/history">
+                  <button className="btn btn-his">View Activity History</button>
+                </NavLink>
+              </div>
+            </div>
           </div>
           <div className="img-avt">
             <img
-              // eslint-disable-next-line max-len
               src={image}
               alt=""
             />
@@ -268,6 +295,7 @@ const styleProfile = styled(Profile)`
     margin: 2rem;
     text-align: center;
     border-radius: 5px;
+    padding-top: 5em;
   }
 
   .contain {
@@ -299,12 +327,11 @@ const styleProfile = styled(Profile)`
     margin: 10px 5px;
     border-left: 1px dotted #dae1f5;
   }
-  .errorMessage{
+  .errorMessage {
     font-size: 0.8rem;
     color: red;
     font-weight: 500px;
     margin: 0 0 0.7rem 0.5rem;
-    
   }
   img {
     width: 200px;
@@ -365,7 +392,13 @@ const styleProfile = styled(Profile)`
   .form-contain {
     border-radius: 0px;
   }
-  @media screen and (max-width: 782px) {
+  .footer-info {
+    display: flex;
+  }
+  .footer-info div {
+    width: 50%;
+  }
+  @media screen and (max-width: 1200px) {
     .contain {
       display: flex;
       flex-direction: column-reverse;
@@ -374,6 +407,12 @@ const styleProfile = styled(Profile)`
     .form-contain,
     .img-avt {
       border: none;
+    }
+
+    .img-avt {
+      display: flex;
+      flex-direction: column;
+      align-self: flex-end;
     }
   }
 `
