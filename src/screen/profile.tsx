@@ -11,11 +11,14 @@ import {
   faCalendar,
 } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
+import LoadingBar from 'react-top-loading-bar'
+
 import * as moment from 'moment'
 import Dialog from '../common/dialog'
 import { AccountContext } from '../contexts/account-context'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
+
 
 Profile.propTypes = {
   className: PropTypes.string,
@@ -44,6 +47,8 @@ function Profile(props: any) {
   const [isInputValid, setIsInputValid] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [inputError, setInputError] = useState<string>('')
+  const [isDisable, setIsDisable] = useState(false)
+  const [progress, setProgress] = useState(0)
 
   function handleEdit() {
     setEditStatus(!editStatus)
@@ -57,20 +62,24 @@ function Profile(props: any) {
   }
   const handleAccept = async () => {
     setIsOpen(false)
-    console.log(isInputValid)
-    const id = Number(localStorage.getItem("id"))
-    const response = await axios.put(UPDATE_PROFILE_URL, {
-      id,
-      firstName,
-      lastName,
-      email,
-      address,
-      phone,
-      dob,
-      image,
-    })
-
-    console.log(response)
+    setIsDisable(true)
+    setProgress(progress + 10)
+    if (isInputValid) {
+      const id = Number(localStorage.getItem("id"))
+      const response = await axios.put(UPDATE_PROFILE_URL, {
+        id,
+        firstName,
+        lastName,
+        email,
+        address,
+        phone,
+        dob,
+        image,
+      })
+      console.log(response)
+      setProgress(100)
+      setIsDisable(false)
+    }
   }
   function handleFileChange(e: any) {
     setImage(URL.createObjectURL(e.target.files[0]))
@@ -115,6 +124,7 @@ function Profile(props: any) {
 
   return (
     <div className={className}>
+      <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="info-container">
         <div className="contain">
           <div className="form-contain">
@@ -238,7 +248,7 @@ function Profile(props: any) {
                 Edit Profile
               </button>
             ) : (
-              <button className="btn-edit" onClick={handleEditProfile}>
+              <button className="btn-edit" onClick={handleEditProfile} disabled={isDisable}>
                 Save{' '}
               </button>
             )}
