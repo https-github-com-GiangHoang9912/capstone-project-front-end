@@ -1,12 +1,8 @@
-// import React from 'react'
-import { useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
-// import Constant from "../const.json";
-// import axios from "axios";
 
 HomePage.propTypes = {
   className: PropTypes.string,
@@ -16,29 +12,26 @@ HomePage.defaultProps = {
 }
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-   
-  },
-  btnDuplicate:{
-    color: "white",
+  root: {},
+  btnDuplicate: {
+    color: 'white',
     width: 250,
     height: 48,
-    padding: "0 30px",
-    fontSize: "0.8rem",
-    margin: "1rem 1rem",
-    boxShadow: "0 3px 5px 2px rgba(0, 0, 0, .3)",
-   
+    padding: '0 30px',
+    fontSize: '0.8rem',
+    margin: '1rem 1rem',
+    boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
   },
-  btnSelf:{
-    color: "white",
+  btnSelf: {
+    color: 'white',
     width: 250,
     height: 48,
-    boxShadow: "0 3px 5px 2px rgba(0, 0, 0, .3)",
-    fontSize: "0.8rem",
-    margin: "1rem 1rem",
-    background: "#030a45",
-  }
-}));
+    boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
+    fontSize: '0.8rem',
+    margin: '1rem 1rem',
+    background: '#030a45',
+  },
+}))
 function HomePage(props: any) {
   const { className } = props
   const classes = useStyles()
@@ -72,7 +65,6 @@ function HomePage(props: any) {
     </div>
   )
 }
-
 
 const HomeStyled = styled(HomePage)`
   width: 100%;
@@ -118,9 +110,8 @@ const HomeStyled = styled(HomePage)`
     line-height: 32px;
     margin: auto;
   }
-  .link{
-    text-decoration:none;
-    
+  .link {
+    text-decoration: none;
   }
   p {
     font-family: 'Open Sans', sans-serif;
@@ -138,8 +129,6 @@ const HomeStyled = styled(HomePage)`
     display: flex;
     justify-content: center;
   }
-  
-  
 
   @media screen and (max-width: 1024px) {
     .function {

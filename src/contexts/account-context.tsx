@@ -3,7 +3,7 @@ import { AccountContextProps, Account } from '../interface/acc'
 
 const accountDefault: Account = {
   id: 0,
-  username: 'admin',
+  username: '',
   role: 0,
   profile: {
     firstname: '',

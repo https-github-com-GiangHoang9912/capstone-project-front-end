@@ -237,7 +237,6 @@ const StyledAdmin = styled(ManageStaffs)`
     margin: 1rem;
     width: 100%;
     padding: 10px 30px;
-    width: 70%;
     min-width: 690px;
   }
 

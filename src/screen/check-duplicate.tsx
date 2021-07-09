@@ -7,7 +7,6 @@ import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
-import Cookies from 'universal-cookie/es6'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
@@ -21,17 +20,8 @@ Duplicate.defaultProps = {
   className: '',
 }
 
-const cookies = new Cookies()
 axios.defaults.withCredentials = true
 const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
-const REFRESH_JWT_TOKEN = `${CONSTANT.BASE_URL}/refresh-token`
-
-interface IBank {
-  id: number
-  title: string
-  code: string
-}
-
 interface IQuestion {
   question: string
   point: number
@@ -60,14 +50,14 @@ function Duplicate(props: any) {
   function handleFileChange(e: any) {
     setFileName(e.target.files[0].name)
   }
-
+  const id = localStorage.getItem("id")
   async function handleCheck() {
     const response = await axios
       .post(MODEL_CHECK_DUPLICATE_URL, {
         question,
       })
       .catch(async (error) => {
-        refreshToken(error, account.id)
+        refreshToken(error, id? Number(id) : account.id)
       })
     if (response && response.data) {
       setResult(response.data)
@@ -247,7 +237,7 @@ const StyleDuplicate = styled(Duplicate)`
   .csv-link p{
     color: #545d7a;
     padding: 0.2em;
-    font-size: 16px;
+    font-size: 0.9rem;
   }
   .control-right {
     width: 50%;
@@ -298,7 +288,7 @@ const StyleDuplicate = styled(Duplicate)`
   .guide-line p {
     width: 60%;
     margin: 10px 0px 0px 100px;
-    font-size: 16px;
+    font-size: 0.9rem;
     color: #545d7a;
   }
   #gl-left {

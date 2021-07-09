@@ -11,15 +11,15 @@ TableReact.defaultProps = {
 }
 function TableReact(props: any) {
   const { className } = props
-  const columns: any = useMemo(() => props.columns, [])
-  const data: any = useMemo(() => props.data, [])
-  const isPagination: boolean = useMemo(() => props.isPagination, [])
+  const columns: any = useMemo(() => props.columns, props.columns)
+  const data: any = useMemo(() => props.data, props.data)
+  const isPagination: boolean = useMemo(() => props.isPagination, props.isPagination)
   useTable({
     columns,
     data,
   })
-  console.log(columns)
-  console.log(data)
+
+  useTable({ columns, data }, usePagination)
   const {
     getTableProps,
     getTableBodyProps,
@@ -120,7 +120,7 @@ const StyleTable = styled(TableReact)`
   }
 
   th {
-    text-align: center;
+    text-align: left;
     color: #fff;
     font-size: 16px;
     background-color: #303f9f;
