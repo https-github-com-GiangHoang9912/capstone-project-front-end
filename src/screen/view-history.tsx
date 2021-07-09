@@ -1,8 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faQuestionCircle, faCopy, faIdCard, faLock, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+import {
+  faTrash,
+  faQuestionCircle,
+  faCopy,
+  faIdCard,
+  faLock,
+  faExclamationCircle,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons'
+import axios from 'axios'
+import * as moment from 'moment'
+import * as CONSTANT from '../const'
 
 ViewHistory.propTypes = {
   className: PropTypes.string,
@@ -11,189 +22,190 @@ ViewHistory.defaultProps = {
   className: '',
 }
 
-function ViewHistory(props: any){
-  const { className } = props;
-  const [activity, setActivity] = useState<any>([
-    { id: 1,
-     title: "Self-Generation"
-    },
-    { id: 2,
-      title: "Duplicate Detection"
-     },
-     { id: 3,
-      title: "Update Profile"
-     },
-     { id: 4,
-      title: "Change password"
-     },
-  ])
-  const [history, setHistory] = useState<any>([
-      {
-        date: "20/05/2021",
-        activity: "Self-Generation questions",
-        icon: faQuestionCircle,
-      },
-      {
-        date: "22/05/2021",
-        activity: "Duplicate detection questions",
-        icon: faCopy,
-      },
-      {
-        date: "23/05/2021",
-        activity: "Self-Generation questions",
-        icon: faQuestionCircle,
-      },
-      {
-        date: "25/05/2021",
-        activity: "Update profile",
-        icon: faIdCard,
-      },
-      {
-        date: "25/05/2021",
-        activity: "Change password",
-        icon: faLock,
-      },
-      {
-        date: "26/05/2021",
-        activity: "Self-Generation questions",
-        icon: faQuestionCircle,
-      },
-      {
-        date: "26/05/2021",
-        activity: "Update profile",
-        icon: faIdCard,
-      },
-      {
-        date: "27/05/2021",
-        activity: "Change password",
-        icon: faLock,
-      },
+interface HistoryType {
+  id: number
+  historyName: string
+}
 
-  ]);
+interface History {
+  id?: number
+  description?: string
+  userId?: number
+  typeId?: number
+  date?: string
+  icon?: IconDefinition
+}
 
-   
+const GET_HISTORY_TYPE_URL = `${CONSTANT.BASE_URL}/history-type`
+const GET_HISTORY_URL = `${CONSTANT.BASE_URL}/history`
+
+function ViewHistory(props: any) {
+  const { className } = props
+  const id = localStorage.getItem('id') ? localStorage.getItem('id') : -1
+  const [activity, setActivity] = useState<HistoryType[]>([])
+  const [typeId, setSelect] = useState(0)
+  const [histories, setHistories] = useState<History[]>([])
+
+  useEffect(() => {
+    axios.get(GET_HISTORY_TYPE_URL).then((response) => {
+      setActivity(response.data)
+    })
+  }, [])
+
+  const search = (e: any) => {
+    setSelect(e.target.value)
+    axios.get(`${GET_HISTORY_URL}/${id}/${e.target.value}`).then((response) => {
+      console.log(response.data)
+      setHistories(response.data)
+    })
+  }
+
   return (
     <div className={className}>
-        <div className="container">
-          <div className="main-left">
-            <span className="text">Clear all activity history ❌</span>
-            <p className = "text">Filter by Activity </p>
-            <select className="filter-select">
-            <option key="all" value="all">All</option>
-            {activity.map((act:any) => (
-              <option key={act.id} value={act.title}>
-                {act.title}
+      <div className="container">
+        <div className="main-left">
+          {/* <span className="text">Clear all activity history ❌</span> */}
+          <p className="text">Filter by Activity </p>
+          <select className="filter-select" onChange={search} value={typeId}>
+            <option key="all" value="all">
+              All
+            </option>
+            {activity.map((act: HistoryType) => (
+              <option key={act.id} value={act.id}>
+                {act.historyName}
               </option>
-              ))}
-              </select>
-              <div className="notice">
-                 <span><FontAwesomeIcon icon={faExclamationCircle} className="item-icon"/>
-                 Your activity history is only saved up to 30 days in the system. 
-                After 30 days, the information about that activity will be deleted.
-                 </span>
+            ))}
+          </select>
+          <div className="notice">
+            <span>
+              <FontAwesomeIcon icon={faExclamationCircle} className="item-icon" />
+              Your activity history is only saved up to 30 days in the system. After 30 days, the
+              information about that activity will be deleted.
+            </span>
+          </div>
+        </div>
+        <div className="main-right">
+          <h5>Activity History</h5>
+          <hr />
+          <div className="list-history">
+            {histories.map((item: History, index: number) => (
+              <div className="item-history" key={index}>
+                <div className="item-activity">
+                  <p className="activity-title">
+                    <span className="item-date">{moment.default(item.date).format("DD/MM/YYYY")}</span>
+                    {item.typeId === CONSTANT.HISTORY_TYPE.DUPLICATE ? (
+                      <FontAwesomeIcon icon={faCopy} className="item-icon" />
+                    ) : (
+                      ''
+                    )}
+                    {item.typeId === CONSTANT.HISTORY_TYPE.GENERATE ? (
+                      <FontAwesomeIcon icon={faQuestionCircle} className="item-icon" />
+                    ) : (
+                      ''
+                    )}
+                    {item.typeId === CONSTANT.HISTORY_TYPE.UPDATE_PROFILE ? (
+                      <FontAwesomeIcon icon={faIdCard} className="item-icon" />
+                    ) : (
+                      ''
+                    )}
+                    {item.typeId === CONSTANT.HISTORY_TYPE.CHANGE_PASSWORD ? (
+                      <FontAwesomeIcon icon={faLock} className="item-icon" />
+                    ) : (
+                      ''
+                    )}
+                    {item.description}
+                  </p>
+                </div>
+                <div className="item-delete">
+                  <FontAwesomeIcon icon={faTrash} />
+                </div>
               </div>
-            </div>
-          <div className="main-right">
-            <h5>Activity History</h5>
-            <hr/>
-            <div className= "list-history">
-                {history.map((item: any) => (
-                    <div className="item-history" key={item.activity}>  
-                    <div className="item-activity" >
-                      <p className="activity-title"><span className="item-date">{item.date}</span>
-                      <FontAwesomeIcon icon={item.icon} className="item-icon"/> {item.activity}</p>
-                      </div>
-                    <div className="item-delete"><FontAwesomeIcon icon={faTrash}/></div>
-                  </div>
-                ))}
-                
-            </div>
+            ))}
           </div>
-          </div>
+        </div>
+      </div>
     </div>
   )
 }
 
 const StyleViewHistory = styled(ViewHistory)`
-    width: 100%;
-    height: 100vh;
-    background-color: #f7f8fb;
-   .container{
-     margin:0.5rem;
-     display: flex;
-     justify-content: space-around;
-     padding-top: 5em;
-   }
-   .main-left{
-     width: 25%;
-     margin: 40px 0;
-   }
-   .main-left .text{
-     font-size: 16px;
-     color: #545D7A;
-     margin: 20px;
-     font-weight: 500;
-   }
-   .filter-select{
-     width: 80%;
-     height: 40px;
-     margin: 20px;
-     border: none;
-     background: none;
-     outline: none;
-     color: #545D7A;
-     border-bottom: 2px solid #545D7A ;
-   }
-   .notice{
+  width: 100%;
+  height: 100vh;
+  background-color: #f7f8fb;
+  .container {
+    margin: 0.5rem;
+    display: flex;
+    justify-content: space-around;
+    padding-top: 5em;
+  }
+  .main-left {
+    width: 25%;
+    margin: 40px 0;
+  }
+  .main-left .text {
+    font-size: 16px;
+    color: #545d7a;
+    margin: 20px;
+    font-weight: 500;
+  }
+  .filter-select {
+    width: 80%;
+    height: 40px;
+    margin: 20px;
+    border: none;
+    background: none;
+    outline: none;
+    color: #545d7a;
+    border-bottom: 2px solid #545d7a;
+  }
+  .notice {
     margin: 200px 0px 20px 20px;
-    color: #545D7A;
+    color: #545d7a;
     font-size: 15px;
-   }
-   .main-right{
-     width: 70%;
-     height: auto;
-     border: 1px solid #DAE1F5;
-     margin: 20px 0;
-     border-radius: 5px;
-     background: #fff;
-   }
-   .main-right h5{
-     font-size: 20px;
-     font-weight: 500;
-     padding: 20px;
-   }
-   .main-right hr{
-     height: 2px;
-     border: none;
-     background-color: #DAE1F5;
-   }
-   .list-history{
-     padding: 20px 10px;
-   }
-   .item-history{
-     display: flex;
-     justify-content: space-between;
-     padding: 10px 0px;
-   }
-   .item-date{
-     margin:0 20px ;
-     color: #545D7A;
-   }
-   .item-acivity{
-     width: 80%;
-     
-   }
-   .activity-title{
+  }
+  .main-right {
+    width: 70%;
+    height: auto;
+    border: 1px solid #dae1f5;
+    margin: 20px 0;
+    border-radius: 5px;
+    background: #fff;
+  }
+  .main-right h5 {
+    font-size: 20px;
+    font-weight: 500;
+    padding: 20px;
+  }
+  .main-right hr {
+    height: 2px;
+    border: none;
+    background-color: #dae1f5;
+  }
+  .list-history {
+    padding: 20px 10px;
+  }
+  .item-history {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0px;
+  }
+  .item-date {
+    margin: 0 20px;
+    color: #545d7a;
+  }
+  .item-acivity {
+    width: 80%;
+  }
+  .activity-title {
     font-size: 16px;
     font-weight: 400;
-   }
-   .item-icon{
-     color: #303f9f;
-     margin-right: 5px;
-   }
-   .item-delete{
-     margin-right:20px;
-   }
-
+  }
+  .item-icon {
+    color: #303f9f;
+    margin-right: 5px;
+  }
+  .item-delete {
+    margin-right: 20px;
+  }
 `
 export default StyleViewHistory

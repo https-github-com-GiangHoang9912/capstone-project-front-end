@@ -7,11 +7,14 @@ import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
+import LoadingBar from 'react-top-loading-bar'
+
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
 import Table from '../common/table'
 import { AccountContext } from '../contexts/account-context'
+
 
 Duplicate.propTypes = {
   className: PropTypes.string,
@@ -44,24 +47,30 @@ function Duplicate(props: any) {
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
+  const [progress, setProgress] = useState(0)
+  const [isDisable, setIsDisable] = useState(false)
   const [question, setQuestion] = useState<string>('')
   const [result, setResult] = useState<IQuestion[]>([])
 
   function handleFileChange(e: any) {
     setFileName(e.target.files[0].name)
   }
-  const id = localStorage.getItem("id")
+  const id = localStorage.getItem('id')
   async function handleCheck() {
+    setIsDisable(true)
+    setProgress(progress + 10)
     const response = await axios
       .post(MODEL_CHECK_DUPLICATE_URL, {
         question,
       })
       .catch(async (error) => {
-        refreshToken(error, id? Number(id) : account.id)
+        refreshToken(error, id ? Number(id) : account.id)
       })
     if (response && response.data) {
       setResult(response.data)
       setVisibleResult(true)
+      setProgress(100)
+      setIsDisable(false)
     }
   }
   function handleInputQuestion(e: any) {
@@ -81,6 +90,7 @@ function Duplicate(props: any) {
   }
   return (
     <div className={className}>
+      <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="container">
         <div className="control control-left">
           <div className="import-bank">
@@ -147,6 +157,7 @@ function Duplicate(props: any) {
               color="primary"
               onClick={handleCheck}
               className={classes.btnDup}
+              disabled={isDisable}
             >
               Check
             </Button>
@@ -196,7 +207,6 @@ const StyleDuplicate = styled(Duplicate)`
     margin: 10px;
     background-color: #fff;
     border-radius: 5px;
-  
   }
   .control-left {
     width: 35%;
@@ -210,31 +220,31 @@ const StyleDuplicate = styled(Duplicate)`
     color: #10182f;
     border-bottom: 1px solid #dae1f5;
   }
-  .import-bank{
+  .import-bank {
     width: 100%;
-    border: 1px solid #DAE1F5;
+    border: 1px solid #dae1f5;
     background-color: #fff;
     border-radius: 5px;
   }
-  .convert-csv{
+  .convert-csv {
     display: flex;
     padding: 1em;
     margin-top: 1em;
-    border: 1px solid #DAE1F5;
+    border: 1px solid #dae1f5;
     background-color: #fff;
     text-align: start;
     border-radius: 5px;
   }
-  .convert-csv img{
+  .convert-csv img {
     width: 20%;
   }
-  .csv-link{
+  .csv-link {
     margin-left: 1rem;
   }
-  .csv-link h3{
+  .csv-link h3 {
     font-size: 17px;
   }
-  .csv-link p{
+  .csv-link p {
     color: #545d7a;
     padding: 0.2em;
     font-size: 0.9rem;
@@ -242,7 +252,7 @@ const StyleDuplicate = styled(Duplicate)`
   .control-right {
     width: 50%;
     min-height: 500px;
-    border: 1px solid #DAE1F5;
+    border: 1px solid #dae1f5;
   }
   .control-right h2 {
     padding: 1rem;
@@ -277,8 +287,8 @@ const StyleDuplicate = styled(Duplicate)`
     margin-top: 2rem;
     padding: 20px;
   }
-  .duplicate-icon{
-    color:#303f9f;
+  .duplicate-icon {
+    color: #303f9f;
     margin: 0 5px;
   }
   .guide-line {

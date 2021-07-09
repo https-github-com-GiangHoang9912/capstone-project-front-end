@@ -39,10 +39,10 @@ interface Question {
 const MODEL_SELF_GENERATION_URL = `${CONSTANT.BASE_URL}/self-generate`
 
 const SelfGenerate = ({ className = '' }) => {
-  const [progress, setProgress] = useState(0)
   const [showProgress, setShowProgress] = useState<Boolean>(false)
   const [isOpen, setIsOpen] = useState(false)
   const [isDisable, setIsDisable] = useState(false)
+  const [progress, setProgress] = useState(0)
   const [tagetIndex, setTagetIndex] = useState(1)
   const history = useHistory()
   const classes = useStyles()
