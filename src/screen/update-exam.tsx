@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme) => ({
     width: '100vh',
   },
   styleBtn: {
-    width: 150,
-    height: 50,
+    width: 70,
+    height: 30,
     backgroundColor: '#1e90ff',
     cursor: 'pointer',
     margin: '5px',
@@ -387,7 +387,8 @@ function UpdateExam(props: any) {
         </div>
         <div className="container-button">
           <div>
-            <Button variant="contained"
+            <Button
+              variant="contained"
               color="primary"
               className={classes.styleBtn}
             >
@@ -448,14 +449,12 @@ const StyledUpdateExam = styled(UpdateExam)`
   justify-content: center;
 }
 .text-subject {
-  margin-top: 2.5rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
 }
 //* Css for button */
 
 .container-button {
-    margin-bottom: 10px;
-    margin-top: 15px;
     display: flex;
     justify-content: center;
 }
@@ -463,7 +462,6 @@ const StyledUpdateExam = styled(UpdateExam)`
 .create-exam {
   height: auto;
   width: 100%;
-  overflow-y: scroll;
 }
 .container-exam {
   height: auto;

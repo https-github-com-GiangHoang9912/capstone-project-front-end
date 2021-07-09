@@ -7,14 +7,18 @@ import { Button, makeStyles } from '@material-ui/core'
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 // import {  } from 'react';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+// import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+// import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye } from '@fortawesome/free-solid-svg-icons'
 
+import { useHistory } from 'react-router-dom'
 import Table from '../common/tableReact'
-import { TableViewExam } from '../common/table';
+import Dialog from '../common/dialog'
+
+
+// import { TableViewExam } from '../common/table';
 
 interface IExam {
   id: number,
@@ -44,6 +48,21 @@ const useStyles = makeStyles((theme) => ({
 function ListExam(props: any) {
   const { className } = props;
   const classes = useStyles();
+  const history = useHistory();
+  const [isOpen, setIsOpen] = useState(false);
+
+  function handleDelete() {
+    setIsOpen(true)
+  }
+  const handleDialogClose = () => {
+    setIsOpen(false)
+  }
+
+  const handleAccept = () => {
+    history.push('/update-exam')
+  }
+
+
   const [result, setResult] = useState<IExam[]>([
     {
       id: 1,
@@ -137,7 +156,7 @@ function ListExam(props: any) {
     {
       Header: "View",
       Cell: (cell: any) => (
-        <FontAwesomeIcon className='detailExam' icon={faEye} />
+        <FontAwesomeIcon className='detail-exam' icon={faEye} />
       )
     },
     {
@@ -148,79 +167,75 @@ function ListExam(props: any) {
           <Button
             variant="contained"
             color="primary"
-            className='style-btn'>Edit</Button>
+            className='style-btn'
+            onClick={handleAccept}
+          >Edit</Button>
           <Button
             variant="contained"
             color="secondary"
             className='style-btn'>Delete</Button>
         </div>
       )
-
     },
   ]
-
   const [textInput, setTextInput] = useState<string>('');
-  const [paginated, setPaginated] = useState<any>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState(5);
-  let pages = 1;
-
-  const totalPage = Math.ceil(result.length / pageSize);
-  pages = result.length && pageSize === 0 ? totalPage : totalPage + 1;
-  const showPages = Array<number>();
-  for (let i = 1; i < pages; i++) {
-    showPages.push(i);
-  }
-  // const showPages = _.range(1, pages);
-
-  useEffect(() => {
-    setPaginated(result.slice(0, pageSize));
-  }, []);
-
-  // const childResult = Array<IExam[]>([]);
-
   const handleSearchExam = function (content: string) {
     return result.filter(item => item.name.includes(content.trim()));
   }
-
   console.log('search neeee', handleSearchExam('SSC101'));
 
+
+  // useEffect(() => {
+  //   setPaginated(result.slice(0, pageSize));
+  // }, []);
+  // const showPages = _.range(1, pages);
+  // const childResult = Array<IExam[]>([]);
   // console.log(childResult)
-  const pagination = (pageNo: number) => {
-    setCurrentPage(pageNo);
-    const startIndex = (pageNo - 1) * pageSize;
-    console.log('index start', startIndex);
-    const paginatedPost = result.slice(startIndex, pageSize * pageNo);
-    console.log('current', pageNo);
-    console.log('post', paginatedPost);
-    setPaginated(paginatedPost);
-    console.log(paginated);
-  }
+  // const pagination = (pageNo: number) => {
+  //   setCurrentPage(pageNo);
+  //   const startIndex = (pageNo - 1) * pageSize;
+  //   console.log('index start', startIndex);
+  //   const paginatedPost = result.slice(startIndex, pageSize * pageNo);
+  //   console.log('current', pageNo);
+  //   console.log('post', paginatedPost);
+  //   setPaginated(paginatedPost);
+  //   console.log(paginated);
+  // }
 
-  const nextPagination = (pageNo: number) => {
-    console.log('current', pageNo);
-    const newCurrentPage = pageNo + 1;
-    setCurrentPage(newCurrentPage);
-    console.log('new current', newCurrentPage);
-    const startIndex = (newCurrentPage - 1) * pageSize;
-    console.log('start Index', startIndex);
-    const paginatedPost = result.slice(startIndex, pageSize * newCurrentPage);
-    setPaginated(paginatedPost);
-    console.log(paginated);
-  }
+  // const nextPagination = (pageNo: number) => {
+  //   console.log('current', pageNo);
+  //   const newCurrentPage = pageNo + 1;
+  //   setCurrentPage(newCurrentPage);
+  //   console.log('new current', newCurrentPage);
+  //   const startIndex = (newCurrentPage - 1) * pageSize;
+  //   console.log('start Index', startIndex);
+  //   const paginatedPost = result.slice(startIndex, pageSize * newCurrentPage);
+  //   setPaginated(paginatedPost);
+  //   console.log(paginated);
+  // }
 
-  const prevPagination = (pageNo: number) => {
-    console.log('current', pageNo);
-    const newCurrentPage = pageNo - 1;
-    setCurrentPage(newCurrentPage);
-    console.log('new current', newCurrentPage);
-    const startIndex = (newCurrentPage - 1) * pageSize;
-    console.log('start Index', startIndex);
-    const paginatedPost = result.slice(startIndex, pageSize * newCurrentPage);
-    setPaginated(paginatedPost);
-    console.log(paginated);
-  }
+  // const prevPagination = (pageNo: number) => {
+  //   console.log('current', pageNo);
+  //   const newCurrentPage = pageNo - 1;
+  //   setCurrentPage(newCurrentPage);
+  //   console.log('new current', newCurrentPage);
+  //   const startIndex = (newCurrentPage - 1) * pageSize;
+  //   console.log('start Index', startIndex);
+  //   const paginatedPost = result.slice(startIndex, pageSize * newCurrentPage);
+  //   setPaginated(paginatedPost);
+  //   console.log(paginated);
+  // }
+  // const [paginated, setPaginated] = useState<any>([]);
+  // const [currentPage, setCurrentPage] = useState<number>(1);
+  // const [pageSize, setPageSize] = useState(5);
+  // let pages = 1;
 
+  // const totalPage = Math.ceil(result.length / pageSize);
+  // pages = result.length && pageSize === 0 ? totalPage : totalPage + 1;
+  // const showPages = Array<number>();
+  // for (let i = 1; i < pages; i++) {
+  //   showPages.push(i);
+  // }
 
   const onTextInputChange = useCallback((e) => {
     setTextInput(e.target.value);
@@ -230,32 +245,89 @@ function ListExam(props: any) {
 
   return (
     <div className={className}>
-      <div className={classes.root}>
-        <div className="search-exam">
-          <TextField
-            className="search-exam--txt"
-            id="outlined-search"
-            label="Search by title exam"
-            type="search"
-            variant="outlined"
-            value={textInput}
-            onChange={onTextInputChange} />
-          <Button
-            className="btn-search"
-            variant="contained"
-            disabled={!textInput}
-            color="primary"> Search </Button>
-        </div>
-        <div className="tbl-exams">
-          <Table columns={columns} data={result} isPagination={true} />
+      <div className="limiter">
+        <div className="container">
+          <div className="main">
+            <div className="search-exam">
+              <TextField
+                className="search-exam--txt"
+                id="outlined-search"
+                label="Search by title exam"
+                type="search"
+                variant="outlined"
+                size="small"
+                value={textInput}
+                onChange={onTextInputChange} />
+              <Button
+                size="small"
+                className="btn-search"
+                variant="contained"
+                disabled={!textInput}
+                color="primary"> Search </Button>
+              <Button
+                size="small"
+                className="btn-search"
+                variant="contained"
+                color="primary"> Create Exam </Button>
+            </div>
+            <div className="tbl-exams">
+              <Table columns={columns} data={result} isPagination={true} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
   );
 }
 const StyleListExam = styled(ListExam)`
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 
-box-sizing: border-box;
+body,
+html {
+  height: 100%;
+  font-family: sans-serif;
+}
+
+.limiter {
+  width: 100%;
+  margin: 0 auto;
+}
+.container {
+  width: 100%;
+  min-height: 100vh;
+  overflow: auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+.main {
+  background: #fff;
+  border-radius: 10px;
+  overflow: auto;
+  align-items: center;
+  padding: 10px;
+  width: 70%;
+  min-width: 600px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.tbl-exams {
+  width: 70%;
+}
+
 .show-page {
   width: 100%;
   height: 100%;
@@ -264,9 +336,16 @@ box-sizing: border-box;
   width: 75;
   height: 40;
   cursor: pointer;
-  margin-left: 1rem;
+  margin-right: 1rem;
   margin-bottom: 5px;
   font-size: 1;
+}
+.detail-exam {
+  margin-left: 0.3rem;
+}
+.detail-exam:hover {
+  cursor: pointer;
+  color: #5e6bd3;
 }
 //** icon prev next/
 .border-icon {
@@ -328,11 +407,13 @@ box-sizing: border-box;
   justify-content: center;
   align-items: center;
   margin-top: 2%;
+  margin-bottom: 2%;
 }
 .btn-search {
   width: 120px;
-  height: 50px;
+  height: 40px;
   margin-left: 10px;
+  font-size: 0.7rem;
 }
 /* Hide scrollbar for IE, Edge add Firefox */
 .scrollbar-hidden {

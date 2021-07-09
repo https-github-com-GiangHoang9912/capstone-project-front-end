@@ -46,38 +46,38 @@ const SelfGenerate = ({ className = '' }) => {
   const handleAccept = () => {
     history.push('/check-duplicate')
   }
-  
-  const [fakeQuestion, setFakeQuestion] =useState([
+
+  const [fakeQuestion, setFakeQuestion] = useState([
     {
-       id: 1,
-       text: "Which of the following is NOT considered characteristic of a low-context culture?"
+      id: 1,
+      text: "Which of the following is NOT considered characteristic of a low-context culture?"
     },
     {
       id: 2,
       text: "Which of the following is NOT a key strategy for effective global communication?"
-   },
-   {
-    id: 3,
-    text: "Why are short subject lines desirable in e-mail?"
- },
-   ]);
+    },
+    {
+      id: 3,
+      text: "Why are short subject lines desirable in e-mail?"
+    },
+  ]);
 
-   const columns = [
-     {
-       Header: "No. ",
-       accessor: "id"
-     },
-     { 
-       Header: "Question",
-       accessor: "text"
-     },
-     { 
-       Header: "Edit",
-       Cell: ( cell:any ) => (
+  const columns = [
+    {
+      Header: "No. ",
+      accessor: "id"
+    },
+    {
+      Header: "Question",
+      accessor: "text"
+    },
+    {
+      Header: "Edit",
+      Cell: (cell: any) => (
         <Icon color="secondary" >edit_circle</Icon>
       )
-     }
-   ];
+    }
+  ];
 
   return (
     <div className={className}>
@@ -85,7 +85,7 @@ const SelfGenerate = ({ className = '' }) => {
         <form>
           {/* Nhap cau tra loi */}
           <br />
-          
+
           <Carousel isRTL className="carousel">
             {items.map((item) => (
               <div className="item-input">
@@ -120,8 +120,8 @@ const SelfGenerate = ({ className = '' }) => {
             ))}
           </Carousel>
           <div className="controls-wrapper">
-             <Icon color="primary" onClick={addItem}>add_circle</Icon>
-             <Icon color="secondary"  onClick={removeItem}>delete_circle</Icon>
+            <Icon color="primary" onClick={addItem}>add_circle</Icon>
+            <Icon color="secondary" onClick={removeItem}>delete_circle</Icon>
           </div>
           {/* Generate cau hoi */}
           <Button
@@ -136,7 +136,7 @@ const SelfGenerate = ({ className = '' }) => {
           {/* call components ProgressBar */}
           {showProgress ? <Progress percentage={60} /> : ''}
           {/* Display question generated */}
-          <Table columns={columns} data={fakeQuestion} isPagination ={false} />
+          <Table columns={columns} data={fakeQuestion} isPagination={false} />
           <Button
             variant="contained"
             color="primary"

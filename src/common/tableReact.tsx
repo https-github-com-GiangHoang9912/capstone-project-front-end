@@ -127,7 +127,7 @@ const StyleTable = styled(TableReact)`
   }
 
   th {
-    text-align: center;
+    text-align: left;
     color: #fff;
     font-size: 16px;
     background-color: #303f9f;
@@ -140,6 +140,8 @@ const StyleTable = styled(TableReact)`
   td {
     padding: 1rem 0.2rem;
     font-size: 16px;
+    text-align: left;
+
     
   }
   td:last-child{
