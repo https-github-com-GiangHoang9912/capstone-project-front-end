@@ -1,24 +1,29 @@
-import styled from 'styled-components'
 import * as React from "react";
 
+import styled from 'styled-components';
 import { useCallback, useEffect, useState } from 'react';
-// import { Pagination } from '@material-ui/lab';
-import { Button, makeStyles } from '@material-ui/core'
+import { Button, makeStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
-// import {  } from 'react';
-// import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-// import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye } from '@fortawesome/free-solid-svg-icons'
-
-import { useHistory } from 'react-router-dom'
-import Table from '../common/tableReact'
-import Dialog from '../common/dialog'
 
 
-// import { TableViewExam } from '../common/table';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+
+import { useHistory } from 'react-router-dom';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import InputLabel from '@material-ui/core/InputLabel';
+import Input from '@material-ui/core/Input';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
+
+import Table from '../common/tableReact';
 
 interface IExam {
   id: number,
@@ -42,6 +47,39 @@ const useStyles = makeStyles((theme) => ({
       height: 'auto'
     },
   },
+  paper: {
+
+  },
+  containerCreate: {
+
+  },
+  titleCreate: {
+
+  },
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  formControl: {
+    margin: theme.spacing(2),
+    minWidth: 200,
+  },
+  nameExam: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  txtNameExam: {
+    marginTop: '1rem',
+    width: '200px',
+    height: '80px',
+    marginLeft: '17px'
+  },
+  formCreate: {
+
+  },
+  bank: {
+
+  }
 
 }));
 
@@ -51,13 +89,30 @@ function ListExam(props: any) {
   const history = useHistory();
   const [isOpen, setIsOpen] = useState(false);
 
-  function handleDelete() {
-    setIsOpen(true)
-  }
-  const handleDialogClose = () => {
-    setIsOpen(false)
-  }
 
+  const [open, setOpen] = useState(false);
+  const [subject, setSubject] = useState('');
+  /* Event when click button create exam */
+  const handleChange = (event: any) => {
+    setSubject((event.target.value) || '');
+  };
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  /* event when click delete */
+  // function handleDelete() {
+  //   setIsOpen(true)
+  // }
+  // const handleDialogClose = () => {
+  //   setIsOpen(false)
+  // }
+
+  /* event when click edit */
   const handleAccept = () => {
     history.push('/update-exam')
   }
@@ -184,59 +239,45 @@ function ListExam(props: any) {
   }
   console.log('search neeee', handleSearchExam('SSC101'));
 
-
-  // useEffect(() => {
-  //   setPaginated(result.slice(0, pageSize));
-  // }, []);
-  // const showPages = _.range(1, pages);
-  // const childResult = Array<IExam[]>([]);
-  // console.log(childResult)
-  // const pagination = (pageNo: number) => {
-  //   setCurrentPage(pageNo);
-  //   const startIndex = (pageNo - 1) * pageSize;
-  //   console.log('index start', startIndex);
-  //   const paginatedPost = result.slice(startIndex, pageSize * pageNo);
-  //   console.log('current', pageNo);
-  //   console.log('post', paginatedPost);
-  //   setPaginated(paginatedPost);
-  //   console.log(paginated);
-  // }
-
-  // const nextPagination = (pageNo: number) => {
-  //   console.log('current', pageNo);
-  //   const newCurrentPage = pageNo + 1;
-  //   setCurrentPage(newCurrentPage);
-  //   console.log('new current', newCurrentPage);
-  //   const startIndex = (newCurrentPage - 1) * pageSize;
-  //   console.log('start Index', startIndex);
-  //   const paginatedPost = result.slice(startIndex, pageSize * newCurrentPage);
-  //   setPaginated(paginatedPost);
-  //   console.log(paginated);
-  // }
-
-  // const prevPagination = (pageNo: number) => {
-  //   console.log('current', pageNo);
-  //   const newCurrentPage = pageNo - 1;
-  //   setCurrentPage(newCurrentPage);
-  //   console.log('new current', newCurrentPage);
-  //   const startIndex = (newCurrentPage - 1) * pageSize;
-  //   console.log('start Index', startIndex);
-  //   const paginatedPost = result.slice(startIndex, pageSize * newCurrentPage);
-  //   setPaginated(paginatedPost);
-  //   console.log(paginated);
-  // }
-  // const [paginated, setPaginated] = useState<any>([]);
-  // const [currentPage, setCurrentPage] = useState<number>(1);
-  // const [pageSize, setPageSize] = useState(5);
-  // let pages = 1;
-
-  // const totalPage = Math.ceil(result.length / pageSize);
-  // pages = result.length && pageSize === 0 ? totalPage : totalPage + 1;
-  // const showPages = Array<number>();
-  // for (let i = 1; i < pages; i++) {
-  //   showPages.push(i);
-  // }
-
+  const body = (
+    <div className={classes.paper}>
+      <div className={classes.containerCreate}>
+        <div className={classes.bank}>
+          <div className={classes.titleCreate}>
+            <span>Choose subject bank: </span>
+          </div>
+          <div className={className.formCreate}>
+            <form className={classes.container}>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="demo-dialog-native">Subject</InputLabel>
+                <Select
+                  native
+                  value={subject}
+                  onChange={handleChange}
+                  input={<Input id="demo-dialog-native" />}
+                >
+                  <option aria-label="None" value="" />
+                  <option value={10}>SSC101</option>
+                  <option value={20}>MAD301</option>
+                  <option value={30}>Wig202</option>
+                </Select>
+              </FormControl>
+            </form>
+          </div>
+        </div>
+        <div className={classes.nameExam}>
+          <span>Enter name new bank: </span>
+          <TextField
+            className={classes.txtNameExam}
+            id="outlined-basic"
+            label="Enter name"
+            variant="outlined" />
+          <p style={{color: "red", width:'330px'}}>* The system will automatically create a test with
+            50 random questions in the school question bank. </p>
+        </div>
+      </div>
+    </div >
+  );
   const onTextInputChange = useCallback((e) => {
     setTextInput(e.target.value);
   }, []);
@@ -266,9 +307,24 @@ function ListExam(props: any) {
                 color="primary"> Search </Button>
               <Button
                 size="small"
+                onClick={handleClickOpen}
                 className="btn-search"
                 variant="contained"
                 color="primary"> Create Exam </Button>
+              <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Fill the form to create New Exam</DialogTitle>
+                <DialogContent>
+                  {body}
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose} color="primary">
+                    Cancel
+                  </Button>
+                  <Button onClick={handleClose} color="primary">
+                    Ok
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </div>
             <div className="tbl-exams">
               <Table columns={columns} data={result} isPagination={true} />
@@ -320,10 +376,13 @@ html {
   width: 70%;
   min-width: 600px;
   display: flex;
+  margin-top: 5%;
   justify-content: center;
   flex-direction: column;
 }
-
+.txt-nam__exam {
+  margin-top: 1rem;
+}
 .tbl-exams {
   width: 70%;
 }

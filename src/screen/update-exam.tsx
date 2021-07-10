@@ -438,18 +438,24 @@ function UpdateExam(props: any) {
 }
 
 const StyledUpdateExam = styled(UpdateExam)`
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 
-/* height: 100vh; */
-  font-family: Poppins-Regular, sans-serif;
-  background-color: #f7f8fb;
-
+body,
+html {
+  height: 100%;
+  font-family: sans-serif;
+}
 .contain-select-subjects {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .text-subject {
-  margin-top: 1rem;
+  margin-top: 10%;
   margin-bottom: 1rem;
 }
 //* Css for button */
@@ -482,50 +488,7 @@ const StyledUpdateExam = styled(UpdateExam)`
   overflow-y: scroll;
   text-align: start;
 }
-.content-exam, .content-bank p {
-  font-size: 20px;
-}
 
-.content-exam p:hover {
-  color:#5cb85c;
-  cursor: pointer;
-}
-.content-bank p:hover {
-  color:#5cb85c;
-  cursor: pointer;
-}
-.title-exam {
-  align-items: center;
-  font-family: Barlow;
-  font-size: 40px;
-  font-weight:1000;
-  margin-left: 6%;
-  color:#ee4949;
-}
-//* css for icon forward */
-.forward {
-  font-size: 50px;
-  color: #fd647a;  
-  margin-top: 320px;
-  width: 15%;
-}
-.forward:hover {
-  color: #c5031f;
-  cursor: pointer;
-}
 //* Responsive */
-@media (max-width: 768px) { 
-  .container-exam {
-    flex-direction: column;
-    padding: 10px;
-  }
-  .content-exam, .content-bank {
-    width: 100%;
-  } 
-  .forward {
-    margin: 50px;
-    
-  }
-}
 `
 export default StyledUpdateExam;

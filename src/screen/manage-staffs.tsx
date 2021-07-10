@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { Checkbox } from '@material-ui/core'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import Icon from '@material-ui/core/Icon';
 import styled from 'styled-components'
 import Table from '../common/tableReact'
+
 
 Staff.propTypes = {
   className: PropTypes.string,
@@ -35,29 +36,6 @@ function Staff(props: any) {
   const [checked, setChecked] = useState(true)
   return (
     <p>a</p>
-    // <div className={className}>
-    //   <div className="child-container">
-    //     <div className="checkbox-child">
-    //       <Checkbox
-    //         defaultChecked={checked}
-    //         color="primary"
-    //         inputProps={{ 'aria-label': 'secondary checkbox' }}
-    //       />
-    //     </div>
-    //     <div className="avatar-user">
-    //       <img src="avatar2.png" />
-    //     </div>
-    //     <div className="profile-user">
-    //       <span className="text-email">{ staff.mail }</span>
-    //       <span className="text-name">{ staff.name }</span>
-    //     </div>
-    //     <div className="iconTrash">
-    //       <span className="icon">
-    //         <FontAwesomeIcon className="faTrash" icon={faTrash} />
-    //       </span>
-    //     </div>
-    //   </div>
-    // </div>
   )
 }
 
@@ -66,17 +44,20 @@ function ManageStaffs(props: any) {
     {
       id: 101,
       name: 'Nguyen Anh Tien',
-      mail: 'tienna@fe.edu.vn'
+      mail: 'tienna@fe.edu.vn',
+      block: true
     },
     {
       id: 102,
       name: 'Tran Van Toan',
-      mail: 'toantv@fe.edu.vn'
+      mail: 'toantv@fe.edu.vn',
+      block: false
     },
     {
       id: 201,
       name: 'Pham Nhat Anh',
-      mail: 'anhpn@fe.edu.vn'
+      mail: 'anhpn@fe.edu.vn',
+      block: false
     }
     ,
     {
@@ -125,6 +106,19 @@ function ManageStaffs(props: any) {
       Header: "Email",
       accessor: "mail",
     },
+    {
+      Header: "View Profile",
+       Cell: ( cell:any ) => (
+        <span><Icon color="primary" >visibility</Icon></span>
+      )
+    },
+    {
+      Header: "Block/Unblock",
+      acccesor: "block",
+       Cell: ( cell:any ) => (
+        <span><Icon color="secondary" >lock_circle</Icon></span>
+      )
+    }
   ]
   let StaffsComponents:any = []
 
@@ -157,19 +151,8 @@ function ManageStaffs(props: any) {
                 <p className="btn btn-white btn-animate">Cancel</p>
               </div>
             </div>
-            <hr className="display" />
             <div className="manage">
-              <div className="select-all">
-                <div className="checkbox">
-                  <Checkbox
-                    defaultChecked={checked}
-                    color="primary"
-                    inputProps={{ 'aria-label': 'secondary checkbox' }}
-                  />
-                </div>
-              </div>
-              
-              <Table columns ={columns} data={staffs} isPagination = {true} />
+              <Table className="table-wrapper" columns ={columns} data={staffs} isPagination = {true} />
             </div>
           </div>
         </div>
@@ -195,7 +178,7 @@ const StyledAdmin = styled(ManageStaffs)`
     outline: none;
     border: none;
   }
-
+    
   div .checkbox {
     width: 20%;
   }
@@ -221,7 +204,7 @@ const StyledAdmin = styled(ManageStaffs)`
   }
   .container {
     width: 100%;
-    min-height: 100vh;
+    height: auto;
     overflow: auto;
     display: -webkit-box;
     display: -webkit-flex;
@@ -231,17 +214,37 @@ const StyledAdmin = styled(ManageStaffs)`
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    padding: 15px;
+    padding: 6em 15px 15px 15px;
   }
   .main {
     background: #fff;
-    border-radius: 10px;
+    border-radius: 5px;
     overflow: auto;
-    position: absolute;
     align-items: center;
     padding: 10px;
-    width: 70%;
+    margin: 1rem;
+    width: 100%;
+    padding: 10px 30px;
     min-width: 690px;
+  }
+
+  .manage {
+    height: 30rem;
+    .table-wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+  }
+
+  table {
+    overflow: auto;
+    table-layout: auto;
+  }
+
+  th {
+    text-align: left !important;
   }
 
   /** css for area contain search */
@@ -249,12 +252,12 @@ const StyledAdmin = styled(ManageStaffs)`
     position: relative;
     display: flex;
     margin: auto;
-    margin-bottom: 10px;
     align-items: center;
     background: #cecdcd;
     padding: 10px;
     width: 500px;
   }
+  
   .value-search {
     width: 350px;
     font-family: sans-serif;
@@ -266,9 +269,8 @@ const StyledAdmin = styled(ManageStaffs)`
     height: 50px;
     border-radius: 10px;
     padding: 0 30px 0 30px;
-    cursor: pointer;
+    cursor: auto;
     padding: 0 30px 0 65px;
-    cursor: pointer;
   }
   /** icon search */
   .icon-search {
@@ -288,7 +290,7 @@ const StyledAdmin = styled(ManageStaffs)`
   .btn-white {
     margin-left: 10px;
   }
-
+  
   //** css button */
   .text-box {
     margin-left: 25px;
@@ -316,7 +318,6 @@ const StyledAdmin = styled(ManageStaffs)`
     width: 45%;
     align-items: center;
     margin-top: 40px;
-    position: absolute;
     left: 50%;
     transform: translateX(-50%);
   }

@@ -1,10 +1,8 @@
 // lib
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
 
 import styled from 'styled-components'
-import React from 'react'
-
 
 // components
 import HomePage from '../screen/home'
@@ -14,19 +12,33 @@ import Header from '../common/header'
 import PersistentDrawerLeft from '../common/drawer'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
-import CreateExam from '../screen/create-exam'
+import ListExam from '../screen/list-exam'
 import { AccountContextProvider } from '../contexts/account-context'
 import ManageStaffs from '../screen/manage-staffs'
 import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
-import ForgotPassword from '../screen/forgot-password'
 import UpdateExam from '../screen/update-exam'
-import ListExam from '../screen/list-exam'
-
+import { refreshToken } from '../services/services'
 
 function App(props: any) {
-  const [isOpen, setIsOpen] = React.useState(true);
-  const [isLogin, setIsLogin] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(true)
+  const [isLogin, setIsLogin] = useState(false)
+
+  // useEffect(() => {
+  //   const id = localStorage.getItem('id')
+  //   const data = {
+  //     response: null,
+  //   }
+  //   refreshToken(data, id ? Number(id) : -1)
+  //     .then(() => {})
+  //     .catch((err) => {
+  //       if (err.response.status === 401) {
+  //         localStorage.clear()
+  //       }
+  //     })
+  // }, [])
+
+  const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
 
   const toggleClass = isOpen ? 'menu-open' : 'menu-close'
   return (
@@ -37,10 +49,7 @@ function App(props: any) {
           setIsOpen={setIsOpen}
           className={isLogin ? 'hidden-component' : ''}
         />
-        <PersistentDrawerLeft
-          isOpen={isOpen}
-          className={isLogin ? 'hidden-component' : ''}
-        />
+        <PersistentDrawerLeft isOpen={isOpen} className={isLogin ? 'hidden-component' : ''} />
         <div className={`main-content ${toggleClass}`}>
           <Switch>
             <Route exact path="/">
@@ -55,30 +64,28 @@ function App(props: any) {
             <Route exact path="/self-generate">
               <SelfGenerate />
             </Route>
-            <Route exact path="/profile" component={Profile} >
+            <Route exact path="/profile" component={Profile}>
               <Profile />
             </Route>
-            <Route exact path="/history" component={Profile} >
+            <Route exact path="/history" component={Profile}>
               <ViewHistory />
             </Route>
-            <Route exact path="/change-password" component={Profile} >
+            <Route exact path="/changePassword" component={Profile}>
               <ChangePassword />
             </Route>
-            <Route exact path="/forgot-password" component={Profile} >
-              <ForgotPassword />
-            </Route>
-            <Route exact path="/create-exam" component={Profile} >
-              <CreateExam />
-            </Route>
-            <Route exact path="/update-exam" component={Profile} >
-              <UpdateExam />
-            </Route>
-            <Route exact path="/list-exam" component={Profile} >
+            <Route exact path="/list-exam" component={Profile}>
               <ListExam />
             </Route>
-            <Route exact path="/admin/manage-staffs">
-              <ManageStaffs />
+            <Route exact path="/update-exam" component={Profile}>
+              <UpdateExam />
             </Route>
+            {role === 1 ? (
+              <Route exact path="/admin/manage-staffs">
+                <ManageStaffs />
+              </Route>
+            ) : (
+              ''
+            )}
             <Route exact path="/login" component={Login}>
               <Login setIsLogin={setIsLogin} />
             </Route>
@@ -89,6 +96,4 @@ function App(props: any) {
   )
 }
 
-export default styled(App)`
-
-`
+export default styled(App)``
