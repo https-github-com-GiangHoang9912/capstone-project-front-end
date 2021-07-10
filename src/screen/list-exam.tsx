@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import styled from 'styled-components';
 import { useCallback, useEffect, useState } from 'react';
 import { Button, makeStyles } from '@material-ui/core';
