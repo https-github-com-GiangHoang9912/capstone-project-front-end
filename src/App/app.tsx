@@ -32,7 +32,7 @@ function App(props: any) {
     refreshToken(data, id ? Number(id) : -1)
       .then(() => {})
       .catch((err) => {
-        if (err.response.status === 401) {
+        if (err.response && err.response.status === 401) {
           localStorage.clear()
         }
       })
