@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
@@ -36,29 +36,7 @@ function Staff(props: any) {
   const { staff } = props
   const [checked, setChecked] = useState(true)
   return (
-    <div className={className}>
-      <div className="child-container">
-        <div className="checkbox-child">
-          <Checkbox
-            defaultChecked={checked}
-            color="primary"
-            inputProps={{ 'aria-label': 'secondary checkbox' }}
-          />
-        </div>
-        <div className="avatar-user">
-          <img src="avatar2.png" />
-        </div>
-        <div className="profile-user">
-          <span className="text-email">{ staff.mail }</span>
-          <span className="text-name">{ staff.name }</span>
-        </div>
-        <div className="iconTrash">
-          <span className="icon">
-            <FontAwesomeIcon className="faTrash" icon={faTrash} />
-          </span>
-        </div>
-      </div>
-    </div>
+    <p>a</p>
   )
 }
 
@@ -70,6 +48,13 @@ function ManageStaffs(props: any) {
       mail: 'tienna@fe.edu.vn',
       block: true
     },
+    {
+      id: 201,
+      name: 'Pham Nhat Anh',
+      mail: 'anhpn@fe.edu.vn',
+      block: false
+    }
+    ,
     {
       id: 102,
       name: 'Tran Van Toan',

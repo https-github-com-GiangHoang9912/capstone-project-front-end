@@ -268,6 +268,7 @@ const SelfStyle = styled(SelfGenerate)`
     font-weight: 600;
     color: #545d7a;
     padding: 10px 0;
+    float: left;
   }
   .note-box {
     color: #545d7a;
