@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
-import styled from 'styled-components'
+import styled from 'styled-components'  
 
 // components
 import HomePage from '../screen/home'

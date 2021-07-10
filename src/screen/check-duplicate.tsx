@@ -113,7 +113,7 @@ function Duplicate(props: any) {
             </div>
           </div>
           <div className="convert-csv">
-            <img src="csv.png" />
+            <div className="csv-img" />
             <div className="csv-link">
               <a href="https://convertio.co/vn/doc-csv/" target="_blank" rel="noreferrer">
                 <h3>Convert file to CSV</h3>
@@ -189,7 +189,7 @@ function Duplicate(props: any) {
 const StyleDuplicate = styled(Duplicate)`
   width: 100%;
   height: auto;
-  background-color: #f7f8fb;
+  
   .container {
     margin: 0.5rem;
     padding: 5em 10px 10px 10px;
@@ -197,7 +197,7 @@ const StyleDuplicate = styled(Duplicate)`
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
-    background-color: #f7f8fb;
+    background-color: #fbfbfb;
     text-align: center;
     /* box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
       rgba(17, 17, 26, 0.1) 0px 16px 56px; */
@@ -211,7 +211,7 @@ const StyleDuplicate = styled(Duplicate)`
   .control-left {
     width: 35%;
     height: 100%;
-    background-color: #f7f8fb;
+    background-color: #fbfbfb;
   }
   .control-left h2 {
     width: 90%;
@@ -222,37 +222,48 @@ const StyleDuplicate = styled(Duplicate)`
   }
   .import-bank {
     width: 100%;
-    border: 1px solid #dae1f5;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     background-color: #fff;
     border-radius: 5px;
+    padding-bottom: 20px;
   }
   .convert-csv {
     display: flex;
+    justify-content:center;
+    height: auto;
     padding: 1em;
     margin-top: 1em;
-    border: 1px solid #dae1f5;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     background-color: #fff;
     text-align: start;
     border-radius: 5px;
   }
-  .convert-csv img {
-    width: 20%;
-  }
+  
   .csv-link {
     margin-left: 1rem;
   }
+  .csv-img{
+    width:150px;
+    height: 90px;
+    background-image: url('https://image.flaticon.com/icons/png/128/2305/2305855.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+
+  }
   .csv-link h3 {
     font-size: 17px;
+    
   }
   .csv-link p {
     color: #545d7a;
     padding: 0.2em;
+    margin: 0;
     font-size: 0.9rem;
   }
   .control-right {
     width: 50%;
     min-height: 500px;
-    border: 1px solid #dae1f5;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   }
   .control-right h2 {
     padding: 1rem;

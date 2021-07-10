@@ -30,7 +30,9 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiTextField-root': {
       width: '100%',
     },
-    marginTop: '-74px',
+    backgroundImage: `url('https://vcdn-vnexpress.vnecdn.net/2020/03/22/b-JPG-4063-1584888577.jpg')`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
   },
   loginGoogle: {
     '& button': {
@@ -60,16 +62,12 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     width: '100%',
-    height: '108.5vh',
     minHeight: '100vh',
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
     padding: '15px',
-    backgroundImage: `url('https://vcdn-vnexpress.vnecdn.net/2020/03/22/b-JPG-4063-1584888577.jpg')`,
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
     minWidth: '430px',
   },
   wrapLogin: {
@@ -110,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
   loadingDiv: {
     position: 'absolute',
     width: '100vw',
-    height: '108.5vh',
+    height: '100vh',
     backgroundImage: 'linear-gradient(to right, #0e252c, #0a2530, #092433, #0b2336, #102239)',
     display: 'none',
     'z-index': 2,

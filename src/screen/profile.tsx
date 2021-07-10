@@ -299,7 +299,6 @@ function Profile(props: any) {
 const styleProfile = styled(Profile)`
   width: 100%;
   min-height: 100vh;
-  background-color: #f7f8fb;
   padding-bottom: 20px;
   .info-container {
     margin: 2rem;
