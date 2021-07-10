@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { Checkbox } from '@material-ui/core'
 import Icon from '@material-ui/core/Icon';
 import styled from 'styled-components'
 import Table from '../common/tableReact'
@@ -48,6 +49,13 @@ function ManageStaffs(props: any) {
       block: true
     },
     {
+      id: 201,
+      name: 'Pham Nhat Anh',
+      mail: 'anhpn@fe.edu.vn',
+      block: false
+    }
+    ,
+    {
       id: 102,
       name: 'Tran Van Toan',
       mail: 'toantv@fe.edu.vn',
@@ -58,17 +66,6 @@ function ManageStaffs(props: any) {
       name: 'Pham Nhat Anh',
       mail: 'anhpn@fe.edu.vn',
       block: false
-    }
-    ,
-    {
-      id: 102,
-      name: 'Tran Van Toan',
-      mail: 'toantv@fe.edu.vn'
-    },
-    {
-      id: 201,
-      name: 'Pham Nhat Anh',
-      mail: 'anhpn@fe.edu.vn'
     }
     ,
     {

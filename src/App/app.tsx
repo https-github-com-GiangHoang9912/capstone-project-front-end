@@ -1,6 +1,6 @@
 // lib
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 import styled from 'styled-components'
 
