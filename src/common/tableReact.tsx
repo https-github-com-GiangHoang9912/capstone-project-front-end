@@ -37,10 +37,10 @@ function TableReact(props: any) {
     // Get the state from the instance
     state: { pageIndex, pageSize },
   } = useTable({ columns, data }, usePagination)
-   const arr = [];
-   for(let i = 1; i <=pageCount;i++){
-     arr.push(i);
-   }
+  const arr = [];
+  for (let i = 1; i <= pageCount; i++) {
+    arr.push(i);
+  }
   return (
     <div className={className}>
       <table {...getTableProps()} className="table">
@@ -75,24 +75,24 @@ function TableReact(props: any) {
         ' '
       ) : (
         <div className="pagination">
-          
+
           <button className="btnChange" onClick={() => previousPage()} disabled={!canPreviousPage}>
             {'<'}
           </button>{' '}
-           {arr.map((item,index)=>(
-             <button className={pageIndex === index ? " pageNumber pageActive": "pageNumber "} onClick={() => gotoPage(item-1)}>{item}</button>
-           ))}
+          {arr.map((item, index) => (
+            <button className={pageIndex === index ? " pageNumber pageActive" : "pageNumber "} onClick={() => gotoPage(item - 1)}>{item}</button>
+          ))}
           <button className="btnChange" onClick={() => nextPage()} disabled={!canNextPage}>
             {'>'}
           </button>{' '}
-          
+
           <span>
             Page{' '}
             <strong>
               {pageIndex + 1} of {pageOptions.length}
             </strong>{' '}
           </span>
-         
+
           <select
             value={pageSize}
             onChange={(e) => {
@@ -112,11 +112,17 @@ function TableReact(props: any) {
 }
 
 const StyleTable = styled(TableReact)`
+
+  thead {
+    position: sticky;
+    top: 0; 
+    position: -webkit-sticky;
+  }
   table {
     width: 100%;
     border: none;
     border-collapse: collapse;
-    margin: 2rem 0rem;
+    margin: 0rem 0rem;
   }
 
   th {
@@ -133,6 +139,12 @@ const StyleTable = styled(TableReact)`
   td {
     padding: 1rem 0.2rem;
     font-size: 16px;
+    text-align: left;
+
+    
+  }
+  td:last-child{
+    display: block;    
   }
   .pagination{
     margin: 1rem;
@@ -164,5 +176,6 @@ const StyleTable = styled(TableReact)`
   .pageNumber:hover {
     background-color: #becbeb;
   }
+
 `
 export default StyleTable

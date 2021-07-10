@@ -12,7 +12,7 @@ import Header from '../common/header'
 import PersistentDrawerLeft from '../common/drawer'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
-import CreateExam from '../screen/create-exam'
+import ListExam from '../screen/list-exam'
 import { AccountContextProvider } from '../contexts/account-context'
 import ManageStaffs from '../screen/manage-staffs'
 import ViewHistory from '../screen/view-history'
@@ -32,7 +32,7 @@ function App(props: any) {
     refreshToken(data, id ? Number(id) : -1)
       .then(() => {})
       .catch((err) => {
-        if (err.response.status === 401) {
+        if (err.response && err.response.status === 401) {
           localStorage.clear()
         }
       })
@@ -73,8 +73,8 @@ function App(props: any) {
             <Route exact path="/changePassword" component={Profile}>
               <ChangePassword />
             </Route>
-            <Route exact path="/create-exam" component={Profile}>
-              <CreateExam />
+            <Route exact path="/list-exam" component={Profile}>
+              <ListExam />
             </Route>
             <Route exact path="/update-exam" component={Profile}>
               <UpdateExam />

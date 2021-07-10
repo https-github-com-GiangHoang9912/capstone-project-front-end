@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import Select from '@material-ui/core/Select';
+
+import Checkbox from '@material-ui/core/Checkbox';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 import { Button, FormHelperText, makeStyles } from '@material-ui/core'
-
-
 import styled from 'styled-components'
+
+import Table from '../common/tableReact'
+
 
 UpdateExam.propTypes = {
   className: PropTypes.string,
@@ -17,160 +22,373 @@ UpdateExam.propTypes = {
 UpdateExam.defaultProps = {
   className: '',
 };
-const useStyles = makeStyles({
-  formControl: {
-    marginTop: 25,
-    minWidth: 200,
-    marginBottom: 15,
-    backgroundColor: "#ffffff"
+const useStyles = makeStyles((theme) => ({
+  dialogPaper: {
+    minHeight: '30vh',
+    maxHeight: '80vh',
+    width: '100vh',
   },
-
-  selectEmpty: {
-    // marginTop: theme.spacing(2),
-  },
-  selectedSubject: {
-    backgroundColor: "#ffffff",
-    color: "#57606f"
-  }
-  ,
-  textFliedSubject: {
-    fontSize: 20,
-    marginRight: 10,
-    color: "black",
-    padding: 10
-  },
-
   styleBtn: {
-    width: 150,
-    height: 50,
+    width: 70,
+    height: 30,
     backgroundColor: '#1e90ff',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    margin: '5px',
   },
-});
+  paper: {
+
+  },
+  detailAnswer: {
+    marginLeft: '1rem',
+    display: 'block'
+  },
+  title: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  titleExam: {
+    color: '#46178F',
+    alignItems: 'center'
+  },
+  contentExam: {
+    // flexDirection: 'column'
+  },
+  question: {
+    marginLeft: '-25px',
+    alignItems: 'center'
+  },
+  answer: {
+    marginTop: '-10px',
+    padding: '5px'
+  }
+
+}));
 
 function UpdateExam(props: any) {
   const { className } = props;
   const classes = useStyles();
   const [selected, setSelected] = useState('');
-  const [nameBank, setNameBank] = useState('');
+  const [nameBank, setNameBank] = useState('Exam Bank');
+  const [scroll, setScroll] = useState('paper');
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+    setScroll(scroll);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const selectionChangeHandler = (event: any) => {
     setSelected(event.target.value)
   };
   const selectionBankHandler = (event: any) => {
     setNameBank(event.target.value)
   };
+
+  const exams = [
+    {
+      id: 101,
+      name: 'In which region does Asia have a lot of oil and gas?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    },
+    {
+      id: 102,
+      name: 'Asia is a continent?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    },
+    {
+      id: 201,
+      name: 'Asia has a land area about approx?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    }
+    ,
+    {
+      id: 102,
+      name: 'Which continent is bordered by Asia?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    },
+    {
+      id: 201,
+      name: ' In which region are the mountain and platea systems of Asia concentrated?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    }
+    ,
+    {
+      id: 102,
+      name: 'Who are you?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    },
+    {
+      id: 201,
+      name: 'What is the largest ocean in the world?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    }
+    ,
+    {
+      id: 102,
+      name: 'Who are you?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    },
+    {
+      id: 201,
+      name: 'What is the largest ocean in the world?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    }
+    ,
+    {
+      id: 102,
+      name: 'Who are you?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    },
+    {
+      id: 201,
+      name: 'What is the largest ocean in the world?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    }
+    ,
+    {
+      id: 102,
+      name: 'Who are you?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    },
+    {
+      id: 201,
+      name: 'What is the largest ocean in the world? ',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    }
+    ,
+    {
+      id: 102,
+      name: 'Who are you?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    },
+    {
+      id: 201,
+      name: 'What is the largest ocean in the world? ',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    }
+    ,
+    {
+      id: 102,
+      name: 'Who are you?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    },
+    {
+      id: 201,
+      name: 'What is the largest ocean in the world? ',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    }
+    ,
+    {
+      id: 102,
+      name: 'Who are you?',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    },
+    {
+      id: 999,
+      name: 'What is the largest ocean in the world? ',
+      answer: [
+        'A. Japan',
+        'B. Laos',
+        'C. China',
+        'D. VietNam'
+      ]
+    }
+  ]
+
+  const columns = [
+    {
+      width: '5%',
+      Header: "ID",
+      accessor: "id",
+    },
+    {
+      width: '65%',
+      Header: "Question",
+      accessor: "name",
+    },
+    {
+      width: '30%',
+      Header: "Answer",
+      accessor: "answer",
+    },
+  ]
+  const body = (
+    <div className={classes.paper}>
+      <div className={classes.contentExam}>
+        <div className={classes.question}>
+          <Checkbox
+            color="primary"
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+          />
+          <span>1. What do you want?</span>
+        </div>
+        <div className={classes.answer}>
+          <span className={classes.detailAnswer}>a. China</span>
+          <span className={classes.detailAnswer}>b. England</span>
+          <span className={classes.detailAnswer}>c. Laos</span>
+          <span className={classes.detailAnswer}>d. VietNam</span>
+        </div>
+      </div>
+      <div className={classes.contentExam}>
+        <div className={classes.question}>
+          <Checkbox
+            color="primary"
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+          />
+          <span>1. What do you want?</span>
+        </div>
+        <div className={classes.answer}>
+          <span className={classes.detailAnswer}>a. China</span>
+          <span className={classes.detailAnswer}>b. England</span>
+          <span className={classes.detailAnswer}>c. Laos</span>
+          <span className={classes.detailAnswer}>d. VietNam</span>
+        </div>
+      </div>
+      <div className={classes.contentExam}>
+        <div className={classes.question}>
+          <Checkbox
+            color="primary"
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+          />
+          <span>1. What do you want?</span>
+        </div>
+        <div className={classes.answer}>
+          <span className={classes.detailAnswer}>a. China</span>
+          <span className={classes.detailAnswer}>b. England</span>
+          <span className={classes.detailAnswer}>c. Laos</span>
+          <span className={classes.detailAnswer}>d. VietNam</span>
+        </div>
+      </div>
+      <div className={classes.contentExam}>
+        <div className={classes.question}>
+          <Checkbox
+            color="primary"
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+          />
+          <span>1. What do you want?</span>
+        </div>
+        <div className={classes.answer}>
+          <span className={classes.detailAnswer}>a. China</span>
+          <span className={classes.detailAnswer}>b. England</span>
+          <span className={classes.detailAnswer}>c. Laos</span>
+          <span className={classes.detailAnswer}>d. VietNam</span>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className={className}>
       <div className="create-exam">
         <div className="container-exam">
           <div className="exam">
-            <div className="contain-select-subjects">
-              <div className="text-subject">
-                <FormHelperText
-                  className={classes.textFliedSubject}>
-                  <h3>Select a subject to update: </h3></FormHelperText>
-              </div>
-              <div className="select-subjects">
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel>Subjects</InputLabel>
-                  <Select
-                    className={classes.selectedSubject}
-                    label="Subjects"
-                    displayEmpty
-                    value={selected}
-                    native
-                    onChange={selectionChangeHandler}
-                  >
-                    <option className={classes.selectedSubject} value='SSC101'>SSC101</option>
-                    <option className={classes.selectedSubject} value='MAE101'>MAE101</option>
-                    <option className={classes.selectedSubject} value='MLN201'>MLN201</option>
-                    <option className={classes.selectedSubject} value='CSD201'>CSD201</option>
-                    <option className={classes.selectedSubject} value='HCI301'>HCI301</option>
-                  </Select>
-                </FormControl>
-              </div>
+            <div className="text-subject">
+              <h2>SSC101 Chapter 123</h2>
             </div>
-
             <div className="content-exam" >
-              <p>1. In which region does Asia have a lot of oil and gas?</p>
-              <p>2. Asia is a continent?</p>
-              <p>3. Asia has a land area about approx?</p>
-              <p>4. Which continent is bordered by Asia?</p>
-              <p>7. In which region are the mountain and plateau
-                systems of Asia concentrated?</p>
-            </div>
-          </div>
-          <div className="icon">
-            <FontAwesomeIcon className="forward" icon={faArrowLeft} />
-          </div>
-          <div className="bank">
-            <div className="contain-select-subjects">
-              <div className="text-subject">
-                <FormHelperText
-                  className={classes.textFliedSubject}>
-                  <h3>Choose a subject bank: </h3></FormHelperText>
-              </div>
-              <div className="select-subjects">
-                <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel>Banks</InputLabel>
-                  <Select
-                    className={classes.selectedSubject}
-                    label="Subjects"
-                    displayEmpty
-                    value={nameBank}
-                    native
-                    onChange={selectionBankHandler}
-                  >
-                    <option className={classes.selectedSubject} value='SSC101'>SSC101</option>
-                    <option className={classes.selectedSubject} value='MAE101'>MAE101</option>
-                    <option className={classes.selectedSubject} value='MLN201'>MLN201</option>
-                    <option className={classes.selectedSubject} value='CSD201'>CSD201</option>
-                    <option className={classes.selectedSubject} value='HCI301'>HCI301</option>
-                  </Select>
-                </FormControl>
-              </div>
-            </div>
-            <div className="content-bank" >
-              <p>1. In which region does Asia have a lot of oil and gas?</p>
-              <p>2. Asia is a continent?</p>
-              <p>3. Asia has a land area about approx?</p>
-              <p>4. Which continent is bordered by Asia?</p>
-              <p>5. Which ocean does Asia not border?</p>
-              <p>6. Which of the following plains is not part of Asia?</p>
-              <p>7. In which region are the mountain and plateau systems of Asia
-                concentrated?</p>
-              <p>8. In which direction does the mountain and plateau
-                system run?</p>
-              <p>9. In which region does Asia have a lot of oil and gas?</p>
-              <p>10. Asia is a continent?</p>
-              <p>11. Asia has a land area about approx?</p>
-              <p>12. Which continent is bordered by Asia?</p>
-              <p>13. Which ocean does Asia not border?</p>
-              <p>14. Which of the following plains is not part of Asia?</p>
-              <p>15. In which region are the mountain and plateau systems
-                of Asia concentrated?</p>
-              <p>16. In which region are the mountain and plateau systems
-                of Asia concentrated?</p>
-              <p>17. In which direction does the mountain and plateau
-                system run?</p>
-              <p>18. In which region are the mountain and plateau systems
-                of Asia concentrated?</p>
-              <p>19. In which direction does the mountain and plateau
-                system run?</p>
+              <Table columns={columns} data={exams} isPagination={false} />
             </div>
           </div>
         </div>
         <div className="container-button">
           <div>
-            <Button variant="contained"
-              color="primary"
-              className={classes.styleBtn}
-            >
-              Random
-            </Button>
-          </div>
-          <div>
-            <Button variant="contained"
+            <Button
+              variant="contained"
               color="primary"
               className={classes.styleBtn}
             >
@@ -178,12 +396,40 @@ function UpdateExam(props: any) {
             </Button>
           </div>
           <div>
-            <Button variant="contained"
+            <Button
+              variant="contained"
               color="primary"
               className={classes.styleBtn}
+              onClick={handleClickOpen}
             >
-              Reset
+              Add
             </Button>
+            <Dialog
+              classes={{ paper: classes.dialogPaper }}
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="scroll-dialog-title"
+              aria-describedby="scroll-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                <div className={classes.title}>
+                  <h2 className={classes.titleExam}>SSC101 Chapter 123 </h2>
+                </div>
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {body}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Close
+                </Button>
+                <Button onClick={handleClose} color="primary" autoFocus>
+                  Save
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
         </div>
       </div>
@@ -192,24 +438,31 @@ function UpdateExam(props: any) {
 }
 
 const StyledUpdateExam = styled(UpdateExam)`
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 
-  height: 100vh;
-  font-family: Poppins-Regular, sans-serif;
-  background-color: #f7f8fb;
-  
+body,
+html {
+  height: 100%;
+  font-family: sans-serif;
+}
 .contain-select-subjects {
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
+.text-subject {
+  margin-top: 10%;
+  margin-bottom: 1rem;
+}
 //* Css for button */
 
 .container-button {
-    margin-bottom: 10px;
-    margin-top: 15px;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
 }
 //* Css for area create exam and bank */
 .create-exam {
@@ -223,63 +476,19 @@ const StyledUpdateExam = styled(UpdateExam)`
   padding:  0px 100px 10px 100px;
   text-align: center;
 }
-.content-exam, .content-bank {
+.content-exam {
   flex: 1;
   width: 100%;
-  height: 650px;
+  height: 500px;
   border: 1px solid black;
-  background-color: #fff;
-  padding: 10px;
+  background-color: #fff; 
   border: none;
+  margin-top: 1rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   overflow-y: scroll;
   text-align: start;
-  border-radius: 10px;
-}
-.content-exam, .content-bank p {
-  font-size: 20px;
 }
 
-.content-exam p:hover {
-  color:#5cb85c;
-  cursor: pointer;
-}
-.content-bank p:hover {
-  color:#5cb85c;
-  cursor: pointer;
-}
-.title-exam {
-  align-items: center;
-  font-family: Barlow;
-  font-size: 40px;
-  font-weight:1000;
-  margin-left: 6%;
-  color:#ee4949;
-}
-//* css for icon forward */
-.forward {
-  font-size: 50px;
-  color: #fd647a;  
-  margin-top: 320px;
-  width: 15%;
-}
-.forward:hover {
-  color: #c5031f;
-  cursor: pointer;
-}
 //* Responsive */
-@media (max-width: 768px) { 
-  .container-exam {
-    flex-direction: column;
-    padding: 10px;
-  }
-  .content-exam, .content-bank {
-    width: 100%;
-  } 
-  .forward {
-    margin: 50px;
-    
-  }
-}
 `
 export default StyledUpdateExam;
