@@ -24,19 +24,19 @@ function App(props: any) {
   const [isOpen, setIsOpen] = useState(true)
   const [isLogin, setIsLogin] = useState(false)
 
-  // useEffect(() => {
-  //   const id = localStorage.getItem('id')
-  //   const data = {
-  //     response: null,
-  //   }
-  //   refreshToken(data, id ? Number(id) : -1)
-  //     .then(() => {})
-  //     .catch((err) => {
-  //       if (err.response.status === 401) {
-  //         localStorage.clear()
-  //       }
-  //     })
-  // }, [])
+  useEffect(() => {
+    const id = localStorage.getItem('id')
+    const data = {
+      response: null,
+    }
+    refreshToken(data, id ? Number(id) : -1)
+      .then(() => {})
+      .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          localStorage.clear()
+        }
+      })
+  }, [])
 
   const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
 
