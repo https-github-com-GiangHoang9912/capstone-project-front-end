@@ -93,13 +93,13 @@ function TableReact(props: any) {
             </strong>{' '}
           </span>
 
-          <select
+          <select className="pageSize"
             value={pageSize}
             onChange={(e) => {
               setPageSize(Number(e.target.value))
             }}
           >
-            {[5, 10, 15, 50].map((pageSizes) => (
+            {[5, 15, 50].map((pageSizes) => (
               <option key={pageSizes} value={pageSizes}>
                 Show {pageSizes}
               </option>
@@ -117,11 +117,12 @@ const StyleTable = styled(TableReact)`
     position: sticky;
     top: 0; 
     position: -webkit-sticky;
+   
   }
   table {
     width: 100%;
-    border: none;
     border-collapse: collapse;
+    
     margin: 0rem 0rem;
   }
 
@@ -130,15 +131,16 @@ const StyleTable = styled(TableReact)`
     color: #fff;
     font-size: 16px;
     background-color: #303f9f;
-    padding: 0.6rem 0.3rem;
+    padding: 0.6rem 0.6rem;
   }
 
   tr:nth-child(even) {
-    background-color: #dddddd;
+    background-color: #ebf6fa;
   }
   td {
-    padding: 1rem 0.2rem;
-    font-size: 16px;
+    padding: 1rem 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 400;
     text-align: left;
 
     
@@ -149,6 +151,14 @@ const StyleTable = styled(TableReact)`
   .pagination{
     margin: 1rem;
     text-align: center;
+  }
+  .pageSize{
+    border: none;
+    outline: none;
+    font-size: 0.9rem;
+    margin-left: 1rem;
+    border-bottom: 2px solid #303f9f;
+    background:none;
   }
   .btnChange{
     color: #303f9f;

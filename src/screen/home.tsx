@@ -106,7 +106,7 @@ const HomeStyled = styled(HomePage)`
     color: #fff;
     width: 50%;
     font-family: 'Source Sans Pro', sans-serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 500;
     line-height: 32px;
     margin: auto;

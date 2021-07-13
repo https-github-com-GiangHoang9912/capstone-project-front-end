@@ -214,7 +214,7 @@ function ListExam(props: any) {
     },
     {
       Header: "Update",
-      Cell: (row: any) =>
+      Cell: (cell:any) =>
       (
         <div>
           <Button
@@ -226,10 +226,12 @@ function ListExam(props: any) {
           <Button
             variant="contained"
             color="secondary"
-            className='style-btn'>Delete</Button>
+            className='style-btn'>Delete{cell.row.original.id}</Button>
         </div>
       )
+      
     },
+    
   ]
   const [textInput, setTextInput] = useState<string>('');
   const handleSearchExam = function (content: string) {
@@ -371,7 +373,7 @@ html {
   overflow: auto;
   align-items: center;
   padding: 10px;
-  width: 70%;
+  width: 100%;
   min-width: 600px;
   display: flex;
   margin-top: 5%;
@@ -382,7 +384,7 @@ html {
   margin-top: 1rem;
 }
 .tbl-exams {
-  width: 70%;
+  width: 90%;
 }
 
 .show-page {

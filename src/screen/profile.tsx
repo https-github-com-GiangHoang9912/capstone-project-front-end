@@ -360,6 +360,9 @@ const styleProfile = styled(Profile)`
     border: none;
     border-bottom: 1px solid #dae1f5;
   }
+  .input-bar:focus{
+    border-bottom: 1px solid #306bf3;
+  }
 
   span {
     color: #10182f;

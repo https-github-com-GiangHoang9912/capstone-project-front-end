@@ -95,7 +95,9 @@ function Duplicate(props: any) {
         <div className="control control-left">
           <div className="import-bank">
             <h2 className="select">Import a new Bank</h2>
-            <input type="file" accept=".csv" className="input-bank" onChange={handleFileChange} />
+            <div className="input-bank">
+            <input type="file" accept=".csv" onChange={handleFileChange} title=" "/>
+            </div>
             <p className="file-rule">Bank input must be .csv file</p>
             <p className="bank-name">Bank name: {fileName}</p>
             {fileName.includes('.csv') ? (
@@ -222,7 +224,7 @@ const StyleDuplicate = styled(Duplicate)`
   }
   .import-bank {
     width: 100%;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     background-color: #fff;
     border-radius: 5px;
     padding-bottom: 20px;
@@ -233,7 +235,7 @@ const StyleDuplicate = styled(Duplicate)`
     height: auto;
     padding: 1em;
     margin-top: 1em;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     background-color: #fff;
     text-align: start;
     border-radius: 5px;
@@ -263,27 +265,32 @@ const StyleDuplicate = styled(Duplicate)`
   .control-right {
     width: 50%;
     min-height: 500px;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
   .control-right h2 {
     padding: 1rem;
   }
-  .input-bank::-webkit-file-upload-button {
-    visibility: hidden;
-  }
-  .input-bank::before {
-    content: 'Import your bank';
-    display: inline-block;
-    font-size: 1.3em;
-    padding: 10px 20px;
-    color: #fff;
-    background-color: #303f9f;
-    font-weight: 600;
-    margin: 1em 0 0 2em;
-  }
-  .input-bank:hover::before {
-    background-color: #2727a1;
-  }
+  input::-webkit-file-upload-button {
+  padding: 10px 20px;
+  background-color: #303f9f;
+  border: none;
+  font-size: 1rem;
+  border-radius: 5px;
+  color: #fff;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  transition: 100ms ease-out;
+  font-weight: bold;
+  cursor: pointer;
+}
+input::-webkit-file-upload-button:hover {
+  background-color: #35367a;
+}
+.input-bank{
+  margin: 1rem;
+}
+  input[type="file"]{
+  font-size: 0px;
+}
   .file-rule {
     color: #8c95ad;
   }
