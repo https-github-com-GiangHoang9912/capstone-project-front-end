@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiTextField-root': {
       width: '100%',
     },
-    marginTop: '-74px',
   },
   loginGoogle: {
     '& button': {

@@ -1,26 +1,15 @@
-import React, { useState } from 'react'
+import  React, { useState, FC } from 'react'
 import PropTypes from 'prop-types'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { Checkbox } from '@material-ui/core'
+
 import Icon from '@material-ui/core/Icon';
+import BlockIcon from '@material-ui/icons/Block';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
+
 import styled from 'styled-components'
-import Table from '../common/tableReact'
-
-
-Staff.propTypes = {
-  className: PropTypes.string,
-  staff: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    mail: PropTypes.string.isRequired,
-  })
-}
-
-Staff.defaultProps = {
-  className: '',
-  staff: {}
-}
+import { useTable } from 'react-table'
 
 
 ManageStaffs.propTypes = {
@@ -31,362 +20,236 @@ ManageStaffs.defaultProps = {
   className: '',
 }
 
-function Staff(props: any) {
-  const { className } = props
-  const { staff } = props
-  const [checked, setChecked] = useState(true)
-  return (
-    <p>a</p>
-  )
+type BooleanProp = {
+  cell : {
+    value?: Boolean
+  }
 }
 
 function ManageStaffs(props: any) {
-  const staffs = [
-    {
-      id: 101,
-      name: 'Nguyen Anh Tien',
-      mail: 'tienna@fe.edu.vn',
-      block: true
-    },
-    {
-      id: 201,
-      name: 'Pham Nhat Anh',
-      mail: 'anhpn@fe.edu.vn',
-      block: false
-    }
-    ,
-    {
-      id: 102,
-      name: 'Tran Van Toan',
-      mail: 'toantv@fe.edu.vn',
-      block: false
-    },
-    {
-      id: 201,
-      name: 'Pham Nhat Anh',
-      mail: 'anhpn@fe.edu.vn',
-      block: false
-    }
-    ,
-    {
-      id: 102,
-      name: 'Tran Van Toan',
-      mail: 'toantv@fe.edu.vn'
-    },
-    {
-      id: 201,
-      name: 'Pham Nhat Anh',
-      mail: 'anhpn@fe.edu.vn'
-    }
-    ,
-    {
-      id: 102,
-      name: 'Tran Van Toan',
-      mail: 'toantv@fe.edu.vn'
-    },
-    {
-      id: 201,
-      name: 'Pham Nhat Anh',
-      mail: 'anhpn@fe.edu.vn'
-    }
-  ]
-  const columns = [
-    {
-      Header: "ID",
-      accessor: "id",
-    },
-    {
-      Header: "Full Name",
-      accessor: "name",
-    },
-    {
-      Header: "Email",
-      accessor: "mail",
-    },
-    {
-      Header: "View Profile",
-       Cell: ( cell:any ) => (
-        <span><Icon color="primary" >visibility</Icon></span>
-      )
-    },
-    {
-      Header: "Block/Unblock",
-      acccesor: "block",
-       Cell: ( cell:any ) => (
-        <span><Icon color="secondary" >lock_circle</Icon></span>
-      )
-    }
-  ]
-  let StaffsComponents:any = []
-
-  try {
-    StaffsComponents = staffs.map((staff) =>
-      <Staff key={staff.id.toString()} staff={staff} />
-    )
-  } catch (error) {
-    console.log(`err: ${error}`);
-  }
-
   const { className } = props
-  const [checked, setChecked] = useState(true)
 
-  return (
-    <div className={className}>
-      <div className="limiter">
-        <div className="container">
-          <div className="main">
-            <div className="search">
-              <input
-                type="text"
-                className="value-search"
-                placeholder="Search to add available staff..."
-              />
-              <span className="icon-search">
-                <FontAwesomeIcon icon={faSearch} />
-              </span>
-              <div className="text-box">
-                <p className="btn btn-white btn-animate">Cancel</p>
-              </div>
-            </div>
-            <div className="manage">
-              <Table className="table-wrapper" columns ={columns} data={staffs} isPagination = {true} />
-            </div>
-          </div>
-        </div>
+  const renderBlockIcon: FC<BooleanProp> = ({ cell: { value } }) =>
+    <IconButton className='icon-button'>
+      {
+        value ? <LockOpenIcon fontSize='medium' color='primary'/>
+              : <BlockIcon fontSize='medium' color='secondary' />
+      }
+    </IconButton>
+  const renderStatus: FC<any> = ({ row: { original: { block } } }) =>
+      <div>
+        {
+          block ? <Chip label='Blocked' color='secondary' className='status-chip'/>
+          : <Chip label='Active' color='primary' className='status-chip' />
+        }
       </div>
+
+  const renderNameBox: FC<any> = ({ row: { original: { isMale } }, cell: { value } }) =>
+    <div className="name-box">
+      <Button className='name'>{value}</Button>
+      <div className="gender">{isMale ? 'Male': 'Female'}</div>
     </div>
+
+  const data = React.useMemo(
+    () => [
+      {
+        id: 101,
+        name: 'Nguyen Anh Tien',
+        isMale: true,
+        mail: 'tienna@fe.edu.vn',
+        phone: '0965625152',
+        department: 'SE',
+        block: true
+      },
+      {
+        id: 201,
+        name: 'Pham Nhat Anh',
+        isMale: false,
+        mail: 'anhpn@fe.edu.vn',
+        phone: '0965625152',
+        department: 'SB',
+        block: false
+      },
+      {
+        id: 102,
+        name: 'Tran Van Toan',
+        isMale: true,
+        mail: 'toantv@fe.edu.vn',
+        phone: '0965625152',
+        department: 'MC',
+        block: false
+      },
+      {
+        id: 201,
+        name: 'Pham Nhat Anh',
+        isMale: false,
+        mail: 'anhpn@fe.edu.vn',
+        phone: '0965625152',
+        department: 'SE',
+        block: false,
+      },
+      {
+        id: 301,
+        name: 'Nguyen Anh Tu',
+        isMale: true,
+        mail: 'tuna@fe.edu.vn',
+        phone: '0965625152',
+        department: 'SB',
+        block: true
+      },
+      {
+        id: 302,
+        name: 'Pham Nhat Huyen',
+        isMale: false,
+        mail: 'anhpn@fe.edu.vn',
+        phone: '0965625152',
+        department: 'SE',
+        block: false
+      },
+      {
+        id: 303,
+        name: 'Tran Van Toan',
+        isMale: true,
+        mail: 'toantv@fe.edu.vn',
+        phone: '0965625152',
+        department: 'SE',
+        block: false
+      },
+      {
+        id: 304,
+        name: 'Pham Minh Lan',
+        isMale: false,
+        mail: 'anhpn@fe.edu.vn',
+        phone: '0965625152',
+        department: 'SE',
+        block: false,
+      },
+  
+    ],
+    []
+  )
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "ID",
+        accessor: "id",
+      },
+      {
+        Header: "Full Name",
+        accessor: "name",
+        Cell: renderNameBox,
+      },
+      {
+        Header: "Email",
+        accessor: "mail",
+      },
+      {
+        Header: "Phone",
+        accessor: "phone",
+      },
+      {
+        Header: "Department",
+        accessor: "department",
+      },
+      {
+        Header: "Status",
+        Cell: renderStatus,
+      },
+      {
+        Header: "Action",
+        accessor: "block",
+        Cell: renderBlockIcon,
+      },
+    ],
+    []
+  )
+
+  const tableInstance = useTable({ columns, data })
+ 
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = tableInstance
+ 
+  return (
+    <table {...getTableProps()} className={className}>
+      <thead>
+        {
+        headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {
+            headerGroup.headers.map(column => (
+              <th {...column.getHeaderProps()}>
+                {column.render('Header')}
+              </th>
+            ))
+            }
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {
+        rows.map(row => {
+          prepareRow(row)
+          return (
+            <tr {...row.getRowProps()}>
+              {
+              row.cells.map(cell => 
+                <td {...cell.getCellProps()}>
+                  {cell.render('Cell')}
+                </td>
+              )}
+            </tr>
+          )
+        })}
+      </tbody>
+    </table>
   )
 }
 
 const StyledAdmin = styled(ManageStaffs)`
-  * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-  }
-
-  body,
-  html {
-    height: 100%;
-    font-family: sans-serif;
-  }
-
-  input {
-    outline: none;
-    border: none;
-  }
-    
-  div .checkbox {
-    width: 20%;
-  }
-
-  div .text-all {
-    width: 20%;
-  }
-
-  div .profile {
-    width: 28%;
-    height: 60px;
-    display: flex;
-    padding: 5px;
-  }
-
-  div .iconTrash {
-    width: 20%;
-  }
-
-  .limiter {
-    width: 100%;
-    margin: 0 auto;
-  }
-  .container {
-    width: 100%;
-    height: auto;
-    overflow: auto;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    padding: 6em 15px 15px 15px;
-  }
-  .main {
-    background: #fff;
-    border-radius: 5px;
-    overflow: auto;
-    align-items: center;
-    padding: 10px;
-    margin: 1rem;
-    width: 100%;
-    padding: 10px 30px;
-    min-width: 690px;
-  }
-
-  .manage {
-    height: 30rem;
-    .table-wrapper {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 100%;
-    }
-  }
-
-  table {
-    overflow: auto;
-    table-layout: auto;
-  }
-
-  th {
-    text-align: left !important;
-  }
-
-  /** css for area contain search */
-  .search {
-    position: relative;
-    display: flex;
-    margin: auto;
-    align-items: center;
-    background: #cecdcd;
-    padding: 10px;
-    width: 500px;
-  }
+  border-collapse: collapse !important;
+  margin: auto;
+  margin-top: 2rem;
   
-  .value-search {
-    width: 350px;
-    font-family: sans-serif;
-    font-size: 15px;
-    line-height: 1.5;
-    color: #666666;
-    display: block;
-    background: #fff;
-    height: 50px;
+  thead {
+    background: #d5dfea;
+    color: #25292d;
+    position: sticky;
+    top: 74px; 
+    position: -webkit-sticky;
+    z-index: 100;
     border-radius: 10px;
-    padding: 0 30px 0 30px;
-    cursor: auto;
-    padding: 0 30px 0 65px;
-  }
-  /** icon search */
-  .icon-search {
-    display: flex;
-    align-items: center;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 100%;
-    padding-left: 35px;
-  }
-  .fa-search:hover {
-    color: rgb(20, 235, 20);
-    cursor: pointer;
   }
 
-  .btn-white {
-    margin-left: 10px;
-  }
-  
-  //** css button */
-  .text-box {
-    margin-left: 25px;
-    width: 90px;
-    height: 45px;
-    background: rgb(81, 207, 230);
-    align-items: center;
-    display: flex;
-    border-radius: 5px;
-    padding-left: 10px;
-  }
-  .text-box p {
-    color: #fff;
-    font-weight: bold;
-    font-family: Arial, Helvetica, sans-serif;
+  th, td {
+    border-bottom: 1px solid lightgray;
+    padding: 1rem 1.5rem;
+    text-align: left;
   }
 
-  .text-box p:hover {
-    color: red;
-    cursor: pointer;
+  tbody tr:hover {
+    background-color: #eaf1f8;
   }
 
-  //** kẻ ngang **/
-  .display {
-    width: 45%;
-    align-items: center;
-    margin-top: 40px;
-    left: 50%;
-    transform: translateX(-50%);
+  .icon-button {
+    background-color: #e4e4e4;
   }
 
-  //* content select */
-  .select-all {
-    display: flex;
-    margin-top: 70px;
-    align-items: baseline;
+  .name {
+    padding: 0;
+    color: #3f96f3;
+
   }
-  .content-detail {
-    display: flex;
-    margin-top: 30px;
-    align-items: center;
+  .name:hover {
   }
 
-  .checkbox {
-    width: 20px;
-    height: 20px;
-  }
-
-  .text-select,
-  .text-profile {
-    font-size: 20px;
-  }
-
-  /* css for Staff */
-  .child-container {
-    display: flex;
-    margin-top: 30px;
-    align-items: center;
-  }
-
-  img {
-    width: 60px;
-    height: 60px;
-  }
-
-
-  .text-select,
-  .text-profile {
-    font-size: 20px;
-  }
-
-  //** setsize div */
-  div .checkbox-child {
-    width: 50px;
-  }
-
-  div .avatar-user {
-    width: 10%;
-  }
-
-  div .profile-user {
-    width: 28%;
-    height: 60px;
-    border: 1px solid black;
-    display: flex;
-    flex-direction: column;
-    padding: 5px;
-  }
-
-  div .iconTrash {
-    width: 20%;
-    margin-left: 10px;
-  }
-
-  .profile-user .text-email {
+  .gender {
     font-size: 13px;
-  }
-  .profile-user .text-name {
-    font-size: 20px;
+    color: gray;
   }
 `
 export default StyledAdmin
