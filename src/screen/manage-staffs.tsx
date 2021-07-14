@@ -46,8 +46,11 @@ function ManageStaffs(props: any) {
 
   const renderNameBox: FC<any> = ({ row: { original: { isMale } }, cell: { value } }) =>
     <div className="name-box">
-      <Button className='name'>{value}</Button>
-      <div className="gender">{isMale ? 'Male': 'Female'}</div>
+      <div className="avt" />
+      <div className="name-gender">
+        <Button className='name'>{value}</Button>
+        <div className="gender">{isMale ? 'Male': 'Female'}</div>
+      </div>
     </div>
 
   const data = React.useMemo(
@@ -135,7 +138,7 @@ function ManageStaffs(props: any) {
         accessor: "id",
       },
       {
-        Header: "Full Name",
+        Header: "Teacher",
         accessor: "name",
         Cell: renderNameBox,
       },
@@ -214,9 +217,11 @@ const StyledAdmin = styled(ManageStaffs)`
   border-collapse: collapse !important;
   margin: auto;
   margin-top: 2rem;
+  table-layout: fixed;
+  overflow: auto
   
   thead {
-    background: #d5dfea;
+    background-color: #d5dfea;
     color: #25292d;
     position: sticky;
     top: 74px; 
@@ -228,7 +233,8 @@ const StyledAdmin = styled(ManageStaffs)`
   th, td {
     border-bottom: 1px solid lightgray;
     padding: 1rem 1.5rem;
-    text-align: left;
+    border-collapse: collapse !important;
+    text-align: left !important;
   }
 
   tbody tr:hover {
@@ -239,12 +245,26 @@ const StyledAdmin = styled(ManageStaffs)`
     background-color: #e4e4e4;
   }
 
+  .name-box {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .avt {
+    background-color: orange;
+    background-image: url('../images/ava2.png');
+    min-width: 50px;
+    min-height: 50px;
+    max-width: 50px;
+    max-height: 50px;
+  }
+
   .name {
     padding: 0;
     color: #3f96f3;
-
-  }
-  .name:hover {
+    min-width: 10rem;
+    justify-content: left;
   }
 
   .gender {
