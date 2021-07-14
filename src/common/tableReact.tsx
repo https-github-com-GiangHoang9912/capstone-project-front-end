@@ -130,7 +130,7 @@ const StyleTable = styled(TableReact)`
     color: #fff;
     font-size: 16px;
     background-color: #303f9f;
-    padding: 0.6rem 0.3rem;
+    padding: 0.8rem 0.7rem;
   }
 
   tr:nth-child(even) {
@@ -140,7 +140,7 @@ const StyleTable = styled(TableReact)`
     padding: 1rem 0.2rem;
     font-size: 16px;
     text-align: left;
-
+    padding: 0.8rem 0.7rem;
     
   }
   td:last-child{

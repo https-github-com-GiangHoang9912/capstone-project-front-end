@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Checkbox from '@material-ui/core/Checkbox';
+import { useHistory } from 'react-router-dom';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -70,7 +71,7 @@ function UpdateExam(props: any) {
   const [selected, setSelected] = useState('');
   const [nameBank, setNameBank] = useState('Exam Bank');
   const [scroll, setScroll] = useState('paper');
-
+  const history = useHistory();
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -89,6 +90,11 @@ function UpdateExam(props: any) {
     setNameBank(event.target.value)
   };
 
+  /* event when click Back */
+  const handleClickBack = () => {
+    history.push('/list-exam');
+  };
+
   const exams = [
     {
       id: 101,
@@ -98,7 +104,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 102,
@@ -108,7 +115,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -118,7 +126,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -129,7 +138,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -139,7 +149,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -150,7 +161,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -160,7 +172,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -171,7 +184,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -181,7 +195,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -192,7 +207,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -202,7 +218,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -213,7 +230,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -223,7 +241,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -234,7 +253,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -244,7 +264,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -255,7 +276,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -265,7 +287,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -276,7 +299,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 999,
@@ -286,27 +310,37 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
   ]
 
   const columns = [
     {
-      width: '5%',
       Header: "ID",
       accessor: "id",
     },
     {
-      width: '65%',
       Header: "Question",
       accessor: "name",
     },
     {
-      width: '30%',
       Header: "Answer",
-      accessor: "answer",
+      accessor: (data: any) =>
+        <div>
+          {data.answer.map((item: string) => (<p style={{ width: "100px" }}>{item}</p>))}
+        </div>
+    },
+
+    {
+      Header: "Correct Answer",
+      Cell: (cell: any) =>
+        <div style={{ textAlign: "center" }}>
+          {cell.row.original.correct}
+        </div>
     },
   ]
+
   const body = (
     <div className={classes.paper}>
       <div className={classes.contentExam}>
@@ -376,12 +410,12 @@ function UpdateExam(props: any) {
     <div className={className}>
       <div className="create-exam">
         <div className="container-exam">
-          <div className="exam">
+          <div className="main">
             <div className="text-subject">
               <h2>SSC101 Chapter 123</h2>
             </div>
             <div className="content-exam" >
-              <Table columns={columns} data={exams} isPagination={false} />
+              <Table columns={columns} data={exams} isPagination={true} />
             </div>
           </div>
         </div>
@@ -391,8 +425,9 @@ function UpdateExam(props: any) {
               variant="contained"
               color="primary"
               className={classes.styleBtn}
+              onClick={handleClickBack}
             >
-              Save
+              Back
             </Button>
           </div>
           <div>
@@ -455,7 +490,6 @@ html {
   justify-content: center;
 }
 .text-subject {
-  margin-top: 10%;
   margin-bottom: 1rem;
 }
 //* Css for button */
@@ -473,20 +507,31 @@ html {
   height: auto;
   display:flex;
   justify-content: space-around;
-  padding:  0px 100px 10px 100px;
+  padding:  0px 100px 0px 100px;
   text-align: center;
 }
 .content-exam {
-  flex: 1;
-  width: 100%;
+  width: 90%;
   height: 500px;
   border: 1px solid black;
   background-color: #fff; 
   border: none;
-  margin-top: 1rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   overflow-y: scroll;
   text-align: start;
+}
+.main {
+  background: #fff;
+  border-radius: 10px;
+  overflow: auto;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
+  min-width: 600px;
+  display: flex;
+  margin-top: 5rem;
+  justify-content: center;
+  flex-direction: column;
 }
 
 //* Responsive */

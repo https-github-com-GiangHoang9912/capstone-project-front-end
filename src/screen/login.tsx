@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiTextField-root': {
       width: '100%',
     },
-    marginTop: '-74px',
   },
   loginGoogle: {
     '& button': {
@@ -60,7 +59,6 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     width: '100%',
-    height: '108.5vh',
     minHeight: '100vh',
     display: 'flex',
     flexWrap: 'wrap',

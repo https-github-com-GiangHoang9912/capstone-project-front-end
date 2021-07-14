@@ -1,15 +1,12 @@
-<<<<<<< HEAD
 import { Dispatch, FC,  SetStateAction,  useContext } from 'react'
-=======
-import { Dispatch, FC, SetStateAction } from 'react'
 
->>>>>>> 2426f7976163c5ee6b9c22d4789ce5c4f9b72a12
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 // MUI
 import { IconButton, AppBar, Toolbar } from '@material-ui/core'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'
+
 
 interface Styled {
   className?: string

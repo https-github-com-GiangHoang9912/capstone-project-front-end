@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
 import { useHistory } from 'react-router-dom';
 import Dialog from '@material-ui/core/Dialog';
@@ -19,13 +19,12 @@ import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
-
 import Table from '../common/tableReact';
 
 interface IExam {
   id: number,
-  name: string
+  name: string,
+  subject: string
 }
 
 ListExam.propTypes = {
@@ -77,6 +76,12 @@ const useStyles = makeStyles((theme) => ({
   },
   bank: {
 
+  },
+  titleView: {
+
+  },
+  answerQ: {
+    marginLeft: '1rem'
   }
 
 }));
@@ -88,112 +93,117 @@ function ListExam(props: any) {
   const [isOpen, setIsOpen] = useState(false);
 
 
-  const [open, setOpen] = useState(false);
+  const [openDialogCreate, setOpenDialogCreate] = useState(false);
+  const [openDialogDelete, setOpenDialogDelete] = useState(false);
+  const [openDialogView, setOpenDialogView] = useState(false);
+
+  const [idDelete, setIdDelete] = useState(0);
+  const [nameExam, setNameExam] = useState('');
   const [subject, setSubject] = useState('');
-  /* Event when click button create exam */
-  const handleChange = (event: any) => {
-    setSubject((event.target.value) || '');
-  };
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  /* event when click delete */
-  // function handleDelete() {
-  //   setIsOpen(true)
-  // }
-  // const handleDialogClose = () => {
-  //   setIsOpen(false)
-  // }
 
   /* event when click edit */
-  const handleAccept = () => {
-    history.push('/update-exam')
-  }
-
+  const handleClickEdit = () => {
+    history.push('/update-exam');
+  };
 
   const [result, setResult] = useState<IExam[]>([
     {
       id: 1,
       name: 'SSC101 Chapter 123',
+      subject: 'SSC'
     }
     ,
     {
       id: 2,
       name: 'MEA201 Chapter 789',
+      subject: 'MAE'
     },
     {
       id: 3,
       name: 'MAD102 Chapter 456',
+      subject: 'MAD'
     },
     {
       id: 4,
       name: 'HCM201 Chapter 1234',
+      subject: 'HCM'
     },
     {
       id: 5,
       name: 'VNR205 Chapter 10',
+      subject: 'VNR'
     }, {
       id: 6,
       name: 'SSC101 Chapter 123',
+      subject: 'SSC'
     },
     {
       id: 7,
       name: 'MEA201 Chapter 789',
+      subject: 'MAE'
     },
     {
       id: 8,
       name: 'MAD102 Chapter 456',
+      subject: 'MAD'
     },
     {
       id: 9,
       name: 'HCM201 Chapter 1234',
+      subject: 'HCM'
     },
     {
       id: 10,
       name: 'VNR205 Chapter 10',
+      subject: 'VNR'
     }, {
       id: 11,
       name: 'SSC101 Chapter 123',
+      subject: 'SSC'
     },
     {
       id: 12,
       name: 'MEA201 Chapter 789',
+      subject: 'SSC'
     },
     {
       id: 13,
       name: 'MAD102 Chapter 456',
+      subject: 'SSC'
     },
     {
       id: 14,
       name: 'HCM201 Chapter 1234',
+      subject: 'SSC'
     },
     {
       id: 15,
       name: 'VNR205 Chapter 10',
+      subject: 'SSC'
     }, {
       id: 16,
       name: 'SSC101 Chapter 123',
+      subject: 'SSC'
     },
     {
       id: 17,
       name: 'MEA201 Chapter 789',
+      subject: 'SSC'
     },
     {
       id: 18,
       name: 'MAD102 Chapter 456',
+      subject: 'SSC'
     },
     {
       id: 19,
       name: 'HCM201 Chapter 1234',
+      subject: 'SSC'
     },
     {
       id: 20,
       name: 'VNR205 Chapter 10',
+      subject: 'SSC'
     }
   ])
 
@@ -207,36 +217,170 @@ function ListExam(props: any) {
       accessor: "name",
     },
     {
+      Header: "Subject Name",
+      accessor: "subject",
+    },
+    {
       Header: "View",
       Cell: (cell: any) => (
-        <FontAwesomeIcon className='detail-exam' icon={faEye} />
+        <FontAwesomeIcon
+          id={cell.row.original.id}
+          className='detail-exam'
+          onClick={() => handleView(cell.row.original.id)}
+          icon={faEye} />
       )
     },
     {
       Header: "Update",
-      Cell: (row: any) =>
+      Cell: (cell: any) =>
       (
         <div>
           <Button
             variant="contained"
             color="primary"
             className='style-btn'
-            onClick={handleAccept}
+            id={cell.row.original.id}
+            onClick={handleClickEdit}
           >Edit</Button>
           <Button
             variant="contained"
             color="secondary"
-            className='style-btn'>Delete</Button>
+            className='style-btn'
+            id={cell.row.original.id}
+            onClick={() => handleDelete(cell.row.original.id, cell.row.original.name)}
+          >Delete</Button>
         </div>
       )
-    },
-  ]
-  const [textInput, setTextInput] = useState<string>('');
-  const handleSearchExam = function (content: string) {
-    return result.filter(item => item.name.includes(content.trim()));
-  }
-  console.log('search neeee', handleSearchExam('SSC101'));
 
+    },
+  ];
+  /* Event when click icon view exam */
+  function handleView(id: number) {
+    setOpenDialogView(true);
+    // setNameExam(name);
+  };
+
+  const handleViewClose = () => {
+    setOpenDialogView(false);
+  };
+
+
+  /* Event when click button create exam */
+  const handleChange = (event: any) => {
+    setSubject((event.target.value) || '');
+  };
+  const handleClickBtnCreate = () => {
+    setOpenDialogCreate(true);
+  };
+  const handleClickSaveCreate = (id: number, examName: string, nameSubject: string) => {
+    const exam: IExam = {
+      id,
+      name: examName,
+      subject: nameSubject
+    }
+    result.push(exam)
+    setResult(result);
+
+    // setResult((prevResult:IExam) => {
+    //    prevResult.push(exam);
+    // });
+    setOpenDialogCreate(false);
+  };
+  const handleCloseCreate = () => {
+    setOpenDialogCreate(false);
+  };
+  const onTxtNameExamChange = useCallback((e) => {
+    setTxtNameExam(e.target.value);
+  }, []);
+
+  /* event when click delete */
+  function handleDelete(id: number, name: string) {
+    setOpenDialogDelete(true)
+    setIdDelete(id);
+    setNameExam(name);
+  };
+
+  const handleDeleteCancel = () => {
+    setOpenDialogDelete(false)
+  };
+
+  const handleDeleteClose = (idPrams: number) => {
+    let newExams = new Array<IExam>();
+    console.log('current result', result)
+    newExams = result.filter(item => item.id !== idPrams)
+    setResult(newExams);
+    console.log('after result', result)
+    setOpenDialogDelete(false);
+  };
+
+  const [textInput, setTextInput] = useState<string>('');
+  const [txtNameExam, setTxtNameExam] = useState<string>('');
+  // const handleSearchExam = function (content: string) {
+  //   return result.filter(item => item.name.includes(content.trim()));
+  // }
+  // console.log('search neeee', handleSearchExam('SSC101'));
+  const onTextInputChange = useCallback((e) => {
+    setTextInput(e.target.value);
+  }, []);
+
+  /* Body view exam dialog */
+  const bodyView = (
+    <div className={classes.paper}>
+      <div className={classes.containerCreate}>
+        {/* <h3 className={classes.titleView}>SSC101 Chapter123</h3> */}
+        <div>
+          <div className="question">
+            <p>1. How many oceans are there on earth? are there on earth?</p>
+          </div>
+          <div className="answer">
+            <p className={classes.answerQ}>A. 1</p>
+            <p className={classes.answerQ}>B. 2</p>
+            <p className={classes.answerQ}>C. 4</p>
+            <p className={classes.answerQ}>D. 6</p>
+          </div>
+
+        </div>
+        <div>
+          <div className="question">
+            <p>2. How many oceans are there on earth?</p>
+          </div>
+          <div className="answer">
+            <p className={classes.answerQ}>A. 1</p>
+            <p className={classes.answerQ}>B. 2</p>
+            <p className={classes.answerQ}>C. 4</p>
+            <p className={classes.answerQ}>D. 6</p>
+          </div>
+
+        </div>
+        <div>
+          <div className="question">
+            <p>3. How many oceans are there on earth?</p>
+          </div>
+          <div className="answer">
+            <p className={classes.answerQ}>A. 1</p>
+            <p className={classes.answerQ}>B. 2</p>
+            <p className={classes.answerQ}>C. 4</p>
+            <p className={classes.answerQ}>D. 6</p>
+          </div>
+
+        </div>
+        <div>
+          <div className="question">
+            <p>4. How many oceans are there on earth?</p>
+          </div>
+          <div className="answer">
+            <p className={classes.answerQ}>A. 1</p>
+            <p className={classes.answerQ}>B. 2</p>
+            <p className={classes.answerQ}>C. 4</p>
+            <p className={classes.answerQ}>D. 6</p>
+          </div>
+
+        </div>
+      </div>
+    </div >
+  );
+
+  /* Body create exam dialog */
   const body = (
     <div className={classes.paper}>
       <div className={classes.containerCreate}>
@@ -255,9 +399,9 @@ function ListExam(props: any) {
                   input={<Input id="demo-dialog-native" />}
                 >
                   <option aria-label="None" value="" />
-                  <option value={10}>SSC101</option>
-                  <option value={20}>MAD301</option>
-                  <option value={30}>Wig202</option>
+                  <option value='SSC101'>SSC101</option>
+                  <option value='MAD301'>MAD301</option>
+                  <option value='Wig202'>Wig202</option>
                 </Select>
               </FormControl>
             </form>
@@ -269,18 +413,22 @@ function ListExam(props: any) {
             className={classes.txtNameExam}
             id="outlined-basic"
             label="Enter name"
-            variant="outlined" />
-          <p style={{color: "red", width:'330px'}}>* The system will automatically create a test with
-            50 random questions in the school question bank. </p>
+            variant="outlined"
+            value={txtNameExam}
+            onChange={onTxtNameExamChange}
+          />
+          <p style={{ width: '330px', color: '#30336b' }}>
+            <FontAwesomeIcon icon={faExclamationCircle} style={{
+              color: '#303f9f',
+              margin: '0 5px'
+            }} className="note-icon" />
+            The system will automatically create a test with
+            50 random questions in the school question bank.
+          </p>
         </div>
       </div>
     </div >
   );
-  const onTextInputChange = useCallback((e) => {
-    setTextInput(e.target.value);
-  }, []);
-
-
 
   return (
     <div className={className}>
@@ -288,38 +436,83 @@ function ListExam(props: any) {
         <div className="container">
           <div className="main">
             <div className="search-exam">
-              <TextField
-                className="search-exam--txt"
-                id="outlined-search"
-                label="Search by title exam"
-                type="search"
-                variant="outlined"
-                size="small"
-                value={textInput}
-                onChange={onTextInputChange} />
+              <div>
+                <TextField
+                  className="search-exam--txt"
+                  id="outlined-search"
+                  label="Search by title exam"
+                  type="search"
+                  variant="outlined"
+                  size="small"
+                  value={textInput}
+                  onChange={onTextInputChange} />
+                <Button
+                  size="small"
+                  className="btn-search"
+                  variant="contained"
+                  disabled={!textInput}
+                  color="primary"> Search </Button>
+              </div>
               <Button
                 size="small"
+                onClick={handleClickBtnCreate}
                 className="btn-search"
                 variant="contained"
-                disabled={!textInput}
-                color="primary"> Search </Button>
-              <Button
-                size="small"
-                onClick={handleClickOpen}
-                className="btn-search"
-                variant="contained"
-                color="primary"> Create Exam </Button>
-              <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Fill the form to create New Exam</DialogTitle>
+                color="primary"
+              > Create Exam </Button>
+              {/* Dialog Create  */}
+              <Dialog open={openDialogCreate} onClose={handleCloseCreate}>
+                <DialogTitle style={{
+                  fontWeight: 'bold',
+                }}>Fill the form to create New Exam</DialogTitle>
                 <DialogContent>
                   {body}
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleClose} color="primary">
+                  <Button onClick={handleCloseCreate} color="primary">
                     Cancel
                   </Button>
-                  <Button onClick={handleClose} color="primary">
-                    Ok
+                  <Button onClick={() => handleClickSaveCreate(999, txtNameExam, subject)} color="primary">
+                    Create
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              {/* Dialog Delete  */}
+              <Dialog open={openDialogDelete} onClose={handleDeleteCancel}>
+                <DialogTitle style={{
+                  backgroundColor: '#ff6b81',
+                  color: '#ffffff', fontWeight: 'bold',
+                  padding: '5px 24px'
+                }}>
+                  <h3 className="title-delete">Delete</h3>
+                </DialogTitle>
+                <DialogContent style={{
+                  padding: '35px 24px'
+                }}>
+                  <span>Do you want delete
+                    <span style={{ fontWeight: 'bold' }}> {nameExam} </span> exam???
+                  </span>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleDeleteCancel} color="primary">
+                    Cancel
+                  </Button>
+                  <Button onClick={() => handleDeleteClose(idDelete)} color="secondary">
+                    Delete
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              {/* Dialog View detail exam  */}
+              <Dialog open={openDialogView} onClose={handleViewClose}>
+                <DialogTitle style={{
+                  fontWeight: 'bold',
+                }}><h3>SSC101 Chapter123</h3></DialogTitle>
+                <DialogContent>
+                  {bodyView}
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleViewClose} color="primary">
+                    Close
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -374,17 +567,24 @@ html {
   width: 70%;
   min-width: 600px;
   display: flex;
-  margin-top: 5%;
+  margin-top: 5rem;
   justify-content: center;
   flex-direction: column;
+}
+//** icon create */
+.note-icon {
+    color: #303f9f;
+    margin: 0 5px;
 }
 .txt-nam__exam {
   margin-top: 1rem;
 }
 .tbl-exams {
-  width: 70%;
+  width: 90%;
 }
-
+.tiltle-delete {
+  color: red;
+}
 .show-page {
   width: 100%;
   height: 100%;
@@ -461,7 +661,8 @@ html {
 //* are search exam/
 .search-exam {
   display: flex;
-  justify-content: center;
+  width: 90%;
+  justify-content: space-between;
   align-items: center;
   margin-top: 2%;
   margin-bottom: 2%;
@@ -469,7 +670,7 @@ html {
 .btn-search {
   width: 120px;
   height: 40px;
-  margin-left: 10px;
+  margin-left: 0.5rem;
   font-size: 0.7rem;
 }
 /* Hide scrollbar for IE, Edge add Firefox */
