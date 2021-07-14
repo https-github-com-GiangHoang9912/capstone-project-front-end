@@ -263,8 +263,6 @@ function ListExam(props: any) {
   const handleViewClose = () => {
     setOpenDialogView(false);
   };
-
-
   /* Event when click button create exam */
   const handleChange = (event: any) => {
     setSubject((event.target.value) || '');
@@ -273,18 +271,20 @@ function ListExam(props: any) {
     setOpenDialogCreate(true);
   };
   const handleClickSaveCreate = (id: number, examName: string, nameSubject: string) => {
-    const exam: IExam = {
-      id,
-      name: examName,
-      subject: nameSubject
+    if (examName && nameSubject) {
+      const exam: IExam = {
+        id,
+        name: examName,
+        subject: nameSubject
+      }
+      result.push(exam)
+      setResult(result);
+      setOpenDialogCreate(false);
     }
-    result.push(exam)
-    setResult(result);
-
+    setOpenDialogCreate(true);
     // setResult((prevResult:IExam) => {
     //    prevResult.push(exam);
     // });
-    setOpenDialogCreate(false);
   };
   const handleCloseCreate = () => {
     setOpenDialogCreate(false);
@@ -416,6 +416,7 @@ function ListExam(props: any) {
             variant="outlined"
             value={txtNameExam}
             onChange={onTxtNameExamChange}
+            required
           />
           <p style={{ width: '330px', color: '#30336b' }}>
             <FontAwesomeIcon icon={faExclamationCircle} style={{

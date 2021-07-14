@@ -30,11 +30,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100vh',
   },
   styleBtn: {
-    width: 70,
+    width: '5rem',
     height: 30,
-    backgroundColor: '#1e90ff',
     cursor: 'pointer',
-    margin: '5px',
+    margin: '5px 20px',
   },
   paper: {
 
@@ -72,14 +71,25 @@ function UpdateExam(props: any) {
   const [nameBank, setNameBank] = useState('Exam Bank');
   const [scroll, setScroll] = useState('paper');
   const history = useHistory();
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
+  const [open, setOpen] = useState(false); // for event click add
+  const [openDialogDelete, setOpenDialogDelete] = useState(false);
+  const [idQuestion, setIdQuestion] = useState(0);
+  const [nameQuestion, setNameQuestion] = useState('');
+  /** event click button delete */
+  const handleClickDelete = (id: number, name: string) => {
+    setOpenDialogDelete(true);
+    setIdQuestion(id);
+    setNameQuestion(name);
+  };
+  const handleCloseDialogDelete = () => {
+    setOpenDialogDelete(false);
+  };
+  /** event click button add */
+  const handleClickAdd = () => {
     setOpen(true);
     setScroll(scroll);
   };
-
-  const handleClose = () => {
+  const handleCloseDialogAdd = () => {
     setOpen(false);
   };
 
@@ -331,13 +341,29 @@ function UpdateExam(props: any) {
           {data.answer.map((item: string) => (<p style={{ width: "100px" }}>{item}</p>))}
         </div>
     },
-
     {
       Header: "Correct Answer",
       Cell: (cell: any) =>
         <div style={{ textAlign: "center" }}>
           {cell.row.original.correct}
         </div>
+    },
+    {
+      Header: "Delete",
+      Cell: (cell: any) =>
+      (
+        <div className="contain">
+          <Button
+            variant="contained"
+            color="secondary"
+            className='style-btn'
+            id={cell.row.original.id}
+            onClick={() => handleClickDelete(cell.row.original.id, cell.row.original.name)}
+          >Delete</Button>
+        </div>
+
+      )
+
     },
   ]
 
@@ -415,40 +441,65 @@ function UpdateExam(props: any) {
               <h2>SSC101 Chapter 123</h2>
             </div>
             <div className="content-exam" >
-              <Table columns={columns} data={exams} isPagination={true} />
+              <Table columns={columns} data={exams} isPagination={false} />
             </div>
           </div>
         </div>
         <div className="container-button">
           <div>
-            <Button
+            {/* <Button
               variant="contained"
-              color="primary"
+              color="secondary"
               className={classes.styleBtn}
-              onClick={handleClickBack}
+              onClick={handleClickDelete}
             >
-              Back
-            </Button>
+              Delete
+            </Button> */}
+            {/* Dialog Delete  */}
+            <Dialog open={openDialogDelete} onClose={handleCloseDialogDelete}>
+              <DialogTitle style={{
+                backgroundColor: '#ff6b81',
+                color: '#ffffff', fontWeight: 'bold',
+                padding: '5px 24px'
+              }}>
+                <h3 className="title-delete">Delete</h3>
+              </DialogTitle>
+              <DialogContent style={{
+                padding: '35px 24px'
+              }}>
+                <span>Do you want delete
+                    <span style={{ fontWeight: 'bold' }}>"{nameQuestion}"</span> question???
+                </span>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDialogDelete} color="primary">
+                  Cancel
+                  </Button>
+                <Button onClick={handleCloseDialogDelete} color="secondary">
+                  Delete
+                  </Button>
+              </DialogActions>
+            </Dialog>
           </div>
           <div>
             <Button
               variant="contained"
               color="primary"
-              className={classes.styleBtn}
-              onClick={handleClickOpen}
+              onClick={handleClickAdd}
+              style={{ marginTop: '0.3rem'}}
             >
-              Add
+              Add Question
             </Button>
             <Dialog
               classes={{ paper: classes.dialogPaper }}
               open={open}
-              onClose={handleClose}
+              onClose={handleCloseDialogAdd}
               aria-labelledby="scroll-dialog-title"
               aria-describedby="scroll-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
                 <div className={classes.title}>
-                  <h2 className={classes.titleExam}>SSC101 Chapter 123 </h2>
+                  <h2 className={classes.titleExam}>SSC101 Bank </h2>
                 </div>
               </DialogTitle>
               <DialogContent>
@@ -457,10 +508,10 @@ function UpdateExam(props: any) {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={handleCloseDialogAdd} color="primary">
                   Close
                 </Button>
-                <Button onClick={handleClose} color="primary" autoFocus>
+                <Button onClick={handleCloseDialogAdd} color="primary" autoFocus>
                   Save
                 </Button>
               </DialogActions>
@@ -484,11 +535,16 @@ html {
   height: 100%;
   font-family: sans-serif;
 }
-.contain-select-subjects {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+.style-btn {
+  width: 75;
+  height: 40;
+  cursor: pointer;
+  margin-top: 1rem;
+  margin-right: 1rem;
+  font-size: 1;
 }
+
 .text-subject {
   margin-bottom: 1rem;
 }

@@ -1,4 +1,4 @@
-import { Dispatch, FC,  SetStateAction,  useContext } from 'react'
+import { Dispatch, FC, SetStateAction } from 'react'
 
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
@@ -153,7 +153,8 @@ const StyledHeader = styled(Header)`
   }
 
   #avatar {
-    width: 100%;
+    width: 40px;
+    height: 40px;
     border-radius: 100%;
   }
 

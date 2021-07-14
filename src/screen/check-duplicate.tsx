@@ -12,9 +12,8 @@ import LoadingBar from 'react-top-loading-bar'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
-import { TableCheckDuplicate } from '../common/table'
+import { TableViewExam } from '../common/table'
 import { AccountContext } from '../contexts/account-context'
-
 
 Duplicate.propTypes = {
   className: PropTypes.string,
@@ -25,6 +24,8 @@ Duplicate.defaultProps = {
 
 axios.defaults.withCredentials = true
 const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
+const ADD_FILE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/upload-dataset`
+
 interface IQuestion {
   question: string
   point: number
@@ -51,8 +52,10 @@ function Duplicate(props: any) {
   const [isDisable, setIsDisable] = useState(false)
   const [question, setQuestion] = useState<string>('')
   const [result, setResult] = useState<IQuestion[]>([])
+  const [file, setFile] = useState<any>()
 
   function handleFileChange(e: any) {
+    setFile(e.target.files[0])
     setFileName(e.target.files[0].name)
   }
   const id = localStorage.getItem('id')
@@ -88,6 +91,22 @@ function Duplicate(props: any) {
   const handleDialogClose = () => {
     setIsOpen(false)
   }
+
+  const handleAddFileBank = async (e: any) => {
+    e.preventDefault()
+    console.log(file)
+
+    const formData = new FormData()
+    formData.append('train', file, file.name)
+
+    const response = await axios.post(ADD_FILE_DATASET_URL, formData).catch(async (error) => {
+      refreshToken(error, id ? Number(id) : account.id)
+    })
+    if (response && response.data) {
+      console.log(response)
+    }
+  }
+
   return (
     <div className={className}>
       <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
@@ -99,7 +118,12 @@ function Duplicate(props: any) {
             <p className="file-rule">Bank input must be .csv file</p>
             <p className="bank-name">Bank name: {fileName}</p>
             {fileName.includes('.csv') ? (
-              <Button variant="contained" color="secondary" className={classes.btnDup}>
+              <Button
+                variant="contained"
+                color="secondary"
+                className={classes.btnDup}
+                onClick={handleAddFileBank}
+              >
                 Add Bank
               </Button>
             ) : (
@@ -179,7 +203,7 @@ function Duplicate(props: any) {
               handleClose={handleDialogClose}
             />
           </div>
-          {visibleResult ? <TableCheckDuplicate results={result} /> : ' '}
+          {visibleResult ? <TableViewExam results={result} /> : ' '}
         </div>
       </div>
     </div>
