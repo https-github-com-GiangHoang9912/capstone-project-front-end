@@ -1,15 +1,21 @@
 import React, { useState, FC } from 'react'
 import PropTypes from 'prop-types'
 
-import Icon from '@material-ui/core/Icon'
-import BlockIcon from '@material-ui/icons/Block'
-import LockOpenIcon from '@material-ui/icons/LockOpen'
-import IconButton from '@material-ui/core/IconButton'
 import Button from '@material-ui/core/Button'
 import Chip from '@material-ui/core/Chip'
 
-import styled from 'styled-components'
 import { useTable, usePagination } from 'react-table'
+import Icon from '@material-ui/core/Icon';
+import BlockIcon from '@material-ui/icons/Block';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
+import TransferWithinAStationIcon from '@material-ui/icons/TransferWithinAStation';
+
+import IconButton from '@material-ui/core/IconButton';
+
+import styled from 'styled-components'
+
+import ava2 from '../images/ava2.png'
+
 
 ManageStaffs.propTypes = {
   className: PropTypes.string,
@@ -28,28 +34,26 @@ type BooleanProp = {
 function ManageStaffs(props: any) {
   const { className } = props
 
-  const renderBlockIcon: FC<BooleanProp> = ({ cell: { value } }) => (
-    <IconButton className="icon-button">
-      {value ? (
-        <LockOpenIcon fontSize="medium" color="primary" />
-      ) : (
-        <BlockIcon fontSize="medium" color="secondary" />
-      )}
-    </IconButton>
-  )
-  const renderStatus: FC<any> = ({
-    row: {
-      original: { block },
-    },
-  }) => (
-    <div>
-      {block ? (
-        <Chip label="Blocked" color="secondary" className="status-chip" />
-      ) : (
-        <Chip label="Active" color="primary" className="status-chip" />
-      )}
+  const renderActionBtns: FC<BooleanProp> = ({ cell: { value } }) =>
+    <div className='action-btns'>
+      <IconButton className='icon-button'>
+        {
+          value ? <LockOpenIcon fontSize='medium' color='primary'/>
+                : <BlockIcon fontSize='medium' color='secondary' />
+        }
+      </IconButton>
+      <IconButton className='icon-button'>
+        <TransferWithinAStationIcon />
+      </IconButton>
     </div>
-  )
+
+  const renderStatus: FC<any> = ({ row: { original: { block } } }) =>
+      <div>
+        {
+          block ? <Chip label='Blocked' color='secondary' className='status-chip'/>
+          : <Chip label='Active' color='primary' className='status-chip' />
+        }
+      </div>
 
   const renderNameBox: FC<any> = ({
     row: {
@@ -74,8 +78,9 @@ function ManageStaffs(props: any) {
         isMale: true,
         mail: 'tienna@fe.edu.vn',
         phone: '0965625152',
-        department: 'SE',
-        block: true,
+        major: 'SE',
+        role: 'Staff',
+        block: true
       },
       {
         id: 201,
@@ -83,8 +88,9 @@ function ManageStaffs(props: any) {
         isMale: false,
         mail: 'anhpn@fe.edu.vn',
         phone: '0965625152',
-        department: 'SB',
-        block: false,
+        major: 'SB',
+        role: 'User',
+        block: false
       },
       {
         id: 102,
@@ -92,8 +98,9 @@ function ManageStaffs(props: any) {
         isMale: true,
         mail: 'toantv@fe.edu.vn',
         phone: '0965625152',
-        department: 'MC',
-        block: false,
+        major: 'MC',
+        role: 'Staff',
+        block: false
       },
       {
         id: 201,
@@ -101,7 +108,8 @@ function ManageStaffs(props: any) {
         isMale: false,
         mail: 'anhpn@fe.edu.vn',
         phone: '0965625152',
-        department: 'SE',
+        major: 'SE',
+        role: 'User',
         block: false,
       },
       {
@@ -110,8 +118,9 @@ function ManageStaffs(props: any) {
         isMale: true,
         mail: 'tuna@fe.edu.vn',
         phone: '0965625152',
-        department: 'SB',
-        block: true,
+        major: 'SB',
+        role: 'User',
+        block: true
       },
       {
         id: 302,
@@ -119,8 +128,9 @@ function ManageStaffs(props: any) {
         isMale: false,
         mail: 'anhpn@fe.edu.vn',
         phone: '0965625152',
-        department: 'SE',
-        block: false,
+        major: 'SE',
+        role: 'User',
+        block: false
       },
       {
         id: 303,
@@ -128,8 +138,9 @@ function ManageStaffs(props: any) {
         isMale: true,
         mail: 'toantv@fe.edu.vn',
         phone: '0965625152',
-        department: 'SE',
-        block: false,
+        major: 'SE',
+        role: 'Staff',
+        block: false
       },
       {
         id: 304,
@@ -137,7 +148,8 @@ function ManageStaffs(props: any) {
         isMale: false,
         mail: 'anhpn@fe.edu.vn',
         phone: '0965625152',
-        department: 'SE',
+        major: 'SE',
+        role: 'Staff',
         block: false,
       },
     ],
@@ -159,21 +171,21 @@ function ManageStaffs(props: any) {
         accessor: 'mail',
       },
       {
-        Header: 'Phone',
-        accessor: 'phone',
+        Header: "Major",
+        accessor: "major",
       },
       {
-        Header: 'Department',
-        accessor: 'department',
+        Header: "Role",
+        accessor: "role",
       },
       {
         Header: 'Status',
         Cell: renderStatus,
       },
       {
-        Header: 'Action',
-        accessor: 'block',
-        Cell: renderBlockIcon,
+        Header: "Action",
+        accessor: "block",
+        Cell: renderActionBtns,
       },
     ],
     []
@@ -280,15 +292,16 @@ const StyledAdmin = styled(ManageStaffs)`
   margin: auto;
   margin-top: 2rem;
   table-layout: fixed;
-  overflow: auto thead {
-    background-color: #d5dfea;
-    color: #25292d;
-    position: sticky;
-    top: 74px;
-    position: -webkit-sticky;
-    z-index: 100;
-    border-radius: 10px;
-  }
+  overflow: auto 
+    thead {
+      background-color: #d5dfea;
+      color: #25292d;
+      position: sticky;
+      top: 74px;
+      position: -webkit-sticky;
+      z-index: 100;
+      border-radius: 10px;
+    }
   }
   th,
   td {
@@ -299,11 +312,11 @@ const StyledAdmin = styled(ManageStaffs)`
   }
 
   tbody tr:hover {
-    background-color: #eaf1f8;
   }
 
   .icon-button {
     background-color: #e4e4e4;
+    margin-right: 10px;
   }
 
   .name-box {
@@ -314,7 +327,6 @@ const StyledAdmin = styled(ManageStaffs)`
 
   .avt {
     background-color: orange;
-    background-image: url('../images/ava2.png');
     min-width: 50px;
     min-height: 50px;
     max-width: 50px;
@@ -394,5 +406,6 @@ const StyledAdmin = styled(ManageStaffs)`
   .pageNumber:hover {
     background-color: #becbeb;
   }
+
 `
 export default StyledAdmin
