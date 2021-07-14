@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
-import styled from 'styled-components'  
+import styled from 'styled-components' 
 
 // components
 import HomePage from '../screen/home'
@@ -41,7 +41,8 @@ function App(props: any) {
 
   const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
 
-  const toggleClass = isOpen ? 'menu-open' : 'menu-close'
+  const toggleMenuClass = isOpen ? 'menu-open' : 'menu-close'
+  const toggleHeaderClass = !isLogin ? 'header-open' : ''
   return (
     <Router>
       <AccountContextProvider>
@@ -51,7 +52,7 @@ function App(props: any) {
           className={isLogin ? 'hidden-component' : ''}
         />
         <PersistentDrawerLeft isOpen={isOpen} className={isLogin ? 'hidden-component' : ''} />
-        <div className={`main-content ${toggleClass}`}>
+        <div className={`main-content ${toggleMenuClass} ${toggleHeaderClass}`}>
           <Switch>
             <Route exact path="/">
               <HomePage />
@@ -80,13 +81,9 @@ function App(props: any) {
             <Route exact path="/update-exam" component={Profile}>
               <UpdateExam />
             </Route>
-            {role === 1 ? (
-              <Route exact path="/admin/manage-staffs">
-                <ManageStaffs />
-              </Route>
-            ) : (
-              ''
-            )}
+            <Route exact path="/admin/manage-staffs">
+              <ManageStaffs />
+            </Route>
             <Route exact path="/login" component={Login}>
               <Login setIsLogin={setIsLogin} />
             </Route>
