@@ -18,7 +18,7 @@ import Dialog from '../common/dialog'
 import { AccountContext } from '../contexts/account-context'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
-
+import { storage } from '../firebase'
 
 Profile.propTypes = {
   className: PropTypes.string,
@@ -49,6 +49,7 @@ function Profile(props: any) {
   const [inputError, setInputError] = useState<string>('')
   const [isDisable, setIsDisable] = useState(false)
   const [progress, setProgress] = useState(0)
+  const [file, setFile] = useState<any>('')
 
   function handleEdit() {
     setEditStatus(!editStatus)
@@ -65,23 +66,60 @@ function Profile(props: any) {
     setIsDisable(true)
     setProgress(progress + 10)
     if (isInputValid) {
-      const id = Number(localStorage.getItem("id"))
-      const response = await axios.put(UPDATE_PROFILE_URL, {
-        id,
-        firstName,
-        lastName,
-        email,
-        address,
-        phone,
-        dob,
-        image,
-      })
-      console.log(response)
-      setProgress(100)
-      setIsDisable(false)
+      const id = Number(localStorage.getItem('id'))
+      try {
+        console.log(file)
+        if (file) {
+          const uploadTask = storage.ref(`images/${file.name}`).put(file)
+          uploadTask.on(
+            'state_changed',
+            () => {},
+            (error) => {
+              console.log(error)
+            },
+            () => {
+              storage
+                .ref('images')
+                .child(file.name)
+                .getDownloadURL()
+                .then(async (url) => {
+                  await axios.put(UPDATE_PROFILE_URL, {
+                    id,
+                    firstName,
+                    lastName,
+                    email,
+                    address,
+                    phone,
+                    dob,
+                    avatar: url,
+                  })
+                  localStorage.setItem('avatar', url)
+                  setProgress(100)
+                  setIsDisable(false)
+                })
+            }
+          )
+        } else {
+          await axios.put(UPDATE_PROFILE_URL, {
+            id,
+            firstName,
+            lastName,
+            email,
+            address,
+            phone,
+            dob,
+          })
+          setProgress(100)
+          setIsDisable(false)
+        }
+      } catch (error) {
+        refreshToken(error, id ? Number(id) : account.id)
+      }
     }
   }
+
   function handleFileChange(e: any) {
+    setFile(e.target.files[0])
     setImage(URL.createObjectURL(e.target.files[0]))
   }
 
@@ -93,15 +131,14 @@ function Profile(props: any) {
         username,
       })
       .then((response) => {
-        const dobFormat = moment.default(response.data.dateOfBirth).format("DD/MM/YYYY")
+        const dobFormat = moment.default(response.data.dateOfBirth).format('DD/MM/YYYY')
         setFirstName(response.data.firstName ? response.data.firstName : '')
         setLastName(response.data.lastName ? response.data.lastName : '')
         setEmail(response.data.email ? response.data.email : '')
         setAddress(response.data.address ? response.data.address : '')
         setPhone(response.data.phone ? response.data.phone : '')
         setDob(response.data.dateOfBirth ? dobFormat : '')
-        setImage(response.data.avatar ? response.data.avatar : '')
-
+        setImage(response.data.avatar ? response.data.avatar : 'avatar2.png')
       })
       .catch(async (error) => {
         refreshToken(error, id ? Number(id) : account.id)
@@ -277,10 +314,7 @@ function Profile(props: any) {
             </div>
           </div>
           <div className="img-avt">
-            <img
-              src={image}
-              alt=""
-            />
+            <img src={image} alt="" />
             <input
               type="file"
               name="file"

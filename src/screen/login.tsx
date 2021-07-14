@@ -188,7 +188,7 @@ const Login: FC<LoginProps> = (props) => {
           localStorage.setItem('username', response.data.username)
           localStorage.setItem(
             'avatar',
-            response.data.profile.avatar ? response.data.profile.avatar : 'avatar2.png'
+            response.data.profile ? response.data.profile.avatar : 'avatar2.png'
           )
           history.push('/Home')
         }
@@ -224,7 +224,7 @@ const Login: FC<LoginProps> = (props) => {
           localStorage.setItem('username', response.data.username)
           localStorage.setItem(
             'avatar',
-            response.data.profile.avatar ? response.data.profile.avatar : 'avatar2.png'
+            response.data.profile ? response.data.profile.avatar : 'avatar2.png'
           )
           history.push('/Home')
         }

@@ -19,6 +19,7 @@ import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
 import UpdateExam from '../screen/update-exam'
 import { refreshToken } from '../services/services'
+import { storage } from '../firebase'
 
 function App(props: any) {
   const [isOpen, setIsOpen] = useState(true)

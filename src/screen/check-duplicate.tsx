@@ -12,7 +12,7 @@ import LoadingBar from 'react-top-loading-bar'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
-import { TableCheckDuplicate } from '../common/table'
+import { TableViewExam } from '../common/table'
 import { AccountContext } from '../contexts/account-context'
 
 
@@ -181,7 +181,7 @@ function Duplicate(props: any) {
               handleClose={handleDialogClose}
             />
           </div>
-          {visibleResult ? <TableCheckDuplicate results={result} /> : ' '}
+          {visibleResult ? <TableViewExam results={result} /> : ' '}
         </div>
       </div>
     </div>
