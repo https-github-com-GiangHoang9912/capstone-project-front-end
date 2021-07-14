@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiTextField-root': {
       width: '100%',
     },
+    backgroundImage: `url('https://vcdn-vnexpress.vnecdn.net/2020/03/22/b-JPG-4063-1584888577.jpg')`,
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
   },
   loginGoogle: {
     '& button': {
@@ -65,9 +68,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     padding: '15px',
-    backgroundImage: `url('https://vcdn-vnexpress.vnecdn.net/2020/03/22/b-JPG-4063-1584888577.jpg')`,
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
     minWidth: '430px',
   },
   wrapLogin: {

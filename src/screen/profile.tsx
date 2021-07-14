@@ -333,7 +333,6 @@ function Profile(props: any) {
 const styleProfile = styled(Profile)`
   width: 100%;
   min-height: 100vh;
-  background-color: #f7f8fb;
   padding-bottom: 20px;
   .info-container {
     margin: 2rem;
@@ -394,6 +393,9 @@ const styleProfile = styled(Profile)`
     margin-bottom: 15px;
     border: none;
     border-bottom: 1px solid #dae1f5;
+  }
+  .input-bar:focus{
+    border-bottom: 1px solid #306bf3;
   }
 
   span {
