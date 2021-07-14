@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background-color: whitesmoke;
+  background-color: #fbfbfb;
   height: 100vh;
   /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; */
@@ -20,6 +20,10 @@ body {
 }
 .menu-close {
   margin-left: -15rem;
+}
+
+.header-open {
+  margin-top: 73px;
 }
 
 #root {

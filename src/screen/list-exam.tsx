@@ -4,7 +4,6 @@ import { Button, makeStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -12,13 +11,12 @@ import { useHistory } from 'react-router-dom';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+
 import Table from '../common/tableReact';
 
 interface IExam {
@@ -565,10 +563,10 @@ html {
   overflow: auto;
   align-items: center;
   padding: 10px;
-  width: 70%;
+  width: 90%;
   min-width: 600px;
   display: flex;
-  margin-top: 5rem;
+  /* margin-top: 5rem; */
   justify-content: center;
   flex-direction: column;
 }
@@ -581,7 +579,7 @@ html {
   margin-top: 1rem;
 }
 .tbl-exams {
-  width: 90%;
+  width: 100%;
 }
 .tiltle-delete {
   color: red;

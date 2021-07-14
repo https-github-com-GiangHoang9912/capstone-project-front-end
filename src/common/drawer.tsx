@@ -103,7 +103,7 @@ function PersistentDrawerLeft(props: any) {
           {menuItems.map((item) => {
             const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
 
-            if (item.key === 4 && role !== 1) return ""
+            // if (item.key === 4 && role !== 1) return ""
 
             return (
               <ListItem key={item.key}>
@@ -134,6 +134,7 @@ export default styled(PersistentDrawerLeft)`
   li {
     height: 50px;
     padding: 0;
+    margin: 10px 0;
     font-size: 0.9rem;
     a {
       width: 100%;

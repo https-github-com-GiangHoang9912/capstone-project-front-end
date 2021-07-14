@@ -114,7 +114,9 @@ function Duplicate(props: any) {
         <div className="control control-left">
           <div className="import-bank">
             <h2 className="select">Import a new Bank</h2>
-            <input type="file" accept=".csv" className="input-bank" onChange={handleFileChange} />
+            <div className="input-bank">
+            <input type="file" accept=".csv" onChange={handleFileChange} title=" "/>
+            </div>
             <p className="file-rule">Bank input must be .csv file</p>
             <p className="bank-name">Bank name: {fileName}</p>
             {fileName.includes('.csv') ? (
@@ -137,7 +139,7 @@ function Duplicate(props: any) {
             </div>
           </div>
           <div className="convert-csv">
-            <img src="csv.png" />
+            <div className="csv-img" />
             <div className="csv-link">
               <a href="https://convertio.co/vn/doc-csv/" target="_blank" rel="noreferrer">
                 <h3>Convert file to CSV</h3>
@@ -213,7 +215,7 @@ function Duplicate(props: any) {
 const StyleDuplicate = styled(Duplicate)`
   width: 100%;
   height: auto;
-  background-color: #f7f8fb;
+  
   .container {
     margin: 0.5rem;
     padding: 5em 10px 10px 10px;
@@ -221,7 +223,7 @@ const StyleDuplicate = styled(Duplicate)`
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
-    background-color: #f7f8fb;
+    background-color: #fbfbfb;
     text-align: center;
     /* box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
       rgba(17, 17, 26, 0.1) 0px 16px 56px; */
@@ -235,7 +237,7 @@ const StyleDuplicate = styled(Duplicate)`
   .control-left {
     width: 35%;
     height: 100%;
-    background-color: #f7f8fb;
+    background-color: #fbfbfb;
   }
   .control-left h2 {
     width: 90%;
@@ -246,57 +248,73 @@ const StyleDuplicate = styled(Duplicate)`
   }
   .import-bank {
     width: 100%;
-    border: 1px solid #dae1f5;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     background-color: #fff;
     border-radius: 5px;
+    padding-bottom: 20px;
   }
   .convert-csv {
     display: flex;
+    justify-content:center;
+    height: auto;
     padding: 1em;
     margin-top: 1em;
-    border: 1px solid #dae1f5;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     background-color: #fff;
     text-align: start;
     border-radius: 5px;
   }
-  .convert-csv img {
-    width: 20%;
-  }
+  
   .csv-link {
     margin-left: 1rem;
   }
+  .csv-img{
+    width:150px;
+    height: 90px;
+    background-image: url('https://image.flaticon.com/icons/png/128/2305/2305855.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+
+  }
   .csv-link h3 {
     font-size: 17px;
+    
   }
   .csv-link p {
     color: #545d7a;
     padding: 0.2em;
+    margin: 0;
     font-size: 0.9rem;
   }
   .control-right {
     width: 50%;
     min-height: 500px;
-    border: 1px solid #dae1f5;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
   .control-right h2 {
     padding: 1rem;
   }
-  .input-bank::-webkit-file-upload-button {
-    visibility: hidden;
-  }
-  .input-bank::before {
-    content: 'Import your bank';
-    display: inline-block;
-    font-size: 1.3em;
-    padding: 10px 20px;
-    color: #fff;
-    background-color: #303f9f;
-    font-weight: 600;
-    margin: 1em 0 0 2em;
-  }
-  .input-bank:hover::before {
-    background-color: #2727a1;
-  }
+  input::-webkit-file-upload-button {
+  padding: 10px 20px;
+  background-color: #303f9f;
+  border: none;
+  font-size: 1rem;
+  border-radius: 5px;
+  color: #fff;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  transition: 100ms ease-out;
+  font-weight: bold;
+  cursor: pointer;
+}
+input::-webkit-file-upload-button:hover {
+  background-color: #35367a;
+}
+.input-bank{
+  margin: 1rem;
+}
+  input[type="file"]{
+  font-size: 0px;
+}
   .file-rule {
     color: #8c95ad;
   }

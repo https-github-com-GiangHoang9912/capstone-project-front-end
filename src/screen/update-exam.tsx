@@ -486,9 +486,9 @@ function UpdateExam(props: any) {
               variant="contained"
               color="primary"
               onClick={handleClickAdd}
-              style={{ marginTop: '0.3rem'}}
+              style={{ marginTop: '0.2rem', height:'30px'}}
             >
-              Add Question
+              Add Questions
             </Button>
             <Dialog
               classes={{ paper: classes.dialogPaper }}
@@ -585,7 +585,7 @@ html {
   width: 100%;
   min-width: 600px;
   display: flex;
-  margin-top: 5rem;
+  margin-top: 1rem;
   justify-content: center;
   flex-direction: column;
 }

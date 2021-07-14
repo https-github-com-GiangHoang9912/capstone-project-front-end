@@ -13,6 +13,8 @@ import LoadingBar from 'react-top-loading-bar'
 import { refreshToken } from '../services/services'
 import Progress from '../common/progress'
 import Dialog from '../common/dialog'
+
+
 import Table from '../common/tableReact'
 import * as CONSTANT from '../const'
 import { AccountContext } from '../contexts/account-context'
@@ -251,7 +253,6 @@ const SelfStyle = styled(SelfGenerate)`
     text-align: center;
     border-radius: 5px;
     background: #fff;
-    border: 1px solid #dae1f5;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     margin-top: 6em;
   }
