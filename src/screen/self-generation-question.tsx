@@ -7,15 +7,19 @@ import Carousel from 'react-elastic-carousel'
 import Button from '@material-ui/core/Button'
 import Icon from '@material-ui/core/Icon'
 import axios from 'axios'
+import LoadingBar from 'react-top-loading-bar'
+import { faEdit, faPlayCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
+import EditIcon from '@material-ui/icons/Edit';
+import AddCircleIcon from '@material-ui/icons/AddCircle'
 import IconButton from '@material-ui/core/IconButton'
 import SvgIcon from '@material-ui/core/SvgIcon'
-import LoadingBar from 'react-top-loading-bar'
-import { refreshToken } from '../services/services'
+import { AccountContext } from '../contexts/account-context'
 import Progress from '../common/progress'
 import Dialog from '../common/dialog'
 import Table from '../common/tableReact'
+import { refreshToken } from '../services/services'
 import * as CONSTANT from '../const'
-import { AccountContext } from '../contexts/account-context'
+
 
 axios.defaults.withCredentials = true
 
@@ -116,7 +120,7 @@ const SelfGenerate = ({ className = '' }) => {
     },
     {
       Header: 'Edit',
-      Cell: (cell: any) => <Icon color="secondary">edit_circle</Icon>,
+      Cell: (cell: any) => <EditIcon color="secondary" />,
     },
   ]
 
@@ -189,9 +193,7 @@ const SelfGenerate = ({ className = '' }) => {
             ))}
           </Carousel>
           <div className="controls-wrapper">
-            <Icon className="icon-add" fontSize="large" color="primary" onClick={addItem}>
-              add_circle
-            </Icon>
+          <AddCircleIcon color="primary" style={{fontSize: 40}} />
           </div>
           {/* Generate cau hoi */}
           <Button
