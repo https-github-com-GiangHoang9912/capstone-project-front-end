@@ -17,6 +17,11 @@ import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
+import axios from 'axios'
+import * as moment from 'moment'
+import * as CONSTANT from '../const'
+
+
 import Table from '../common/tableReact';
 
 interface IExam {
@@ -24,6 +29,13 @@ interface IExam {
   name: string,
   subject: string
 }
+interface Exam {
+  id: number
+  examName: string
+  subjectId: number
+  userId: number
+}
+
 
 ListExam.propTypes = {
   className: PropTypes.string,
@@ -84,12 +96,13 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
+const GET_EXAM_URL = `${CONSTANT.BASE_URL}/exam`;
+
 function ListExam(props: any) {
   const { className } = props;
   const classes = useStyles();
   const history = useHistory();
   const [isOpen, setIsOpen] = useState(false);
-
 
   const [openDialogCreate, setOpenDialogCreate] = useState(false);
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
@@ -98,6 +111,18 @@ function ListExam(props: any) {
   const [idDelete, setIdDelete] = useState(0);
   const [nameExam, setNameExam] = useState('');
   const [subject, setSubject] = useState('');
+
+  const [exams, setExams] = useState<Exam[]>([]);
+
+  useEffect(() => {
+    axios.get(GET_EXAM_URL).then((response) => {
+      setExams(response.data)
+    })
+  }, []);
+
+  const searchExam = (e: any) => {
+   
+  }
 
   /* event when click edit */
   const handleClickEdit = () => {
@@ -311,14 +336,14 @@ function ListExam(props: any) {
     setOpenDialogDelete(false);
   };
 
-  const [textInput, setTextInput] = useState<string>('');
+  const [textInputSearch, setTextInputSearch] = useState<string>('');
   const [txtNameExam, setTxtNameExam] = useState<string>('');
   // const handleSearchExam = function (content: string) {
   //   return result.filter(item => item.name.includes(content.trim()));
   // }
   // console.log('search neeee', handleSearchExam('SSC101'));
   const onTextInputChange = useCallback((e) => {
-    setTextInput(e.target.value);
+    setTextInputSearch(e.target.value);
   }, []);
 
   /* Body view exam dialog */
@@ -443,13 +468,13 @@ function ListExam(props: any) {
                   type="search"
                   variant="outlined"
                   size="small"
-                  value={textInput}
+                  value={textInputSearch}
                   onChange={onTextInputChange} />
                 <Button
                   size="small"
                   className="btn-search"
                   variant="contained"
-                  disabled={!textInput}
+                  disabled={!textInputSearch}
                   color="primary"> Search </Button>
               </div>
               <Button
