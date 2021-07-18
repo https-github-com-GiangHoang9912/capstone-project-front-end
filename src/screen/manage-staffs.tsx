@@ -45,11 +45,13 @@ interface User {
 }
 
 const GET_USERS_URL = `${CONSTANT.BASE_URL}/user/users`
+const GET_USERS_SEARCH_URL = `${CONSTANT.BASE_URL}/user`
 const GET_INFORMATION_URL = `${CONSTANT.BASE_URL}/user/get-information`
 
 function ManageStaffs(props: any) {
   const { className } = props
   const [isOpen, setIsOpen] = useState(false);
+  const [searchValue,setSearchValue] = useState(' ');
    const [user, setUser] = useState<User[]>([{
     id: 1,
     username: "ba",
@@ -289,10 +291,23 @@ function ManageStaffs(props: any) {
     arr.push(i)
   }
   
+  const handleSearchValue = (e:any) =>{
+     setSearchValue(e.target.value);
+    
+  }
+  const searchUser = () =>{
+    if(searchValue === undefined || searchValue === null || searchValue === ' ') return
+    axios.get(`${GET_USERS_SEARCH_URL}/${searchValue}`).then((response) => {
+      console.log(response.data)
+      setUser(response.data)
+      console.log(user);
+    })
+  }
   return (
     <div className={className}>
       <div className="search-box">
-         <input type="text" className="search-bar" placeholder="Search account"/>
+         <input type="text" className="search-bar" placeholder="Search account" onChange={handleSearchValue}/>
+         <Button onClick={searchUser}>Search</Button>
       </div>
       <table {...getTableProps()} >
         <thead>
@@ -427,7 +442,7 @@ const StyledAdmin = styled(ManageStaffs)`
     color: gray;
   }
   .search-box{
-    margin: 2rem;
+    margin: 2rem 4.5rem 0 0;
     text-align: right;
   }
 
