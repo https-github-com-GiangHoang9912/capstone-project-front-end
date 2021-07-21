@@ -4,6 +4,7 @@ import { Button, makeStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 
+import axios from 'axios'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
@@ -19,15 +20,23 @@ import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+import * as CONSTANT from '../const'
 
 import Table from '../common/tableReact';
 
 interface IExam {
   id: number,
-  name: string
+  examName: string,
+  subjectId?: number,
+  userId?: number,
+}
+interface Subject {
+  id: number
+  subjectName: string
 }
 
+const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`
+const GET_EXAM_URL = `${CONSTANT.BASE_URL}/exam`
 ListExam.propTypes = {
   className: PropTypes.string,
 };
@@ -85,11 +94,9 @@ function ListExam(props: any) {
   const { className } = props;
   const classes = useStyles();
   const history = useHistory();
-  const [isOpen, setIsOpen] = useState(false);
-
-
+  const [exam, setExam] = useState<IExam[]>([])
   const [open, setOpen] = useState(false);
-  const [subject, setSubject] = useState('');
+  const [subject, setSubject] = useState<Subject[]>([]);
   /* Event when click button create exam */
   const handleChange = (event: any) => {
     setSubject((event.target.value) || '');
@@ -114,88 +121,21 @@ function ListExam(props: any) {
   const handleAccept = () => {
     history.push('/update-exam')
   }
+  useEffect(() => {
+    axios.get(GET_SUBJECT_URL).then((response) => {
+      setSubject(response.data)
+    })
+  }, [])
 
+  const id = localStorage.getItem('id') ? localStorage.getItem('id') : -1
+  useEffect(() => { 
+    axios.get(`${GET_EXAM_URL}/${id}`).then((response) => {
+      console.log(response.data)
+      setExam(response.data)
+    })
+  }, [])
 
-  const [result, setResult] = useState<IExam[]>([
-    {
-      id: 1,
-      name: 'SSC101 Chapter 123',
-    }
-    ,
-    {
-      id: 2,
-      name: 'MEA201 Chapter 789',
-    },
-    {
-      id: 3,
-      name: 'MAD102 Chapter 456',
-    },
-    {
-      id: 4,
-      name: 'HCM201 Chapter 1234',
-    },
-    {
-      id: 5,
-      name: 'VNR205 Chapter 10',
-    }, {
-      id: 6,
-      name: 'SSC101 Chapter 123',
-    },
-    {
-      id: 7,
-      name: 'MEA201 Chapter 789',
-    },
-    {
-      id: 8,
-      name: 'MAD102 Chapter 456',
-    },
-    {
-      id: 9,
-      name: 'HCM201 Chapter 1234',
-    },
-    {
-      id: 10,
-      name: 'VNR205 Chapter 10',
-    }, {
-      id: 11,
-      name: 'SSC101 Chapter 123',
-    },
-    {
-      id: 12,
-      name: 'MEA201 Chapter 789',
-    },
-    {
-      id: 13,
-      name: 'MAD102 Chapter 456',
-    },
-    {
-      id: 14,
-      name: 'HCM201 Chapter 1234',
-    },
-    {
-      id: 15,
-      name: 'VNR205 Chapter 10',
-    }, {
-      id: 16,
-      name: 'SSC101 Chapter 123',
-    },
-    {
-      id: 17,
-      name: 'MEA201 Chapter 789',
-    },
-    {
-      id: 18,
-      name: 'MAD102 Chapter 456',
-    },
-    {
-      id: 19,
-      name: 'HCM201 Chapter 1234',
-    },
-    {
-      id: 20,
-      name: 'VNR205 Chapter 10',
-    }
-  ])
+  
 
   const columns = [
     {
@@ -204,8 +144,9 @@ function ListExam(props: any) {
     },
     {
       Header: "Exam Name",
-      accessor: "name",
+      accessor: "examName",
     },
+   
     {
       Header: "View",
       Cell: (cell: any) => (
@@ -235,10 +176,10 @@ function ListExam(props: any) {
   ]
   const [textInput, setTextInput] = useState<string>('');
   const handleSearchExam = function (content: string) {
-    return result.filter(item => item.name.includes(content.trim()));
+    return exam.filter(item => item.examName.includes(content.trim()));
   }
-  console.log('search neeee', handleSearchExam('SSC101'));
-
+  console.log('search neeee', exam);
+  
   const body = (
     <div className={classes.paper}>
       <div className={classes.containerCreate}>
@@ -252,14 +193,12 @@ function ListExam(props: any) {
                 <InputLabel htmlFor="demo-dialog-native">Subject</InputLabel>
                 <Select
                   native
-                  value={subject}
-                  onChange={handleChange}
                   input={<Input id="demo-dialog-native" />}
                 >
-                  <option aria-label="None" value="" />
-                  <option value={10}>SSC101</option>
-                  <option value={20}>MAD301</option>
-                  <option value={30}>Wig202</option>
+                  {subject.map((sub: Subject)=>(
+                    <option value={sub.id}>{sub.subjectName}</option>
+                  ))}
+                  
                 </Select>
               </FormControl>
             </form>
@@ -272,7 +211,7 @@ function ListExam(props: any) {
             id="outlined-basic"
             label="Enter name"
             variant="outlined" />
-          <p style={{color: "red", width:'330px'}}>* The system will automatically create a test with
+          <p style={{color: "red", width:'530px'}}>* The system will automatically create a test with
             50 random questions in the school question bank. </p>
         </div>
       </div>
@@ -327,7 +266,7 @@ function ListExam(props: any) {
               </Dialog>
             </div>
             <div className="tbl-exams">
-              <Table columns={columns} data={result} isPagination={true} />
+              <Table columns={columns} data={exam} isPagination={true} />
             </div>
           </div>
         </div>

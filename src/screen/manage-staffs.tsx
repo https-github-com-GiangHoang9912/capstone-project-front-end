@@ -1,19 +1,20 @@
-import React, { useState, FC } from 'react'
+import React, { useState, FC, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import Button from '@material-ui/core/Button'
 import Chip from '@material-ui/core/Chip'
+
+import axios from 'axios'
 
 import { useTable, usePagination } from 'react-table'
 import Icon from '@material-ui/core/Icon';
 import BlockIcon from '@material-ui/icons/Block';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import TransferWithinAStationIcon from '@material-ui/icons/TransferWithinAStation';
-
 import IconButton from '@material-ui/core/IconButton';
-
 import styled from 'styled-components'
-
+import Dialog from '../common/dialog'
+import * as CONSTANT from '../const'
 import ava2 from '../images/ava2.png'
 
 
@@ -31,9 +32,44 @@ type BooleanProp = {
   }
 }
 
+
+interface User {
+  id: number,
+  username: string,
+  contactInfo: {
+    firstName: string,
+    lastName: string,
+    email: string,
+    phone: string,
+  }
+}
+
+const GET_USERS_URL = `${CONSTANT.BASE_URL}/user/users`
+const GET_USERS_SEARCH_URL = `${CONSTANT.BASE_URL}/user`
+const GET_INFORMATION_URL = `${CONSTANT.BASE_URL}/user/get-information`
+
 function ManageStaffs(props: any) {
   const { className } = props
-
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchValue,setSearchValue] = useState(' ');
+   const [user, setUser] = useState<User[]>([{
+    id: 1,
+    username: "ba",
+    contactInfo: {
+      firstName: "ba",
+      lastName: "ba",
+      email: "ba",
+      phone: "ba",
+    }
+  }]);
+  const [userDetail,setUserDetail] = useState<any>({
+      firstName: "ba",
+      lastName: "ba",
+      email: "ba",
+      phone: "ba",
+      dateOfBirth: "ba",
+      address: "ba",
+  });
   const renderActionBtns: FC<BooleanProp> = ({ cell: { value } }) =>
     <div className='action-btns'>
       <IconButton className='icon-button'>
@@ -64,97 +100,142 @@ function ManageStaffs(props: any) {
     <div className="name-box">
       <div className="avt" />
       <div className="name-gender">
-        <Button className="name">{value}</Button>
+        <Button className="name" onClick={() => handleDialogOpen(value)}>{value}</Button>
         <div className="gender">{isMale ? 'Male' : 'Female'}</div>
       </div>
     </div>
   )
-
-  const data = React.useMemo(
-    () => [
-      {
-        id: 101,
-        name: 'Nguyen Anh Tien',
-        isMale: true,
-        mail: 'tienna@fe.edu.vn',
-        phone: '0965625152',
-        major: 'SE',
-        role: 'Staff',
-        block: true
-      },
-      {
-        id: 201,
-        name: 'Pham Nhat Anh',
-        isMale: false,
-        mail: 'anhpn@fe.edu.vn',
-        phone: '0965625152',
-        major: 'SB',
-        role: 'User',
-        block: false
-      },
-      {
-        id: 102,
-        name: 'Tran Van Toan',
-        isMale: true,
-        mail: 'toantv@fe.edu.vn',
-        phone: '0965625152',
-        major: 'MC',
-        role: 'Staff',
-        block: false
-      },
-      {
-        id: 201,
-        name: 'Pham Nhat Anh',
-        isMale: false,
-        mail: 'anhpn@fe.edu.vn',
-        phone: '0965625152',
-        major: 'SE',
-        role: 'User',
-        block: false,
-      },
-      {
-        id: 301,
-        name: 'Nguyen Anh Tu',
-        isMale: true,
-        mail: 'tuna@fe.edu.vn',
-        phone: '0965625152',
-        major: 'SB',
-        role: 'User',
-        block: true
-      },
-      {
-        id: 302,
-        name: 'Pham Nhat Huyen',
-        isMale: false,
-        mail: 'anhpn@fe.edu.vn',
-        phone: '0965625152',
-        major: 'SE',
-        role: 'User',
-        block: false
-      },
-      {
-        id: 303,
-        name: 'Tran Van Toan',
-        isMale: true,
-        mail: 'toantv@fe.edu.vn',
-        phone: '0965625152',
-        major: 'SE',
-        role: 'Staff',
-        block: false
-      },
-      {
-        id: 304,
-        name: 'Pham Minh Lan',
-        isMale: false,
-        mail: 'anhpn@fe.edu.vn',
-        phone: '0965625152',
-        major: 'SE',
-        role: 'Staff',
-        block: false,
-      },
-    ],
-    []
+  
+  const detailDialog= (
+    <div className="detail-container">
+      <img src={ava2} style={{width:200}}/>
+        <h3 className="info-user">{`${userDetail.lastName} ${userDetail.firstName}`}</h3>
+        <table id="table-info" style={{width: 500, margin: 10}}>
+          <tr>
+            <td>Email</td>
+            <td className="info-user">{userDetail.email}</td>
+        </tr>
+        <tr>
+            <td>DOB</td>
+            <td className="info-user">{userDetail.dateOfBirth}</td>
+        </tr>
+        <tr>
+            <td>Address</td>
+            <td className="info-user">{userDetail.address}</td>
+        </tr>
+        <tr>
+            <td>Phone</td>
+            <td className="info-user">{userDetail.phone}</td>
+        </tr>
+        </table>
+    </div>
   )
+
+ 
+  useEffect(() => {
+    axios.get(GET_USERS_URL).then((response) => {
+      console.log(response.data)
+      setUser(response.data)
+    })
+  }, [])
+
+  const handleDialogOpen = (username: any)=>{
+    setIsOpen(true);
+    axios.post(GET_INFORMATION_URL, { username }).then((response) => {
+      console.log(response.data)
+      setUserDetail(response.data)
+      console.log(userDetail);
+    })
+  }
+  function handleDialogClose(){
+    setIsOpen(false);
+  }
+  // const data = React.useMemo(
+  //   () => [
+  //     {
+  //       id: 101,
+  //       name: 'Nguyen Anh Tien',
+  //       isMale: true,
+  //       mail: 'tienna@fe.edu.vn',
+  //       phone: '0965625152',
+  //       major: 'SE',
+  //       role: 'Staff',
+  //       block: true
+  //     },
+  //     {
+  //       id: 201,
+  //       name: 'Pham Nhat Anh',
+  //       isMale: false,
+  //       mail: 'anhpn@fe.edu.vn',
+  //       phone: '0965625152',
+  //       major: 'SB',
+  //       role: 'User',
+  //       block: false
+  //     },
+  //     {
+  //       id: 102,
+  //       name: 'Tran Van Toan',
+  //       isMale: true,
+  //       mail: 'toantv@fe.edu.vn',
+  //       phone: '0965625152',
+  //       major: 'MC',
+  //       role: 'Staff',
+  //       block: false
+  //     },
+  //     {
+  //       id: 201,
+  //       name: 'Pham Nhat Anh',
+  //       isMale: false,
+  //       mail: 'anhpn@fe.edu.vn',
+  //       phone: '0965625152',
+  //       major: 'SE',
+  //       role: 'User',
+  //       block: false,
+  //     },
+  //     {
+  //       id: 301,
+  //       name: 'Nguyen Anh Tu',
+  //       isMale: true,
+  //       mail: 'tuna@fe.edu.vn',
+  //       phone: '0965625152',
+  //       major: 'SB',
+  //       role: 'User',
+  //       block: true
+  //     },
+  //     {
+  //       id: 302,
+  //       name: 'Pham Nhat Huyen',
+  //       isMale: false,
+  //       mail: 'anhpn@fe.edu.vn',
+  //       phone: '0965625152',
+  //       major: 'SE',
+  //       role: 'User',
+  //       block: false
+  //     },
+  //     {
+  //       id: 303,
+  //       name: 'Tran Van Toan',
+  //       isMale: true,
+  //       mail: 'toantv@fe.edu.vn',
+  //       phone: '0965625152',
+  //       major: 'SE',
+  //       role: 'Staff',
+  //       block: false
+  //     },
+  //     {
+  //       id: 304,
+  //       name: 'Pham Minh Lan',
+  //       isMale: false,
+  //       mail: 'anhpn@fe.edu.vn',
+  //       phone: '0965625152',
+  //       major: 'SE',
+  //       role: 'Staff',
+  //       block: false,
+  //     },
+  //   ],
+  //   []
+  // )
+  const data = user;
   const columns = React.useMemo(
     () => [
       {
@@ -163,16 +244,12 @@ function ManageStaffs(props: any) {
       },
       {
         Header: 'Teacher',
-        accessor: 'name',
+        accessor: "username",
         Cell: renderNameBox,
       },
       {
-        Header: 'Email',
-        accessor: 'mail',
-      },
-      {
-        Header: "Major",
-        accessor: "major",
+        Header: 'Full Name',
+        accessor: (d:any) => `${d.contactInfo.lastName} ${d.contactInfo.firstName}`,
       },
       {
         Header: "Role",
@@ -213,11 +290,24 @@ function ManageStaffs(props: any) {
   for (let i = 1; i <= pageCount; i++) {
     arr.push(i)
   }
-
+  
+  const handleSearchValue = (e:any) =>{
+     setSearchValue(e.target.value);
+    
+  }
+  const searchUser = () =>{
+    if(searchValue === undefined || searchValue === null || searchValue === ' ') return
+    axios.get(`${GET_USERS_SEARCH_URL}/${searchValue}`).then((response) => {
+      console.log(response.data)
+      setUser(response.data)
+      console.log(user);
+    })
+  }
   return (
     <div className={className}>
       <div className="search-box">
-         <input type="text" className="search-bar" placeholder="Search account"/>
+         <input type="text" className="search-bar" placeholder="Search account" onChange={handleSearchValue}/>
+         <Button onClick={searchUser}>Search</Button>
       </div>
       <table {...getTableProps()} >
         <thead>
@@ -282,6 +372,13 @@ function ManageStaffs(props: any) {
         </select>
         </div>
       </div>
+      <Dialog 
+              title="Profile"
+              buttonCancel="Close"
+              content = {detailDialog}
+              isOpen={isOpen}
+              handleClose={handleDialogClose}
+            />
     </div>
   )
 }
@@ -345,7 +442,7 @@ const StyledAdmin = styled(ManageStaffs)`
     color: gray;
   }
   .search-box{
-    margin: 2rem;
+    margin: 2rem 4.5rem 0 0;
     text-align: right;
   }
 
@@ -406,6 +503,10 @@ const StyledAdmin = styled(ManageStaffs)`
   .pageNumber:hover {
     background-color: #becbeb;
   }
+  .detail-container h3 {
+   color:red;
+  }
 
+  
 `
 export default StyledAdmin
