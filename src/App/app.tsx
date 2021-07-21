@@ -75,7 +75,7 @@ function App(props: any) {
             <Route exact path="/changePassword" component={Profile}>
               <ChangePassword />
             </Route>
-            <Route exact path="/list-exam" component={Profile}>
+            <Route exact path="/exam" component={Profile}>
               <ListExam />
             </Route>
             <Route exact path="/update-exam" component={Profile}>

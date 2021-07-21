@@ -447,15 +447,6 @@ function UpdateExam(props: any) {
         </div>
         <div className="container-button">
           <div>
-            {/* <Button
-              variant="contained"
-              color="secondary"
-              className={classes.styleBtn}
-              onClick={handleClickDelete}
-            >
-              Delete
-            </Button> */}
-            {/* Dialog Delete  */}
             <Dialog open={openDialogDelete} onClose={handleCloseDialogDelete}>
               <DialogTitle style={{
                 backgroundColor: '#ff6b81',

@@ -60,7 +60,7 @@ function ViewHistory(props: any) {
       setHistories(response.data)
     })
   }
-
+ 
   return (
     <div className={className}>
       <div className="container">

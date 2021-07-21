@@ -16,7 +16,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Input from '@material-ui/core/Input';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
 import axios from 'axios'
 import * as moment from 'moment'
 import * as CONSTANT from '../const'
@@ -25,18 +24,38 @@ import * as CONSTANT from '../const'
 import Table from '../common/tableReact';
 
 interface IExam {
+  id?: number,
+  examName?: string,
+  userId?: number
+  subject?: {}
+}
+interface Subject {
   id: number,
-  name: string,
-  subject: string
+  subjectName: string,
 }
-interface Exam {
-  id: number
-  examName: string
-  subjectId: number
-  userId: number
+
+interface Answer {
+  id: number,
+  answerText: string,
+  answerGroupId: number,
+}
+
+interface Question {
+  id: number,
+  questionText: string,
+  answerGroupId: number,
+  examId: number,
+  answerGroup: {
+    id: number,
+    correctAnswer: number,
+    answer: Answer[]
+  }
 }
 
 
+const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`;
+const GET_EXAM_URL = `${CONSTANT.BASE_URL}/exam`;
+const GET_QUESTION_URL1 = `${CONSTANT.BASE_URL}/question`;
 ListExam.propTypes = {
   className: PropTypes.string,
 };
@@ -90,145 +109,77 @@ const useStyles = makeStyles((theme) => ({
   titleView: {
 
   },
-  answerQ: {
-    marginLeft: '1rem'
-  }
-
+  showAnswer: {
+    marginLeft: '1.5rem'
+  },
+  dialogPaper: {
+    minHeight: '30vh',
+    maxHeight: '80vh',
+    width: '100vh',
+  },
 }));
-
-const GET_EXAM_URL = `${CONSTANT.BASE_URL}/exam`;
 
 function ListExam(props: any) {
   const { className } = props;
   const classes = useStyles();
   const history = useHistory();
   const [isOpen, setIsOpen] = useState(false);
-
   const [openDialogCreate, setOpenDialogCreate] = useState(false);
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [openDialogView, setOpenDialogView] = useState(false);
+  const [scroll, setScroll] = useState('paper');
+
 
   const [idDelete, setIdDelete] = useState(0);
   const [nameExam, setNameExam] = useState('');
-  const [subject, setSubject] = useState('');
+  // const [subject, setSubject] = useState('');
 
-  const [exams, setExams] = useState<Exam[]>([]);
+  const [exams, setExams] = useState<IExam[]>([
+    {}
+  ]);
+  const [subject, setSubject] = useState<Subject[]>([
+  ]);
 
+  const [question, setQuestion] = useState<Question[]>([
+  ]);
+
+  const [answers, setAnswers] = useState<Answer[]>([
+  ]);
+  //* Get subject */
   useEffect(() => {
-    axios.get(GET_EXAM_URL).then((response) => {
-      setExams(response.data)
+    axios.get(`${GET_SUBJECT_URL}`).then((response) => {
+      console.log('Subject data', response.data);
+      setSubject(response.data);
     })
   }, []);
 
-  const searchExam = (e: any) => {
-   
+  //* userid */
+  const idUser = localStorage.getItem('id') ? localStorage.getItem('id') : -1;
+
+  //* Get Exam by userid */
+  useEffect(() => {
+    axios.get(`${GET_EXAM_URL}/${idUser}`).then((response) => {
+      setExams(response.data);
+    }).catch((err) => {
+      console.log("Failed to fetch data: ", err.message);
+    })
+  }, []);
+  //* Get Question */
+  function takeContentByExam1(idExam: number) {
+    setOpenDialogView(true);
+    setScroll(scroll);
+    axios.get(`${GET_QUESTION_URL1}/${idExam}`).then((response) => {
+      console.log('question detail data: ', response.data);
+      setQuestion(response.data)
+    }).catch((err) => {
+      console.log("Failed to fetch data: ", err.message);
+    })
   }
 
   /* event when click edit */
   const handleClickEdit = () => {
     history.push('/update-exam');
   };
-
-  const [result, setResult] = useState<IExam[]>([
-    {
-      id: 1,
-      name: 'SSC101 Chapter 123',
-      subject: 'SSC'
-    }
-    ,
-    {
-      id: 2,
-      name: 'MEA201 Chapter 789',
-      subject: 'MAE'
-    },
-    {
-      id: 3,
-      name: 'MAD102 Chapter 456',
-      subject: 'MAD'
-    },
-    {
-      id: 4,
-      name: 'HCM201 Chapter 1234',
-      subject: 'HCM'
-    },
-    {
-      id: 5,
-      name: 'VNR205 Chapter 10',
-      subject: 'VNR'
-    }, {
-      id: 6,
-      name: 'SSC101 Chapter 123',
-      subject: 'SSC'
-    },
-    {
-      id: 7,
-      name: 'MEA201 Chapter 789',
-      subject: 'MAE'
-    },
-    {
-      id: 8,
-      name: 'MAD102 Chapter 456',
-      subject: 'MAD'
-    },
-    {
-      id: 9,
-      name: 'HCM201 Chapter 1234',
-      subject: 'HCM'
-    },
-    {
-      id: 10,
-      name: 'VNR205 Chapter 10',
-      subject: 'VNR'
-    }, {
-      id: 11,
-      name: 'SSC101 Chapter 123',
-      subject: 'SSC'
-    },
-    {
-      id: 12,
-      name: 'MEA201 Chapter 789',
-      subject: 'SSC'
-    },
-    {
-      id: 13,
-      name: 'MAD102 Chapter 456',
-      subject: 'SSC'
-    },
-    {
-      id: 14,
-      name: 'HCM201 Chapter 1234',
-      subject: 'SSC'
-    },
-    {
-      id: 15,
-      name: 'VNR205 Chapter 10',
-      subject: 'SSC'
-    }, {
-      id: 16,
-      name: 'SSC101 Chapter 123',
-      subject: 'SSC'
-    },
-    {
-      id: 17,
-      name: 'MEA201 Chapter 789',
-      subject: 'SSC'
-    },
-    {
-      id: 18,
-      name: 'MAD102 Chapter 456',
-      subject: 'SSC'
-    },
-    {
-      id: 19,
-      name: 'HCM201 Chapter 1234',
-      subject: 'SSC'
-    },
-    {
-      id: 20,
-      name: 'VNR205 Chapter 10',
-      subject: 'SSC'
-    }
-  ])
 
   const columns = [
     {
@@ -237,11 +188,11 @@ function ListExam(props: any) {
     },
     {
       Header: "Exam Name",
-      accessor: "name",
+      accessor: "examName",
     },
     {
       Header: "Subject Name",
-      accessor: "subject",
+      accessor: "subject.subjectName"
     },
     {
       Header: "View",
@@ -249,7 +200,7 @@ function ListExam(props: any) {
         <FontAwesomeIcon
           id={cell.row.original.id}
           className='detail-exam'
-          onClick={() => handleView(cell.row.original.id)}
+          onClick={() => takeContentByExam1(cell.row.original.id)}
           icon={faEye} />
       )
     },
@@ -288,27 +239,12 @@ function ListExam(props: any) {
   };
   /* Event when click button create exam */
   const handleChange = (event: any) => {
-    setSubject((event.target.value) || '');
+    // setSubject((event.target.value) || '');
   };
   const handleClickBtnCreate = () => {
     setOpenDialogCreate(true);
   };
-  const handleClickSaveCreate = (id: number, examName: string, nameSubject: string) => {
-    if (examName && nameSubject) {
-      const exam: IExam = {
-        id,
-        name: examName,
-        subject: nameSubject
-      }
-      result.push(exam)
-      setResult(result);
-      setOpenDialogCreate(false);
-    }
-    setOpenDialogCreate(true);
-    // setResult((prevResult:IExam) => {
-    //    prevResult.push(exam);
-    // });
-  };
+
   const handleCloseCreate = () => {
     setOpenDialogCreate(false);
   };
@@ -329,76 +265,38 @@ function ListExam(props: any) {
 
   const handleDeleteClose = (idPrams: number) => {
     let newExams = new Array<IExam>();
-    console.log('current result', result)
-    newExams = result.filter(item => item.id !== idPrams)
-    setResult(newExams);
-    console.log('after result', result)
+    console.log('current result', exams)
+    newExams = exams.filter(item => item.id !== idPrams);
+    setExams(newExams);
+    console.log('after result', exams);
     setOpenDialogDelete(false);
   };
 
-  const [textInputSearch, setTextInputSearch] = useState<string>('');
+  const [textInput, setTextInput] = useState<string>('');
   const [txtNameExam, setTxtNameExam] = useState<string>('');
-  // const handleSearchExam = function (content: string) {
-  //   return result.filter(item => item.name.includes(content.trim()));
-  // }
-  // console.log('search neeee', handleSearchExam('SSC101'));
+
   const onTextInputChange = useCallback((e) => {
-    setTextInputSearch(e.target.value);
+    setTextInput(e.target.value);
   }, []);
 
   /* Body view exam dialog */
   const bodyView = (
     <div className={classes.paper}>
       <div className={classes.containerCreate}>
-        {/* <h3 className={classes.titleView}>SSC101 Chapter123</h3> */}
-        <div>
-          <div className="question">
-            <p>1. How many oceans are there on earth? are there on earth?</p>
-          </div>
-          <div className="answer">
-            <p className={classes.answerQ}>A. 1</p>
-            <p className={classes.answerQ}>B. 2</p>
-            <p className={classes.answerQ}>C. 4</p>
-            <p className={classes.answerQ}>D. 6</p>
-          </div>
-
-        </div>
-        <div>
-          <div className="question">
-            <p>2. How many oceans are there on earth?</p>
-          </div>
-          <div className="answer">
-            <p className={classes.answerQ}>A. 1</p>
-            <p className={classes.answerQ}>B. 2</p>
-            <p className={classes.answerQ}>C. 4</p>
-            <p className={classes.answerQ}>D. 6</p>
-          </div>
-
-        </div>
-        <div>
-          <div className="question">
-            <p>3. How many oceans are there on earth?</p>
-          </div>
-          <div className="answer">
-            <p className={classes.answerQ}>A. 1</p>
-            <p className={classes.answerQ}>B. 2</p>
-            <p className={classes.answerQ}>C. 4</p>
-            <p className={classes.answerQ}>D. 6</p>
-          </div>
-
-        </div>
-        <div>
-          <div className="question">
-            <p>4. How many oceans are there on earth?</p>
-          </div>
-          <div className="answer">
-            <p className={classes.answerQ}>A. 1</p>
-            <p className={classes.answerQ}>B. 2</p>
-            <p className={classes.answerQ}>C. 4</p>
-            <p className={classes.answerQ}>D. 6</p>
-          </div>
-
-        </div>
+        {
+          question.map((ques: Question, index: number) => (
+            <div>
+              <div className="question">
+                <p>{index + 1}. {ques.questionText}</p>
+              </div>
+              <div className="answer">
+                {ques.answerGroup.answer.map((ans: Answer) => (
+                  <p className={classes.showAnswer}>{ans.answerText}</p>
+                ))}
+              </div>
+            </div>
+          ))
+        }
       </div>
     </div >
   );
@@ -421,10 +319,11 @@ function ListExam(props: any) {
                   onChange={handleChange}
                   input={<Input id="demo-dialog-native" />}
                 >
-                  <option aria-label="None" value="" />
-                  <option value='SSC101'>SSC101</option>
-                  <option value='MAD301'>MAD301</option>
-                  <option value='Wig202'>Wig202</option>
+                  {
+                    subject.map((sub: Subject) => (
+                      <option value={sub.id}>{sub.subjectName}</option>
+                    ))
+                  }
                 </Select>
               </FormControl>
             </form>
@@ -468,13 +367,13 @@ function ListExam(props: any) {
                   type="search"
                   variant="outlined"
                   size="small"
-                  value={textInputSearch}
+                  value={textInput}
                   onChange={onTextInputChange} />
                 <Button
                   size="small"
                   className="btn-search"
                   variant="contained"
-                  disabled={!textInputSearch}
+                  disabled={!textInput}
                   color="primary"> Search </Button>
               </div>
               <Button
@@ -496,7 +395,7 @@ function ListExam(props: any) {
                   <Button onClick={handleCloseCreate} color="primary">
                     Cancel
                   </Button>
-                  <Button onClick={() => handleClickSaveCreate(999, txtNameExam, subject)} color="primary">
+                  <Button color="primary">
                     Create
                   </Button>
                 </DialogActions>
@@ -527,7 +426,13 @@ function ListExam(props: any) {
                 </DialogActions>
               </Dialog>
               {/* Dialog View detail exam  */}
-              <Dialog open={openDialogView} onClose={handleViewClose}>
+              <Dialog
+                classes={{ paper: classes.dialogPaper }}
+                open={openDialogView}
+                onClose={handleViewClose}
+                aria-labelledby="scroll-dialog-title"
+                aria-describedby="scroll-dialog-description"
+              >
                 <DialogTitle style={{
                   fontWeight: 'bold',
                 }}><h3>SSC101 Chapter123</h3></DialogTitle>
@@ -542,7 +447,7 @@ function ListExam(props: any) {
               </Dialog>
             </div>
             <div className="tbl-exams">
-              <Table columns={columns} data={result} isPagination={true} />
+              <Table columns={columns} data={exams} isPagination={true} />
             </div>
           </div>
         </div>
