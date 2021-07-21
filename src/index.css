@@ -22,9 +22,9 @@ body {
   margin-left: -15rem;
 }
 
-.header-open {
+/* .header-open {
   margin-top: 73px;
-}
+} */
 
 #root {
   display: flex;

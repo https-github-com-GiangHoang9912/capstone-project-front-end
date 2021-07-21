@@ -2,7 +2,7 @@
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
-import styled from 'styled-components' 
+import styled from 'styled-components'
 
 // components
 import HomePage from '../screen/home'
@@ -81,9 +81,13 @@ function App(props: any) {
             <Route exact path="/update-exam" component={Profile}>
               <UpdateExam />
             </Route>
-            <Route exact path="/admin/manage-staffs">
-              <ManageStaffs />
-            </Route>
+            {role === 1 ? (
+              <Route exact path="/admin/manage-staffs" component={ManageStaffs}>
+                <ManageStaffs />
+              </Route>
+            ) : (
+              ''
+            )}
             <Route exact path="/login" component={Login}>
               <Login setIsLogin={setIsLogin} />
             </Route>
