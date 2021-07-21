@@ -14,6 +14,7 @@ function TableReact(props: any) {
   const columns: any = useMemo(() => props.columns, props.columns)
   const data: any = useMemo(() => props.data, props.data)
   const isPagination: boolean = useMemo(() => props.isPagination, props.isPagination)
+
   useTable({
     columns,
     data,
@@ -34,6 +35,7 @@ function TableReact(props: any) {
     nextPage,
     previousPage,
     setPageSize,
+    rows,
     // Get the state from the instance
     state: { pageIndex, pageSize },
   } = useTable({ columns, data }, usePagination)
@@ -41,6 +43,8 @@ function TableReact(props: any) {
   for (let i = 1; i <= pageCount; i++) {
     arr.push(i);
   }
+  let dataRow = [];
+  isPagination ? dataRow = page : dataRow = rows;
   return (
     <div className={className}>
       <table {...getTableProps()} className="table">
@@ -77,39 +81,39 @@ function TableReact(props: any) {
       {!isPagination ? (
         ' '
       ) : (
-        <div className="pagination">
+          <div className="pagination">
 
-          <button className="btnChange" onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {'<'}
-          </button>{' '}
-          {arr.map((item, index) => (
-            <button className={pageIndex === index ? " pageNumber pageActive" : "pageNumber "} onClick={() => gotoPage(item - 1)}>{item}</button>
-          ))}
-          <button className="btnChange" onClick={() => nextPage()} disabled={!canNextPage}>
-            {'>'}
-          </button>{' '}
-
-          <span>
-            Page{' '}
-            <strong>
-              {pageIndex + 1} of {pageOptions.length}
-            </strong>{' '}
-          </span>
-
-          <select className="pageSize"
-            value={pageSize}
-            onChange={(e) => {
-              setPageSize(Number(e.target.value))
-            }}
-          >
-            {[5, 15, 50].map((pageSizes) => (
-              <option key={pageSizes} value={pageSizes}>
-                Show {pageSizes}
-              </option>
+            <button className="btnChange" onClick={() => previousPage()} disabled={!canPreviousPage}>
+              {'<'}
+            </button>{' '}
+            {arr.map((item, index) => (
+              <button className={pageIndex === index ? " pageNumber pageActive" : "pageNumber "} onClick={() => gotoPage(item - 1)}>{item}</button>
             ))}
-          </select>
-        </div>
-      )}
+            <button className="btnChange" onClick={() => nextPage()} disabled={!canNextPage}>
+              {'>'}
+            </button>{' '}
+
+            <span>
+              Page{' '}
+              <strong>
+                {pageIndex + 1} of {pageOptions.length}
+              </strong>{' '}
+            </span>
+
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value))
+              }}
+            >
+              {[5, 10, 15, 50].map((pageSizes) => (
+                <option key={pageSizes} value={pageSizes}>
+                  Show {pageSizes}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
     </div>
   )
 }
@@ -120,12 +124,12 @@ const StyleTable = styled(TableReact)`
     position: sticky;
     top: 0; 
     position: -webkit-sticky;
+    z-index: 100;
    
   }
   table {
     width: 100%;
     border-collapse: collapse;
-    
     margin: 0rem 0rem;
   }
 
@@ -134,7 +138,7 @@ const StyleTable = styled(TableReact)`
     color: #fff;
     font-size: 16px;
     background-color: #303f9f;
-    padding: 0.6rem 0.6rem;
+    padding: 0.8rem 0.7rem;
   }
 
   tr:nth-child(even) {
@@ -145,7 +149,7 @@ const StyleTable = styled(TableReact)`
     font-size: 0.9rem;
     font-weight: 400;
     text-align: left;
-
+    padding: 0.8rem 0.7rem;
     
   }
   td:last-child{

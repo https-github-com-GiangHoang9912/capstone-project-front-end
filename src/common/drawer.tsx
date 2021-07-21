@@ -80,13 +80,13 @@ function PersistentDrawerLeft(props: any) {
       key: 4,
       icon: <SupervisorAccountIcon fontSize="small" />,
       text: 'Manage Staffs',
-      link: '/admin/manage-staffs',
+      link: '/manage-staffs',
     },
     {
       key: 5,
-      icon: <NoteAddIcon fontSize='small'/>,
+      icon: <NoteAddIcon fontSize='small' />,
       text: 'Manage Exam',
-      link: '/list-exam',
+      link: '/exam',
     }
   ]
 

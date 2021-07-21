@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Checkbox from '@material-ui/core/Checkbox';
+import { useHistory } from 'react-router-dom';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -29,11 +30,10 @@ const useStyles = makeStyles((theme) => ({
     width: '100vh',
   },
   styleBtn: {
-    width: 70,
+    width: '5rem',
     height: 30,
-    backgroundColor: '#1e90ff',
     cursor: 'pointer',
-    margin: '5px',
+    margin: '5px 20px',
   },
   paper: {
 
@@ -70,15 +70,26 @@ function UpdateExam(props: any) {
   const [selected, setSelected] = useState('');
   const [nameBank, setNameBank] = useState('Exam Bank');
   const [scroll, setScroll] = useState('paper');
-
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
+  const history = useHistory();
+  const [open, setOpen] = useState(false); // for event click add
+  const [openDialogDelete, setOpenDialogDelete] = useState(false);
+  const [idQuestion, setIdQuestion] = useState(0);
+  const [nameQuestion, setNameQuestion] = useState('');
+  /** event click button delete */
+  const handleClickDelete = (id: number, name: string) => {
+    setOpenDialogDelete(true);
+    setIdQuestion(id);
+    setNameQuestion(name);
+  };
+  const handleCloseDialogDelete = () => {
+    setOpenDialogDelete(false);
+  };
+  /** event click button add */
+  const handleClickAdd = () => {
     setOpen(true);
     setScroll(scroll);
   };
-
-  const handleClose = () => {
+  const handleCloseDialogAdd = () => {
     setOpen(false);
   };
 
@@ -87,6 +98,11 @@ function UpdateExam(props: any) {
   };
   const selectionBankHandler = (event: any) => {
     setNameBank(event.target.value)
+  };
+
+  /* event when click Back */
+  const handleClickBack = () => {
+    history.push('/list-exam');
   };
 
   const exams = [
@@ -98,7 +114,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 102,
@@ -108,7 +125,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -118,7 +136,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -129,7 +148,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -139,7 +159,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -150,7 +171,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -160,7 +182,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -171,7 +194,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -181,7 +205,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -192,7 +217,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -202,7 +228,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -213,7 +240,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -223,7 +251,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -234,7 +263,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -244,7 +274,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -255,7 +286,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 201,
@@ -265,7 +297,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
     ,
     {
@@ -276,7 +309,8 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     },
     {
       id: 999,
@@ -286,27 +320,53 @@ function UpdateExam(props: any) {
         'B. Laos',
         'C. China',
         'D. VietNam'
-      ]
+      ],
+      correct: 'A'
     }
   ]
 
   const columns = [
     {
-      width: '5%',
       Header: "ID",
       accessor: "id",
     },
     {
-      width: '65%',
       Header: "Question",
       accessor: "name",
     },
     {
-      width: '30%',
       Header: "Answer",
-      accessor: "answer",
+      accessor: (data: any) =>
+        <div>
+          {data.answer.map((item: string) => (<p style={{ width: "100px" }}>{item}</p>))}
+        </div>
+    },
+    {
+      Header: "Correct Answer",
+      Cell: (cell: any) =>
+        <div style={{ textAlign: "center" }}>
+          {cell.row.original.correct}
+        </div>
+    },
+    {
+      Header: "Delete",
+      Cell: (cell: any) =>
+      (
+        <div className="contain">
+          <Button
+            variant="contained"
+            color="secondary"
+            className='style-btn'
+            id={cell.row.original.id}
+            onClick={() => handleClickDelete(cell.row.original.id, cell.row.original.name)}
+          >Delete</Button>
+        </div>
+
+      )
+
     },
   ]
+
   const body = (
     <div className={classes.paper}>
       <div className={classes.contentExam}>
@@ -376,7 +436,7 @@ function UpdateExam(props: any) {
     <div className={className}>
       <div className="create-exam">
         <div className="container-exam">
-          <div className="exam">
+          <div className="main">
             <div className="text-subject">
               <h2>SSC101 Chapter 123</h2>
             </div>
@@ -387,33 +447,50 @@ function UpdateExam(props: any) {
         </div>
         <div className="container-button">
           <div>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.styleBtn}
-            >
-              Save
-            </Button>
+            <Dialog open={openDialogDelete} onClose={handleCloseDialogDelete}>
+              <DialogTitle style={{
+                backgroundColor: '#ff6b81',
+                color: '#ffffff', fontWeight: 'bold',
+                padding: '5px 24px'
+              }}>
+                <h3 className="title-delete">Delete</h3>
+              </DialogTitle>
+              <DialogContent style={{
+                padding: '35px 24px'
+              }}>
+                <span>Do you want delete
+                    <span style={{ fontWeight: 'bold' }}>"{nameQuestion}"</span> question???
+                </span>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDialogDelete} color="primary">
+                  Cancel
+                  </Button>
+                <Button onClick={handleCloseDialogDelete} color="secondary">
+                  Delete
+                  </Button>
+              </DialogActions>
+            </Dialog>
           </div>
           <div>
             <Button
               variant="contained"
               color="primary"
-              className={classes.styleBtn}
-              onClick={handleClickOpen}
+              onClick={handleClickAdd}
+              style={{ marginTop: '0.2rem', height:'30px'}}
             >
-              Add
+              Add Questions
             </Button>
             <Dialog
               classes={{ paper: classes.dialogPaper }}
               open={open}
-              onClose={handleClose}
+              onClose={handleCloseDialogAdd}
               aria-labelledby="scroll-dialog-title"
               aria-describedby="scroll-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
                 <div className={classes.title}>
-                  <h2 className={classes.titleExam}>SSC101 Chapter 123 </h2>
+                  <h2 className={classes.titleExam}>SSC101 Bank </h2>
                 </div>
               </DialogTitle>
               <DialogContent>
@@ -422,10 +499,10 @@ function UpdateExam(props: any) {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={handleCloseDialogAdd} color="primary">
                   Close
                 </Button>
-                <Button onClick={handleClose} color="primary" autoFocus>
+                <Button onClick={handleCloseDialogAdd} color="primary" autoFocus>
                   Save
                 </Button>
               </DialogActions>
@@ -449,13 +526,17 @@ html {
   height: 100%;
   font-family: sans-serif;
 }
-.contain-select-subjects {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
+.style-btn {
+  width: 75;
+  height: 40;
+  cursor: pointer;
+  margin-top: 1rem;
+  margin-right: 1rem;
+  font-size: 1;
 }
+
 .text-subject {
-  margin-top: 10%;
   margin-bottom: 1rem;
 }
 //* Css for button */
@@ -473,20 +554,31 @@ html {
   height: auto;
   display:flex;
   justify-content: space-around;
-  padding:  0px 100px 10px 100px;
+  padding:  0px 100px 0px 100px;
   text-align: center;
 }
 .content-exam {
-  flex: 1;
-  width: 100%;
+  width: 90%;
   height: 500px;
   border: 1px solid black;
   background-color: #fff; 
   border: none;
-  margin-top: 1rem;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   overflow-y: scroll;
   text-align: start;
+}
+.main {
+  background: #fff;
+  border-radius: 10px;
+  overflow: auto;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
+  min-width: 600px;
+  display: flex;
+  margin-top: 1rem;
+  justify-content: center;
+  flex-direction: column;
 }
 
 //* Responsive */
