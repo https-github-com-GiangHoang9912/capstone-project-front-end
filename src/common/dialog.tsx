@@ -27,6 +27,7 @@ function DialogComponent(props: any) {
     className,
     title,
     message,
+    content,
     buttonAccept,
     buttonCancel,
     isOpen,
@@ -46,6 +47,7 @@ function DialogComponent(props: any) {
         <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">{message}</DialogContentText>
+          {content}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAccept} color="primary">

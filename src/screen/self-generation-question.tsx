@@ -195,7 +195,7 @@ const SelfGenerate = ({ className = '' }) => {
             ))}
           </Carousel>
           <div className="controls-wrapper">
-          <AddCircleIcon color="primary" style={{fontSize: 40}} />
+          <AddCircleIcon color="primary" style={{fontSize: 40}} onClick={addItem} />
           </div>
           {/* Generate cau hoi */}
           <Button
