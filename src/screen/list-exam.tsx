@@ -166,7 +166,7 @@ function ListExam(props: any) {
     }).catch((err) => {
       console.log("Failed to fetch data: ", err.message);
     })
-  }, []);
+  }, [openDialogCreate]);
   //* Get Question */
   function takeContentByExam1(idExam: number) {
     setOpenDialogView(true);
@@ -368,6 +368,7 @@ function ListExam(props: any) {
 
     if (response) {
       console.log(response)
+      setOpenDialogCreate(false);
     }
   }
 
