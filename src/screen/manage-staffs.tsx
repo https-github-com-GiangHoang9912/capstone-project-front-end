@@ -108,24 +108,24 @@ function ManageStaffs(props: any) {
   
   const detailDialog= (
     <div className="detail-container">
-      <img src={ava2} style={{width:200}}/>
-        <h3 className="info-user">{`${userDetail.lastName} ${userDetail.firstName}`}</h3>
+      <img src={userDetail.avatar? userDetail.avatar: ava2} style={{width:200}}/>
+        <h3 className="info-user">{`${userDetail.lastName? userDetail.lastName : ""} ${userDetail.firstName? userDetail.firstName : ""}`}</h3>
         <table id="table-info" style={{width: 500, margin: 10}}>
           <tr>
             <td>Email</td>
-            <td className="info-user">{userDetail.email}</td>
+            <td className="info-user">{userDetail.email?userDetail.email:""}</td>
         </tr>
         <tr>
             <td>DOB</td>
-            <td className="info-user">{userDetail.dateOfBirth}</td>
+            <td className="info-user">{userDetail.dateOfBirth?userDetail.dateOfBirth:""}</td>
         </tr>
         <tr>
             <td>Address</td>
-            <td className="info-user">{userDetail.address}</td>
+            <td className="info-user">{userDetail.address? userDetail.address:""}</td>
         </tr>
         <tr>
             <td>Phone</td>
-            <td className="info-user">{userDetail.phone}</td>
+            <td className="info-user">{userDetail.phone? userDetail.phone:""}</td>
         </tr>
         </table>
     </div>
@@ -249,7 +249,7 @@ function ManageStaffs(props: any) {
       },
       {
         Header: 'Full Name',
-        accessor: (d:any) => `${d.contactInfo.lastName} ${d.contactInfo.firstName}`,
+        accessor: (d:any) => `${d.contactInfo? d.contactInfo.lastName : ""} ${d.contactInfo? d.contactInfo.firstName:""}`,
       },
       {
         Header: "Role",
@@ -444,6 +444,7 @@ const StyledAdmin = styled(ManageStaffs)`
   .search-box{
     margin: 2rem 4.5rem 0 0;
     text-align: right;
+    margin-top: 8em;
   }
 
   .search-bar{
