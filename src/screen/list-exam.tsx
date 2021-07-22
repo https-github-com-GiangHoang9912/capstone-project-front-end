@@ -33,18 +33,21 @@ interface Subject {
   id: number,
   subjectName: string,
 }
-
 interface Answer {
-  id: number,
+  answerId: number,
   answerText: string,
   answerGroupId: number,
 }
-
 interface Question {
   id: number,
-  questionText: string,
+  questionBankId: number,
   answerGroupId: number,
   examId: number,
+  questionBank: {
+    id: number,
+    questionText: string,
+    subjectId: 1
+  },
   answerGroup: {
     id: number,
     correctAnswer: number,
@@ -52,11 +55,6 @@ interface Question {
   }
 }
 
-
-const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`;
-const GET_EXAM_URL = `${CONSTANT.BASE_URL}/exam`;
-const GET_EXAM_BY_NAME_URL = `${CONSTANT.BASE_URL}/exam`;
-const GET_QUESTION_URL = `${CONSTANT.BASE_URL}/questions`;
 ListExam.propTypes = {
   className: PropTypes.string,
 };
@@ -125,6 +123,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`;
+const GET_EXAM_URL = `${CONSTANT.BASE_URL}/exam`;
+const GET_EXAM_BY_NAME_URL = `${CONSTANT.BASE_URL}/exam`;
+const GET_QUESTION_URL = `${CONSTANT.BASE_URL}/questions`;
+const CREATE_EXAM_URL = `${CONSTANT.BASE_URL}/exam/create-exam`;
+const DELETE_EXAM_URL = `${CONSTANT.BASE_URL}/exam/delete-exam`;
+
 function ListExam(props: any) {
   const { className } = props;
   const classes = useStyles();
@@ -146,6 +151,8 @@ function ListExam(props: any) {
 
   const [subject, setSubject] = useState<Subject[]>([
   ]);
+
+  const [subjectId, setSubjectId] = useState<Number>(1);
 
   const [question, setQuestion] = useState<Question[]>([
   ]);
@@ -173,7 +180,7 @@ function ListExam(props: any) {
     }).catch((err) => {
       console.log("Failed to fetch data exam by userID: ", err.message);
     })
-  }, []);
+  }, [openDialogCreate, openDialogDelete]);
 
   //* Get Exam by name */
   function getExamByName(name: string) {
@@ -192,7 +199,7 @@ function ListExam(props: any) {
     setScroll(scroll);
     setNameExam(titleExam);
     axios.get(`${GET_QUESTION_URL}/${idExam}`).then((response) => {
-      // console.log('question detail data: ', response.data);
+      console.log('question detail data: ', response.data);
       setQuestion(response.data)
     }).catch((err) => {
       console.log("Failed to get data question by examID: ", err.message);
@@ -201,7 +208,7 @@ function ListExam(props: any) {
 
   //* event when click edit */
   const handleClickEdit = (idExam: number) => {
-    history.push('/update-exam', {params: idExam});
+    history.push('/update-exam', { params: idExam });
   };
 
   const columns = [
@@ -258,6 +265,7 @@ function ListExam(props: any) {
   /* Event when click button create exam */
   const handleChange = (event: any) => {
     // setSubject((event.target.value) || '');
+    setSubjectId(Number(event.target.value))
   };
   const handleClickBtnCreate = () => {
     setOpenDialogCreate(true);
@@ -270,8 +278,21 @@ function ListExam(props: any) {
     setTxtNameExam(e.target.value);
   }, []);
 
+
+  // async (e: any) => {
+  //   e.preventDefault()
+  //   console.log(subjectId)
+  //   console.log(txtNameExam)
+  //   const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
+  //     subjectId,
+  //     examName: txtNameExam
+  //   })
+  //   if (response) {
+  //     console.log(response)
+  //     setOpenDialogCreate(false);
+  //   }
   /* event when click delete */
-  function handleDelete(id: number, titleExam: string) {
+  const handleDelete = async (id: number, titleExam: string) => {
     setOpenDialogDelete(true)
     setIdDelete(id);
     setNameExam(titleExam);
@@ -281,12 +302,12 @@ function ListExam(props: any) {
     setOpenDialogDelete(false)
   };
 
-  const handleDeleteClose = (idPrams: number) => {
-    let newExams = new Array<IExam>();
-    console.log('current result', exams)
-    newExams = exams.filter(item => item.id !== idPrams);
-    setExams(newExams);
-    console.log('after result', exams);
+  const handleDeleteClose = async (id: number) => {
+    const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
+    if (response) {
+      console.log(response)
+      setOpenDialogCreate(false);
+    }
     setOpenDialogDelete(false);
   };
 
@@ -300,22 +321,33 @@ function ListExam(props: any) {
   /* Body view exam dialog */
   const bodyView = (
     <div className={classes.paper}>
-      <div className={classes.containerCreate}>
-        {
-          question.map((ques: Question, index: number) => (
-            <div>
-              <div className="question">
-                <p>{index + 1}. {ques.questionText}</p>
+      {
+        question.length !== 0 ? (<div className={classes.containerCreate}>
+          {
+            question.map((ques: Question, index: number) => (
+              <div>
+                <div className="question">
+                  <p style={{
+                    fontWeight: 'bold',
+                    color: '#2F6473'
+                  }}>{index + 1}. {ques.questionBank.questionText}</p>
+                </div>
+                <div className="answer">
+                  {ques.answerGroup.answer.map((ans: Answer) => (
+                    <p className={classes.showAnswer}>{ans.answerText}</p>
+                  ))}
+                </div>
               </div>
-              <div className="answer">
-                {ques.answerGroup.answer.map((ans: Answer) => (
-                  <p className={classes.showAnswer}>{ans.answerText}</p>
-                ))}
-              </div>
-            </div>
-          ))
-        }
-      </div>
+            ))
+          }
+        </div>)
+          : (<div><h3 style={{
+            fontWeight: 'bold',
+            color: '#2F6473',
+            textAlign: 'center'
+          }}>This exam has no questions</h3></div>)
+      }
+
     </div >
   );
 
@@ -333,7 +365,7 @@ function ListExam(props: any) {
                 <InputLabel htmlFor="demo-dialog-native">Subject</InputLabel>
                 <Select
                   native
-                  value={subject}
+                  value={subjectId}
                   onChange={handleChange}
                   input={<Input id="demo-dialog-native" />}
                 >
@@ -371,6 +403,17 @@ function ListExam(props: any) {
     </div >
   );
 
+  const handleCreateExam = async (e: any) => {
+    e.preventDefault()
+    console.log(subjectId)
+    console.log(txtNameExam)
+    const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`)
+    if (response) {
+      console.log(response)
+      setOpenDialogCreate(false);
+    }
+  }
+
   return (
     <div className={className}>
       <div className="limiter">
@@ -385,7 +428,7 @@ function ListExam(props: any) {
                   type="search"
                   variant="outlined"
                   size="small"
-                  value={textSearch}                  
+                  value={textSearch}
                   onChange={onTextSearchChange} />
                 <Button
                   size="small"
@@ -403,9 +446,9 @@ function ListExam(props: any) {
                 color="primary"
               > Create Exam </Button>
               {/* Dialog Create  */}
-              <Dialog classes={{ paper: classes.dialogCreateExam }} 
-                      open={openDialogCreate} 
-                      onClose={handleCloseCreate}>
+              <Dialog classes={{ paper: classes.dialogCreateExam }}
+                open={openDialogCreate}
+                onClose={handleCloseCreate}>
                 <DialogTitle style={{
                   fontWeight: 'bold',
                   textAlign: 'center'
@@ -417,7 +460,7 @@ function ListExam(props: any) {
                   <Button onClick={handleCloseCreate} color="primary">
                     Cancel
                   </Button>
-                  <Button color="primary">
+                  <Button color="primary" onClick={handleCreateExam}>
                     Create
                   </Button>
                 </DialogActions>
@@ -515,7 +558,7 @@ html {
   border-radius: 10px;
   overflow: auto;
   align-items: center;
-  padding: 10px;
+  padding: 5px 10px;
   width: 90%;
   min-width: 600px;
   display: flex;

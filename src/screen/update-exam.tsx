@@ -45,15 +45,21 @@ interface Answer {
 
 interface Question {
   id: number,
-  questionText: string,
+  questionBankId: number,
   answerGroupId: number,
   examId: number,
+  questionBank: {
+    id: number,
+    questionText: string,
+    subjectId: 1
+  },
   answerGroup: {
     id: number,
     correctAnswer: number,
     answer: Answer[]
   }
 }
+
 const useStyles = makeStyles((theme) => ({
   dialogPaper: {
     minHeight: '30vh',
@@ -101,7 +107,7 @@ function UpdateExam(props: any) {
   const { className } = props;
   const classes = useStyles();
   const [selected, setSelected] = useState('');
-  const [nameBank, setNameBank] = useState('Exam Bank');
+  const [nameBank, setNameBank] = useState('Exam Bank'); 
   const [scroll, setScroll] = useState('paper');
   const history = useHistory();
   const [open, setOpen] = useState(false); // for event click add
@@ -163,31 +169,6 @@ function UpdateExam(props: any) {
     history.push('/list-exam');
   };
 
-  const exams = [
-    {
-      id: 102,
-      name: 'Who are you?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    },
-    {
-      id: 999,
-      name: 'What is the largest ocean in the world? ',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    }
-  ];
-
   const columns = [
     {
       Header: "ID",
@@ -197,13 +178,16 @@ function UpdateExam(props: any) {
       Header: "Question",
       accessor: "questionText",
     },
-    // {
-    //   Header: "Answer",
-    //   accessor: (data: any) =>
-    //     <div>
-    //       {data.answerGroup.answer.map((item: string) => (<p style={{ width: "100px" }}>{item}</p>))}
-    //     </div>
-    // },
+    {
+      Header: "Answer",
+      accessor: (data: any) =>
+        <div>
+          {
+            data.answerGroup.answer.map((item: string) =>
+              (<p style={{ width: "100px" }}>{item}</p>))
+          }
+        </div>
+    },
     {
       Header: "Correct Answer",
       accessor: "answerGroup.correctAnswer"
@@ -221,8 +205,6 @@ function UpdateExam(props: any) {
             onClick={() => handleClickDelete(cell.row.original.id, cell.row.original.name)}
           >Delete</Button>
         </div>
-        
-
       )
 
     },
@@ -306,7 +288,9 @@ function UpdateExam(props: any) {
             </div>
           </div>
         </div>
-        <div className="container-button">
+        <div className="container-button"
+          style={{ backgroundColor: 'rgb(255,255,255)' }}
+        >
           <div>
             <Dialog open={openDialogDelete} onClose={handleCloseDialogDelete}>
               <DialogTitle style={{
@@ -333,12 +317,14 @@ function UpdateExam(props: any) {
               </DialogActions>
             </Dialog>
           </div>
-          <div>
+          <div
+            style={{ backgroundColor: "#FFFFFF" }}
+          >
             <Button
               variant="contained"
               color="primary"
               onClick={handleClickAdd}
-              style={{ marginTop: '1rem', height: '30px' }}
+              style={{ marginTop: '0.5rem', height: '30px' }}
             >
               Add Questions
             </Button>
@@ -346,7 +332,7 @@ function UpdateExam(props: any) {
               variant="contained"
               color="primary"
               onClick={handleShow}
-              style={{ marginTop: '1rem', height: '30px' }}
+              style={{ marginTop: '0.5rem', height: '30px' }}
             >
               Show Questions
             </Button>
@@ -383,6 +369,8 @@ function UpdateExam(props: any) {
   );
 }
 
+
+
 const StyledUpdateExam = styled(UpdateExam)`
 * {
   padding: 0;
@@ -394,6 +382,7 @@ body,
 html {
   height: 100%;
   font-family: sans-serif;
+  background-color:"#FFFFF"; 
 }
 
 .style-btn {
@@ -413,6 +402,7 @@ html {
 .container-button {
     display: flex;
     justify-content: center;
+    background-color: rgb(255,255,255);
 }
 //* Css for area create exam and bank */
 .create-exam {
@@ -423,11 +413,11 @@ html {
   height: auto;
   display:flex;
   justify-content: space-around;
-  padding:  0px 100px 0px 100px;
   text-align: center;
 }
 .content-exam {
   width: 90%;
+  margin-top: 3%;
   height: 500px;
   border: 1px solid black;
   background-color: #fff; 

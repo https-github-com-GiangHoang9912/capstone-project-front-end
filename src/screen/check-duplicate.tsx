@@ -12,7 +12,7 @@ import LoadingBar from 'react-top-loading-bar'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
-import { TableViewExam } from '../common/table'
+import { TableCheckDuplicate } from '../common/table'
 import { AccountContext } from '../contexts/account-context'
 
 Duplicate.propTypes = {
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 function Duplicate(props: any) {
-  const { className } = props
+  const { className, handleNotification } = props
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false)
   const [fileName, setFileName] = useState<string>('')
@@ -50,6 +50,7 @@ function Duplicate(props: any) {
   const account = accountContextData
   const [progress, setProgress] = useState(0)
   const [isDisable, setIsDisable] = useState(false)
+  const [isDisableAddBank, setIsDisableAddBank] = useState(false)
   const [question, setQuestion] = useState<string>('')
   const [result, setResult] = useState<IQuestion[]>([])
   const [file, setFile] = useState<any>()
@@ -74,6 +75,7 @@ function Duplicate(props: any) {
       setVisibleResult(true)
       setProgress(100)
       setIsDisable(false)
+      handleNotification('success', `${response.status}: Successful`)
     }
   }
   function handleInputQuestion(e: any) {
@@ -94,8 +96,8 @@ function Duplicate(props: any) {
 
   const handleAddFileBank = async (e: any) => {
     e.preventDefault()
-    console.log(file)
-
+    setIsDisableAddBank(true)
+    setProgress(progress + 10)
     const formData = new FormData()
     formData.append('train', file, file.name)
 
@@ -103,7 +105,13 @@ function Duplicate(props: any) {
       refreshToken(error, id ? Number(id) : account.id)
     })
     if (response && response.data) {
-      console.log(response)
+      setProgress(100)
+      setIsDisableAddBank(false)
+      handleNotification('success', `${response.status}: Training data Successful`)
+    } else {
+      setProgress(100)
+      setIsDisableAddBank(false)
+      handleNotification('danger', `Training data fail`)
     }
   }
 
@@ -115,7 +123,7 @@ function Duplicate(props: any) {
           <div className="import-bank">
             <h2 className="select">Import a new Bank</h2>
             <div className="input-bank">
-            <input type="file" accept=".csv" onChange={handleFileChange} title=" "/>
+              <input type="file" accept=".csv" onChange={handleFileChange} title=" " />
             </div>
             <p className="file-rule">Bank input must be .csv file</p>
             <p className="bank-name">Bank name: {fileName}</p>
@@ -125,6 +133,7 @@ function Duplicate(props: any) {
                 color="secondary"
                 className={classes.btnDup}
                 onClick={handleAddFileBank}
+                disabled={isDisableAddBank}
               >
                 Add Bank
               </Button>
@@ -205,7 +214,7 @@ function Duplicate(props: any) {
               handleClose={handleDialogClose}
             />
           </div>
-          {visibleResult ? <TableViewExam results={result} /> : ' '}
+          {visibleResult ? <TableCheckDuplicate results={result} /> : ' '}
         </div>
       </div>
     </div>
@@ -215,7 +224,7 @@ function Duplicate(props: any) {
 const StyleDuplicate = styled(Duplicate)`
   width: 100%;
   height: auto;
-  
+
   .container {
     margin: 0.5rem;
     padding: 5em 10px 10px 10px;
@@ -255,7 +264,7 @@ const StyleDuplicate = styled(Duplicate)`
   }
   .convert-csv {
     display: flex;
-    justify-content:center;
+    justify-content: center;
     height: auto;
     padding: 1em;
     margin-top: 1em;
@@ -264,21 +273,19 @@ const StyleDuplicate = styled(Duplicate)`
     text-align: start;
     border-radius: 5px;
   }
-  
+
   .csv-link {
     margin-left: 1rem;
   }
-  .csv-img{
-    width:150px;
+  .csv-img {
+    width: 150px;
     height: 90px;
     background-image: url('https://image.flaticon.com/icons/png/128/2305/2305855.png');
     background-size: contain;
     background-repeat: no-repeat;
-
   }
   .csv-link h3 {
     font-size: 17px;
-    
   }
   .csv-link p {
     color: #545d7a;
@@ -295,26 +302,26 @@ const StyleDuplicate = styled(Duplicate)`
     padding: 1rem;
   }
   input::-webkit-file-upload-button {
-  padding: 10px 20px;
-  background-color: #303f9f;
-  border: none;
-  font-size: 1rem;
-  border-radius: 5px;
-  color: #fff;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  transition: 100ms ease-out;
-  font-weight: bold;
-  cursor: pointer;
-}
-input::-webkit-file-upload-button:hover {
-  background-color: #35367a;
-}
-.input-bank{
-  margin: 1rem;
-}
-  input[type="file"]{
-  font-size: 0px;
-}
+    padding: 10px 20px;
+    background-color: #303f9f;
+    border: none;
+    font-size: 1rem;
+    border-radius: 5px;
+    color: #fff;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    transition: 100ms ease-out;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  input::-webkit-file-upload-button:hover {
+    background-color: #35367a;
+  }
+  .input-bank {
+    margin: 1rem;
+  }
+  input[type='file'] {
+    font-size: 0px;
+  }
   .file-rule {
     color: #8c95ad;
   }
