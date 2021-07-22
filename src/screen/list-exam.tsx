@@ -55,7 +55,8 @@ interface Question {
 
 const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`;
 const GET_EXAM_URL = `${CONSTANT.BASE_URL}/exam`;
-const GET_QUESTION_URL1 = `${CONSTANT.BASE_URL}/question`;
+const GET_EXAM_BY_NAME_URL = `${CONSTANT.BASE_URL}/exam`;
+const GET_QUESTION_URL = `${CONSTANT.BASE_URL}/questions`;
 ListExam.propTypes = {
   className: PropTypes.string,
 };
@@ -117,6 +118,11 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: '80vh',
     width: '100vh',
   },
+  dialogCreateExam: {
+    minHeight: '30vh',
+    maxHeight: '80vh',
+    width: '60vh',
+  }
 }));
 
 function ListExam(props: any) {
@@ -137,6 +143,7 @@ function ListExam(props: any) {
   const [exams, setExams] = useState<IExam[]>([
     {}
   ]);
+
   const [subject, setSubject] = useState<Subject[]>([
   ]);
 
@@ -145,11 +152,14 @@ function ListExam(props: any) {
 
   const [answers, setAnswers] = useState<Answer[]>([
   ]);
+
   //* Get subject */
   useEffect(() => {
     axios.get(`${GET_SUBJECT_URL}`).then((response) => {
-      console.log('Subject data', response.data);
+      // console.log('Subject data', response.data);
       setSubject(response.data);
+    }).catch((err) => {
+      console.log("Failed to fetch data subject by userID: ", err.message);
     })
   }, []);
 
@@ -161,24 +171,37 @@ function ListExam(props: any) {
     axios.get(`${GET_EXAM_URL}/${idUser}`).then((response) => {
       setExams(response.data);
     }).catch((err) => {
-      console.log("Failed to fetch data: ", err.message);
+      console.log("Failed to fetch data exam by userID: ", err.message);
     })
   }, []);
-  //* Get Question */
-  function takeContentByExam1(idExam: number) {
-    setOpenDialogView(true);
-    setScroll(scroll);
-    axios.get(`${GET_QUESTION_URL1}/${idExam}`).then((response) => {
-      console.log('question detail data: ', response.data);
-      setQuestion(response.data)
+
+  //* Get Exam by name */
+  function getExamByName(name: string) {
+    axios.get(`${GET_EXAM_BY_NAME_URL}/${idUser}/search/${name}`).then((response) => {
+      console.log('Exam By Name   : ', response.data);
+      setExams(response.data);
+      setTextSearch("");
     }).catch((err) => {
-      console.log("Failed to fetch data: ", err.message);
+      console.log("Failed to fetch exam by name: ", err.message);
     })
   }
 
-  /* event when click edit */
-  const handleClickEdit = () => {
-    history.push('/update-exam');
+  //* Get Question */
+  function takeContentByExam(idExam: number, titleExam: string) {
+    setOpenDialogView(true);
+    setScroll(scroll);
+    setNameExam(titleExam);
+    axios.get(`${GET_QUESTION_URL}/${idExam}`).then((response) => {
+      // console.log('question detail data: ', response.data);
+      setQuestion(response.data)
+    }).catch((err) => {
+      console.log("Failed to get data question by examID: ", err.message);
+    })
+  }
+
+  //* event when click edit */
+  const handleClickEdit = (idExam: number) => {
+    history.push('/update-exam', {params: idExam});
   };
 
   const columns = [
@@ -200,7 +223,7 @@ function ListExam(props: any) {
         <FontAwesomeIcon
           id={cell.row.original.id}
           className='detail-exam'
-          onClick={() => takeContentByExam1(cell.row.original.id)}
+          onClick={() => takeContentByExam(cell.row.original.id, cell.row.original.examName)}
           icon={faEye} />
       )
     },
@@ -214,14 +237,14 @@ function ListExam(props: any) {
             color="primary"
             className='style-btn'
             id={cell.row.original.id}
-            onClick={handleClickEdit}
+            onClick={() => handleClickEdit(cell.row.original.id)}
           >Edit</Button>
           <Button
             variant="contained"
             color="secondary"
             className='style-btn'
             id={cell.row.original.id}
-            onClick={() => handleDelete(cell.row.original.id, cell.row.original.name)}
+            onClick={() => handleDelete(cell.row.original.id, cell.row.original.examName)}
           >Delete</Button>
         </div>
       )
@@ -229,11 +252,6 @@ function ListExam(props: any) {
     },
   ];
   /* Event when click icon view exam */
-  function handleView(id: number) {
-    setOpenDialogView(true);
-    // setNameExam(name);
-  };
-
   const handleViewClose = () => {
     setOpenDialogView(false);
   };
@@ -253,10 +271,10 @@ function ListExam(props: any) {
   }, []);
 
   /* event when click delete */
-  function handleDelete(id: number, name: string) {
+  function handleDelete(id: number, titleExam: string) {
     setOpenDialogDelete(true)
     setIdDelete(id);
-    setNameExam(name);
+    setNameExam(titleExam);
   };
 
   const handleDeleteCancel = () => {
@@ -272,11 +290,11 @@ function ListExam(props: any) {
     setOpenDialogDelete(false);
   };
 
-  const [textInput, setTextInput] = useState<string>('');
+  const [textSearch, setTextSearch] = useState<string>('');
   const [txtNameExam, setTxtNameExam] = useState<string>('');
 
-  const onTextInputChange = useCallback((e) => {
-    setTextInput(e.target.value);
+  const onTextSearchChange = useCallback((e) => {
+    setTextSearch(e.target.value);
   }, []);
 
   /* Body view exam dialog */
@@ -340,10 +358,10 @@ function ListExam(props: any) {
             onChange={onTxtNameExamChange}
             required
           />
-          <p style={{ width: '330px', color: '#30336b' }}>
+          <p style={{ color: '#30336b' }}>
             <FontAwesomeIcon icon={faExclamationCircle} style={{
               color: '#303f9f',
-              margin: '0 5px'
+              margin: '0 10 0 0'
             }} className="note-icon" />
             The system will automatically create a test with
             50 random questions in the school question bank.
@@ -367,13 +385,14 @@ function ListExam(props: any) {
                   type="search"
                   variant="outlined"
                   size="small"
-                  value={textInput}
-                  onChange={onTextInputChange} />
+                  value={textSearch}                  
+                  onChange={onTextSearchChange} />
                 <Button
                   size="small"
                   className="btn-search"
                   variant="contained"
-                  disabled={!textInput}
+                  disabled={!textSearch}
+                  onClick={() => getExamByName(textSearch)}
                   color="primary"> Search </Button>
               </div>
               <Button
@@ -384,10 +403,13 @@ function ListExam(props: any) {
                 color="primary"
               > Create Exam </Button>
               {/* Dialog Create  */}
-              <Dialog open={openDialogCreate} onClose={handleCloseCreate}>
+              <Dialog classes={{ paper: classes.dialogCreateExam }} 
+                      open={openDialogCreate} 
+                      onClose={handleCloseCreate}>
                 <DialogTitle style={{
                   fontWeight: 'bold',
-                }}>Fill the form to create New Exam</DialogTitle>
+                  textAlign: 'center'
+                }}><h3>Fill the form to create New Exam</h3></DialogTitle>
                 <DialogContent>
                   {body}
                 </DialogContent>
@@ -435,7 +457,8 @@ function ListExam(props: any) {
               >
                 <DialogTitle style={{
                   fontWeight: 'bold',
-                }}><h3>SSC101 Chapter123</h3></DialogTitle>
+                  textAlign: 'center'
+                }}><h3>{nameExam}</h3></DialogTitle>
                 <DialogContent>
                   {bodyView}
                 </DialogContent>

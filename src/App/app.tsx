@@ -81,7 +81,7 @@ function App(props: any) {
             <Route exact path="/update-exam" component={Profile}>
               <UpdateExam />
             </Route>
-            <Route exact path="/admin/manage-staffs">
+            <Route exact path="/manage-staffs">
               <ManageStaffs />
             </Route>
             <Route exact path="/login" component={Login}>

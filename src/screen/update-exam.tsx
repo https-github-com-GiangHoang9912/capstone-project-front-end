@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Checkbox from '@material-ui/core/Checkbox';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -12,6 +12,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { Button, FormHelperText, makeStyles } from '@material-ui/core'
 import styled from 'styled-components'
+import axios from 'axios'
+import * as CONSTANT from '../const'
+
 
 import Table from '../common/tableReact'
 
@@ -23,6 +26,34 @@ UpdateExam.propTypes = {
 UpdateExam.defaultProps = {
   className: '',
 };
+interface IExam {
+  id?: number,
+  examName?: string,
+  userId?: number
+  subject?: {}
+}
+interface Subject {
+  id: number,
+  subjectName: string,
+}
+
+interface Answer {
+  id: number,
+  answerText: string,
+  answerGroupId: number,
+}
+
+interface Question {
+  id: number,
+  questionText: string,
+  answerGroupId: number,
+  examId: number,
+  answerGroup: {
+    id: number,
+    correctAnswer: number,
+    answer: Answer[]
+  }
+}
 const useStyles = makeStyles((theme) => ({
   dialogPaper: {
     minHeight: '30vh',
@@ -64,6 +95,8 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
+const GET_QUESTION_URL = `${CONSTANT.BASE_URL}/questions`;
+
 function UpdateExam(props: any) {
   const { className } = props;
   const classes = useStyles();
@@ -75,6 +108,25 @@ function UpdateExam(props: any) {
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [idQuestion, setIdQuestion] = useState(0);
   const [nameQuestion, setNameQuestion] = useState('');
+
+  const [question, setQuestion] = useState<Question[]>([
+  ]);
+
+  const location: any = useLocation();
+  const idExam = location.state.params;
+
+  console.log(idExam);
+
+  //* Get question by idExam */
+  useEffect(() => {
+    axios.get(`${GET_QUESTION_URL}/${idExam}`).then((response) => {
+      console.log(response.data);
+      setQuestion(response.data);
+    }).catch((err) => {
+      console.log("Failed to get question by  id Exam: ", err.message);
+    })
+  }, []);
+
   /** event click button delete */
   const handleClickDelete = (id: number, name: string) => {
     setOpenDialogDelete(true);
@@ -89,6 +141,12 @@ function UpdateExam(props: any) {
     setOpen(true);
     setScroll(scroll);
   };
+
+  const handleShow = () => {
+    console.log(question);
+  };
+
+
   const handleCloseDialogAdd = () => {
     setOpen(false);
   };
@@ -106,201 +164,6 @@ function UpdateExam(props: any) {
   };
 
   const exams = [
-    {
-      id: 101,
-      name: 'In which region does Asia have a lot of oil and gas?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    },
-    {
-      id: 102,
-      name: 'Asia is a continent?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    },
-    {
-      id: 201,
-      name: 'Asia has a land area about approx?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    }
-    ,
-    {
-      id: 102,
-      name: 'Which continent is bordered by Asia?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    },
-    {
-      id: 201,
-      name: ' In which region are the mountain and platea systems of Asia concentrated?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    }
-    ,
-    {
-      id: 102,
-      name: 'Who are you?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    },
-    {
-      id: 201,
-      name: 'What is the largest ocean in the world?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    }
-    ,
-    {
-      id: 102,
-      name: 'Who are you?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    },
-    {
-      id: 201,
-      name: 'What is the largest ocean in the world?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    }
-    ,
-    {
-      id: 102,
-      name: 'Who are you?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    },
-    {
-      id: 201,
-      name: 'What is the largest ocean in the world?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    }
-    ,
-    {
-      id: 102,
-      name: 'Who are you?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    },
-    {
-      id: 201,
-      name: 'What is the largest ocean in the world? ',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    }
-    ,
-    {
-      id: 102,
-      name: 'Who are you?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    },
-    {
-      id: 201,
-      name: 'What is the largest ocean in the world? ',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    }
-    ,
-    {
-      id: 102,
-      name: 'Who are you?',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    },
-    {
-      id: 201,
-      name: 'What is the largest ocean in the world? ',
-      answer: [
-        'A. Japan',
-        'B. Laos',
-        'C. China',
-        'D. VietNam'
-      ],
-      correct: 'A'
-    }
-    ,
     {
       id: 102,
       name: 'Who are you?',
@@ -323,7 +186,7 @@ function UpdateExam(props: any) {
       ],
       correct: 'A'
     }
-  ]
+  ];
 
   const columns = [
     {
@@ -332,21 +195,18 @@ function UpdateExam(props: any) {
     },
     {
       Header: "Question",
-      accessor: "name",
+      accessor: "questionText",
     },
-    {
-      Header: "Answer",
-      accessor: (data: any) =>
-        <div>
-          {data.answer.map((item: string) => (<p style={{ width: "100px" }}>{item}</p>))}
-        </div>
-    },
+    // {
+    //   Header: "Answer",
+    //   accessor: (data: any) =>
+    //     <div>
+    //       {data.answerGroup.answer.map((item: string) => (<p style={{ width: "100px" }}>{item}</p>))}
+    //     </div>
+    // },
     {
       Header: "Correct Answer",
-      Cell: (cell: any) =>
-        <div style={{ textAlign: "center" }}>
-          {cell.row.original.correct}
-        </div>
+      accessor: "answerGroup.correctAnswer"
     },
     {
       Header: "Delete",
@@ -361,6 +221,7 @@ function UpdateExam(props: any) {
             onClick={() => handleClickDelete(cell.row.original.id, cell.row.original.name)}
           >Delete</Button>
         </div>
+        
 
       )
 
@@ -441,7 +302,7 @@ function UpdateExam(props: any) {
               <h2>SSC101 Chapter 123</h2>
             </div>
             <div className="content-exam" >
-              <Table columns={columns} data={exams} isPagination={false} />
+              <Table columns={columns} data={question} isPagination={false} />
             </div>
           </div>
         </div>
@@ -459,16 +320,16 @@ function UpdateExam(props: any) {
                 padding: '35px 24px'
               }}>
                 <span>Do you want delete
-                    <span style={{ fontWeight: 'bold' }}>"{nameQuestion}"</span> question???
+                  <span style={{ fontWeight: 'bold' }}>"{nameQuestion}"</span> question???
                 </span>
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleCloseDialogDelete} color="primary">
                   Cancel
-                  </Button>
+                </Button>
                 <Button onClick={handleCloseDialogDelete} color="secondary">
                   Delete
-                  </Button>
+                </Button>
               </DialogActions>
             </Dialog>
           </div>
@@ -477,9 +338,17 @@ function UpdateExam(props: any) {
               variant="contained"
               color="primary"
               onClick={handleClickAdd}
-              style={{ marginTop: '0.2rem', height:'30px'}}
+              style={{ marginTop: '1rem', height: '30px' }}
             >
               Add Questions
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleShow}
+              style={{ marginTop: '1rem', height: '30px' }}
+            >
+              Show Questions
             </Button>
             <Dialog
               classes={{ paper: classes.dialogPaper }}
