@@ -207,8 +207,12 @@ function ListExam(props: any) {
   }
 
   //* event when click edit */
-  const handleClickEdit = (idExam: number) => {
-    history.push('/update-exam', { params: idExam });
+  const handleClickEdit = (idExam: number, idSubject: number) => {
+    const infor = {
+      idExam,
+      idSubject
+    }
+    history.push('/update-exam', { params: infor });
   };
 
   const columns = [
@@ -244,7 +248,8 @@ function ListExam(props: any) {
             color="primary"
             className='style-btn'
             id={cell.row.original.id}
-            onClick={() => handleClickEdit(cell.row.original.id)}
+            onClick={() =>
+              handleClickEdit(cell.row.original.id, cell.row.original.subject.id)}
           >Edit</Button>
           <Button
             variant="contained"
@@ -258,11 +263,11 @@ function ListExam(props: any) {
 
     },
   ];
-  /* Event when click icon view exam */
+  //* Event when click icon view exam */
   const handleViewClose = () => {
     setOpenDialogView(false);
   };
-  /* Event when click button create exam */
+  //* Event when click button create exam */
   const handleChange = (event: any) => {
     // setSubject((event.target.value) || '');
     setSubjectId(Number(event.target.value))
@@ -278,20 +283,7 @@ function ListExam(props: any) {
     setTxtNameExam(e.target.value);
   }, []);
 
-
-  // async (e: any) => {
-  //   e.preventDefault()
-  //   console.log(subjectId)
-  //   console.log(txtNameExam)
-  //   const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
-  //     subjectId,
-  //     examName: txtNameExam
-  //   })
-  //   if (response) {
-  //     console.log(response)
-  //     setOpenDialogCreate(false);
-  //   }
-  /* event when click delete */
+  //* event when click delete */
   const handleDelete = async (id: number, titleExam: string) => {
     setOpenDialogDelete(true)
     setIdDelete(id);
@@ -306,9 +298,8 @@ function ListExam(props: any) {
     const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
     if (response) {
       console.log(response)
-      setOpenDialogCreate(false);
+      setOpenDialogDelete(false);
     }
-    setOpenDialogDelete(false);
   };
 
   const [textSearch, setTextSearch] = useState<string>('');
@@ -318,7 +309,7 @@ function ListExam(props: any) {
     setTextSearch(e.target.value);
   }, []);
 
-  /* Body view exam dialog */
+  //* Body view exam dialog */
   const bodyView = (
     <div className={classes.paper}>
       {
@@ -351,7 +342,7 @@ function ListExam(props: any) {
     </div >
   );
 
-  /* Body create exam dialog */
+  //* Body create exam dialog */
   const body = (
     <div className={classes.paper}>
       <div className={classes.containerCreate}>

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { FC, useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Checkbox from '@material-ui/core/Checkbox';
@@ -10,7 +10,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { Button, FormHelperText, makeStyles } from '@material-ui/core'
+import { Button, makeStyles } from '@material-ui/core'
 import styled from 'styled-components'
 import axios from 'axios'
 import * as CONSTANT from '../const'
@@ -102,12 +102,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const GET_QUESTION_URL = `${CONSTANT.BASE_URL}/questions`;
-
+const DELETE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/delete`;
 function UpdateExam(props: any) {
   const { className } = props;
   const classes = useStyles();
   const [selected, setSelected] = useState('');
-  const [nameBank, setNameBank] = useState('Exam Bank'); 
+  const [nameBank, setNameBank] = useState('Exam Bank');
   const [scroll, setScroll] = useState('paper');
   const history = useHistory();
   const [open, setOpen] = useState(false); // for event click add
@@ -116,22 +116,49 @@ function UpdateExam(props: any) {
   const [nameQuestion, setNameQuestion] = useState('');
 
   const [question, setQuestion] = useState<Question[]>([
+    {
+      id: 1,
+      questionBankId: 1,
+      answerGroupId: 1,
+      examId: 1,
+      questionBank: {
+        id: 1,
+        questionText: 'hahaha',
+        subjectId: 1
+      },
+      answerGroup: {
+        id: 1,
+        correctAnswer: 1,
+        answer: [
+          {
+            id: 1,
+            answerText: 'string',
+            answerGroupId: 1,
+          },
+          {
+            id: 2,
+            answerText: 'kaka',
+            answerGroupId: 1,
+          }
+        ]
+      }
+    }
   ]);
 
   const location: any = useLocation();
-  const idExam = location.state.params;
+  const idExam = location.state.params.idExam;
 
   console.log(idExam);
 
   //* Get question by idExam */
   useEffect(() => {
     axios.get(`${GET_QUESTION_URL}/${idExam}`).then((response) => {
-      console.log(response.data);
+      console.log('Question: ', response.data);
       setQuestion(response.data);
     }).catch((err) => {
       console.log("Failed to get question by  id Exam: ", err.message);
     })
-  }, []);
+  }, [openDialogDelete]);
 
   /** event click button delete */
   const handleClickDelete = (id: number, name: string) => {
@@ -139,9 +166,16 @@ function UpdateExam(props: any) {
     setIdQuestion(id);
     setNameQuestion(name);
   };
-  const handleCloseDialogDelete = () => {
-    setOpenDialogDelete(false);
+  const handleAcceptDialogDelete = async (id: number) => {
+    const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`);
+    if (response) {
+      console.log(response)
+      setOpenDialogDelete(false);
+    }
   };
+  const handleCancelDialogDelete = () => {
+    setOpenDialogDelete(false);
+  }
   /** event click button add */
   const handleClickAdd = () => {
     setOpen(true);
@@ -169,6 +203,7 @@ function UpdateExam(props: any) {
     history.push('/list-exam');
   };
 
+
   const columns = [
     {
       Header: "ID",
@@ -176,21 +211,35 @@ function UpdateExam(props: any) {
     },
     {
       Header: "Question",
-      accessor: "questionText",
+      accessor: "questionBank.questionText",
     },
     {
       Header: "Answer",
       accessor: (data: any) =>
         <div>
-          {
-            data.answerGroup.answer.map((item: string) =>
-              (<p style={{ width: "100px" }}>{item}</p>))
-          }
+          {data.answerGroup.answer.map((item: any) =>
+          (
+            <p style={{ width: "100px" }}>{item.answerText}</p>
+          )
+          )}
         </div>
+
     },
     {
       Header: "Correct Answer",
-      accessor: "answerGroup.correctAnswer"
+      accessor: (data: any) =>
+        <div>
+          {data.answerGroup.answer.map((item: any) => (
+            item.answerId === data.answerGroup.correctAnswer ?
+              (
+                <p style={{ width: "100px" }}>{item.answerText}</p>
+              ) :
+              (
+                <p />
+              )
+          )
+          )}
+        </div>
     },
     {
       Header: "Delete",
@@ -202,7 +251,8 @@ function UpdateExam(props: any) {
             color="secondary"
             className='style-btn'
             id={cell.row.original.id}
-            onClick={() => handleClickDelete(cell.row.original.id, cell.row.original.name)}
+            onClick={() =>
+              handleClickDelete(cell.row.original.id, cell.row.original.questionBank.questionText)}
           >Delete</Button>
         </div>
       )
@@ -292,7 +342,9 @@ function UpdateExam(props: any) {
           style={{ backgroundColor: 'rgb(255,255,255)' }}
         >
           <div>
-            <Dialog open={openDialogDelete} onClose={handleCloseDialogDelete}>
+            <Dialog
+              open={openDialogDelete}
+              onClose={handleCancelDialogDelete}>
               <DialogTitle style={{
                 backgroundColor: '#ff6b81',
                 color: '#ffffff', fontWeight: 'bold',
@@ -304,14 +356,14 @@ function UpdateExam(props: any) {
                 padding: '35px 24px'
               }}>
                 <span>Do you want delete
-                  <span style={{ fontWeight: 'bold' }}>"{nameQuestion}"</span> question???
+                  <span style={{ fontWeight: 'bold', margin: '0 0.5rem' }}>"{nameQuestion}"</span> question???
                 </span>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleCloseDialogDelete} color="primary">
+                <Button onClick={handleCancelDialogDelete} color="primary">
                   Cancel
                 </Button>
-                <Button onClick={handleCloseDialogDelete} color="secondary">
+                <Button onClick={() => handleAcceptDialogDelete(idQuestion)} color="secondary">
                   Delete
                 </Button>
               </DialogActions>
@@ -328,14 +380,14 @@ function UpdateExam(props: any) {
             >
               Add Questions
             </Button>
-            <Button
+            {/* <Button
               variant="contained"
               color="primary"
               onClick={handleShow}
               style={{ marginTop: '0.5rem', height: '30px' }}
             >
               Show Questions
-            </Button>
+            </Button> */}
             <Dialog
               classes={{ paper: classes.dialogPaper }}
               open={open}
