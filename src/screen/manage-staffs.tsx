@@ -1,17 +1,15 @@
-import React, { useState, FC, useEffect } from 'react'
+import React, { useState, FC, useEffect,useCallback } from 'react'
 import PropTypes from 'prop-types'
-
 import Button from '@material-ui/core/Button'
 import Chip from '@material-ui/core/Chip'
-
 import axios from 'axios'
-
+import * as moment from 'moment'
 import { useTable, usePagination } from 'react-table'
-import Icon from '@material-ui/core/Icon';
 import BlockIcon from '@material-ui/icons/Block';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import TransferWithinAStationIcon from '@material-ui/icons/TransferWithinAStation';
 import IconButton from '@material-ui/core/IconButton';
+import LoadingBar from 'react-top-loading-bar'
 import styled from 'styled-components'
 import Dialog from '../common/dialog'
 import * as CONSTANT from '../const'
@@ -36,6 +34,8 @@ type BooleanProp = {
 interface User {
   id: number,
   username: string,
+  role: number,
+  active: boolean,
   contactInfo: {
     firstName: string,
     lastName: string,
@@ -46,15 +46,25 @@ interface User {
 
 const GET_USERS_URL = `${CONSTANT.BASE_URL}/user/users`
 const GET_USERS_SEARCH_URL = `${CONSTANT.BASE_URL}/user`
+const UPDATE_ACTIVE_URL = `${CONSTANT.BASE_URL}/user/update-active`
+const UPDATE_ROLE_URL = `${CONSTANT.BASE_URL}/user/update-role`
 const GET_INFORMATION_URL = `${CONSTANT.BASE_URL}/user/get-information`
 
 function ManageStaffs(props: any) {
   const { className } = props
   const [isOpen, setIsOpen] = useState(false);
-  const [searchValue,setSearchValue] = useState(' ');
+  const [isDisable, setIsDisable] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [disableRole,setDisableRole] = useState(true)
+  const [roleValue,setRoleValue] = useState(0);
+  const [roleId,setRoleId] = useState(0);
+  const [isOpenRole, setIsOpenRole] = useState(false);
+  const [searchValue,setSearchValue] = useState('');
    const [user, setUser] = useState<User[]>([{
     id: 1,
     username: "ba",
+    role: 1,
+    active: true,
     contactInfo: {
       firstName: "ba",
       lastName: "ba",
@@ -70,23 +80,34 @@ function ManageStaffs(props: any) {
       dateOfBirth: "ba",
       address: "ba",
   });
-  const renderActionBtns: FC<BooleanProp> = ({ cell: { value } }) =>
+  const renderActionBtns: FC<any> = ({ cell: { value }, row: { original: { id } } } ) =>
     <div className='action-btns'>
       <IconButton className='icon-button'>
-        {
-          value ? <LockOpenIcon fontSize='medium' color='primary'/>
-                : <BlockIcon fontSize='medium' color='secondary' />
+        {       
+          value ? <LockOpenIcon fontSize='medium' color='primary' onClick={()=>handleActive(value,id)}/>
+                : <BlockIcon fontSize='medium' color='secondary' onClick={()=>handleActive(value,id)} />
         }
       </IconButton>
       <IconButton className='icon-button'>
-        <TransferWithinAStationIcon />
+        <TransferWithinAStationIcon onClick={()=>handleChangeRole(id)} />
       </IconButton>
     </div>
+    
+    
+  
+  const renderRoleSelect: FC<any> = ({ row: { original: { role } } }) =>
+       <div>
+         {role === 3 ?
+        <p>User</p>
+        : <p>Staff</p>
+        }
+       </div>
+   
 
-  const renderStatus: FC<any> = ({ row: { original: { block } } }) =>
+  const renderStatus: FC<any> = ({ row: { original: { active } } }) =>
       <div>
         {
-          block ? <Chip label='Blocked' color='secondary' className='status-chip'/>
+          active ?<Chip label='Blocked' color='secondary' className='status-chip'/>
           : <Chip label='Active' color='primary' className='status-chip' />
         }
       </div>
@@ -107,17 +128,20 @@ function ManageStaffs(props: any) {
   )
   
   const detailDialog= (
-    <div className="detail-container">
-      <img src={ava2} style={{width:200}}/>
-        <h3 className="info-user">{`${userDetail.lastName} ${userDetail.firstName}`}</h3>
-        <table id="table-info" style={{width: 500, margin: 10}}>
+    <div className={className}>
+      <img className="user-avt" src={userDetail.avatar? userDetail.avatar: ava2} style={{width:150}}/>
+        <table id="table-info" style={{width: 500}}>
+        <tr>
+            <td>Full Name</td>
+            <td className="info-user">{`${userDetail.lastName} ${userDetail.firstName}`}</td>
+        </tr>
           <tr>
             <td>Email</td>
             <td className="info-user">{userDetail.email}</td>
         </tr>
         <tr>
             <td>DOB</td>
-            <td className="info-user">{userDetail.dateOfBirth}</td>
+            <td className="info-user">{moment.default(userDetail.dateOfBirth).format('DD/MM/YYYY')}</td>
         </tr>
         <tr>
             <td>Address</td>
@@ -130,111 +154,67 @@ function ManageStaffs(props: any) {
         </table>
     </div>
   )
+  const handleRoleValue = (e:any) =>{
+    setRoleValue(e.target.value);
+  }
 
- 
+
+  const RoleDialog = (
+    <div>
+      <select value={roleValue} onChange={handleRoleValue}>
+        <option value="3">User</option>
+        <option value="2">Staff</option>
+      </select>
+    </div>
+  )
+  
+
+  const handleActive =(value:any,id:any) => {
+    setIsDisable(true)
+    setProgress(progress + 20)
+    const active = !value;
+    axios.put(UPDATE_ACTIVE_URL, {id,active})
+    setProgress(100)
+    setIsDisable(false)
+  }
+
+  const handleChangeRole = (id: any)=>{
+    setIsOpenRole(true);
+    setRoleId(id);
+  }
+
   useEffect(() => {
-    axios.get(GET_USERS_URL).then((response) => {
-      console.log(response.data)
+    if(searchValue){
+    axios.get(`${GET_USERS_SEARCH_URL}/${searchValue}`).then((response) => {
       setUser(response.data)
-    })
-  }, [])
+    })}
+    else{
+      axios.get(`${GET_USERS_URL}`).then((response) => {
+        setUser(response.data)
+      })
+    }
+  }, [user])
 
   const handleDialogOpen = (username: any)=>{
     setIsOpen(true);
     axios.post(GET_INFORMATION_URL, { username }).then((response) => {
-      console.log(response.data)
       setUserDetail(response.data)
-      console.log(userDetail);
     })
   }
   function handleDialogClose(){
     setIsOpen(false);
+    setIsOpenRole(false);
   }
-  // const data = React.useMemo(
-  //   () => [
-  //     {
-  //       id: 101,
-  //       name: 'Nguyen Anh Tien',
-  //       isMale: true,
-  //       mail: 'tienna@fe.edu.vn',
-  //       phone: '0965625152',
-  //       major: 'SE',
-  //       role: 'Staff',
-  //       block: true
-  //     },
-  //     {
-  //       id: 201,
-  //       name: 'Pham Nhat Anh',
-  //       isMale: false,
-  //       mail: 'anhpn@fe.edu.vn',
-  //       phone: '0965625152',
-  //       major: 'SB',
-  //       role: 'User',
-  //       block: false
-  //     },
-  //     {
-  //       id: 102,
-  //       name: 'Tran Van Toan',
-  //       isMale: true,
-  //       mail: 'toantv@fe.edu.vn',
-  //       phone: '0965625152',
-  //       major: 'MC',
-  //       role: 'Staff',
-  //       block: false
-  //     },
-  //     {
-  //       id: 201,
-  //       name: 'Pham Nhat Anh',
-  //       isMale: false,
-  //       mail: 'anhpn@fe.edu.vn',
-  //       phone: '0965625152',
-  //       major: 'SE',
-  //       role: 'User',
-  //       block: false,
-  //     },
-  //     {
-  //       id: 301,
-  //       name: 'Nguyen Anh Tu',
-  //       isMale: true,
-  //       mail: 'tuna@fe.edu.vn',
-  //       phone: '0965625152',
-  //       major: 'SB',
-  //       role: 'User',
-  //       block: true
-  //     },
-  //     {
-  //       id: 302,
-  //       name: 'Pham Nhat Huyen',
-  //       isMale: false,
-  //       mail: 'anhpn@fe.edu.vn',
-  //       phone: '0965625152',
-  //       major: 'SE',
-  //       role: 'User',
-  //       block: false
-  //     },
-  //     {
-  //       id: 303,
-  //       name: 'Tran Van Toan',
-  //       isMale: true,
-  //       mail: 'toantv@fe.edu.vn',
-  //       phone: '0965625152',
-  //       major: 'SE',
-  //       role: 'Staff',
-  //       block: false
-  //     },
-  //     {
-  //       id: 304,
-  //       name: 'Pham Minh Lan',
-  //       isMale: false,
-  //       mail: 'anhpn@fe.edu.vn',
-  //       phone: '0965625152',
-  //       major: 'SE',
-  //       role: 'Staff',
-  //       block: false,
-  //     },
-  //   ],
-  //   []
-  // )
+  
+  const handleDialogChangeRole = ()=>{
+    setIsDisable(true)
+    setProgress(progress + 20)
+    axios.put(UPDATE_ROLE_URL, {roleId,roleValue})
+    setProgress(100)
+    setIsDisable(false)
+    setIsOpenRole(false);
+  }
+
   const data = user;
   const columns = React.useMemo(
     () => [
@@ -249,19 +229,21 @@ function ManageStaffs(props: any) {
       },
       {
         Header: 'Full Name',
-        accessor: (d:any) => `${d.contactInfo.lastName} ${d.contactInfo.firstName}`,
+        accessor: (d:any) => `${d.contactInfo? d.contactInfo.lastName : ""} ${d.contactInfo ? d.contactInfo.firstName : ""}`,
       },
       {
         Header: "Role",
-        accessor: "role",
+      
+        Cell: renderRoleSelect,
       },
       {
-        Header: 'Status',
+        Header: 'Status',      
         Cell: renderStatus,
       },
+     
       {
         Header: "Action",
-        accessor: "block",
+        accessor: "active",
         Cell: renderActionBtns,
       },
     ],
@@ -291,23 +273,16 @@ function ManageStaffs(props: any) {
     arr.push(i)
   }
   
-  const handleSearchValue = (e:any) =>{
+  const handleSearchValue = (e:any) =>  {
      setSearchValue(e.target.value);
-    
-  }
-  const searchUser = () =>{
-    if(searchValue === undefined || searchValue === null || searchValue === ' ') return
-    axios.get(`${GET_USERS_SEARCH_URL}/${searchValue}`).then((response) => {
-      console.log(response.data)
-      setUser(response.data)
-      console.log(user);
-    })
-  }
+    }
+
   return (
     <div className={className}>
+      <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="search-box">
-         <input type="text" className="search-bar" placeholder="Search account" onChange={handleSearchValue}/>
-         <Button onClick={searchUser}>Search</Button>
+         <input type="text" className="search-bar" placeholder="Search account" 
+         onChange={handleSearchValue}/>
       </div>
       <table {...getTableProps()} >
         <thead>
@@ -379,6 +354,16 @@ function ManageStaffs(props: any) {
               isOpen={isOpen}
               handleClose={handleDialogClose}
             />
+             <Dialog 
+              title="Profile"
+              buttonCancel="Close"
+              buttonAccept="Change"
+              message="Change this account role"
+              content = {RoleDialog}
+              isOpen={isOpenRole}
+              handleAccept={handleDialogChangeRole}
+              handleClose={handleDialogClose}
+            />
     </div>
   )
 }
@@ -429,7 +414,7 @@ const StyledAdmin = styled(ManageStaffs)`
     max-width: 50px;
     max-height: 50px;
   }
-
+ 
   .name {
     padding: 0;
     color: #3f96f3;
@@ -506,7 +491,10 @@ const StyledAdmin = styled(ManageStaffs)`
   .detail-container h3 {
    color:red;
   }
-
+  #table-info td{
+    border: 1px solid lightgray;
+    font-size: 0.9rem;
+  }
   
 `
 export default StyledAdmin

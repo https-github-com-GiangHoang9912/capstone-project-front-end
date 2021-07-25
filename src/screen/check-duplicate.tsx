@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -15,6 +15,7 @@ import Dialog from '../common/dialog'
 import { TableViewExam } from '../common/table'
 import { AccountContext } from '../contexts/account-context'
 
+
 Duplicate.propTypes = {
   className: PropTypes.string,
 }
@@ -25,7 +26,7 @@ Duplicate.defaultProps = {
 axios.defaults.withCredentials = true
 const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
 const ADD_FILE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/upload-dataset`
-
+const GET_ROLE_URL = `${CONSTANT.BASE_URL}/user/role`
 interface IQuestion {
   question: string
   point: number
@@ -49,6 +50,7 @@ function Duplicate(props: any) {
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
   const [progress, setProgress] = useState(0)
+  const [role,setRole] = useState(0);
   const [isDisable, setIsDisable] = useState(false)
   const [question, setQuestion] = useState<string>('')
   const [result, setResult] = useState<IQuestion[]>([])
@@ -59,6 +61,14 @@ function Duplicate(props: any) {
     setFileName(e.target.files[0].name)
   }
   const id = localStorage.getItem('id')
+  useEffect(() => {
+    axios.get(`${GET_ROLE_URL}/${id}`).then((response) => {
+      setRole(response.data.role);
+    }).catch((err) => {
+      console.log("Failed to fetch data: ", err.message);
+    })
+  }, []);
+
   async function handleCheck() {
     setIsDisable(true)
     setProgress(progress + 10)
@@ -94,8 +104,6 @@ function Duplicate(props: any) {
 
   const handleAddFileBank = async (e: any) => {
     e.preventDefault()
-    console.log(file)
-
     const formData = new FormData()
     formData.append('train', file, file.name)
 
@@ -111,6 +119,7 @@ function Duplicate(props: any) {
     <div className={className}>
       <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="container">
+        {role !== 3 ?
         <div className="control control-left">
           <div className="import-bank">
             <h2 className="select">Import a new Bank</h2>
@@ -148,6 +157,7 @@ function Duplicate(props: any) {
             </div>
           </div>
         </div>
+         : '' }
         <div className="control control-right">
           <h2>Enter your question here:</h2>
           <TextField
