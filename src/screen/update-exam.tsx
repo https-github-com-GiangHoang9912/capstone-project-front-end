@@ -1,19 +1,26 @@
-import { FC, useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import Checkbox from '@material-ui/core/Checkbox';
+// import Checkbox from '@material-ui/core/Checkbox';
 import { useHistory, useLocation } from 'react-router-dom';
-
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-import { Button, makeStyles } from '@material-ui/core'
-import styled from 'styled-components'
-import axios from 'axios'
-import * as CONSTANT from '../const'
+import { Button, makeStyles } from '@material-ui/core';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import styled from 'styled-components';
+import axios from 'axios';
+import TextField from '@material-ui/core/TextField';
+import DialogCustom from '../common/dialog';
+import * as CONSTANT from '../const';
 
 
 import Table from '../common/tableReact'
@@ -51,7 +58,7 @@ interface Question {
   questionBank: {
     id: number,
     questionText: string,
-    subjectId: 1
+    subjectId: 1,
   },
   answerGroup: {
     id: number,
@@ -60,10 +67,23 @@ interface Question {
   }
 }
 
+interface Subject {
+  id: number,
+  subjectName: string,
+  questionBank: QuestionBank[]
+}
+interface QuestionBank {
+  idQuestion: number,
+  questionText: string,
+  subjectId: number,
+  checked?: boolean,
+}
+
 const useStyles = makeStyles((theme) => ({
   dialogPaper: {
     minHeight: '30vh',
     maxHeight: '80vh',
+    minWidth: '350px',
     width: '100vh',
   },
   styleBtn: {
@@ -91,29 +111,48 @@ const useStyles = makeStyles((theme) => ({
     // flexDirection: 'column'
   },
   question: {
-    marginLeft: '-25px',
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: '10px'
   },
   answer: {
     marginTop: '-10px',
     padding: '5px'
+  },
+  multipleAnswer: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  multiple: {
+    marginTop: '1rem'
+  },
+  trueFalseAnswer: {
+    marginLeft: '1rem'
+  },
+  iconAdd: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '1rem'
   }
 
 }));
 
 const GET_QUESTION_URL = `${CONSTANT.BASE_URL}/questions`;
 const DELETE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/delete`;
+const GET_QUESTIONBANK_URL = `${CONSTANT.BASE_URL}/subject`;
+const CREATE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/create`;
+const UPDATE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/update`;
+
 function UpdateExam(props: any) {
   const { className } = props;
   const classes = useStyles();
-  const [selected, setSelected] = useState('');
-  const [nameBank, setNameBank] = useState('Exam Bank');
   const [scroll, setScroll] = useState('paper');
   const history = useHistory();
-  const [open, setOpen] = useState(false); // for event click add
+  const [openDialogAdd, setOpenDialogAdd] = useState(false); // for event click add
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [idQuestion, setIdQuestion] = useState(0);
   const [nameQuestion, setNameQuestion] = useState('');
+  const [openDialogUpdate, setOpenDialogUpdate] = useState(false);
+  const arrayCheck = new Array<number>();
 
   const [question, setQuestion] = useState<Question[]>([
     {
@@ -145,21 +184,49 @@ function UpdateExam(props: any) {
     }
   ]);
 
+  const [subject, setSubject] = useState<Subject[]>(
+    [
+      {
+        id: 1,
+        subjectName: 'string',
+        questionBank: [
+          {
+            idQuestion: 1,
+            questionText: 'string',
+            subjectId: 1,
+          }
+        ]
+      }
+    ]
+  );
+  const [valueTypeAnswer, setValueTypeAnswer] = useState('tf');
+  const [correctAnswerTypeTf, setCorrectAnswerTypeTf] = useState('true');
+
   const location: any = useLocation();
-  const idExam = location.state.params.idExam;
-
-  console.log(idExam);
-
+  const { idExam } = location.state.params;
+  const { idSubject } = location.state.params;
+  const { examName } = location.state.params;
+  const idUser = localStorage.getItem('id') ? localStorage.getItem('id') : -1;
   //* Get question by idExam */
   useEffect(() => {
     axios.get(`${GET_QUESTION_URL}/${idExam}`).then((response) => {
-      console.log('Question: ', response.data);
+      // console.log('Question: ', response.data);
       setQuestion(response.data);
     }).catch((err) => {
       console.log("Failed to get question by  id Exam: ", err.message);
     })
-  }, [openDialogDelete]);
+  }, [openDialogDelete, openDialogAdd, openDialogUpdate]);
 
+  //* Get question bank by subject id */
+  useEffect(() => {
+    axios.get(`${GET_QUESTIONBANK_URL}/${idSubject}`).then((response) => {
+      setSubject(response.data);
+    }).catch((err) => {
+      console.log("Failed to get question bank by id subject: ", err.message);
+    })
+  }, []);
+
+  // console.log('Question huhu: ', subject);
   /** event click button delete */
   const handleClickDelete = (id: number, name: string) => {
     setOpenDialogDelete(true);
@@ -177,33 +244,89 @@ function UpdateExam(props: any) {
     setOpenDialogDelete(false);
   }
   /** event click button add */
-  const handleClickAdd = () => {
-    setOpen(true);
+  const handleClickAddQuestion = () => {
+    setOpenDialogAdd(true);
     setScroll(scroll);
   };
 
-  const handleShow = () => {
-    console.log(question);
+  //* event process click button save in dialog add question
+
+  const handleSaveQuestion = async (e: any) => {
+    e.preventDefault();
+    // console.log('close dialog', arrayCheck);
+    const questionAdd = arrayCheck.map((item: any) => (
+      {
+        questionBankId: item,
+        examId: idExam
+      }
+    ))
+    console.log('close dialog', questionAdd);
+    const response = await axios.post(`${CREATE_QUESTION_URL}`,
+      questionAdd
+    )
+    if (response) {
+      console.log(response)
+      setOpenDialogAdd(false);
+    } else {
+      console.log('Error add question to exam')
+    }
+  }
+
+  const handleCloseDialogAdd = async (e: any) => {
+    e.preventDefault();
+    setOpenDialogAdd(false);
   };
 
+  //* Dialog edit question in exams
+  const handleClickEditQuestion = (questionId: number) => {
+    setIdQuestion(questionId);
+    setOpenDialogUpdate(true);
+  }
 
-  const handleCloseDialogAdd = () => {
-    setOpen(false);
-  };
+  const handleSaveUpdateQuestion = async (e: any) => {
+    e.preventDefault();
+    let response = null;
+    if (valueTypeAnswer === "tf") {
+      let answerGroupId = 1
+      console.log('valueTypeAnswer 1', valueTypeAnswer);
+      if (correctAnswerTypeTf == "true") {
+        console.log('answerGroupId ', answerGroupId);
+        response = await axios.put(`${UPDATE_QUESTION_URL}/${idQuestion}`, {
+          answerGroupId
+        });
+      } else {
+        answerGroupId = 2;
+        console.log('answerGroupId', answerGroupId);
+        response = await axios.put(`${UPDATE_QUESTION_URL}/${idQuestion}`, {
+          answerGroupId
+        });
+      }
+    } else {
+      console.log('multiple choice', valueTypeAnswer);
+    }
+    if (response) {
+      setOpenDialogUpdate(false);
+    } else {
+      console.log('Error update question to exam');
+    }
+  }
 
-  const selectionChangeHandler = (event: any) => {
-    setSelected(event.target.value)
-  };
-  const selectionBankHandler = (event: any) => {
-    setNameBank(event.target.value)
-  };
+  const handleCloseUpdateQuestion = () => {
+    setOpenDialogUpdate(false)
+  }
 
   /* event when click Back */
   const handleClickBack = () => {
     history.push('/list-exam');
   };
 
-
+  //* Event when click radio button
+  const handleChange = (event: any) => {
+    setValueTypeAnswer(event.target.value);
+  };
+  const handleChangeCorrect = (event: any) => {
+    setCorrectAnswerTypeTf(event.target.value);
+  };
   const columns = [
     {
       Header: "ID",
@@ -217,9 +340,9 @@ function UpdateExam(props: any) {
       Header: "Answer",
       accessor: (data: any) =>
         <div>
-          {data.answerGroup.answer.map((item: any) =>
+          {data.answerGroup.answer.map((item: any, index: number) =>
           (
-            <p style={{ width: "100px" }}>{item.answerText}</p>
+            <p style={{ width: "100px" }}>{String.fromCharCode(65 + index)}. {item.answerText}</p>
           )
           )}
         </div>
@@ -242,10 +365,17 @@ function UpdateExam(props: any) {
         </div>
     },
     {
-      Header: "Delete",
+      Header: "Update",
       Cell: (cell: any) =>
       (
         <div className="contain">
+          <Button
+            variant="contained"
+            color="primary"
+            className='style-btn'
+            id={cell.row.original.id}
+            onClick={() => handleClickEditQuestion(cell.row.original.id)}
+          >Edit</Button>
           <Button
             variant="contained"
             color="secondary"
@@ -260,67 +390,98 @@ function UpdateExam(props: any) {
     },
   ]
 
-  const body = (
+  const titleDialogUpdate = (
+    <div>
+      <h3>Update question in  <span style={{color: '#FD647A'}}>{examName}</span> Exam </h3>
+    </div>
+  )
+
+  const bodyAddQuestion = (
     <div className={classes.paper}>
       <div className={classes.contentExam}>
-        <div className={classes.question}>
-          <Checkbox
-            color="primary"
-            inputProps={{ 'aria-label': 'secondary checkbox' }}
-          />
-          <span>1. What do you want?</span>
-        </div>
-        <div className={classes.answer}>
-          <span className={classes.detailAnswer}>a. China</span>
-          <span className={classes.detailAnswer}>b. England</span>
-          <span className={classes.detailAnswer}>c. Laos</span>
-          <span className={classes.detailAnswer}>d. VietNam</span>
-        </div>
+        {
+          subject.map((item: any) =>
+            item.questionBank.map((quesBank: any, index: number) => (
+              (
+                <div className={classes.question}>
+                  <input
+                    type="checkbox"
+                    onChange={(e: any) => {
+                      if (e.target.checked) {
+                        arrayCheck.push(quesBank.id)
+                        // console.log('ka add', arrayCheck);
+                      } else {
+                        for (let i = 0; i < arrayCheck.length; i++) {
+                          if (arrayCheck[i] === quesBank.id) {
+                            arrayCheck.splice(i, 1);
+                          }
+                        }
+                        // console.log('ka xoa', arrayCheck);
+                      }
+                    }}
+                  />
+                  <span>{index + 1}. <span style={{
+                    margin: '0px 10px'
+                  }}>{quesBank.questionText}</span></span>
+                </div>
+              )
+            ))
+          )
+        }
+
       </div>
+    </div>
+  );
+
+  const bodyUpdateQuestion = (
+    <div className={classes.paper}>
       <div className={classes.contentExam}>
-        <div className={classes.question}>
-          <Checkbox
-            color="primary"
-            inputProps={{ 'aria-label': 'secondary checkbox' }}
-          />
-          <span>1. What do you want?</span>
-        </div>
-        <div className={classes.answer}>
-          <span className={classes.detailAnswer}>a. China</span>
-          <span className={classes.detailAnswer}>b. England</span>
-          <span className={classes.detailAnswer}>c. Laos</span>
-          <span className={classes.detailAnswer}>d. VietNam</span>
-        </div>
-      </div>
-      <div className={classes.contentExam}>
-        <div className={classes.question}>
-          <Checkbox
-            color="primary"
-            inputProps={{ 'aria-label': 'secondary checkbox' }}
-          />
-          <span>1. What do you want?</span>
-        </div>
-        <div className={classes.answer}>
-          <span className={classes.detailAnswer}>a. China</span>
-          <span className={classes.detailAnswer}>b. England</span>
-          <span className={classes.detailAnswer}>c. Laos</span>
-          <span className={classes.detailAnswer}>d. VietNam</span>
-        </div>
-      </div>
-      <div className={classes.contentExam}>
-        <div className={classes.question}>
-          <Checkbox
-            color="primary"
-            inputProps={{ 'aria-label': 'secondary checkbox' }}
-          />
-          <span>1. What do you want?</span>
-        </div>
-        <div className={classes.answer}>
-          <span className={classes.detailAnswer}>a. China</span>
-          <span className={classes.detailAnswer}>b. England</span>
-          <span className={classes.detailAnswer}>c. Laos</span>
-          <span className={classes.detailAnswer}>d. VietNam</span>
-        </div>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">
+            <p style={{ color: '#4E5FBB', fontWeight: 'bold', }}>Type answer: </p>
+          </FormLabel>
+          <div className={classes.trueFalseAnswer}>
+            <RadioGroup aria-label="group" name="group-answer" value={valueTypeAnswer} onChange={handleChange}>
+              <FormControlLabel value="tf" control={<Radio />} label="True/False" />
+              <FormControlLabel value="multiple" control={<Radio />} label="Multiple Choice" />
+            </RadioGroup>
+          </div>
+        </FormControl>
+        {
+          valueTypeAnswer == 'tf' ? (
+            <div>
+              <FormLabel component="legend">
+                <p style={{ color: '#4E5FBB', fontWeight: 'bold', }}> Correct Answer:  </p>
+              </FormLabel>
+              <div className={classes.trueFalseAnswer}>
+                <RadioGroup aria-label="correct" name="correct-answer" value={correctAnswerTypeTf} onChange={handleChangeCorrect}>
+                  <FormControlLabel value="true" control={<Radio />} label="True" />
+                  <FormControlLabel value="false" control={<Radio />} label="False" />
+                </RadioGroup>
+              </div>
+            </div>
+          ) : (
+            <div className={classes.multipleAnswer}>
+              <p style={{ color: '#4E5FBB', fontWeight: 'bold', }}>Multiple Answer:</p>
+              <div className={classes.iconAdd}>
+                <Fab color="primary" aria-label="add" size="small">
+                  <AddIcon />
+                </Fab>
+                <span style={{ color: '#4E5FBB', fontWeight: 'normal', marginLeft: '0.5rem' }}>Add answer</span>
+              </div>
+
+              <TextField
+                id="outlined-textarea"
+                label="Answer A"
+                placeholder="Placeholder"
+                multiline
+                variant="outlined"
+                className={classes.multiple}
+                required
+              />
+            </div>
+          )
+        }
       </div>
     </div>
   );
@@ -375,45 +536,49 @@ function UpdateExam(props: any) {
             <Button
               variant="contained"
               color="primary"
-              onClick={handleClickAdd}
+              onClick={handleClickAddQuestion}
               style={{ marginTop: '0.5rem', height: '30px' }}
             >
               Add Questions
             </Button>
-            {/* <Button
-              variant="contained"
-              color="primary"
-              onClick={handleShow}
-              style={{ marginTop: '0.5rem', height: '30px' }}
-            >
-              Show Questions
-            </Button> */}
             <Dialog
               classes={{ paper: classes.dialogPaper }}
-              open={open}
+              open={openDialogAdd}
               onClose={handleCloseDialogAdd}
               aria-labelledby="scroll-dialog-title"
               aria-describedby="scroll-dialog-description"
             >
               <DialogTitle id="alert-dialog-title">
                 <div className={classes.title}>
-                  <h2 className={classes.titleExam}>SSC101 Bank </h2>
+                  <h2 className={classes.titleExam}>{subject[0].subjectName}</h2>
                 </div>
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  {body}
+                  {bodyAddQuestion}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleCloseDialogAdd} color="primary">
                   Close
                 </Button>
-                <Button onClick={handleCloseDialogAdd} color="primary" autoFocus>
+                <Button onClick={handleSaveQuestion} color="primary" autoFocus>
                   Save
                 </Button>
               </DialogActions>
             </Dialog>
+          </div>
+          <div className="update-question">
+            <DialogCustom
+              classes={{ paper: classes.dialogPaper }}
+              title={titleDialogUpdate}
+              buttonAccept="Save"
+              buttonCancel="Close"
+              content={bodyUpdateQuestion}
+              isOpen={openDialogUpdate}
+              handleAccept={handleSaveUpdateQuestion}
+              handleClose={handleCloseUpdateQuestion}
+            />
           </div>
         </div>
       </div>
@@ -437,12 +602,15 @@ html {
   background-color:"#FFFFF"; 
 }
 
+.multiple{
+  margin-top: 0.5rem;
+}
+
 .style-btn {
   width: 75;
   height: 40;
   cursor: pointer;
-  margin-top: 1rem;
-  margin-right: 1rem;
+  margin: 0.5rem 1rem 0.5rem 0;
   font-size: 1;
 }
 
@@ -491,7 +659,11 @@ html {
   justify-content: center;
   flex-direction: column;
 }
-
+//* css for cell update.
+.contain {
+  display: flex;
+  align-items: center;
+}
 //* Responsive */
 `
 export default StyledUpdateExam;

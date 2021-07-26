@@ -207,10 +207,11 @@ function ListExam(props: any) {
   }
 
   //* event when click edit */
-  const handleClickEdit = (idExam: number, idSubject: number) => {
+  const handleClickEdit = (idExam: number, idSubject: number, examName: string) => {
     const infor = {
       idExam,
-      idSubject
+      idSubject,
+      examName
     }
     history.push('/update-exam', { params: infor });
   };
@@ -249,14 +250,19 @@ function ListExam(props: any) {
             className='style-btn'
             id={cell.row.original.id}
             onClick={() =>
-              handleClickEdit(cell.row.original.id, cell.row.original.subject.id)}
+              handleClickEdit(
+                cell.row.original.id,
+                cell.row.original.subject.id,
+                cell.row.original.examName
+              )}
           >Edit</Button>
           <Button
             variant="contained"
             color="secondary"
             className='style-btn'
             id={cell.row.original.id}
-            onClick={() => handleDelete(cell.row.original.id, cell.row.original.examName)}
+            onClick={() =>
+              handleDelete(cell.row.original.id, cell.row.original.examName)}
           >Delete</Button>
         </div>
       )
@@ -284,7 +290,7 @@ function ListExam(props: any) {
   }, []);
 
   //* event when click delete */
-  const handleDelete = async (id: number, titleExam: string) => {
+  const handleDelete = (id: number, titleExam: string) => {
     setOpenDialogDelete(true)
     setIdDelete(id);
     setNameExam(titleExam);
@@ -309,6 +315,7 @@ function ListExam(props: any) {
     setTextSearch(e.target.value);
   }, []);
 
+  // const listCheckBox = document.querySelectorAll(".check-box");
   //* Body view exam dialog */
   const bodyView = (
     <div className={classes.paper}>
@@ -324,8 +331,8 @@ function ListExam(props: any) {
                   }}>{index + 1}. {ques.questionBank.questionText}</p>
                 </div>
                 <div className="answer">
-                  {ques.answerGroup.answer.map((ans: Answer) => (
-                    <p className={classes.showAnswer}>{ans.answerText}</p>
+                  {ques.answerGroup.answer.map((ans: Answer, ansIndex: number) => (
+                    <p className={classes.showAnswer}>{String.fromCharCode(65 + ansIndex)}. {ans.answerText}</p>
                   ))}
                 </div>
               </div>
@@ -398,7 +405,12 @@ function ListExam(props: any) {
     e.preventDefault()
     console.log(subjectId)
     console.log(txtNameExam)
-    const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`)
+    const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`,
+      {
+        subjectId,
+        examName: txtNameExam
+      }
+    )
     if (response) {
       console.log(response)
       setOpenDialogCreate(false);
@@ -553,7 +565,7 @@ html {
   width: 90%;
   min-width: 600px;
   display: flex;
-  /* margin-top: 5rem; */
+  margin-top: 5rem;
   justify-content: center;
   flex-direction: column;
 }
