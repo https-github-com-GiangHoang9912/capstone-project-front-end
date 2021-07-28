@@ -98,7 +98,7 @@ function ManageStaffs(props: any) {
     cell: { value },
   }) => (
     <div className="name-box">
-      <div className="avt" />
+      <div className="avt" style={{ backgroundImage:`url(${ava2})` }} />
       <div className="name-gender">
         <Button className="name" onClick={() => handleDialogOpen(value)}>{value}</Button>
         <div className="gender">{isMale ? 'Male' : 'Female'}</div>
@@ -423,7 +423,7 @@ const StyledAdmin = styled(ManageStaffs)`
   }
 
   .avt {
-    background-color: orange;
+    background-size: cover;
     min-width: 50px;
     min-height: 50px;
     max-width: 50px;
