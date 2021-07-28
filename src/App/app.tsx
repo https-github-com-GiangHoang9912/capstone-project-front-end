@@ -23,6 +23,7 @@ import ManageStaffs from '../screen/manage-staffs'
 import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
 import UpdateExam from '../screen/update-exam'
+import NotFound from '../screen/404-not-found'
 import { refreshToken } from '../services/services'
 
 const App: FC = (props: any) => {
@@ -105,6 +106,7 @@ const App: FC = (props: any) => {
             <Route exact path="/login" component={Login}>
               <Login setIsLogin={setIsLogin} />
             </Route>
+            <Route component={NotFound} />
           </Switch>
         </div>
       </AccountContextProvider>
