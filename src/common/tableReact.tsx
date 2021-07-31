@@ -63,7 +63,7 @@ function TableReact(props: any) {
         </thead>
 
         <tbody {...getTableBodyProps()}>
-          {page.map((row,index) => {
+          {dataRow.map((row,index) => {
             prepareRow(row)
             const { key, ...restRowProps } = row.getRowProps()
             return (
@@ -92,7 +92,6 @@ function TableReact(props: any) {
             <button className="btnChange" onClick={() => nextPage()} disabled={!canNextPage}>
               {'>'}
             </button>{' '}
-
             <span>
               Page{' '}
               <strong>
@@ -145,11 +144,10 @@ const StyleTable = styled(TableReact)`
     background-color: #ebf6fa;
   }
   td {
-    padding: 1rem 0.6rem;
     font-size: 0.9rem;
     font-weight: 400;
     text-align: left;
-    padding: 0.8rem 0.7rem;
+    padding: 0.3rem 0.5rem;
     
   }
   td:last-child{

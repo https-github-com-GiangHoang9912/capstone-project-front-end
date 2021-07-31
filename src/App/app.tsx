@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import { useState, useEffect, FC } from 'react'
 
 import styled from 'styled-components'
-import ReactNotification, { store } from 'react-notifications-component'
 import { useDispatch, useSelector } from 'react-redux'
 import Notification from '../common/notification'
 import { RootState } from '../store'
