@@ -268,20 +268,18 @@ function UpdateExam(props: any) {
 
   const handleSaveQuestion = async (e: any) => {
     e.preventDefault()
-    // console.log('close dialog', arrayCheck);
     const questionAdd = arrayCheck.map((item: any) => ({
       questionBankId: item,
       examId: idExam,
     }))
-    // console.log('close dialog', questionAdd)
-    // const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd)
-    // if (response) {
-    //   console.log(response)
-    //   setOpenDialogAdd(false)
-    // } else {
-    //   console.log('Error add question to exam')
-    // }
-    console.log(questionAdd)
+    console.log('close dialog', questionAdd)
+    const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd)
+    if (response) {
+      console.log(response)
+      setOpenDialogAdd(false)
+    } else {
+      console.log('Error add question to exam')
+    }
   }
   const handleCloseDialogAdd = async (e: any) => {
     e.preventDefault()
@@ -472,38 +470,44 @@ function UpdateExam(props: any) {
   const bodyAddQuestion = (
     <div className={classes.paper}>
       <div className={classes.contentExam}>
-        {subject?.questionBank.map((quesBank: any, index: number) => (
-          <div className={classes.question}>
-            <input
-              type="checkbox"
-              className={classes.checkBoxQuestion}
-              onChange={(e: any) => {
-                if (e.target.checked) {
-                  arrayCheck.push(quesBank.id)
-                  // console.log('ka add', arrayCheck);
-                } else {
-                  for (let i = 0; i < arrayCheck.length; i++) {
-                    if (arrayCheck[i] === quesBank.id) {
-                      arrayCheck.splice(i, 1)
+        {subject?.questionBank.map((quesBank: any, index: number) => {
+          const isExist = questions.some((item) => item.questionBankId === quesBank.id)
+          if (!isExist) {
+            return (
+              <div className={classes.question}>
+                <input
+                  type="checkbox"
+                  className={classes.checkBoxQuestion}
+                  onChange={(e: any) => {
+                    if (e.target.checked) {
+                      arrayCheck.push(quesBank.id)
+                      // console.log('ka add', arrayCheck);
+                    } else {
+                      for (let i = 0; i < arrayCheck.length; i++) {
+                        if (arrayCheck[i] === quesBank.id) {
+                          arrayCheck.splice(i, 1)
+                        }
+                      }
+                      // console.log('ka xoa', arrayCheck);
                     }
-                  }
-                  // console.log('ka xoa', arrayCheck);
-                }
-              }}
-            />
-            <span className="sttQuestion">
-              {index + 1}.{' '}
-              <span
-                style={{
-                  margin: '0px 10px',
-                  color: '#000000',
-                }}
-              >
-                {quesBank.questionText}
-              </span>
-            </span>
-          </div>
-        ))}
+                  }}
+                />
+                <span className="sttQuestion">
+                  {index + 1}.{' '}
+                  <span
+                    style={{
+                      margin: '0px 10px',
+                      color: '#000000',
+                    }}
+                  >
+                    {quesBank.questionText}
+                  </span>
+                </span>
+              </div>
+            )
+          }
+          return ''
+        })}
       </div>
     </div>
   )
