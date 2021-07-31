@@ -126,7 +126,7 @@ const useStyles = makeStyles((theme) => ({
 const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`;
 const GET_EXAM_URL = `${CONSTANT.BASE_URL}/exam`;
 const GET_EXAM_BY_NAME_URL = `${CONSTANT.BASE_URL}/exam`;
-const GET_QUESTION_URL = `${CONSTANT.BASE_URL}/questions`;
+const GET_QUESTIONS_URL = `${CONSTANT.BASE_URL}/questions/examId`;
 const CREATE_EXAM_URL = `${CONSTANT.BASE_URL}/exam/create-exam`;
 const DELETE_EXAM_URL = `${CONSTANT.BASE_URL}/exam/delete-exam`;
 
@@ -198,7 +198,7 @@ function ListExam(props: any) {
     setOpenDialogView(true);
     setScroll(scroll);
     setNameExam(titleExam);
-    axios.get(`${GET_QUESTION_URL}/${idExam}`).then((response) => {
+    axios.get(`${GET_QUESTIONS_URL}/${idExam}`).then((response) => {
       console.log('question detail data: ', response.data);
       setQuestion(response.data)
     }).catch((err) => {
@@ -301,11 +301,14 @@ function ListExam(props: any) {
   };
 
   const handleDeleteClose = async (id: number) => {
+    console.log('id exam delete', id);
     const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
     if (response) {
-      console.log(response)
+      console.log(response);
       setOpenDialogDelete(false);
     }
+    console.log(response);
+
   };
 
   const [textSearch, setTextSearch] = useState<string>('');

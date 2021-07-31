@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import react, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 // import Checkbox from '@material-ui/core/Checkbox';
@@ -19,6 +19,7 @@ import AddIcon from '@material-ui/icons/Add';
 import styled from 'styled-components';
 import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import DialogCustom from '../common/dialog';
 import * as CONSTANT from '../const';
 
@@ -45,12 +46,13 @@ interface Subject {
 }
 
 interface Answer {
-  id: number,
+  id?: number,
   answerText: string,
-  answerGroupId: number,
+  answerGroupId?: number,
+  correct?: boolean,
 }
 
-interface Question {
+interface QuestionJoinTable {
   id: number,
   questionBankId: number,
   answerGroupId: number,
@@ -66,7 +68,12 @@ interface Question {
     answer: Answer[]
   }
 }
-
+interface Question {
+  id: number,
+  answerGroupId: number,
+  examId: number,
+  questionBankId: number
+}
 interface Subject {
   id: number,
   subjectName: string,
@@ -132,11 +139,42 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     marginTop: '1rem'
+  },
+  containerAnswer: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  answerQuestion: {
+    width: '80%',
+    marginTop: '1.5rem',
+  },
+  iconRemove: {
+    color: 'red',
+    marginTop: '1.5rem',
+    marginLeft: '0.3rem',
+    '&:hover': {
+      cursor: 'pointer',
+    }
+  },
+  iconChooseCorrect: {
+    marginTop: '1.5rem',
+    marginLeft: '0.3rem',
+  },
+  checkBoxQuestion: {
+    marginRight: '0.5rem',
+    '&:hover': {
+      cursor: 'pointer',
+    }
+  },
+  containQuesIcon: {
+    display: 'flex',
+    alignItems: 'center',
   }
 
 }));
 
-const GET_QUESTION_URL = `${CONSTANT.BASE_URL}/questions`;
+const GET_QUESTIONS_URL = `${CONSTANT.BASE_URL}/questions/examId`;
+const GET_QUESTION_DETAIL_URL = `${CONSTANT.BASE_URL}/questions`;
 const DELETE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/delete`;
 const GET_QUESTIONBANK_URL = `${CONSTANT.BASE_URL}/subject`;
 const CREATE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/create`;
@@ -147,14 +185,16 @@ function UpdateExam(props: any) {
   const classes = useStyles();
   const [scroll, setScroll] = useState('paper');
   const history = useHistory();
+  const typingTimeoutRef = useRef(-1);
   const [openDialogAdd, setOpenDialogAdd] = useState(false); // for event click add
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [idQuestion, setIdQuestion] = useState(0);
   const [nameQuestion, setNameQuestion] = useState('');
   const [openDialogUpdate, setOpenDialogUpdate] = useState(false);
+  const [answers, setAnswers] = useState<Answer[]>([]);
   const arrayCheck = new Array<number>();
-
-  const [question, setQuestion] = useState<Question[]>([
+  const [question, setQuestion] = useState<Question>();
+  const [questions, setQuestions] = useState<QuestionJoinTable[]>([
     {
       id: 1,
       questionBankId: 1,
@@ -201,6 +241,8 @@ function UpdateExam(props: any) {
   );
   const [valueTypeAnswer, setValueTypeAnswer] = useState('tf');
   const [correctAnswerTypeTf, setCorrectAnswerTypeTf] = useState('true');
+  const [valueCorrectAnswer, setValueCorrectAnswer] = useState('0');
+
 
   const location: any = useLocation();
   const { idExam } = location.state.params;
@@ -209,9 +251,8 @@ function UpdateExam(props: any) {
   const idUser = localStorage.getItem('id') ? localStorage.getItem('id') : -1;
   //* Get question by idExam */
   useEffect(() => {
-    axios.get(`${GET_QUESTION_URL}/${idExam}`).then((response) => {
-      // console.log('Question: ', response.data);
-      setQuestion(response.data);
+    axios.get(`${GET_QUESTIONS_URL}/${idExam}`).then((response) => {
+      setQuestions(response.data);
     }).catch((err) => {
       console.log("Failed to get question by  id Exam: ", err.message);
     })
@@ -242,9 +283,10 @@ function UpdateExam(props: any) {
   };
   const handleCancelDialogDelete = () => {
     setOpenDialogDelete(false);
-  }
+  };
   /** event click button add */
   const handleClickAddQuestion = () => {
+    console.log('jajajaja')
     setOpenDialogAdd(true);
     setScroll(scroll);
   };
@@ -270,18 +312,54 @@ function UpdateExam(props: any) {
     } else {
       console.log('Error add question to exam')
     }
-  }
-
+  };
   const handleCloseDialogAdd = async (e: any) => {
     e.preventDefault();
     setOpenDialogAdd(false);
   };
 
+  //* Handle process with answer
+  const handleAddAnswer = () => {
+    const newAnswer = [...answers];
+    newAnswer.push({
+      answerText: '',
+      correct: (newAnswer.length + 1) === 1 
+    });
+    setAnswers(newAnswer);
+  };
+
+  const handleInputAnswer = (index: number) => (e: any) => {
+    const newArr = [...answers];
+    newArr[index].answerText = e.target.value;
+    setAnswers(newArr);
+  };
+
+  // if (typingTimeoutRef.current) {
+  //   clearTimeout(typingTimeoutRef.current);
+  // }
+  // typingTimeoutRef.current = setTimeout(() => {
+  //   newArr[index].answerText = e.target.value;
+  // }, 300);
+  const handleDeleteAnswer = (index: number) => {
+    answers.splice(index, 1);
+    const newArr = [...answers];
+    setAnswers(newArr);
+    console.log(newArr);
+  };
+
   //* Dialog edit question in exams
   const handleClickEditQuestion = (questionId: number) => {
+    console.log(questionId, 'kakaki')
     setIdQuestion(questionId);
+    axios.get(`${GET_QUESTION_DETAIL_URL}/${questionId}`).then((response) => {
+      console.log(response.data);
+      setQuestion(response.data);
+    }).catch((err) => {
+      console.log("Failed to get question detail by id: ", err.message);
+    })
+
     setOpenDialogUpdate(true);
-  }
+  };
 
   const handleSaveUpdateQuestion = async (e: any) => {
     e.preventDefault();
@@ -303,30 +381,58 @@ function UpdateExam(props: any) {
       }
     } else {
       console.log('multiple choice', valueTypeAnswer);
+      console.log('correct answer', valueCorrectAnswer);
+      
     }
     if (response) {
+      console.log(response);
       setOpenDialogUpdate(false);
     } else {
       console.log('Error update question to exam');
     }
-  }
+  };
 
   const handleCloseUpdateQuestion = () => {
-    setOpenDialogUpdate(false)
-  }
+    setOpenDialogUpdate(false);
+    setAnswers([]);
+  };
+
+  //* Event when click radio button tf or multiple choice
+  const handleChange = (event: any) => {
+    setValueTypeAnswer(event.target.value);
+  };
+  //* Event when click radio button tf
+  const handleChangeCorrect = (event: any) => {
+    setCorrectAnswerTypeTf(event.target.value);
+  };
+  //* Event when click multiple choice
+  const handleCorrectAnswerMultiple = (event: any) => {
+    setValueCorrectAnswer(event.target.value);
+    const newAnswers = answers.map((item: Answer, index: number) => {
+      const itemAnswer = {...item};
+      itemAnswer.correct = false;
+      console.log(index,valueCorrectAnswer,'kk' )
+      console.log(index == event.target.value);
+      if (index == event.target.value) {
+        itemAnswer.correct = true;
+      }
+      return itemAnswer;
+    })
+    console.log('new',newAnswers);
+    setAnswers(newAnswers);
+  };
+
+  const titleDialogUpdate = (
+    <div>
+      <h3>Update question in  <span style={{ color: '#FD647A' }}>{examName}</span> Exam </h3>
+    </div>
+  );
 
   /* event when click Back */
   const handleClickBack = () => {
     history.push('/list-exam');
   };
 
-  //* Event when click radio button
-  const handleChange = (event: any) => {
-    setValueTypeAnswer(event.target.value);
-  };
-  const handleChangeCorrect = (event: any) => {
-    setCorrectAnswerTypeTf(event.target.value);
-  };
   const columns = [
     {
       Header: "ID",
@@ -388,13 +494,7 @@ function UpdateExam(props: any) {
       )
 
     },
-  ]
-
-  const titleDialogUpdate = (
-    <div>
-      <h3>Update question in  <span style={{color: '#FD647A'}}>{examName}</span> Exam </h3>
-    </div>
-  )
+  ];
 
   const bodyAddQuestion = (
     <div className={classes.paper}>
@@ -406,6 +506,7 @@ function UpdateExam(props: any) {
                 <div className={classes.question}>
                   <input
                     type="checkbox"
+                    className={classes.checkBoxQuestion}
                     onChange={(e: any) => {
                       if (e.target.checked) {
                         arrayCheck.push(quesBank.id)
@@ -420,8 +521,9 @@ function UpdateExam(props: any) {
                       }
                     }}
                   />
-                  <span>{index + 1}. <span style={{
-                    margin: '0px 10px'
+                  <span className="sttQuestion">{index + 1}. <span style={{
+                    margin: '0px 10px',
+                    color: '#000000'
                   }}>{quesBank.questionText}</span></span>
                 </div>
               )
@@ -454,7 +556,9 @@ function UpdateExam(props: any) {
                 <p style={{ color: '#4E5FBB', fontWeight: 'bold', }}> Correct Answer:  </p>
               </FormLabel>
               <div className={classes.trueFalseAnswer}>
-                <RadioGroup aria-label="correct" name="correct-answer" value={correctAnswerTypeTf} onChange={handleChangeCorrect}>
+                <RadioGroup aria-label="correct" name="correct-answer"
+                  value={correctAnswerTypeTf}
+                  onChange={handleChangeCorrect}>
                   <FormControlLabel value="true" control={<Radio />} label="True" />
                   <FormControlLabel value="false" control={<Radio />} label="False" />
                 </RadioGroup>
@@ -464,21 +568,49 @@ function UpdateExam(props: any) {
             <div className={classes.multipleAnswer}>
               <p style={{ color: '#4E5FBB', fontWeight: 'bold', }}>Multiple Answer:</p>
               <div className={classes.iconAdd}>
-                <Fab color="primary" aria-label="add" size="small">
+                <Fab color="primary"
+                  aria-label="add"
+                  size="small"
+                  onClick={handleAddAnswer}
+                >
                   <AddIcon />
                 </Fab>
-                <span style={{ color: '#4E5FBB', fontWeight: 'normal', marginLeft: '0.5rem' }}>Add answer</span>
+                <span style={{
+                  color: '#4E5FBB',
+                  fontWeight: 'normal',
+                  marginLeft: '0.5rem'
+                }}>Add answer</span>
               </div>
-
-              <TextField
-                id="outlined-textarea"
-                label="Answer A"
-                placeholder="Placeholder"
-                multiline
-                variant="outlined"
-                className={classes.multiple}
-                required
-              />
+              <div className={classes.containerAnswer} id="containerAnswer">
+                <RadioGroup aria-label="correct-answer"
+                  name="correct-answer"
+                  value={valueCorrectAnswer}
+                  onChange={handleCorrectAnswerMultiple} >
+                  {answers.map((item: any, index: number) => (
+                    <div className={classes.containQuesIcon}>
+                      <TextField
+                        id="outlined-basic"
+                        value={answers[index].answerText}
+                        onChange={handleInputAnswer(index)}
+                        label={`Answer ${index + 1}`}
+                        variant="outlined"
+                        placeholder="Enter answer"
+                        className={classes.answerQuestion}
+                      />
+                      <RemoveCircleIcon
+                        className={classes.iconRemove}
+                        fontSize="medium"
+                        onClick={() => handleDeleteAnswer(index)}
+                      />
+                      <FormControlLabel
+                        className={classes.iconChooseCorrect}
+                        value={`${index.toString()}`}
+                        control={<Radio />}
+                        label="Correct" />
+                    </div>
+                  ))}
+                </RadioGroup>
+              </div>
             </div>
           )
         }
@@ -495,7 +627,7 @@ function UpdateExam(props: any) {
               <h2>SSC101 Chapter 123</h2>
             </div>
             <div className="content-exam" >
-              <Table columns={columns} data={question} isPagination={false} />
+              <Table columns={columns} data={questions} isPagination={false} />
             </div>
           </div>
         </div>
