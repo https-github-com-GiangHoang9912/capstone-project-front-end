@@ -21,7 +21,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '0.8rem',
     margin: '1rem 1rem',
     boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
+   
   },
+  
   btnSelf: {
     color: 'white',
     width: 250,
@@ -30,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '0.8rem',
     margin: '1rem 1rem',
     background: '#030a45',
+    '&:hover': {
+      background: '#03061f',
+   },
   },
 }))
 function HomePage(props: any) {

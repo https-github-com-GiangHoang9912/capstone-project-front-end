@@ -139,12 +139,8 @@ function ListExam(props: any) {
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [openDialogView, setOpenDialogView] = useState(false);
   const [scroll, setScroll] = useState('paper');
-
-
   const [idDelete, setIdDelete] = useState(0);
   const [nameExam, setNameExam] = useState('');
-  // const [subject, setSubject] = useState('');
-
   const [exams, setExams] = useState<IExam[]>([
     {}
   ]);
