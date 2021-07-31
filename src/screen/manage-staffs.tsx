@@ -137,7 +137,7 @@ function ManageStaffs(props: any) {
         </tr>
           <tr>
             <td>Email</td>
-            <td className="info-user">{userDetail.email}</td>
+            <td className="info-user">{userDetail.email?userDetail.email:""}</td>
         </tr>
         <tr>
             <td>DOB</td>
@@ -145,11 +145,11 @@ function ManageStaffs(props: any) {
         </tr>
         <tr>
             <td>Address</td>
-            <td className="info-user">{userDetail.address}</td>
+            <td className="info-user">{userDetail.address? userDetail.address:""}</td>
         </tr>
         <tr>
             <td>Phone</td>
-            <td className="info-user">{userDetail.phone}</td>
+            <td className="info-user">{userDetail.phone? userDetail.phone:""}</td>
         </tr>
         </table>
     </div>
@@ -429,6 +429,7 @@ const StyledAdmin = styled(ManageStaffs)`
   .search-box{
     margin: 2rem 4.5rem 0 0;
     text-align: right;
+    margin-top: 8em;
   }
 
   .search-bar{

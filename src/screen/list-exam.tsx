@@ -57,6 +57,7 @@ const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`;
 const GET_EXAM_URL = `${CONSTANT.BASE_URL}/exam`;
 const GET_QUESTION_URL1 = `${CONSTANT.BASE_URL}/question`;
 const GET_EXAM_SEARCH_URL = `${CONSTANT.BASE_URL}/exam/search`
+const CREATE_EXAM_URL = `${CONSTANT.BASE_URL}/exam/create-exam`;
 ListExam.propTypes = {
   className: PropTypes.string,
 };
@@ -137,6 +138,8 @@ function ListExam(props: any) {
   const [subject, setSubject] = useState<Subject[]>([
   ]);
 
+  const [subjectId, setSubjectId] = useState<Number>(1);
+
   const [question, setQuestion] = useState<Question[]>([
   ]);
 
@@ -160,7 +163,7 @@ function ListExam(props: any) {
     }).catch((err) => {
       console.log("Failed to fetch data: ", err.message);
     })
-  }, []);
+  }, [openDialogCreate]);
   //* Get Question */
   function takeContentByExam1(idExam: number) {
     setOpenDialogView(true);
@@ -237,6 +240,7 @@ function ListExam(props: any) {
   /* Event when click button create exam */
   const handleChange = (event: any) => {
     // setSubject((event.target.value) || '');
+    setSubjectId(Number(event.target.value))
   };
   const handleClickBtnCreate = () => {
     setOpenDialogCreate(true);
@@ -326,7 +330,7 @@ function ListExam(props: any) {
                 <InputLabel htmlFor="demo-dialog-native">Subject</InputLabel>
                 <Select
                   native
-                  value={subject}
+                  value={subjectId}
                   onChange={handleChange}
                   input={<Input id="demo-dialog-native" />}
                 >
@@ -363,6 +367,21 @@ function ListExam(props: any) {
       </div>
     </div >
   );
+
+  const handleCreateExam = async (e: any) => {
+    e.preventDefault()
+    console.log(subjectId)
+    console.log(txtNameExam)
+    const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
+      subjectId,
+      examName: txtNameExam
+    })
+
+    if (response) {
+      console.log(response)
+      setOpenDialogCreate(false);
+    }
+  }
 
   return (
     <div className={className}>
@@ -407,7 +426,7 @@ function ListExam(props: any) {
                   <Button onClick={handleCloseCreate} color="primary">
                     Cancel
                   </Button>
-                  <Button color="primary">
+                  <Button color="primary" onClick={handleCreateExam}>
                     Create
                   </Button>
                 </DialogActions>

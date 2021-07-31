@@ -44,7 +44,7 @@ function Profile(props: any) {
   const [address, setAddress] = useState<string>('')
   const [phone, setPhone] = useState<string>('')
   const [email, setEmail] = useState<string>('')
-  const [isInputValid, setIsInputValid] = useState<boolean>(false)
+  const [isInputValid, setIsInputValid] = useState<boolean>(true)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [inputError, setInputError] = useState<string>('')
   const [isDisable, setIsDisable] = useState(false)
@@ -64,8 +64,8 @@ function Profile(props: any) {
   const handleAccept = async () => {
     setIsOpen(false)
     setIsDisable(true)
-    setProgress(progress + 10)
     if (isInputValid) {
+      setProgress(100)
       const id = Number(localStorage.getItem('id'))
       try {
         console.log(file)
@@ -77,8 +77,8 @@ function Profile(props: any) {
             (error) => {
               console.log(error)
             },
-            () => {
-              storage
+            async () => {
+              await storage
                 .ref('images')
                 .child(file.name)
                 .getDownloadURL()
@@ -94,9 +94,9 @@ function Profile(props: any) {
                     avatar: url,
                   })
                   localStorage.setItem('avatar', url)
-                  setProgress(100)
                   setIsDisable(false)
                 })
+              window.location.reload()
             }
           )
         } else {
@@ -109,8 +109,8 @@ function Profile(props: any) {
             phone,
             dob,
           })
-          setProgress(100)
           setIsDisable(false)
+          window.location.reload()
         }
       } catch (error) {
         refreshToken(error, id ? Number(id) : account.id)
@@ -394,7 +394,7 @@ const styleProfile = styled(Profile)`
     border: none;
     border-bottom: 1px solid #dae1f5;
   }
-  .input-bar:focus{
+  .input-bar:focus {
     border-bottom: 1px solid #306bf3;
   }
 

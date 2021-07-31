@@ -74,8 +74,7 @@
     "import/no-extraneous-dependencies": "off",
     "react/button-has-type": "off",
     "react/jsx-filename-extension": "off",
-    "react/no-array-index-key": "off"
+    "react/no-array-index-key": "off",
+    "@typescript-eslint/naming-convention": "off"
   }
-  
-  
 }
