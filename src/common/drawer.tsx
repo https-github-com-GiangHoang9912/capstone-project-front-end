@@ -67,25 +67,25 @@ function PersistentDrawerLeft(props: any) {
     {
       key: 2,
       icon: <Filter2Icon fontSize="small" />,
-      text: 'Check Duplicate',
+      text: 'Check Duplication',
       link: '/check-duplicate',
     },
     {
       key: 3,
       icon: <ContactSupportIcon fontSize="small" />,
-      text: 'Self-generate Question',
+      text: 'Self-generate Questions',
       link: '/self-generate',
     },
     {
       key: 4,
       icon: <SupervisorAccountIcon fontSize="small" />,
-      text: 'Manage Staffs',
+      text: 'Manage Accounts',
       link: '/manage-staffs',
     },
     {
       key: 5,
       icon: <NoteAddIcon fontSize='small' />,
-      text: 'Manage Exam',
+      text: 'Manage Exams',
       link: '/exam',
     }
   ]

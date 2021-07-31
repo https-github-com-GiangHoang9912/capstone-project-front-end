@@ -56,6 +56,7 @@ interface Question {
 const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`;
 const GET_EXAM_URL = `${CONSTANT.BASE_URL}/exam`;
 const GET_QUESTION_URL1 = `${CONSTANT.BASE_URL}/question`;
+const GET_EXAM_SEARCH_URL = `${CONSTANT.BASE_URL}/exam/search`
 const CREATE_EXAM_URL = `${CONSTANT.BASE_URL}/exam/create-exam`;
 ListExam.propTypes = {
   className: PropTypes.string,
@@ -129,12 +130,8 @@ function ListExam(props: any) {
   const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [openDialogView, setOpenDialogView] = useState(false);
   const [scroll, setScroll] = useState('paper');
-
-
   const [idDelete, setIdDelete] = useState(0);
   const [nameExam, setNameExam] = useState('');
-  // const [subject, setSubject] = useState('');
-
   const [exams, setExams] = useState<IExam[]>([
     {}
   ]);
@@ -281,8 +278,22 @@ function ListExam(props: any) {
 
   const onTextInputChange = useCallback((e) => {
     setTextInput(e.target.value);
+    if(textInput ===''){
+      axios.get(`${GET_EXAM_URL}/${idUser}`).then((response) => {
+        setExams(response.data);
+      })
+    }
   }, []);
-
+  const searchExam = () =>{
+    if(textInput){
+    axios.get(`${GET_EXAM_SEARCH_URL}/${textInput}`).then((response) => {
+      console.log(response.data)
+     setExams(response.data)
+    })
+  }
+  }
+  
+ 
   /* Body view exam dialog */
   const bodyView = (
     <div className={classes.paper}>
@@ -393,7 +404,8 @@ function ListExam(props: any) {
                   className="btn-search"
                   variant="contained"
                   disabled={!textInput}
-                  color="primary"> Search </Button>
+                  color="primary"
+                  onClick={searchExam}> Search </Button>
               </div>
               <Button
                 size="small"

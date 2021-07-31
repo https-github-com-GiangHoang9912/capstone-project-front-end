@@ -159,7 +159,7 @@ const StyledHeader = styled(Header)`
   }
 
   #icon {
-    width: 90%;
+    width: 120%;
   }
 `
 
