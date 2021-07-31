@@ -1,20 +1,20 @@
-import { SET_NOTIFICATION, NotificationAction, INotification } from '../types';
+import { SET_NOTIFICATION, NotificationAction, INotification } from '../types'
 
 const initialState: INotification = {
   message: '',
-  types: 'success'
-};
+  types: 'success',
+}
 
 const notificationReducer = (state = initialState, action: NotificationAction) => {
-  switch(action.type) {
+  switch (action.type) {
     case SET_NOTIFICATION:
       return {
         message: action.payload.message,
-        type: action.payload.types
+        type: action.payload.types,
       }
-    default: 
-      return state;
+    default:
+      return state
   }
 }
 
-export default notificationReducer;
+export default notificationReducer

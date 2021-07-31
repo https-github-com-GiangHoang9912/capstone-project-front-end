@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 
 import GoogleLogin from 'react-google-login'
 import { FC, Dispatch, SetStateAction, useContext, useState, useEffect, useRef } from 'react'

@@ -7,7 +7,6 @@ import { IconButton, AppBar, Toolbar } from '@material-ui/core'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'
 
-
 interface Styled {
   className?: string
   isOpen?: Boolean

@@ -45,9 +45,9 @@ import {
   UseSortByHooks,
   UseSortByInstanceProps,
   UseSortByOptions,
-  UseSortByState
+  UseSortByState,
 } from 'react-table'
-declare module 'react-slideshow-image';
+declare module 'react-slideshow-image'
 declare module 'react-table' {
   // take this file as-is, or comment out the sections that don't apply to your plugin configuration
 
@@ -118,4 +118,3 @@ declare module 'react-table' {
       UseRowSelectRowProps<D>,
       UseRowStateRowProps<D> {}
 }
-

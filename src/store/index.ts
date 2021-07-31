@@ -1,13 +1,13 @@
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers } from 'redux'
 
-import notificationReducer from './reducers/notificationReducer';
+import notificationReducer from './reducers/notificationReducer'
 
 const rootReducer = combineReducers({
-  notification: notificationReducer
-});
+  notification: notificationReducer,
+})
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer)
 
-export type RootState = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof rootReducer>
 
-export default store;
+export default store

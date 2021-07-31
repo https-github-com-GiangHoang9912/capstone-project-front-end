@@ -15,7 +15,6 @@ import Dialog from '../common/dialog'
 import { TableCheckDuplicate } from '../common/table'
 import { AccountContext } from '../contexts/account-context'
 
-
 Duplicate.propTypes = {
   className: PropTypes.string,
 }
@@ -50,7 +49,7 @@ function Duplicate(props: any) {
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
   const [progress, setProgress] = useState(0)
-  const [role,setRole] = useState(0);
+  const [role, setRole] = useState(0)
   const [isDisable, setIsDisable] = useState(false)
   const [isDisableAddBank, setIsDisableAddBank] = useState(false)
   const [question, setQuestion] = useState<string>('')
@@ -63,12 +62,15 @@ function Duplicate(props: any) {
   }
   const id = localStorage.getItem('id')
   useEffect(() => {
-    axios.get(`${GET_ROLE_URL}/${id}`).then((response) => {
-      setRole(response.data.role);
-    }).catch((err) => {
-      console.log("Failed to fetch data: ", err.message);
-    })
-  }, []);
+    axios
+      .get(`${GET_ROLE_URL}/${id}`)
+      .then((response) => {
+        setRole(response.data.role)
+      })
+      .catch((err) => {
+        console.log('Failed to fetch data: ', err.message)
+      })
+  }, [])
 
   async function handleCheck() {
     setIsDisable(true)
@@ -129,46 +131,48 @@ function Duplicate(props: any) {
     <div className={className}>
       <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="container">
-        {role !== 3 ?
-        <div className="control control-left">
-          <div className="import-bank">
-            <h2 className="select">Import a new Bank</h2>
-            <div className="input-bank">
-              <input type="file" accept=".csv" onChange={handleFileChange} title=" " />
+        {role !== 3 ? (
+          <div className="control control-left">
+            <div className="import-bank">
+              <h2 className="select">Import a new Bank</h2>
+              <div className="input-bank">
+                <input type="file" accept=".csv" onChange={handleFileChange} title=" " />
+              </div>
+              <p className="file-rule">Bank input must be .csv file</p>
+              <p className="bank-name">Bank name: {fileName}</p>
+              {fileName.includes('.csv') ? (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className={classes.btnDup}
+                  onClick={handleAddFileBank}
+                  disabled={isDisableAddBank}
+                >
+                  Add Bank
+                </Button>
+              ) : (
+                ' '
+              )}
+              <div className="guide-line">
+                <p id="gl-left">
+                  <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Only
+                  Staff and Admin can input question bank, dataset to system.
+                </p>
+              </div>
             </div>
-            <p className="file-rule">Bank input must be .csv file</p>
-            <p className="bank-name">Bank name: {fileName}</p>
-            {fileName.includes('.csv') ? (
-              <Button
-                variant="contained"
-                color="secondary"
-                className={classes.btnDup}
-                onClick={handleAddFileBank}
-                disabled={isDisableAddBank}
-              >
-                Add Bank
-              </Button>
-            ) : (
-              ' '
-            )}
-            <div className="guide-line">
-              <p id="gl-left">
-                <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Only Staff
-                and Admin can input question bank, dataset to system.
-              </p>
+            <div className="convert-csv">
+              <div className="csv-img" />
+              <div className="csv-link">
+                <a href="https://convertio.co/vn/doc-csv/" target="_blank" rel="noreferrer">
+                  <h3>Convert file to CSV</h3>
+                </a>
+                <p>Go to CSV convert page and convert your file to CSV format</p>
+              </div>
             </div>
           </div>
-          <div className="convert-csv">
-            <div className="csv-img" />
-            <div className="csv-link">
-              <a href="https://convertio.co/vn/doc-csv/" target="_blank" rel="noreferrer">
-                <h3>Convert file to CSV</h3>
-              </a>
-              <p>Go to CSV convert page and convert your file to CSV format</p>
-            </div>
-          </div>
-        </div>
-         : '' }
+        ) : (
+          ''
+        )}
         <div className="control control-right">
           <h2>Enter your question here:</h2>
           <TextField

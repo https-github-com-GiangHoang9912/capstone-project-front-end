@@ -3,29 +3,29 @@ import styled from 'styled-components'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
-    height: "auto",
+    width: '100%',
+    height: 'auto',
   },
   container: {
-    margin: "0.5rem",
-    padding: "5em 10px 10px 10px",
-    fontSize: "16px",
-    display: "flex",
-    flexDirection: "row-reverse",
-    justifyContent: "center",
-    backgroundColor: "#fbfbfb",
+    margin: '0.5rem',
+    padding: '5em 10px 10px 10px',
+    fontSize: '16px',
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    justifyContent: 'center',
+    backgroundColor: '#fbfbfb',
   },
   row: {
-      display: "flex",
-      marginTop: "10%",
+    display: 'flex',
+    marginTop: '10%',
   },
   itemRight: {
-    width: "50%",
+    width: '50%',
   },
   itemLeft: {
-    marginTop: "15%",
-    width: "50%",
-  }
+    marginTop: '15%',
+    width: '50%',
+  },
 }))
 
 function NotFound(props: any) {
