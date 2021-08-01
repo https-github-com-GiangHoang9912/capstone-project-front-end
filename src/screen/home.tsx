@@ -48,7 +48,7 @@ function HomePage(props: any) {
           <p className="intro-para">
             An application used to duplicate detection and self-generation of questions based on
             answers in <a>the final exam question bank (FE)</a> using{' '}
-            <a>artificial intelligence (AI) </a> technology in{' '}
+            <a>artificial intelligence (AI)</a> technology in{' '}
             <a>natural language processing (NLP)</a>
           </p>
         </div>
