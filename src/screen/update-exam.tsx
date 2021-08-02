@@ -1,4 +1,4 @@
-import react, { useState, useEffect, useRef } from 'react'
+import react, { useState, useEffect, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 
 // import Checkbox from '@material-ui/core/Checkbox';
@@ -46,8 +46,6 @@ interface Subject {
 interface Answer {
   id?: number
   answerText: string
-  // answerGroupId?: number
-  // correct?: boolean
 }
 interface AnswerGroup {
   id?: number
@@ -173,7 +171,11 @@ const GET_QUESTION_DETAIL_URL = `${CONSTANT.BASE_URL}/questions`
 const DELETE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/delete`
 const GET_QUESTIONBANK_URL = `${CONSTANT.BASE_URL}/subject`
 const CREATE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/create`
-const UPDATE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/update`
+const UPDATE_ANSWERS_TF_URL = `${CONSTANT.BASE_URL}/answers-groups/update`
+const CREATE_ANSWERS_TF_URL = `${CONSTANT.BASE_URL}/answers-groups/create`
+const UPDATE_QUESTION_MULTIPLE_URL = `${CONSTANT.BASE_URL}/answers-groups/update/multiple`
+const GET_ANSWER_GROUP_DETAIL_URL = `${CONSTANT.BASE_URL}/answers-groups`
+
 
 function UpdateExam(props: any) {
   const { className } = props
@@ -187,6 +189,7 @@ function UpdateExam(props: any) {
   const [nameQuestion, setNameQuestion] = useState('')
   const [openDialogUpdate, setOpenDialogUpdate] = useState(false)
   const [currentQuestionAnswerGroup, setCurrentQuestionAnswerGroup] = useState<AnswerGroup[]>([])
+  const [defaultAnswerGroup, setDefaultAnswerGroup] = useState<AnswerGroup[]>([])
   const [answerCorrect, setAnswerCorrect] = useState<Answer | undefined>(undefined)
   const arrayCheck = new Array<number>()
   const [question, setQuestion] = useState<Question>()
@@ -205,122 +208,123 @@ function UpdateExam(props: any) {
     },
   ])
 
-  const [subject, setSubject] = useState<Subject>()
-  const [valueTypeAnswer, setValueTypeAnswer] = useState('tf')
-  const [correctAnswerTypeTf, setCorrectAnswerTypeTf] = useState('true')
-  const [valueCorrectAnswer, setValueCorrectAnswer] = useState('0')
+  const [subject, setSubject] = useState<Subject>();
+  const [valueTypeAnswer, setValueTypeAnswer] = useState('tf');
+  const [correctAnswerTypeTf, setCorrectAnswerTypeTf] = useState('true');
+  const [valueCorrectAnswer, setValueCorrectAnswer] = useState('nothing');
 
-  const location: any = useLocation()
-  const { idExam } = location.state.params
-  const { idSubject } = location.state.params
-  const { examName } = location.state.params
-  const idUser = localStorage.getItem('id') ? localStorage.getItem('id') : -1
+  const location: any = useLocation();
+  const { idExam } = location.state.params;
+  const { idSubject } = location.state.params;
+  const { examName } = location.state.params;
+  const idUser = localStorage.getItem('id') ? localStorage.getItem('id') : -1;
   //* Get question by idExam */
   useEffect(() => {
     axios
       .get(`${GET_QUESTIONS_URL}/${idExam}`)
       .then((response) => {
-        setQuestions(response.data[0].question)
+        setQuestions(response.data[0].question);
       })
       .catch((err) => {
-        console.log('Failed to get question by  id Exam: ', err.message)
+        console.log('Failed to get question by  id Exam: ', err.message);
       })
   }, [openDialogDelete, openDialogAdd, openDialogUpdate])
 
   //* Get question bank by subject id */
   useEffect(() => {
-    console.log('update:', idSubject)
+    console.log('update:', idSubject);
     axios
       .get(`${GET_QUESTIONBANK_URL}/${idSubject}`)
       .then((response) => {
         setSubject(response.data[0])
       })
       .catch((err) => {
-        console.log('Failed to get question bank by id subject: ', err.message)
+        console.log('Failed to get question bank by id subject: ', err.message);
       })
-  }, [])
+  }, []);
 
   // console.log('Question huhu: ', subject);
   /** event click button delete */
   const handleClickDelete = (id: number, name: string) => {
-    setOpenDialogDelete(true)
-    setIdQuestion(id)
-    setNameQuestion(name)
+    setOpenDialogDelete(true);
+    setIdQuestion(id);
+    setNameQuestion(name);
   }
   const handleAcceptDialogDelete = async (id: number) => {
-    const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`)
+    const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`);
     if (response) {
-      console.log(response)
-      setOpenDialogDelete(false)
+      console.log(response);
+      setOpenDialogDelete(false);
     }
   }
   const handleCancelDialogDelete = () => {
-    setOpenDialogDelete(false)
+    setOpenDialogDelete(false);
   }
   /** event click button add */
   const handleClickAddQuestion = () => {
-    console.log('jajajaja', questions)
-    setOpenDialogAdd(true)
-    setScroll(scroll)
+    console.log('jajajaja', questions);
+    setOpenDialogAdd(true);
+    setScroll(scroll);
   }
 
   //* event process click button save in dialog add question
 
   const handleSaveQuestion = async (e: any) => {
-    e.preventDefault()
+    e.preventDefault();
     // console.log('close dialog', arrayCheck);
     const questionAdd = arrayCheck.map((item: any) => ({
       questionBankId: item,
       examId: idExam,
-    }))
-    // console.log('close dialog', questionAdd)
-    // const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd)
-    // if (response) {
-    //   console.log(response)
-    //   setOpenDialogAdd(false)
-    // } else {
-    //   console.log('Error add question to exam')
-    // }
-    console.log(questionAdd)
+    }));
+    console.log('close dialog', questionAdd);
+    const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd);
+    if (response) {
+      console.log(response);
+      setOpenDialogAdd(false);
+    } else {
+      console.log('Error add question to exam');
+    }
+    console.log(questionAdd);
   }
   const handleCloseDialogAdd = async (e: any) => {
-    e.preventDefault()
-    setOpenDialogAdd(false)
+    e.preventDefault();
+    setOpenDialogAdd(false);
   }
 
   //* Handle process with answer
   const handleAddAnswer = () => {
-    const newAnswerGroup = [...currentQuestionAnswerGroup]
+    const newAnswerGroup = [...currentQuestionAnswerGroup];
     newAnswerGroup.push({
       correct: false,
       answer: {
         answerText: '',
       },
     })
-    setCurrentQuestionAnswerGroup(newAnswerGroup)
+    setCurrentQuestionAnswerGroup(newAnswerGroup);
   }
 
   const handleInputAnswer = (index: number) => (e: any) => {
-    const newArr = [...currentQuestionAnswerGroup]
-    newArr[index].answer.answerText = e.target.value
-    setCurrentQuestionAnswerGroup(newArr)
+    const newArr = [...currentQuestionAnswerGroup];
+    newArr[index].answer.answerText = e.target.value;
+    setCurrentQuestionAnswerGroup(newArr);
   }
 
   const handleDeleteAnswer = (index: number) => {
-    currentQuestionAnswerGroup.splice(index, 1)
-    const newArr = [...currentQuestionAnswerGroup]
-    setCurrentQuestionAnswerGroup(newArr)
-    console.log(newArr)
+    currentQuestionAnswerGroup.splice(index, 1);
+    const newArr = [...currentQuestionAnswerGroup];
+    setCurrentQuestionAnswerGroup(newArr);
+    console.log(newArr);
   }
 
   //* Dialog edit question in exams
   const handleClickEditQuestion = (questionId: number, answerGroupsUpdate: AnswerGroup[]) => {
-    setAnswerCorrect(undefined)
-    setCurrentQuestionAnswerGroup(answerGroupsUpdate)
+    setAnswerCorrect(undefined);
+    setCurrentQuestionAnswerGroup(answerGroupsUpdate);
     answerGroupsUpdate.forEach((item: AnswerGroup) => {
       if (item.correct) setAnswerCorrect(item.answer)
     })
-    setIdQuestion(questionId)
+    setIdQuestion(questionId);
+    // console.log(questionId);
     axios
       .get(`${GET_QUESTION_DETAIL_URL}/${questionId}`)
       .then((response) => {
@@ -331,64 +335,111 @@ function UpdateExam(props: any) {
         console.log('Failed to get question detail by id: ', err.message)
       })
 
-    setOpenDialogUpdate(true)
+    setOpenDialogUpdate(true);
   }
 
   const handleSaveUpdateQuestion = async (e: any) => {
-    e.preventDefault()
-    let response = null
+    // e.preventDefault()
+    console.log('currentQuestionAnswerGroup: ', currentQuestionAnswerGroup);
+    let response = null;
     if (valueTypeAnswer === 'tf') {
-      let answerGroupId = 1
-      console.log('valueTypeAnswer 1', valueTypeAnswer)
-      if (correctAnswerTypeTf == 'true') {
-        console.log('answerGroupId ', answerGroupId)
-        response = await axios.put(`${UPDATE_QUESTION_URL}/${idQuestion}`, {
-          answerGroupId,
-        })
+      // console.log(currentQuestionAnswerGroup.length)
+      // if (currentQuestionAnswerGroup.length == 0) setCurrentQuestionAnswerGroup([...defaultAnswerGroup])
+      // console.log(currentQuestionAnswerGroup.length)
+      // console.log('True false choice', valueTypeAnswer);
+      response = await axios.post(`${CREATE_ANSWERS_TF_URL}/${idQuestion}`, currentQuestionAnswerGroup);
+      if (response) {
+        console.log(response);
+        setOpenDialogUpdate(false);
       } else {
-        answerGroupId = 2
-        console.log('answerGroupId', answerGroupId)
-        response = await axios.put(`${UPDATE_QUESTION_URL}/${idQuestion}`, {
-          answerGroupId,
-        })
+        console.log('Error create answer tf...!');
       }
     } else {
-      console.log('multiple choice', valueTypeAnswer)
-      console.log('correct answer', valueCorrectAnswer)
-    }
-    if (response) {
-      console.log(response)
-      setOpenDialogUpdate(false)
-    } else {
-      console.log('Error update question to exam')
+      // console.log('Multiple choice', valueTypeAnswer);
+      // console.log('id question', idQuestion);
+      // response = await axios.put(`${UPDATE_QUESTION_MULTIPLE_URL}/${idQuestion}`,
+      //   answersGroupUpdate
+      // );
+      // if (response) {
+      //   console.log(response);
+      //   setOpenDialogUpdate(false);
+      // } else {
+      //   console.log('Error update answer multiple...!');
+      // }
     }
   }
 
   const handleCloseUpdateQuestion = () => {
-    setOpenDialogUpdate(false)
-    setCurrentQuestionAnswerGroup([])
+    setOpenDialogUpdate(false);
+    setCurrentQuestionAnswerGroup([]);
   }
 
+  useEffect(() => {
+    if (valueTypeAnswer === 'tf' && currentQuestionAnswerGroup.length <= 0) {
+      console.log('True false choice');
+      console.log('id: ', idQuestion);
+      const answerGroupDefault = [
+        {
+          questionId: idQuestion,
+          answerId: 1,
+          correct: false,
+          answer: {
+            id: 1,
+            answerText: 'true'
+          }
+        },
+        {
+          questionId: idQuestion,
+          answerId: 2,
+          correct: true,
+          answer: {
+            id: 2,
+            answerText: 'false'
+          }
+        }
+      ];
+      console.log('defaultAnswerGroup', answerGroupDefault);
+      setDefaultAnswerGroup(answerGroupDefault);
+    }
+  }, [valueTypeAnswer]);
+
   //* Event when click radio button tf or multiple choice
-  const handleChange = (event: any) => {
-    setValueTypeAnswer(event.target.value)
+  const handleChangeTypeAnswer = (event: any) => {
+    setValueTypeAnswer(event.target.value);
+    if (currentQuestionAnswerGroup.length == 0) setCurrentQuestionAnswerGroup([...defaultAnswerGroup])
+    console.log(valueTypeAnswer);
+    console.log('length: ', currentQuestionAnswerGroup.length);
+    console.log('id: ', idQuestion);
   }
   //* Event when click radio button tf
-  const handleChangeCorrect = (event: any) => {
-    setCorrectAnswerTypeTf(event.target.value)
+  const handleChangeCorrectTf = (event: any) => {
+    setCorrectAnswerTypeTf(event.target.value);
+    console.log(event.target.value)
+    // console.log('currnt: ', currentQuestionAnswerGroup);
+    const newResult = currentQuestionAnswerGroup.map((item: AnswerGroup, index: number) => {
+      // console.log(index, '==', item, '==', event.target.value);
+      console.log(index == event.target.value)
+      const itemAnswer = { ...item };
+      itemAnswer.correct = false;
+      if (item.answer.answerText.toLowerCase() === event.target.value) {
+        itemAnswer.correct = true;
+      }
+      return itemAnswer;
+
+    })
+    console.log('new ggg', newResult);
+    setCurrentQuestionAnswerGroup(() => newResult);
   }
   //* Event when click multiple choice
   const handleCorrectAnswerMultiple = (event: any) => {
-    setValueCorrectAnswer(event.target.value)
+    setValueCorrectAnswer(event.target.value);
     const newAnswers = currentQuestionAnswerGroup.map((item: AnswerGroup, index: number) => {
-      const itemAnswer = { ...item }
-      itemAnswer.correct = false
-      console.log(index, valueCorrectAnswer, 'kk')
-      console.log(index == event.target.value)
+      const itemAnswer = { ...item };
+      itemAnswer.correct = false;
       if (index == event.target.value) {
-        itemAnswer.correct = true
+        itemAnswer.correct = true;
       }
-      return itemAnswer
+      return itemAnswer;
     })
     console.log('new', newAnswers)
     setCurrentQuestionAnswerGroup(newAnswers)
@@ -487,7 +538,6 @@ function UpdateExam(props: any) {
                       arrayCheck.splice(i, 1)
                     }
                   }
-                  // console.log('ka xoa', arrayCheck);
                 }
               }}
             />
@@ -509,21 +559,21 @@ function UpdateExam(props: any) {
   )
 
   useEffect(() => {
-    console.log(answerCorrect)
-    console.log(valueTypeAnswer)
-    setValueTypeAnswer('multiple')
+    console.log(answerCorrect);
+    console.log(valueTypeAnswer);
+    setValueTypeAnswer('multiple');
     if (answerCorrect && (answerCorrect.id === 1 || answerCorrect.id === 2)) {
-      setValueTypeAnswer('tf')
-      setCorrectAnswerTypeTf(answerCorrect.answerText.toLowerCase())
+      setValueTypeAnswer('tf');
+      // const valueCorrect = answerCorrect.id === 1 ? '1' : '0';
+      setCorrectAnswerTypeTf(answerCorrect.answerText.toLowerCase());
     }
-
     if (currentQuestionAnswerGroup.length > 0) {
       currentQuestionAnswerGroup.forEach((item, index) => {
         if (item.correct) setValueCorrectAnswer(`${index}`)
       })
     } else {
-      setCurrentQuestionAnswerGroup([])
-      setValueCorrectAnswer(`0`)
+      setCurrentQuestionAnswerGroup([]);
+      // setValueCorrectAnswer(`0`)
     }
   }, [openDialogUpdate])
 
@@ -539,7 +589,7 @@ function UpdateExam(props: any) {
               aria-label="group"
               name="group-answer"
               value={valueTypeAnswer}
-              onChange={handleChange}
+              onChange={handleChangeTypeAnswer}
             >
               <FormControlLabel value="tf" control={<Radio />} label="True/False" />
               <FormControlLabel value="multiple" control={<Radio />} label="Multiple Choice" />
@@ -556,7 +606,7 @@ function UpdateExam(props: any) {
                 aria-label="correct"
                 name="correct-answer"
                 value={correctAnswerTypeTf}
-                onChange={handleChangeCorrect}
+                onChange={handleChangeCorrectTf}
               >
                 <FormControlLabel value="true" control={<Radio />} label="True" />
                 <FormControlLabel value="false" control={<Radio />} label="False" />

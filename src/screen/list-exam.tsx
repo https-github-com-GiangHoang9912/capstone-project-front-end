@@ -183,9 +183,9 @@ function ListExam(props: any) {
 
   //* Get Question */
   function takeContentByExam(idExam: number, titleExam: string) {
-    setOpenDialogView(true)
-    setScroll(scroll)
-    setNameExam(titleExam)
+    setOpenDialogView(true);
+    setScroll(scroll);
+    setNameExam(titleExam);
     axios
       .get(`${GET_QUESTIONS_URL}/${idExam}`)
       .then((response) => {
@@ -205,7 +205,7 @@ function ListExam(props: any) {
       examName,
     }
 
-    console.log('?????', infor)
+    console.log('????? infor ', infor)
 
     history.push('/update-exam', { params: infor })
   }
@@ -314,7 +314,6 @@ function ListExam(props: any) {
     setTextSearch(e.target.value)
   }, [])
 
-  // const listCheckBox = document.querySelectorAll(".check-box");
   //* Body view exam dialog */
   const bodyView = (
     <div className={classes.paper}>
