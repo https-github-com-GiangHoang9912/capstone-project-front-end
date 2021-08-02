@@ -5,18 +5,17 @@ import { useHistory } from 'react-router-dom'
 import TextField from '@material-ui/core/TextField'
 import Carousel from 'react-elastic-carousel'
 import Button from '@material-ui/core/Button'
-import Icon from '@material-ui/core/Icon'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
-import { faEdit, faPlayCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
-import EditIcon from '@material-ui/icons/Edit'
+import Chip from '@material-ui/core/Chip';
+import green from '@material-ui/core/colors/green';
+import DoneIcon from '@material-ui/icons/Done';
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import IconButton from '@material-ui/core/IconButton'
 import SvgIcon from '@material-ui/core/SvgIcon'
 import { AccountContext } from '../contexts/account-context'
 import Progress from '../common/progress'
 import Dialog from '../common/dialog'
-
 import Table from '../common/tableReact'
 
 import { refreshToken } from '../services/services'
@@ -24,11 +23,17 @@ import * as CONSTANT from '../const'
 
 axios.defaults.withCredentials = true
 
+
 const useStyles = makeStyles((theme) => ({
   root: {},
   btnGen: {
     margin: '20px 10px',
   },
+  chipDone: {
+    marginLeft: '1rem',
+    border: '1px solid #0fac31',
+    color: '#0fac31'
+  }
 }))
 
 interface AnswerInput {
@@ -41,7 +46,12 @@ interface Question {
   text: string
 }
 
+interface Subject{
+  id: number
+  subjectName: string
+}
 const MODEL_SELF_GENERATION_URL = `${CONSTANT.BASE_URL}/self-generate`
+const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject `
 
 const SelfGenerate = (props: any) => {
   const { className, handleNotification } = props
@@ -54,7 +64,9 @@ const SelfGenerate = (props: any) => {
   const classes = useStyles()
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
+  const [subjects, setSubjects] = useState<Subject[]>([])
   const [questions, setQuestions] = useState<Question[]>([])
+  const [isDuplicate, setIsDuplicate] = useState<boolean>(false);
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const [items, setItems] = useState<AnswerInput[]>([
     {
@@ -101,7 +113,15 @@ const SelfGenerate = (props: any) => {
       setIsDisable(false)
     }
   }
+
+  
   const handleDialogOpen = () => {
+    axios
+      .get(GET_SUBJECT_URL)
+      .then((response) => {
+        setSubjects(response.data)
+        console.log(response.data);
+      })
     setIsOpen(true)
   }
   const handleDialogClose = () => {
@@ -121,11 +141,34 @@ const SelfGenerate = (props: any) => {
       accessor: 'text',
     },
     {
-      Header: 'Edit',
-      Cell: (cell: any) => <EditIcon color="secondary" />,
+      Header: 'Check Duplication',
+      Cell: (cell: any) => 
+      <Chip
+      label="Check"
+      clickable
+      color="secondary"
+      onClick={() => handleCheckDuplication(cell.row.original.text)}
+      variant="outlined"
+    />,
     },
   ]
 
+  {/* Content subject select dialog */}
+  const subjectDialog = (
+    <div className={className}>
+      <h4>Select a subject to add a question</h4>
+      <select className="select-subject">
+        {
+          subjects.map((sub)=>(
+            <option value={sub.id}>{sub.subjectName}</option>
+          ))
+        }
+      </select>
+    </div>
+  )
+  const handleCheckDuplication = (text:String) =>{
+    setIsDuplicate(true);
+  }
   const handleInputAnswer = (index: number) => (e: any) => {
     const newArr = [...items]
     newArr[index].answer = e.target.value
@@ -214,27 +257,34 @@ const SelfGenerate = (props: any) => {
           {visibleResult ? (
             <div>
               <Table columns={columns} data={questions} isPagination={false} />
-              <p className="note-box">
-                Go to the duplicate detection page to check the newly created question.
-              </p>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.btnGen}
+              {/* Display status check duplication */}
+              {isDuplicate ? <p style ={{color: '#d11c1c', fontSize:"0.9rem", marginTop:"2rem"}}>Unable to add this question to bank</p>:
+              <div className="result-contain">
+              <p>
+                Able to add this question to bank
+                {/* Button add question to bank */}
+                <Chip
+                label="Add question"
+                clickable
+                icon={<DoneIcon />}
                 onClick={handleDialogOpen}
-              >
-                Check duplicate for this question
-              </Button>
+                className={classes.chipDone}
+                variant="outlined"
+              />
+              </p>
+              
+              </div>
+              }
             </div>
           ) : (
             ' '
           )}
-
+         {/* Dialog show select subject to add  */}
           <Dialog
-            title="Go to Duplicate Detection"
-            message="Check duplicate this question with questions in the bank ?"
-            buttonAccept="Yes"
-            buttonCancel="No"
+            title="Add question"
+            buttonAccept="Add"
+            buttonCancel="Cancel"
+            content={subjectDialog}
             isOpen={isOpen}
             handleAccept={handleAccept}
             handleClose={handleDialogClose}
@@ -274,9 +324,26 @@ const SelfStyle = styled(SelfGenerate)`
     float: left;
   }
   .note-box {
-    color: #545d7a;
+    color: #89928c;
     margin: 10px;
     font-size: 0.9rem;
+  }
+  .result-contain{
+    margin-top: 2rem;
+  }
+  .result-contain p{
+    color: #1ab93d;
+    font-size: 0.9rem;
+
+  }
+  .select-subject{
+    width: 200px;
+    height: 24px;
+    border: none;
+    outline: none;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    border-bottom: 2px solid #303f9f;
   }
   .item-input {
     text-align: start;
