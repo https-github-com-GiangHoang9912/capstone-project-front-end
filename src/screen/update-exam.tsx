@@ -211,7 +211,7 @@ function UpdateExam(props: any) {
   const [subject, setSubject] = useState<Subject>();
   const [valueTypeAnswer, setValueTypeAnswer] = useState('tf');
   const [correctAnswerTypeTf, setCorrectAnswerTypeTf] = useState('true');
-  const [valueCorrectAnswer, setValueCorrectAnswer] = useState('nothing');
+  const [valueCorrectAnswer, setValueCorrectAnswer] = useState('0');
 
   const location: any = useLocation();
   const { idExam } = location.state.params;
@@ -220,6 +220,7 @@ function UpdateExam(props: any) {
   const idUser = localStorage.getItem('id') ? localStorage.getItem('id') : -1;
   //* Get question by idExam */
   useEffect(() => {
+    setCorrectAnswerTypeTf('true')
     axios
       .get(`${GET_QUESTIONS_URL}/${idExam}`)
       .then((response) => {
@@ -270,21 +271,19 @@ function UpdateExam(props: any) {
   //* event process click button save in dialog add question
 
   const handleSaveQuestion = async (e: any) => {
-    e.preventDefault();
-    // console.log('close dialog', arrayCheck);
+    e.preventDefault()
     const questionAdd = arrayCheck.map((item: any) => ({
       questionBankId: item,
       examId: idExam,
-    }));
-    console.log('close dialog', questionAdd);
-    const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd);
+    }))
+    console.log('close dialog', questionAdd)
+    const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd)
     if (response) {
-      console.log(response);
-      setOpenDialogAdd(false);
+      console.log(response)
+      setOpenDialogAdd(false)
     } else {
-      console.log('Error add question to exam');
+      console.log('Error add question to exam')
     }
-    console.log(questionAdd);
   }
   const handleCloseDialogAdd = async (e: any) => {
     e.preventDefault();
@@ -295,7 +294,7 @@ function UpdateExam(props: any) {
   const handleAddAnswer = () => {
     const newAnswerGroup = [...currentQuestionAnswerGroup];
     newAnswerGroup.push({
-      correct: false,
+      correct: newAnswerGroup.length == 0,
       answer: {
         answerText: '',
       },
@@ -342,31 +341,19 @@ function UpdateExam(props: any) {
     // e.preventDefault()
     console.log('currentQuestionAnswerGroup: ', currentQuestionAnswerGroup);
     let response = null;
-    if (valueTypeAnswer === 'tf') {
-      // console.log(currentQuestionAnswerGroup.length)
-      // if (currentQuestionAnswerGroup.length == 0) setCurrentQuestionAnswerGroup([...defaultAnswerGroup])
-      // console.log(currentQuestionAnswerGroup.length)
-      // console.log('True false choice', valueTypeAnswer);
-      response = await axios.post(`${CREATE_ANSWERS_TF_URL}/${idQuestion}`, currentQuestionAnswerGroup);
-      if (response) {
-        console.log(response);
-        setOpenDialogUpdate(false);
-      } else {
-        console.log('Error create answer tf...!');
+    response = await axios.post(`${CREATE_ANSWERS_TF_URL}/${idQuestion}`,
+      {
+        currentQuestionAnswerGroup,
+        valueTypeAnswer
       }
+    );
+    if (response) {
+      console.log(response);
+      setOpenDialogUpdate(false);
     } else {
-      // console.log('Multiple choice', valueTypeAnswer);
-      // console.log('id question', idQuestion);
-      // response = await axios.put(`${UPDATE_QUESTION_MULTIPLE_URL}/${idQuestion}`,
-      //   answersGroupUpdate
-      // );
-      // if (response) {
-      //   console.log(response);
-      //   setOpenDialogUpdate(false);
-      // } else {
-      //   console.log('Error update answer multiple...!');
-      // }
+      console.log('Error create answer tf...!');
     }
+
   }
 
   const handleCloseUpdateQuestion = () => {
@@ -382,7 +369,7 @@ function UpdateExam(props: any) {
         {
           questionId: idQuestion,
           answerId: 1,
-          correct: false,
+          correct: true,
           answer: {
             id: 1,
             answerText: 'true'
@@ -391,7 +378,7 @@ function UpdateExam(props: any) {
         {
           questionId: idQuestion,
           answerId: 2,
-          correct: true,
+          correct: false,
           answer: {
             id: 2,
             answerText: 'false'
@@ -523,37 +510,44 @@ function UpdateExam(props: any) {
   const bodyAddQuestion = (
     <div className={classes.paper}>
       <div className={classes.contentExam}>
-        {subject?.questionBank.map((quesBank: any, index: number) => (
-          <div className={classes.question}>
-            <input
-              type="checkbox"
-              className={classes.checkBoxQuestion}
-              onChange={(e: any) => {
-                if (e.target.checked) {
-                  arrayCheck.push(quesBank.id)
-                  // console.log('ka add', arrayCheck);
-                } else {
-                  for (let i = 0; i < arrayCheck.length; i++) {
-                    if (arrayCheck[i] === quesBank.id) {
-                      arrayCheck.splice(i, 1)
+        {subject?.questionBank.map((quesBank: any, index: number) => {
+          const isExist = questions.some((item) => item.questionBankId === quesBank.id)
+          if (!isExist) {
+            return (
+              <div className={classes.question}>
+                <input
+                  type="checkbox"
+                  className={classes.checkBoxQuestion}
+                  onChange={(e: any) => {
+                    if (e.target.checked) {
+                      arrayCheck.push(quesBank.id)
+                      // console.log('ka add', arrayCheck);
+                    } else {
+                      for (let i = 0; i < arrayCheck.length; i++) {
+                        if (arrayCheck[i] === quesBank.id) {
+                          arrayCheck.splice(i, 1)
+                        }
+                      }
+                      // console.log('ka xoa', arrayCheck);
                     }
-                  }
-                }
-              }}
-            />
-            <span className="sttQuestion">
-              {index + 1}.{' '}
-              <span
-                style={{
-                  margin: '0px 10px',
-                  color: '#000000',
-                }}
-              >
-                {quesBank.questionText}
-              </span>
-            </span>
-          </div>
-        ))}
+                  }}
+                />
+                <span className="sttQuestion">
+                  {index + 1}.{' '}
+                  <span
+                    style={{
+                      margin: '0px 10px',
+                      color: '#000000',
+                    }}
+                  >
+                    {quesBank.questionText}
+                  </span>
+                </span>
+              </div>
+            )
+          }
+          return ''
+        })}
       </div>
     </div>
   )
@@ -573,7 +567,7 @@ function UpdateExam(props: any) {
       })
     } else {
       setCurrentQuestionAnswerGroup([]);
-      // setValueCorrectAnswer(`0`)
+      setValueCorrectAnswer(`0`)
     }
   }, [openDialogUpdate])
 
