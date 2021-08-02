@@ -278,7 +278,7 @@ const Login: FC<LoginProps> = (props) => {
               </div>
               <div className={classes.loginGoogle}>
                 <GoogleLogin
-                  clientId={CONSTANT.GOOGLE_CLIENT_ID_LOCAL}
+                  clientId={CONSTANT.GOOGLE_CLIENT_ID}
                   buttonText="FPT.EDU.VN"
                   onSuccess={responseGoogle}
                   onFailure={responseGoogle}
