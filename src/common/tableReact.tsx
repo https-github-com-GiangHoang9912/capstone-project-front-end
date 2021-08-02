@@ -51,7 +51,7 @@ function TableReact(props: any) {
         <thead>
           {headerGroups.map((headerGroup, index) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-              <th>No. </th>
+              
               {headerGroup.headers.map((column, i) => (
                 <th {...column.getHeaderProps()} key={i}>
                   {column.render('Header')}
@@ -67,7 +67,6 @@ function TableReact(props: any) {
             const { key, ...restRowProps } = row.getRowProps()
             return (
               <tr key={key} {...restRowProps}>
-                <td>{index + 1}</td>
                 {row.cells.map((cell) => {
                   const { ...restCellProps } = cell.getCellProps()
                   return <td {...restCellProps}>{cell.render('Cell')}</td>
@@ -135,7 +134,7 @@ const StyleTable = styled(TableReact)`
   th {
     text-align: left;
     color: #fff;
-    font-size: 16px;
+    font-size: 1rem;
     background-color: #303f9f;
     padding: 0.8rem 0.7rem;
   }
