@@ -34,10 +34,16 @@ const StyledTableRow = withStyles((theme: Theme) =>
   })
 )(TableRow)
 
+
+
 const useStyles = makeStyles({
+  container: {
+    width: '94%',
+    margin: 'auto',
+  },
   table: {
     minWidth: 700,
-    marginTop: 50,
+    
   },
   styleBtn: {
     width: 75,
@@ -76,14 +82,13 @@ export function TableCheckDuplicate(props: any) {
   }
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} className={classes.container}>
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell>Question</StyledTableCell>
             <StyledTableCell>Duplicate Score</StyledTableCell>
             <StyledTableCell>Duplicate Status</StyledTableCell>
-            <StyledTableCell>Add</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -96,19 +101,7 @@ export function TableCheckDuplicate(props: any) {
               <StyledTableCell>
                 {item.point.toFixed(2) >= 0.6 ? 'Duplicate' : 'No Duplicate'}
               </StyledTableCell>
-              <StyledTableCell>
-                {item.point.toFixed(2) >= 0.6 ? (
-                  'Duplicate'
-                ) : (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAddQuestion(item.question)}
-                  >
-                    Add To Bank
-                  </Button>
-                )}
-              </StyledTableCell>
+              
             </StyledTableRow>
           ))}
         </TableBody>
@@ -117,72 +110,4 @@ export function TableCheckDuplicate(props: any) {
   )
 }
 
-export function TableViewExam(props: any) {
-  const classes = useStyles()
-  const { results } = props
-  const [isOpen, setIsOpen] = useState(false)
 
-  function handleDelete() {
-    setIsOpen(true)
-    // return id;
-    // console.log()
-  }
-  const handleAcceptDelete = () => {
-    setIsOpen(false)
-    console.log('aaa')
-  }
-  const handleDialogClose = () => {
-    setIsOpen(false)
-  }
-  return (
-    <TableContainer className={classes.viewExam}>
-      <Table className={classes.tableView} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>ID</StyledTableCell>
-            <StyledTableCell>Exam Name</StyledTableCell>
-            <StyledTableCell>View</StyledTableCell>
-            <StyledTableCell>Update</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {results.map((item: any, i: number) => (
-            <StyledTableRow key={i}>
-              <StyledTableCell component="th" scope="row" width={20}>
-                {item.id}
-              </StyledTableCell>
-              <StyledTableCell width={200}>{item.name}</StyledTableCell>
-              <StyledTableCell width={20}>
-                <span>
-                  <FontAwesomeIcon className={classes.detailExam} icon={faEye} />
-                </span>
-              </StyledTableCell>
-              <StyledTableCell width={180}>
-                <Button variant="contained" color="primary" className={classes.styleBtn}>
-                  Edit
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleDelete}
-                  className={classes.styleBtn}
-                >
-                  Delete
-                </Button>
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
-          <Dialog
-            title="Delete Exam"
-            message="Do you want delete this exam???"
-            buttonAccept="Yes"
-            buttonCancel="No"
-            isOpen={isOpen}
-            handleAccept={handleAcceptDelete}
-            handleClose={handleDialogClose}
-          />
-        </TableBody>
-      </Table>
-    </TableContainer>
-  )
-}

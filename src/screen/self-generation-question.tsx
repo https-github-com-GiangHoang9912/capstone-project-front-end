@@ -8,7 +8,6 @@ import Button from '@material-ui/core/Button'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
 import Chip from '@material-ui/core/Chip';
-import green from '@material-ui/core/colors/green';
 import DoneIcon from '@material-ui/icons/Done';
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import IconButton from '@material-ui/core/IconButton'
@@ -334,7 +333,6 @@ const SelfStyle = styled(SelfGenerate)`
   .result-contain p{
     color: #1ab93d;
     font-size: 0.9rem;
-
   }
   .select-subject{
     width: 200px;
