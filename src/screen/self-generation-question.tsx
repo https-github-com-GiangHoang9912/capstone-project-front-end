@@ -95,22 +95,24 @@ const SelfGenerate = (props: any) => {
   }
   async function handleProgress(e: any) {
     e.preventDefault()
-    setIsDisable(true)
     const id = localStorage.getItem('id')
-    setProgress(progress + 10)
-    const response = await axios.post(MODEL_SELF_GENERATION_URL, items).catch(async (error) => {
+    try {
+      setIsDisable(true)
+      setProgress(progress + 10)
+      const response = await axios.post(MODEL_SELF_GENERATION_URL, items)
+      console.log(response)
+      if (response && response.data) {
+        const newArr = response.data.question?.map((item: string, index: number) => ({
+          id: index + 1,
+          text: item,
+        }))
+        setQuestions(newArr)
+        setProgress(100)
+        setVisibleResult(true)
+        setIsDisable(false)
+      }
+    } catch (error) {
       refreshToken(error, id ? Number(id) : account.id)
-    })
-    console.log(response)
-    if (response && response.data) {
-      const newArr = response.data.question?.map((item: string, index: number) => ({
-        id: index + 1,
-        text: item,
-      }))
-      setQuestions(newArr)
-      setProgress(100)
-      setVisibleResult(true)
-      setIsDisable(false)
     }
   }
 
@@ -158,12 +160,17 @@ const SelfGenerate = (props: any) => {
     </div>
   )
   const handleCheckDuplication = async (text: String) => {
-    await axios.get(GET_SUBJECT_URL).then((response) => {
-      setSubjects(response.data)
-      console.log(response.data)
-    })
-    setIsOpen(true)
-    setIsDuplicate(true)
+    const userId = localStorage.getItem('id')
+    try {
+      await axios.get(GET_SUBJECT_URL).then((response) => {
+        setSubjects(response.data)
+        console.log(response.data)
+      })
+      setIsOpen(true)
+      setIsDuplicate(true)
+    } catch (error) {
+      refreshToken(error, userId ? Number(userId) : account.id)
+    }
   }
   const handleInputAnswer = (index: number) => (e: any) => {
     const newArr = [...items]

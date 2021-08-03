@@ -6,12 +6,7 @@ const cookies = new Cookies()
 const REFRESH_JWT_TOKEN = `${CONSTANTS.BASE_URL}/refresh-token`
 
 export const refreshToken = async (error: any, userId: number) => {
-  if (error.response && error.response.status === 401) {
-    await axios.post(REFRESH_JWT_TOKEN, {
-      id: userId,
-    })
-  }
-  if (error.response == null) {
+  if (error.response && error.response.status === 401 || error.response == null) {
     await axios.post(REFRESH_JWT_TOKEN, {
       id: userId,
     })

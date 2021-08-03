@@ -73,23 +73,24 @@ function Duplicate(props: any) {
   }, [])
 
   async function handleCheck() {
-    setIsDisable(true)
-    setProgress(progress + 10)
-    const response = await axios
-      .post(MODEL_CHECK_DUPLICATE_URL, {
+    try {
+      setIsDisable(true)
+      setProgress(progress + 10)
+      const response = await axios.post(MODEL_CHECK_DUPLICATE_URL, {
         question,
       })
-      .catch(async (error) => {
-        refreshToken(error, id ? Number(id) : account.id)
-      })
-    if (response && response.data) {
-      setResult(response.data)
-      setVisibleResult(true)
-      setProgress(100)
-      setIsDisable(false)
-      handleNotification('success', `${response.status}: Successful`)
+      if (response && response.data) {
+        setResult(response.data)
+        setVisibleResult(true)
+        setProgress(100)
+        setIsDisable(false)
+        handleNotification('success', `${response.status}: Successful`)
+      }
+    } catch (error) {
+      refreshToken(error, id ? Number(id) : account.id)
     }
   }
+
   function handleInputQuestion(e: any) {
     setQuestion(e.target.value)
   }
@@ -108,22 +109,25 @@ function Duplicate(props: any) {
 
   const handleAddFileBank = async (e: any) => {
     e.preventDefault()
-    setIsDisableAddBank(true)
-    setProgress(progress + 10)
-    const formData = new FormData()
-    formData.append('train', file, file.name)
+    try {
+      setIsDisableAddBank(true)
+      setProgress(progress + 10)
+      const formData = new FormData()
+      formData.append('train', file, file.name)
 
-    const response = await axios.post(ADD_FILE_DATASET_URL, formData).catch(async (error) => {
+      const response = await axios.post(ADD_FILE_DATASET_URL, formData)
+
+      if (response && response.data) {
+        setProgress(100)
+        setIsDisableAddBank(false)
+        handleNotification('success', `${response.status}: Training data Successful`)
+      } else {
+        setProgress(100)
+        setIsDisableAddBank(false)
+        handleNotification('danger', `Training data fail`)
+      }
+    } catch (error) {
       refreshToken(error, id ? Number(id) : account.id)
-    })
-    if (response && response.data) {
-      setProgress(100)
-      setIsDisableAddBank(false)
-      handleNotification('success', `${response.status}: Training data Successful`)
-    } else {
-      setProgress(100)
-      setIsDisableAddBank(false)
-      handleNotification('danger', `Training data fail`)
     }
   }
 

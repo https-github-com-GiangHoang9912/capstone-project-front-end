@@ -1,4 +1,4 @@
-import react, { useState, useEffect, useRef, useCallback } from 'react'
+import react, { useState, useEffect, useRef, useCallback, useContext } from 'react'
 import PropTypes from 'prop-types'
 
 // import Checkbox from '@material-ui/core/Checkbox';
@@ -22,7 +22,8 @@ import TextField from '@material-ui/core/TextField'
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle'
 import DialogCustom from '../common/dialog'
 import * as CONSTANT from '../const'
-
+import { refreshToken } from '../services/services'
+import { AccountContext } from '../contexts/account-context'
 import Table from '../common/tableReact'
 
 UpdateExam.propTypes = {
@@ -176,12 +177,13 @@ const CREATE_ANSWERS_TF_URL = `${CONSTANT.BASE_URL}/answers-groups/create`
 const UPDATE_QUESTION_MULTIPLE_URL = `${CONSTANT.BASE_URL}/answers-groups/update/multiple`
 const GET_ANSWER_GROUP_DETAIL_URL = `${CONSTANT.BASE_URL}/answers-groups`
 
-
 function UpdateExam(props: any) {
   const { className } = props
   const classes = useStyles()
   const [scroll, setScroll] = useState('paper')
   const history = useHistory()
+  const { accountContextData } = useContext(AccountContext)
+  const account = accountContextData
   const typingTimeoutRef = useRef(-1)
   const [openDialogAdd, setOpenDialogAdd] = useState(false) // for event click add
   const [openDialogDelete, setOpenDialogDelete] = useState(false)
@@ -208,121 +210,131 @@ function UpdateExam(props: any) {
     },
   ])
 
-  const [subject, setSubject] = useState<Subject>();
-  const [valueTypeAnswer, setValueTypeAnswer] = useState('tf');
-  const [correctAnswerTypeTf, setCorrectAnswerTypeTf] = useState('true');
-  const [valueCorrectAnswer, setValueCorrectAnswer] = useState('0');
+  const [subject, setSubject] = useState<Subject>()
+  const [valueTypeAnswer, setValueTypeAnswer] = useState('tf')
+  const [correctAnswerTypeTf, setCorrectAnswerTypeTf] = useState('true')
+  const [valueCorrectAnswer, setValueCorrectAnswer] = useState('0')
 
-  const location: any = useLocation();
-  const { idExam } = location.state.params;
-  const { idSubject } = location.state.params;
-  const { examName } = location.state.params;
-  const idUser = localStorage.getItem('id') ? localStorage.getItem('id') : -1;
+  const location: any = useLocation()
+  const { idExam } = location.state.params
+  const { idSubject } = location.state.params
+  const { examName } = location.state.params
+  const idUser = localStorage.getItem('id') ? localStorage.getItem('id') : -1
   //* Get question by idExam */
   useEffect(() => {
     setCorrectAnswerTypeTf('true')
     axios
       .get(`${GET_QUESTIONS_URL}/${idExam}`)
       .then((response) => {
-        setQuestions(response.data[0].question);
+        setQuestions(response.data[0].question)
       })
       .catch((err) => {
-        console.log('Failed to get question by  id Exam: ', err.message);
+        console.log('Failed to get question by  id Exam: ', err.message)
       })
   }, [openDialogDelete, openDialogAdd, openDialogUpdate])
 
   //* Get question bank by subject id */
   useEffect(() => {
-    console.log('update:', idSubject);
+    console.log('update:', idSubject)
     axios
       .get(`${GET_QUESTIONBANK_URL}/${idSubject}`)
       .then((response) => {
         setSubject(response.data[0])
       })
       .catch((err) => {
-        console.log('Failed to get question bank by id subject: ', err.message);
+        console.log('Failed to get question bank by id subject: ', err.message)
       })
-  }, []);
+  }, [])
 
   // console.log('Question huhu: ', subject);
   /** event click button delete */
   const handleClickDelete = (id: number, name: string) => {
-    setOpenDialogDelete(true);
-    setIdQuestion(id);
-    setNameQuestion(name);
+    setOpenDialogDelete(true)
+    setIdQuestion(id)
+    setNameQuestion(name)
   }
   const handleAcceptDialogDelete = async (id: number) => {
-    const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`);
-    if (response) {
-      console.log(response);
-      setOpenDialogDelete(false);
+    const userId = localStorage.getItem('id')
+    try {
+      const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`)
+      if (response) {
+        console.log(response)
+        setOpenDialogDelete(false)
+      }
+    } catch (error) {
+      refreshToken(error, userId ? Number(userId) : account.id)
     }
   }
   const handleCancelDialogDelete = () => {
-    setOpenDialogDelete(false);
+    setOpenDialogDelete(false)
   }
   /** event click button add */
   const handleClickAddQuestion = () => {
-    console.log('jajajaja', questions);
-    setOpenDialogAdd(true);
-    setScroll(scroll);
+    console.log('jajajaja', questions)
+    setOpenDialogAdd(true)
+    setScroll(scroll)
   }
 
   //* event process click button save in dialog add question
 
   const handleSaveQuestion = async (e: any) => {
     e.preventDefault()
-    const questionAdd = arrayCheck.map((item: any) => ({
-      questionBankId: item,
-      examId: idExam,
-    }))
-    console.log('close dialog', questionAdd)
-    const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd)
-    if (response) {
-      console.log(response)
-      setOpenDialogAdd(false)
-    } else {
-      console.log('Error add question to exam')
+    const userId = localStorage.getItem('id')
+    try {
+      const questionAdd = arrayCheck.map((item: any) => ({
+        questionBankId: item,
+        examId: idExam,
+      }))
+      console.log('close dialog', questionAdd)
+      const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd)
+      if (response) {
+        console.log(response)
+        setOpenDialogAdd(false)
+      } else {
+        console.log('Error add question to exam')
+      }
+    } catch (error) {
+      refreshToken(error, userId ? Number(userId) : account.id)
     }
   }
   const handleCloseDialogAdd = async (e: any) => {
-    e.preventDefault();
-    setOpenDialogAdd(false);
+    e.preventDefault()
+    setOpenDialogAdd(false)
   }
 
   //* Handle process with answer
   const handleAddAnswer = () => {
-    const newAnswerGroup = [...currentQuestionAnswerGroup];
+    const newAnswerGroup = [...currentQuestionAnswerGroup]
     newAnswerGroup.push({
       correct: newAnswerGroup.length == 0,
       answer: {
         answerText: '',
       },
     })
-    setCurrentQuestionAnswerGroup(newAnswerGroup);
+    setCurrentQuestionAnswerGroup(newAnswerGroup)
   }
 
   const handleInputAnswer = (index: number) => (e: any) => {
-    const newArr = [...currentQuestionAnswerGroup];
-    newArr[index].answer.answerText = e.target.value;
-    setCurrentQuestionAnswerGroup(newArr);
+    const newArr = [...currentQuestionAnswerGroup]
+    newArr[index].answer.answerText = e.target.value
+    setCurrentQuestionAnswerGroup(newArr)
   }
 
   const handleDeleteAnswer = (index: number) => {
-    currentQuestionAnswerGroup.splice(index, 1);
-    const newArr = [...currentQuestionAnswerGroup];
-    setCurrentQuestionAnswerGroup(newArr);
-    console.log(newArr);
+    currentQuestionAnswerGroup.splice(index, 1)
+    const newArr = [...currentQuestionAnswerGroup]
+    setCurrentQuestionAnswerGroup(newArr)
+    console.log(newArr)
   }
 
   //* Dialog edit question in exams
   const handleClickEditQuestion = (questionId: number, answerGroupsUpdate: AnswerGroup[]) => {
-    setAnswerCorrect(undefined);
-    setCurrentQuestionAnswerGroup(answerGroupsUpdate);
+    setAnswerCorrect(undefined)
+    setCurrentQuestionAnswerGroup(answerGroupsUpdate)
     answerGroupsUpdate.forEach((item: AnswerGroup) => {
       if (item.correct) setAnswerCorrect(item.answer)
     })
-    setIdQuestion(questionId);
+    setIdQuestion(questionId)
     // console.log(questionId);
     axios
       .get(`${GET_QUESTION_DETAIL_URL}/${questionId}`)
@@ -334,37 +346,38 @@ function UpdateExam(props: any) {
         console.log('Failed to get question detail by id: ', err.message)
       })
 
-    setOpenDialogUpdate(true);
+    setOpenDialogUpdate(true)
   }
 
   const handleSaveUpdateQuestion = async (e: any) => {
-    // e.preventDefault()
-    console.log('currentQuestionAnswerGroup: ', currentQuestionAnswerGroup);
-    let response = null;
-    response = await axios.post(`${CREATE_ANSWERS_TF_URL}/${idQuestion}`,
-      {
+    e.preventDefault()
+    const userId = localStorage.getItem('id')
+    try {
+      let response = null
+      response = await axios.post(`${CREATE_ANSWERS_TF_URL}/${idQuestion}`, {
         currentQuestionAnswerGroup,
-        valueTypeAnswer
+        valueTypeAnswer,
+      })
+      if (response) {
+        console.log(response)
+        setOpenDialogUpdate(false)
+      } else {
+        console.log('Error create answer tf...!')
       }
-    );
-    if (response) {
-      console.log(response);
-      setOpenDialogUpdate(false);
-    } else {
-      console.log('Error create answer tf...!');
+    } catch (error) {
+      refreshToken(error, userId ? Number(userId) : account.id)
     }
-
   }
 
   const handleCloseUpdateQuestion = () => {
-    setOpenDialogUpdate(false);
-    setCurrentQuestionAnswerGroup([]);
+    setOpenDialogUpdate(false)
+    setCurrentQuestionAnswerGroup([])
   }
 
   useEffect(() => {
     if (valueTypeAnswer === 'tf' && currentQuestionAnswerGroup.length <= 0) {
-      console.log('True false choice');
-      console.log('id: ', idQuestion);
+      console.log('True false choice')
+      console.log('id: ', idQuestion)
       const answerGroupDefault = [
         {
           questionId: idQuestion,
@@ -372,8 +385,8 @@ function UpdateExam(props: any) {
           correct: true,
           answer: {
             id: 1,
-            answerText: 'true'
-          }
+            answerText: 'true',
+          },
         },
         {
           questionId: idQuestion,
@@ -381,52 +394,52 @@ function UpdateExam(props: any) {
           correct: false,
           answer: {
             id: 2,
-            answerText: 'false'
-          }
-        }
-      ];
-      console.log('defaultAnswerGroup', answerGroupDefault);
-      setDefaultAnswerGroup(answerGroupDefault);
+            answerText: 'false',
+          },
+        },
+      ]
+      console.log('defaultAnswerGroup', answerGroupDefault)
+      setDefaultAnswerGroup(answerGroupDefault)
     }
-  }, [valueTypeAnswer]);
+  }, [valueTypeAnswer])
 
   //* Event when click radio button tf or multiple choice
   const handleChangeTypeAnswer = (event: any) => {
-    setValueTypeAnswer(event.target.value);
-    if (currentQuestionAnswerGroup.length == 0) setCurrentQuestionAnswerGroup([...defaultAnswerGroup])
-    console.log(valueTypeAnswer);
-    console.log('length: ', currentQuestionAnswerGroup.length);
-    console.log('id: ', idQuestion);
+    setValueTypeAnswer(event.target.value)
+    if (currentQuestionAnswerGroup.length == 0)
+      setCurrentQuestionAnswerGroup([...defaultAnswerGroup])
+    console.log(valueTypeAnswer)
+    console.log('length: ', currentQuestionAnswerGroup.length)
+    console.log('id: ', idQuestion)
   }
   //* Event when click radio button tf
   const handleChangeCorrectTf = (event: any) => {
-    setCorrectAnswerTypeTf(event.target.value);
+    setCorrectAnswerTypeTf(event.target.value)
     console.log(event.target.value)
     // console.log('currnt: ', currentQuestionAnswerGroup);
     const newResult = currentQuestionAnswerGroup.map((item: AnswerGroup, index: number) => {
       // console.log(index, '==', item, '==', event.target.value);
       console.log(index == event.target.value)
-      const itemAnswer = { ...item };
-      itemAnswer.correct = false;
+      const itemAnswer = { ...item }
+      itemAnswer.correct = false
       if (item.answer.answerText.toLowerCase() === event.target.value) {
-        itemAnswer.correct = true;
+        itemAnswer.correct = true
       }
-      return itemAnswer;
-
+      return itemAnswer
     })
-    console.log('new ggg', newResult);
-    setCurrentQuestionAnswerGroup(() => newResult);
+    console.log('new ggg', newResult)
+    setCurrentQuestionAnswerGroup(() => newResult)
   }
   //* Event when click multiple choice
   const handleCorrectAnswerMultiple = (event: any) => {
-    setValueCorrectAnswer(event.target.value);
+    setValueCorrectAnswer(event.target.value)
     const newAnswers = currentQuestionAnswerGroup.map((item: AnswerGroup, index: number) => {
-      const itemAnswer = { ...item };
-      itemAnswer.correct = false;
+      const itemAnswer = { ...item }
+      itemAnswer.correct = false
       if (index == event.target.value) {
-        itemAnswer.correct = true;
+        itemAnswer.correct = true
       }
-      return itemAnswer;
+      return itemAnswer
     })
     console.log('new', newAnswers)
     setCurrentQuestionAnswerGroup(newAnswers)
@@ -553,20 +566,20 @@ function UpdateExam(props: any) {
   )
 
   useEffect(() => {
-    console.log(answerCorrect);
-    console.log(valueTypeAnswer);
-    setValueTypeAnswer('multiple');
+    console.log(answerCorrect)
+    console.log(valueTypeAnswer)
+    setValueTypeAnswer('multiple')
     if (answerCorrect && (answerCorrect.id === 1 || answerCorrect.id === 2)) {
-      setValueTypeAnswer('tf');
+      setValueTypeAnswer('tf')
       // const valueCorrect = answerCorrect.id === 1 ? '1' : '0';
-      setCorrectAnswerTypeTf(answerCorrect.answerText.toLowerCase());
+      setCorrectAnswerTypeTf(answerCorrect.answerText.toLowerCase())
     }
     if (currentQuestionAnswerGroup.length > 0) {
       currentQuestionAnswerGroup.forEach((item, index) => {
         if (item.correct) setValueCorrectAnswer(`${index}`)
       })
     } else {
-      setCurrentQuestionAnswerGroup([]);
+      setCurrentQuestionAnswerGroup([])
       setValueCorrectAnswer(`0`)
     }
   }, [openDialogUpdate])
