@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useContext } from 'react'
 import { Button, makeStyles } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import TextField from '@material-ui/core/TextField'
@@ -19,6 +19,8 @@ import Select from '@material-ui/core/Select'
 import axios from 'axios'
 import * as moment from 'moment'
 import * as CONSTANT from '../const'
+import { AccountContext } from '../contexts/account-context'
+import { refreshToken } from '../services/services'
 
 import Table from '../common/tableReact'
 
@@ -122,6 +124,8 @@ function ListExam(props: any) {
   const { className } = props
   const classes = useStyles()
   const history = useHistory()
+  const { accountContextData } = useContext(AccountContext)
+  const account = accountContextData
   const [isOpen, setIsOpen] = useState(false)
   const [openDialogCreate, setOpenDialogCreate] = useState(false)
   const [openDialogDelete, setOpenDialogDelete] = useState(false)
@@ -205,7 +209,7 @@ function ListExam(props: any) {
       examName,
     }
 
-    console.log('?????', infor)
+    console.log('????? infor ', infor)
 
     history.push('/update-exam', { params: infor })
   }
@@ -298,13 +302,17 @@ function ListExam(props: any) {
   }
 
   const handleDeleteClose = async (id: number) => {
-    console.log('id exam delete', id)
-    const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`)
-    if (response) {
+    const userId = localStorage.getItem('id')
+    try {
+      const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`)
+      if (response) {
+        console.log(response)
+        setOpenDialogDelete(false)
+      }
       console.log(response)
-      setOpenDialogDelete(false)
+    } catch (error) {
+      refreshToken(error, userId ? Number(userId) : account.id)
     }
-    console.log(response)
   }
 
   const [textSearch, setTextSearch] = useState<string>('')
@@ -314,7 +322,6 @@ function ListExam(props: any) {
     setTextSearch(e.target.value)
   }, [])
 
-  // const listCheckBox = document.querySelectorAll(".check-box");
   //* Body view exam dialog */
   const bodyView = (
     <div className={classes.paper}>
@@ -414,15 +421,18 @@ function ListExam(props: any) {
 
   const handleCreateExam = async (e: any) => {
     e.preventDefault()
-    console.log(subjectId)
-    console.log(txtNameExam)
-    const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
-      subjectId,
-      examName: txtNameExam,
-    })
-    if (response) {
-      console.log(response)
-      setOpenDialogCreate(false)
+    const userId = localStorage.getItem('id')
+    try {
+      const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
+        subjectId,
+        examName: txtNameExam,
+      })
+      if (response) {
+        console.log(response)
+        setOpenDialogCreate(false)
+      }
+    } catch (error) {
+      refreshToken(error, userId ? Number(userId) : account.id)
     }
   }
 

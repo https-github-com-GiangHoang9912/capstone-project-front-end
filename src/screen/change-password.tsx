@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { faCheck, faLock, faEye } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components'
 import * as CONSTANT from '../const'
+import { refreshToken } from '../services/services'
+import { AccountContext } from '../contexts/account-context'
 
 ChangePassword.propTypes = {
   className: PropTypes.string,
@@ -17,6 +19,8 @@ ChangePassword.defaultProps = {
 const CHANGE_PASSWORD = `${CONSTANT.BASE_URL}/changePassword`
 function ChangePassword(props: any) {
   const { className } = props
+  const { accountContextData } = useContext(AccountContext)
+  const account = accountContextData
   const [oldPassword, setOldPassword] = useState<String>('')
   const [newPassword, setNewPassword] = useState<String>('')
   const [rePassword, setRePassword] = useState<String>('')
@@ -36,16 +40,21 @@ function ChangePassword(props: any) {
   ])
   const changePassword = async (e: any) => {
     e.preventDefault()
-    const response = await axios.post(
-      CHANGE_PASSWORD,
-      {
-        oldPassword,
-        newPassword,
-      },
-      {
-        withCredentials: true,
-      }
-    )
+    const id = localStorage.getItem('id')
+    try {
+      await axios.post(
+        CHANGE_PASSWORD,
+        {
+          oldPassword,
+          newPassword,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+    } catch (error) {
+      refreshToken(error, id ? Number(id) : account.id)
+    }
   }
   const onCheckBtnClick = useCallback((id) => {
     setIconList((prevState) =>

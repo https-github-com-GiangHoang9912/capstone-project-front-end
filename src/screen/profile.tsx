@@ -113,7 +113,7 @@ function Profile(props: any) {
           window.location.reload()
         }
       } catch (error) {
-        refreshToken(error, id ? Number(id) : account.id)
+        refreshToken(error, id ? id : account.id)
       }
     }
   }

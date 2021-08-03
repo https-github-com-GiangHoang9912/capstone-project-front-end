@@ -1,4 +1,4 @@
-import react, { useState, useEffect, useRef } from 'react'
+import react, { useState, useEffect, useRef, useCallback, useContext } from 'react'
 import PropTypes from 'prop-types'
 
 // import Checkbox from '@material-ui/core/Checkbox';
@@ -22,7 +22,8 @@ import TextField from '@material-ui/core/TextField'
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle'
 import DialogCustom from '../common/dialog'
 import * as CONSTANT from '../const'
-
+import { refreshToken } from '../services/services'
+import { AccountContext } from '../contexts/account-context'
 import Table from '../common/tableReact'
 
 UpdateExam.propTypes = {
@@ -46,8 +47,6 @@ interface Subject {
 interface Answer {
   id?: number
   answerText: string
-  // answerGroupId?: number
-  // correct?: boolean
 }
 interface AnswerGroup {
   id?: number
@@ -173,13 +172,18 @@ const GET_QUESTION_DETAIL_URL = `${CONSTANT.BASE_URL}/questions`
 const DELETE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/delete`
 const GET_QUESTIONBANK_URL = `${CONSTANT.BASE_URL}/subject`
 const CREATE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/create`
-const UPDATE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/update`
+const UPDATE_ANSWERS_TF_URL = `${CONSTANT.BASE_URL}/answers-groups/update`
+const CREATE_ANSWERS_TF_URL = `${CONSTANT.BASE_URL}/answers-groups/create`
+const UPDATE_QUESTION_MULTIPLE_URL = `${CONSTANT.BASE_URL}/answers-groups/update/multiple`
+const GET_ANSWER_GROUP_DETAIL_URL = `${CONSTANT.BASE_URL}/answers-groups`
 
 function UpdateExam(props: any) {
   const { className } = props
   const classes = useStyles()
   const [scroll, setScroll] = useState('paper')
   const history = useHistory()
+  const { accountContextData } = useContext(AccountContext)
+  const account = accountContextData
   const typingTimeoutRef = useRef(-1)
   const [openDialogAdd, setOpenDialogAdd] = useState(false) // for event click add
   const [openDialogDelete, setOpenDialogDelete] = useState(false)
@@ -187,6 +191,7 @@ function UpdateExam(props: any) {
   const [nameQuestion, setNameQuestion] = useState('')
   const [openDialogUpdate, setOpenDialogUpdate] = useState(false)
   const [currentQuestionAnswerGroup, setCurrentQuestionAnswerGroup] = useState<AnswerGroup[]>([])
+  const [defaultAnswerGroup, setDefaultAnswerGroup] = useState<AnswerGroup[]>([])
   const [answerCorrect, setAnswerCorrect] = useState<Answer | undefined>(undefined)
   const arrayCheck = new Array<number>()
   const [question, setQuestion] = useState<Question>()
@@ -217,6 +222,7 @@ function UpdateExam(props: any) {
   const idUser = localStorage.getItem('id') ? localStorage.getItem('id') : -1
   //* Get question by idExam */
   useEffect(() => {
+    setCorrectAnswerTypeTf('true')
     axios
       .get(`${GET_QUESTIONS_URL}/${idExam}`)
       .then((response) => {
@@ -248,10 +254,15 @@ function UpdateExam(props: any) {
     setNameQuestion(name)
   }
   const handleAcceptDialogDelete = async (id: number) => {
-    const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`)
-    if (response) {
-      console.log(response)
-      setOpenDialogDelete(false)
+    const userId = localStorage.getItem('id')
+    try {
+      const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`)
+      if (response) {
+        console.log(response)
+        setOpenDialogDelete(false)
+      }
+    } catch (error) {
+      refreshToken(error, userId ? Number(userId) : account.id)
     }
   }
   const handleCancelDialogDelete = () => {
@@ -268,20 +279,23 @@ function UpdateExam(props: any) {
 
   const handleSaveQuestion = async (e: any) => {
     e.preventDefault()
-    // console.log('close dialog', arrayCheck);
-    const questionAdd = arrayCheck.map((item: any) => ({
-      questionBankId: item,
-      examId: idExam,
-    }))
-    // console.log('close dialog', questionAdd)
-    // const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd)
-    // if (response) {
-    //   console.log(response)
-    //   setOpenDialogAdd(false)
-    // } else {
-    //   console.log('Error add question to exam')
-    // }
-    console.log(questionAdd)
+    const userId = localStorage.getItem('id')
+    try {
+      const questionAdd = arrayCheck.map((item: any) => ({
+        questionBankId: item,
+        examId: idExam,
+      }))
+      console.log('close dialog', questionAdd)
+      const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd)
+      if (response) {
+        console.log(response)
+        setOpenDialogAdd(false)
+      } else {
+        console.log('Error add question to exam')
+      }
+    } catch (error) {
+      refreshToken(error, userId ? Number(userId) : account.id)
+    }
   }
   const handleCloseDialogAdd = async (e: any) => {
     e.preventDefault()
@@ -292,7 +306,7 @@ function UpdateExam(props: any) {
   const handleAddAnswer = () => {
     const newAnswerGroup = [...currentQuestionAnswerGroup]
     newAnswerGroup.push({
-      correct: false,
+      correct: newAnswerGroup.length == 0,
       answer: {
         answerText: '',
       },
@@ -321,6 +335,7 @@ function UpdateExam(props: any) {
       if (item.correct) setAnswerCorrect(item.answer)
     })
     setIdQuestion(questionId)
+    // console.log(questionId);
     axios
       .get(`${GET_QUESTION_DETAIL_URL}/${questionId}`)
       .then((response) => {
@@ -336,31 +351,21 @@ function UpdateExam(props: any) {
 
   const handleSaveUpdateQuestion = async (e: any) => {
     e.preventDefault()
-    let response = null
-    if (valueTypeAnswer === 'tf') {
-      let answerGroupId = 1
-      console.log('valueTypeAnswer 1', valueTypeAnswer)
-      if (correctAnswerTypeTf == 'true') {
-        console.log('answerGroupId ', answerGroupId)
-        response = await axios.put(`${UPDATE_QUESTION_URL}/${idQuestion}`, {
-          answerGroupId,
-        })
+    const userId = localStorage.getItem('id')
+    try {
+      let response = null
+      response = await axios.post(`${CREATE_ANSWERS_TF_URL}/${idQuestion}`, {
+        currentQuestionAnswerGroup,
+        valueTypeAnswer,
+      })
+      if (response) {
+        console.log(response)
+        setOpenDialogUpdate(false)
       } else {
-        answerGroupId = 2
-        console.log('answerGroupId', answerGroupId)
-        response = await axios.put(`${UPDATE_QUESTION_URL}/${idQuestion}`, {
-          answerGroupId,
-        })
+        console.log('Error create answer tf...!')
       }
-    } else {
-      console.log('multiple choice', valueTypeAnswer)
-      console.log('correct answer', valueCorrectAnswer)
-    }
-    if (response) {
-      console.log(response)
-      setOpenDialogUpdate(false)
-    } else {
-      console.log('Error update question to exam')
+    } catch (error) {
+      refreshToken(error, userId ? Number(userId) : account.id)
     }
   }
 
@@ -369,13 +374,61 @@ function UpdateExam(props: any) {
     setCurrentQuestionAnswerGroup([])
   }
 
+  useEffect(() => {
+    if (valueTypeAnswer === 'tf' && currentQuestionAnswerGroup.length <= 0) {
+      console.log('True false choice')
+      console.log('id: ', idQuestion)
+      const answerGroupDefault = [
+        {
+          questionId: idQuestion,
+          answerId: 1,
+          correct: true,
+          answer: {
+            id: 1,
+            answerText: 'true',
+          },
+        },
+        {
+          questionId: idQuestion,
+          answerId: 2,
+          correct: false,
+          answer: {
+            id: 2,
+            answerText: 'false',
+          },
+        },
+      ]
+      console.log('defaultAnswerGroup', answerGroupDefault)
+      setDefaultAnswerGroup(answerGroupDefault)
+    }
+  }, [valueTypeAnswer])
+
   //* Event when click radio button tf or multiple choice
-  const handleChange = (event: any) => {
+  const handleChangeTypeAnswer = (event: any) => {
     setValueTypeAnswer(event.target.value)
+    if (currentQuestionAnswerGroup.length == 0)
+      setCurrentQuestionAnswerGroup([...defaultAnswerGroup])
+    console.log(valueTypeAnswer)
+    console.log('length: ', currentQuestionAnswerGroup.length)
+    console.log('id: ', idQuestion)
   }
   //* Event when click radio button tf
-  const handleChangeCorrect = (event: any) => {
+  const handleChangeCorrectTf = (event: any) => {
     setCorrectAnswerTypeTf(event.target.value)
+    console.log(event.target.value)
+    // console.log('currnt: ', currentQuestionAnswerGroup);
+    const newResult = currentQuestionAnswerGroup.map((item: AnswerGroup, index: number) => {
+      // console.log(index, '==', item, '==', event.target.value);
+      console.log(index == event.target.value)
+      const itemAnswer = { ...item }
+      itemAnswer.correct = false
+      if (item.answer.answerText.toLowerCase() === event.target.value) {
+        itemAnswer.correct = true
+      }
+      return itemAnswer
+    })
+    console.log('new ggg', newResult)
+    setCurrentQuestionAnswerGroup(() => newResult)
   }
   //* Event when click multiple choice
   const handleCorrectAnswerMultiple = (event: any) => {
@@ -383,8 +436,6 @@ function UpdateExam(props: any) {
     const newAnswers = currentQuestionAnswerGroup.map((item: AnswerGroup, index: number) => {
       const itemAnswer = { ...item }
       itemAnswer.correct = false
-      console.log(index, valueCorrectAnswer, 'kk')
-      console.log(index == event.target.value)
       if (index == event.target.value) {
         itemAnswer.correct = true
       }
@@ -472,38 +523,44 @@ function UpdateExam(props: any) {
   const bodyAddQuestion = (
     <div className={classes.paper}>
       <div className={classes.contentExam}>
-        {subject?.questionBank.map((quesBank: any, index: number) => (
-          <div className={classes.question}>
-            <input
-              type="checkbox"
-              className={classes.checkBoxQuestion}
-              onChange={(e: any) => {
-                if (e.target.checked) {
-                  arrayCheck.push(quesBank.id)
-                  // console.log('ka add', arrayCheck);
-                } else {
-                  for (let i = 0; i < arrayCheck.length; i++) {
-                    if (arrayCheck[i] === quesBank.id) {
-                      arrayCheck.splice(i, 1)
+        {subject?.questionBank.map((quesBank: any, index: number) => {
+          const isExist = questions.some((item) => item.questionBankId === quesBank.id)
+          if (!isExist) {
+            return (
+              <div className={classes.question}>
+                <input
+                  type="checkbox"
+                  className={classes.checkBoxQuestion}
+                  onChange={(e: any) => {
+                    if (e.target.checked) {
+                      arrayCheck.push(quesBank.id)
+                      // console.log('ka add', arrayCheck);
+                    } else {
+                      for (let i = 0; i < arrayCheck.length; i++) {
+                        if (arrayCheck[i] === quesBank.id) {
+                          arrayCheck.splice(i, 1)
+                        }
+                      }
+                      // console.log('ka xoa', arrayCheck);
                     }
-                  }
-                  // console.log('ka xoa', arrayCheck);
-                }
-              }}
-            />
-            <span className="sttQuestion">
-              {index + 1}.{' '}
-              <span
-                style={{
-                  margin: '0px 10px',
-                  color: '#000000',
-                }}
-              >
-                {quesBank.questionText}
-              </span>
-            </span>
-          </div>
-        ))}
+                  }}
+                />
+                <span className="sttQuestion">
+                  {index + 1}.{' '}
+                  <span
+                    style={{
+                      margin: '0px 10px',
+                      color: '#000000',
+                    }}
+                  >
+                    {quesBank.questionText}
+                  </span>
+                </span>
+              </div>
+            )
+          }
+          return ''
+        })}
       </div>
     </div>
   )
@@ -514,9 +571,9 @@ function UpdateExam(props: any) {
     setValueTypeAnswer('multiple')
     if (answerCorrect && (answerCorrect.id === 1 || answerCorrect.id === 2)) {
       setValueTypeAnswer('tf')
+      // const valueCorrect = answerCorrect.id === 1 ? '1' : '0';
       setCorrectAnswerTypeTf(answerCorrect.answerText.toLowerCase())
     }
-
     if (currentQuestionAnswerGroup.length > 0) {
       currentQuestionAnswerGroup.forEach((item, index) => {
         if (item.correct) setValueCorrectAnswer(`${index}`)
@@ -539,7 +596,7 @@ function UpdateExam(props: any) {
               aria-label="group"
               name="group-answer"
               value={valueTypeAnswer}
-              onChange={handleChange}
+              onChange={handleChangeTypeAnswer}
             >
               <FormControlLabel value="tf" control={<Radio />} label="True/False" />
               <FormControlLabel value="multiple" control={<Radio />} label="Multiple Choice" />
@@ -556,7 +613,7 @@ function UpdateExam(props: any) {
                 aria-label="correct"
                 name="correct-answer"
                 value={correctAnswerTypeTf}
-                onChange={handleChangeCorrect}
+                onChange={handleChangeCorrectTf}
               >
                 <FormControlLabel value="true" control={<Radio />} label="True" />
                 <FormControlLabel value="false" control={<Radio />} label="False" />

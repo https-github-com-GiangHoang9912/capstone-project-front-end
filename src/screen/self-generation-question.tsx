@@ -7,8 +7,14 @@ import Carousel from 'react-elastic-carousel'
 import Button from '@material-ui/core/Button'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
+<<<<<<< HEAD
 import Chip from '@material-ui/core/Chip';
 import DoneIcon from '@material-ui/icons/Done';
+=======
+import Chip from '@material-ui/core/Chip'
+import green from '@material-ui/core/colors/green'
+import DoneIcon from '@material-ui/icons/Done'
+>>>>>>> 615e4b5b5afb4966f34743000b48ec74a780889a
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import IconButton from '@material-ui/core/IconButton'
 import SvgIcon from '@material-ui/core/SvgIcon'
@@ -22,7 +28,6 @@ import * as CONSTANT from '../const'
 
 axios.defaults.withCredentials = true
 
-
 const useStyles = makeStyles((theme) => ({
   root: {},
   btnGen: {
@@ -31,8 +36,8 @@ const useStyles = makeStyles((theme) => ({
   chipDone: {
     marginLeft: '1rem',
     border: '1px solid #0fac31',
-    color: '#0fac31'
-  }
+    color: '#0fac31',
+  },
 }))
 
 interface AnswerInput {
@@ -45,7 +50,7 @@ interface Question {
   text: string
 }
 
-interface Subject{
+interface Subject {
   id: number
   subjectName: string
 }
@@ -65,7 +70,7 @@ const SelfGenerate = (props: any) => {
   const account = accountContextData
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [questions, setQuestions] = useState<Question[]>([])
-  const [isDuplicate, setIsDuplicate] = useState<boolean>(false);
+  const [isDuplicate, setIsDuplicate] = useState<boolean>(false)
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const [items, setItems] = useState<AnswerInput[]>([
     {
@@ -95,34 +100,27 @@ const SelfGenerate = (props: any) => {
   }
   async function handleProgress(e: any) {
     e.preventDefault()
-    setIsDisable(true)
     const id = localStorage.getItem('id')
-    setProgress(progress + 10)
-    const response = await axios.post(MODEL_SELF_GENERATION_URL, items).catch(async (error) => {
+    try {
+      setIsDisable(true)
+      setProgress(progress + 10)
+      const response = await axios.post(MODEL_SELF_GENERATION_URL, items)
+      console.log(response)
+      if (response && response.data) {
+        const newArr = response.data.question?.map((item: string, index: number) => ({
+          id: index + 1,
+          text: item,
+        }))
+        setQuestions(newArr)
+        setProgress(100)
+        setVisibleResult(true)
+        setIsDisable(false)
+      }
+    } catch (error) {
       refreshToken(error, id ? Number(id) : account.id)
-    })
-    if (response && response.data) {
-      const newArr = response.data.question?.map((item: string, index: number) => ({
-        id: index + 1,
-        text: item,
-      }))
-      setQuestions(newArr)
-      setProgress(100)
-      setVisibleResult(true)
-      setIsDisable(false)
     }
   }
 
-  
-  const handleDialogOpen = () => {
-    axios
-      .get(GET_SUBJECT_URL)
-      .then((response) => {
-        setSubjects(response.data)
-        console.log(response.data);
-      })
-    setIsOpen(true)
-  }
   const handleDialogClose = () => {
     setIsOpen(false)
   }
@@ -141,32 +139,43 @@ const SelfGenerate = (props: any) => {
     },
     {
       Header: 'Check Duplication',
-      Cell: (cell: any) => 
-      <Chip
-      label="Check"
-      clickable
-      color="secondary"
-      onClick={() => handleCheckDuplication(cell.row.original.text)}
-      variant="outlined"
-    />,
+      Cell: (cell: any) => (
+        <Chip
+          label="Check"
+          clickable
+          color="secondary"
+          onClick={() => handleCheckDuplication(cell.row.original.text)}
+          variant="outlined"
+        />
+      ),
     },
   ]
 
-  {/* Content subject select dialog */}
+  {
+    /* Content subject select dialog */
+  }
   const subjectDialog = (
     <div className={className}>
       <h4>Select a subject to add a question</h4>
       <select className="select-subject">
-        {
-          subjects.map((sub)=>(
-            <option value={sub.id}>{sub.subjectName}</option>
-          ))
-        }
+        {subjects.map((sub) => (
+          <option value={sub.id}>{sub.subjectName}</option>
+        ))}
       </select>
     </div>
   )
-  const handleCheckDuplication = (text:String) =>{
-    setIsDuplicate(true);
+  const handleCheckDuplication = async (text: String) => {
+    const userId = localStorage.getItem('id')
+    try {
+      await axios.get(GET_SUBJECT_URL).then((response) => {
+        setSubjects(response.data)
+        console.log(response.data)
+      })
+      setIsOpen(true)
+      setIsDuplicate(true)
+    } catch (error) {
+      refreshToken(error, userId ? Number(userId) : account.id)
+    }
   }
   const handleInputAnswer = (index: number) => (e: any) => {
     const newArr = [...items]
@@ -256,29 +265,11 @@ const SelfGenerate = (props: any) => {
           {visibleResult ? (
             <div>
               <Table columns={columns} data={questions} isPagination={false} />
-              {/* Display status check duplication */}
-              {isDuplicate ? <p style ={{color: '#d11c1c', fontSize:"0.9rem", marginTop:"2rem"}}>Unable to add this question to bank</p>:
-              <div className="result-contain">
-              <p>
-                Able to add this question to bank
-                {/* Button add question to bank */}
-                <Chip
-                label="Add question"
-                clickable
-                icon={<DoneIcon />}
-                onClick={handleDialogOpen}
-                className={classes.chipDone}
-                variant="outlined"
-              />
-              </p>
-              
-              </div>
-              }
             </div>
           ) : (
             ' '
           )}
-         {/* Dialog show select subject to add  */}
+          {/* Dialog show select subject to add  */}
           <Dialog
             title="Add question"
             buttonAccept="Add"
@@ -327,14 +318,14 @@ const SelfStyle = styled(SelfGenerate)`
     margin: 10px;
     font-size: 0.9rem;
   }
-  .result-contain{
+  .result-contain {
     margin-top: 2rem;
   }
-  .result-contain p{
+  .result-contain p {
     color: #1ab93d;
     font-size: 0.9rem;
   }
-  .select-subject{
+  .select-subject {
     width: 200px;
     height: 24px;
     border: none;
