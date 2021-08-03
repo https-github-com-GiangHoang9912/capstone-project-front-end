@@ -10,10 +10,7 @@ TableReact.defaultProps = {
   className: '',
 }
 function TableReact(props: any) {
-  const { className } = props
-  const columns: any = useMemo(() => props.columns, props.columns)
-  const data: any = useMemo(() => props.data, props.data)
-  const isPagination: boolean = useMemo(() => props.isPagination, props.isPagination)
+  const { className, columns,data,isPagination } = props
 
   useTable({
     columns,

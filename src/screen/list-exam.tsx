@@ -121,7 +121,7 @@ const CREATE_EXAM_URL = `${CONSTANT.BASE_URL}/exam/create-exam`
 const DELETE_EXAM_URL = `${CONSTANT.BASE_URL}/exam/delete-exam`
 
 function ListExam(props: any) {
-  const { className } = props
+  const { className, handleNotification } = props
   const classes = useStyles()
   const history = useHistory()
   const { accountContextData } = useContext(AccountContext)
@@ -142,6 +142,7 @@ function ListExam(props: any) {
   const [question, setQuestion] = useState<Question[]>([])
 
   const [answers, setAnswers] = useState<Answer[]>([])
+
 
   //* Get subject */
   useEffect(() => {
@@ -172,17 +173,22 @@ function ListExam(props: any) {
   }, [openDialogCreate, openDialogDelete])
 
   //* Get Exam by name */
-  function getExamByName(name: string) {
-    axios
-      .get(`${GET_EXAM_BY_NAME_URL}/${idUser}/search/${name}`)
-      .then((response) => {
-        console.log('Exam By Name   : ', response.data)
-        setExams(response.data)
+  async function getExamByName(name: string) {
+    try {
+      const response = await axios.get(`${GET_EXAM_BY_NAME_URL}/${idUser}/search/${name}`);
+      console.log('Exam by name', response.data);
+      if (response && response.data.length > 0) {
+        setExams(response.data);
         setTextSearch('')
-      })
-      .catch((err) => {
-        console.log('Failed to fetch exam by name: ', err.message)
-      })
+        handleNotification('Success', `${response.status}: Search exam successfull`)
+      }
+      else {
+        setTextSearch('')
+        handleNotification('warning', `No exam with name '${textSearch}'`)
+      }
+    } catch (error) {
+      refreshToken(error, idUser ? Number(idUser) : account.id)
+    }
   }
 
   //* Get Question */
@@ -301,15 +307,18 @@ function ListExam(props: any) {
     setOpenDialogDelete(false)
   }
 
-  const handleDeleteClose = async (id: number) => {
+  const handleDeleteAccept = async (id: number) => {
     const userId = localStorage.getItem('id')
     try {
-      const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`)
-      if (response) {
+      const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
+      console.log(response.data, 'delete')
+      if (response && response.data) {
         console.log(response)
         setOpenDialogDelete(false)
+        handleNotification('Success', `${response.status}: Delete exam successfull`)
+      } else {
+        handleNotification('danger', `Delete exam fail`)
       }
-      console.log(response)
     } catch (error) {
       refreshToken(error, userId ? Number(userId) : account.id)
     }
@@ -366,7 +375,7 @@ function ListExam(props: any) {
   )
 
   //* Body create exam dialog */
-  const body = (
+  const bodyCreateExam = (
     <div className={classes.paper}>
       <div className={classes.containerCreate}>
         <div className={classes.bank}>
@@ -427,9 +436,12 @@ function ListExam(props: any) {
         subjectId,
         examName: txtNameExam,
       })
-      if (response) {
-        console.log(response)
-        setOpenDialogCreate(false)
+      if (response && response.data) {
+        handleNotification('Success', `${response.status}: Create exam successfull`);
+        setOpenDialogCreate(false);
+        setTxtNameExam('');
+      } else {
+        handleNotification('danger', `Create exam fail`);
       }
     } catch (error) {
       refreshToken(error, userId ? Number(userId) : account.id)
@@ -489,13 +501,13 @@ function ListExam(props: any) {
                 >
                   <h3>Fill the form to create New Exam</h3>
                 </DialogTitle>
-                <DialogContent>{body}</DialogContent>
+                <DialogContent>{bodyCreateExam}</DialogContent>
                 <DialogActions>
-                  <Button onClick={handleCloseCreate} color="primary">
-                    Cancel
-                  </Button>
                   <Button color="primary" onClick={handleCreateExam}>
                     Create
+                  </Button>
+                  <Button onClick={handleCloseCreate} color="primary">
+                    Cancel
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -525,7 +537,7 @@ function ListExam(props: any) {
                   <Button onClick={handleDeleteCancel} color="primary">
                     Cancel
                   </Button>
-                  <Button onClick={() => handleDeleteClose(idDelete)} color="secondary">
+                  <Button onClick={() => handleDeleteAccept(idDelete)} color="secondary">
                     Delete
                   </Button>
                 </DialogActions>

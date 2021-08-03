@@ -35,7 +35,7 @@ const App: FC = (props: any) => {
       response: null,
     }
     refreshToken(data, id ? Number(id) : -1)
-      .then(() => {})
+      .then(() => { })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
           localStorage.clear()
@@ -90,10 +90,10 @@ const App: FC = (props: any) => {
               <ChangePassword />
             </Route>
             <Route exact path="/exam" component={Profile}>
-              <ListExam />
+              <ListExam handleNotification={handleNotification} />
             </Route>
             <Route exact path="/update-exam" component={Profile}>
-              <UpdateExam />
+              <UpdateExam handleNotification={handleNotification} />
             </Route>
             {role === 1 ? (
               <Route exact path="/manage-staffs" component={ManageStaffs}>

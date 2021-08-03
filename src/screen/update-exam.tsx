@@ -157,6 +157,13 @@ const useStyles = makeStyles((theme) => ({
   },
   checkBoxQuestion: {
     marginRight: '0.5rem',
+    backgroundColor: '#fafafa',
+    border: '1px solid #cacece',
+    boxShadow: '0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05)',
+    padding: '6px',
+    borderRadius: '2px',
+    display: 'inline-block',
+    overflow: 'none',
     '&:hover': {
       cursor: 'pointer',
     },
@@ -178,7 +185,7 @@ const UPDATE_QUESTION_MULTIPLE_URL = `${CONSTANT.BASE_URL}/answers-groups/update
 const GET_ANSWER_GROUP_DETAIL_URL = `${CONSTANT.BASE_URL}/answers-groups`
 
 function UpdateExam(props: any) {
-  const { className } = props
+  const { className, handleNotification } = props
   const classes = useStyles()
   const [scroll, setScroll] = useState('paper')
   const history = useHistory()
@@ -257,9 +264,11 @@ function UpdateExam(props: any) {
     const userId = localStorage.getItem('id')
     try {
       const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`)
-      if (response) {
-        console.log(response)
+      if (response && response.data) {
+        handleNotification('Success', `${response.status}: Delete question successful`)
         setOpenDialogDelete(false)
+      } else {
+        handleNotification('danger', `Delete question fail`);
       }
     } catch (error) {
       refreshToken(error, userId ? Number(userId) : account.id)
@@ -270,7 +279,6 @@ function UpdateExam(props: any) {
   }
   /** event click button add */
   const handleClickAddQuestion = () => {
-    console.log('jajajaja', questions)
     setOpenDialogAdd(true)
     setScroll(scroll)
   }
@@ -285,13 +293,14 @@ function UpdateExam(props: any) {
         questionBankId: item,
         examId: idExam,
       }))
-      console.log('close dialog', questionAdd)
-      const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd)
-      if (response) {
+      const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd);
+      console.log('data', response.data)
+      if (response && response.data) {
         console.log(response)
         setOpenDialogAdd(false)
+        handleNotification('Success', `${response.status}: Add questions successful`)
       } else {
-        console.log('Error add question to exam')
+        handleNotification('danger', `Add questions to exam fail`);
       }
     } catch (error) {
       refreshToken(error, userId ? Number(userId) : account.id)
@@ -353,15 +362,16 @@ function UpdateExam(props: any) {
     e.preventDefault()
     const userId = localStorage.getItem('id')
     try {
-      let response = null
+      let response = null;
       response = await axios.post(`${CREATE_ANSWERS_TF_URL}/${idQuestion}`, {
         currentQuestionAnswerGroup,
         valueTypeAnswer,
       })
       if (response) {
-        console.log(response)
+        handleNotification('Success', `${response.status}: Update answer for question successful`)
         setOpenDialogUpdate(false)
       } else {
+        handleNotification('danger', `Update answer for question fail`);
         console.log('Error create answer tf...!')
       }
     } catch (error) {
@@ -448,7 +458,7 @@ function UpdateExam(props: any) {
   const titleDialogUpdate = (
     <div>
       <h3>
-        Update question in <span style={{ color: '#FD647A' }}>{examName}</span> Exam{' '}
+        Update answers for question in <span style={{ color: '#FD647A' }}>{examName} </span> Exam{' '}
       </h3>
     </div>
   )
@@ -534,18 +544,19 @@ function UpdateExam(props: any) {
                   onChange={(e: any) => {
                     if (e.target.checked) {
                       arrayCheck.push(quesBank.id)
-                      // console.log('ka add', arrayCheck);
                     } else {
                       for (let i = 0; i < arrayCheck.length; i++) {
                         if (arrayCheck[i] === quesBank.id) {
                           arrayCheck.splice(i, 1)
                         }
                       }
-                      // console.log('ka xoa', arrayCheck);
                     }
                   }}
                 />
-                <span className="sttQuestion">
+                <span className="sttQuestion" style={{
+                  margin: '0px 10px',
+                  color: '#000000',
+                }}>
                   {index + 1}.{' '}
                   <span
                     style={{
@@ -571,7 +582,6 @@ function UpdateExam(props: any) {
     setValueTypeAnswer('multiple')
     if (answerCorrect && (answerCorrect.id === 1 || answerCorrect.id === 2)) {
       setValueTypeAnswer('tf')
-      // const valueCorrect = answerCorrect.id === 1 ? '1' : '0';
       setCorrectAnswerTypeTf(answerCorrect.answerText.toLowerCase())
     }
     if (currentQuestionAnswerGroup.length > 0) {
@@ -681,9 +691,9 @@ function UpdateExam(props: any) {
       <div className="create-exam">
         <div className="container-exam">
           <div className="main">
-            <div className="text-subject">
+            {/* <div className="text-subject">
               <h2>SSC101 Chapter 123</h2>
-            </div>
+            </div> */}
             <div className="content-exam">
               <Table columns={columns} data={questions} isPagination={false} />
             </div>
@@ -716,11 +726,11 @@ function UpdateExam(props: any) {
                 </span>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleCancelDialogDelete} color="primary">
-                  Cancel
-                </Button>
                 <Button onClick={() => handleAcceptDialogDelete(idQuestion)} color="secondary">
                   Delete
+                </Button>
+                <Button onClick={handleCancelDialogDelete} color="primary">
+                  Cancel
                 </Button>
               </DialogActions>
             </Dialog>
@@ -743,7 +753,7 @@ function UpdateExam(props: any) {
             >
               <DialogTitle id="alert-dialog-title">
                 <div className={classes.title}>
-                  <h2 className={classes.titleExam}>{subject?.subjectName}</h2>
+                  <h2 className={classes.titleExam}>{subject?.subjectName} Bank</h2>
                 </div>
               </DialogTitle>
               <DialogContent>
@@ -752,11 +762,11 @@ function UpdateExam(props: any) {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleCloseDialogAdd} color="primary">
-                  Close
-                </Button>
                 <Button onClick={handleSaveQuestion} color="primary" autoFocus>
                   Save
+                </Button>
+                <Button onClick={handleCloseDialogAdd} color="primary">
+                  Close
                 </Button>
               </DialogActions>
             </Dialog>
@@ -828,7 +838,7 @@ const StyledUpdateExam = styled(UpdateExam)`
   }
   .content-exam {
     width: 90%;
-    margin-top: 3%;
+    margin-top: 7%;
     height: 500px;
     border: 1px solid black;
     background-color: #fff;
