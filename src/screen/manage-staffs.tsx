@@ -58,20 +58,7 @@ function ManageStaffs(props: any) {
   const [roleId, setRoleId] = useState(0)
   const [isOpenRole, setIsOpenRole] = useState(false)
   const [searchValue, setSearchValue] = useState('')
-  const [user, setUser] = useState<User[]>([
-    {
-      id: 1,
-      username: 'ba',
-      role: 1,
-      active: true,
-      contactInfo: {
-        firstName: 'ba',
-        lastName: 'ba',
-        email: 'ba',
-        phone: 'ba',
-      },
-    },
-  ])
+  const [user, setUser] = useState<User[]>([])
   const [userDetail, setUserDetail] = useState<any>({
     firstName: 'ba',
     lastName: 'ba',

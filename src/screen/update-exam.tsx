@@ -179,10 +179,7 @@ const GET_QUESTION_DETAIL_URL = `${CONSTANT.BASE_URL}/questions`
 const DELETE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/delete`
 const GET_QUESTIONBANK_URL = `${CONSTANT.BASE_URL}/subject`
 const CREATE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/create`
-const UPDATE_ANSWERS_TF_URL = `${CONSTANT.BASE_URL}/answers-groups/update`
-const CREATE_ANSWERS_TF_URL = `${CONSTANT.BASE_URL}/answers-groups/create`
-const UPDATE_QUESTION_MULTIPLE_URL = `${CONSTANT.BASE_URL}/answers-groups/update/multiple`
-const GET_ANSWER_GROUP_DETAIL_URL = `${CONSTANT.BASE_URL}/answers-groups`
+const CREATE_ANSWERS_URL = `${CONSTANT.BASE_URL}/answers-groups/create`
 
 function UpdateExam(props: any) {
   const { className, handleNotification } = props
@@ -253,7 +250,6 @@ function UpdateExam(props: any) {
       })
   }, [])
 
-  // console.log('Question huhu: ', subject);
   /** event click button delete */
   const handleClickDelete = (id: number, name: string) => {
     setOpenDialogDelete(true)
@@ -363,7 +359,7 @@ function UpdateExam(props: any) {
     const userId = localStorage.getItem('id')
     try {
       let response = null;
-      response = await axios.post(`${CREATE_ANSWERS_TF_URL}/${idQuestion}`, {
+      response = await axios.post(`${CREATE_ANSWERS_URL}/${idQuestion}`, {
         currentQuestionAnswerGroup,
         valueTypeAnswer,
       })
@@ -426,9 +422,7 @@ function UpdateExam(props: any) {
   const handleChangeCorrectTf = (event: any) => {
     setCorrectAnswerTypeTf(event.target.value)
     console.log(event.target.value)
-    // console.log('currnt: ', currentQuestionAnswerGroup);
     const newResult = currentQuestionAnswerGroup.map((item: AnswerGroup, index: number) => {
-      // console.log(index, '==', item, '==', event.target.value);
       console.log(index == event.target.value)
       const itemAnswer = { ...item }
       itemAnswer.correct = false
@@ -462,7 +456,6 @@ function UpdateExam(props: any) {
       </h3>
     </div>
   )
-
   /* event when click Back */
   const handleClickBack = () => {
     history.push('/list-exam')

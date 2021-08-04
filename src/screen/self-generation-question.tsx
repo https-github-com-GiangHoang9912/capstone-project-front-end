@@ -7,9 +7,8 @@ import Carousel from 'react-elastic-carousel'
 import Button from '@material-ui/core/Button'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
-import Chip from '@material-ui/core/Chip'
-import green from '@material-ui/core/colors/green'
-import DoneIcon from '@material-ui/icons/Done'
+import Chip from '@material-ui/core/Chip';
+import DoneIcon from '@material-ui/icons/Done';
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import IconButton from '@material-ui/core/IconButton'
 import SvgIcon from '@material-ui/core/SvgIcon'
