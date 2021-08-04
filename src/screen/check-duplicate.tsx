@@ -8,13 +8,14 @@ import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
-
+import Chip from '@material-ui/core/Chip';
+import DoneIcon from '@material-ui/icons/Done';
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
 import { TableCheckDuplicate } from '../common/table'
 import { AccountContext } from '../contexts/account-context'
-
+ 
 Duplicate.propTypes = {
   className: PropTypes.string,
 }
@@ -39,13 +40,19 @@ const useStyles = makeStyles((theme) => ({
   btnDup: {
     margin: 10,
   },
-}))
+  chipDone: {
+    marginLeft: '1rem',
+    border: '1px solid #0fac31',
+    color: '#0fac31'
+  }
+})) 
 function Duplicate(props: any) {
   const { className, handleNotification } = props
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false)
   const [fileName, setFileName] = useState<string>('')
-  const [visibleResult, setVisibleResult] = useState<boolean>(false)
+  const [visibleResult, setVisibleResult] = useState<boolean>(true)
+  const [isAdd, setIsAdd] = useState<boolean>(false)
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
   const [progress, setProgress] = useState(0)
@@ -79,16 +86,26 @@ function Duplicate(props: any) {
       const response = await axios.post(MODEL_CHECK_DUPLICATE_URL, {
         question,
       })
-      if (response && response.data) {
-        setResult(response.data)
-        setVisibleResult(true)
-        setProgress(100)
-        setIsDisable(false)
-        handleNotification('success', `${response.status}: Successful`)
+      .catch(async (error) => {
+        refreshToken(error, id ? Number(id) : account.id)
+      })
+    if (response && response.data) {
+      setResult(response.data)
+      if(response.data[0].point.toFixed(2) >= 0.6){
+         setIsAdd(false);
+      }else{
+        setIsAdd(true);
       }
+      setVisibleResult(true)
+      setProgress(100)
+      setIsDisable(false)
+      handleNotification('success', `${response.status}: Successful`)
+    }
     } catch (error) {
       refreshToken(error, id ? Number(id) : account.id)
+
     }
+    
   }
 
   function handleInputQuestion(e: any) {
@@ -234,7 +251,26 @@ function Duplicate(props: any) {
               handleClose={handleDialogClose}
             />
           </div>
-          {visibleResult ? <TableCheckDuplicate results={result} /> : ' '}
+          {visibleResult ? (
+          <div>
+          <TableCheckDuplicate results={result} />
+           {isAdd ? <div className="result-contain">
+           <p>
+             Able to add this question to bank
+             {/* Button add question to bank */}
+             <Chip
+             label="Add question"
+             clickable
+             icon={<DoneIcon />}
+             className={classes.chipDone}
+             variant="outlined"
+           />
+           </p>
+           </div> : <p style ={{color: '#d11c1c', fontSize:"0.9rem", margin:"2rem"}}>
+             Unable to add this question to bank</p>}
+          </div>
+          
+          ) : ' '}
         </div>
       </div>
     </div>
@@ -248,7 +284,6 @@ const StyleDuplicate = styled(Duplicate)`
   .container {
     margin: 0.5rem;
     padding: 5em 10px 10px 10px;
-    font-size: 16px;
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
@@ -274,6 +309,14 @@ const StyleDuplicate = styled(Duplicate)`
     font-size: 20px;
     color: #10182f;
     border-bottom: 1px solid #dae1f5;
+  }
+  .result-contain{
+    margin: 2rem;
+  }
+  .result-contain p{
+    color: #1ab93d;
+    font-size: 0.9rem;
+    text-align: center;
   }
   .import-bank {
     width: 100%;
