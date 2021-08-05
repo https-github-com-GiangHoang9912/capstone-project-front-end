@@ -181,7 +181,7 @@ function ManageStaffs(props: any) {
     if(response){
       setProgress(100)
       setIsDisable(false)
-      handleNotification('Success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`);
+      handleNotification('success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`);
     }else{
       handleNotification('danger', `${CONSTANT.MESSAGE("Change User's Status").FAIL}`)
     }
@@ -224,7 +224,7 @@ function ManageStaffs(props: any) {
     setProgress(100)
     setIsDisable(false)
     setIsOpenRole(false)
-    handleNotification('Success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`);
+    handleNotification('success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`);
     }else{
     setProgress(100)
     setIsDisable(false)

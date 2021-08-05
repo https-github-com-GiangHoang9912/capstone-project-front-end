@@ -260,7 +260,7 @@ function UpdateExam(props: any) {
     try {
       const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`)
       if (response && response.data) {
-        handleNotification('Success', `${CONSTANT.MESSAGE("Question").DELETE_SUCCESS}`)
+        handleNotification('success', `${CONSTANT.MESSAGE("Question").DELETE_SUCCESS}`)
         setOpenDialogDelete(false)
       } else {
         handleNotification('danger', `${CONSTANT.MESSAGE("Delete Question").FAIL}`);
@@ -293,7 +293,7 @@ function UpdateExam(props: any) {
       if (response && response.data) {
         console.log(response)
         setOpenDialogAdd(false)
-        handleNotification('Success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
+        handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
       } else {
         handleNotification('danger', `${CONSTANT.MESSAGE("Add Question").CREATE_SUCCESS}`);
       }
@@ -363,7 +363,7 @@ function UpdateExam(props: any) {
         valueTypeAnswer,
       })
       if (response) {
-        handleNotification('Success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`)
+        handleNotification('success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`)
         setOpenDialogUpdate(false)
       } else {
         handleNotification('danger', `${CONSTANT.MESSAGE("Update Question").FAIL}`);

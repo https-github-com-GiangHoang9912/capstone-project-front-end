@@ -180,7 +180,7 @@ function ListExam(props: any) {
       if (response && response.data.length > 0) {
         setExams(response.data);
         setTextSearch('')
-        handleNotification('Success', `${response.status}: Search exam successfull`)
+        handleNotification('success', `${response.status}: Search exam successfull`)
       }
       else {
         setTextSearch('')
@@ -315,7 +315,7 @@ function ListExam(props: any) {
       if (response) {
         console.log(response)
         setOpenDialogDelete(false)
-        handleNotification('Success', `${CONSTANT.MESSAGE("Exam").DELETE_SUCCESS}`)
+        handleNotification('success', `${CONSTANT.MESSAGE("Exam").DELETE_SUCCESS}`)
       } else {
         handleNotification('danger', `${CONSTANT.MESSAGE("Delete Exam").FAIL}`)
       }
@@ -437,7 +437,7 @@ function ListExam(props: any) {
         examName: txtNameExam,
       })
       if (response && response.data) {
-        handleNotification('Success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
+        handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
         setOpenDialogCreate(false);
         setTxtNameExam('');
       } else {
