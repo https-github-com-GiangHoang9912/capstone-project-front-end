@@ -140,7 +140,6 @@ function Profile(props: any) {
           setDob(response.data.dateOfBirth ? dobFormat : '')
           setImage(response.data.avatar ? response.data.avatar : 'avatar2.png')
         })
-      refreshToken(userId)
     } catch (error) {
       console.error(error)
     }

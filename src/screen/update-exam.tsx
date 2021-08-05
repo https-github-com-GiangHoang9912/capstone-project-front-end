@@ -260,7 +260,7 @@ function UpdateExam(props: any) {
     try {
       const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`)
       if (response && response.data) {
-        handleNotification('Success', `${response.status}: Delete question successful`)
+        handleNotification('success', `${response.status}: Delete question successful`)
         setOpenDialogDelete(false)
       } else {
         handleNotification('danger', `Delete question fail`);
@@ -293,7 +293,7 @@ function UpdateExam(props: any) {
       if (response && response.data) {
         console.log(response)
         setOpenDialogAdd(false)
-        handleNotification('Success', `${response.status}: Add questions successful`)
+        handleNotification('success', `${response.status}: Add questions successful`)
       } else {
         handleNotification('danger', `Add questions to exam fail`);
       }
@@ -363,7 +363,7 @@ function UpdateExam(props: any) {
         valueTypeAnswer,
       })
       if (response) {
-        handleNotification('Success', `${response.status}: Update answer for question successful`)
+        handleNotification('success', `${response.status}: Update answer for question successful`)
         setOpenDialogUpdate(false)
       } else {
         handleNotification('danger', `Update answer for question fail`);
