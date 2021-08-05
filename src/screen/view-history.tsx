@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import * as moment from 'moment'
+import { AccountContext } from '../contexts/account-context'
 import * as CONSTANT from '../const'
 
 ViewHistory.propTypes = {
@@ -41,7 +42,9 @@ const GET_HISTORY_URL = `${CONSTANT.BASE_URL}/history`
 
 function ViewHistory(props: any) {
   const { className } = props
-  const id = localStorage.getItem('id') ? localStorage.getItem('id') : -1
+  const { accountContextData } = useContext(AccountContext)
+  const account = accountContextData
+  const userId = localStorage.getItem('id') ? localStorage.getItem('id') : account.id
   const [activity, setActivity] = useState<HistoryType[]>([])
   const [typeId, setSelect] = useState(0)
   const [histories, setHistories] = useState<History[]>([])
@@ -55,7 +58,7 @@ function ViewHistory(props: any) {
   const search = (e: any) => {
     setSelect(e.target.value)
     if (e.target.value == '------') setHistories([])
-    axios.get(`${GET_HISTORY_URL}/${id}/${e.target.value}`).then((response) => {
+    axios.get(`${GET_HISTORY_URL}/${userId}/${e.target.value}`).then((response) => {
       console.log(response.data)
       setHistories(response.data)
     })

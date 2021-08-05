@@ -104,6 +104,12 @@ const useStyles = makeStyles({
 function ForgotPassword(props: any) {
   const { className, handleNotification } = props
   const classes = useStyles()
+
+  const handleResetPassword = (e: any) => {
+    e.preventDefault()
+  }
+
+  // setIsLogin(false)
   return (
     <div>
       <div className={classes.container}>

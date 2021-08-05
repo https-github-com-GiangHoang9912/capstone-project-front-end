@@ -16,14 +16,15 @@ ChangePassword.defaultProps = {
   className: '',
 }
 
-const CHANGE_PASSWORD = `${CONSTANT.BASE_URL}/changePassword`
+const CHANGE_PASSWORD = `${CONSTANT.BASE_URL}/user/change-password`
 function ChangePassword(props: any) {
   const { className } = props
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
-  const [oldPassword, setOldPassword] = useState<String>('')
-  const [newPassword, setNewPassword] = useState<String>('')
-  const [rePassword, setRePassword] = useState<String>('')
+  const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
+  const [oldPassword, setOldPassword] = useState<string>('')
+  const [newPassword, setNewPassword] = useState<string>('')
+  const [rePassword, setRePassword] = useState<string>('')
   const [iconList, setIconList] = useState([
     {
       id: 1,
@@ -38,13 +39,14 @@ function ChangePassword(props: any) {
       showPassword: false,
     },
   ])
+
   const changePassword = async (e: any) => {
     e.preventDefault()
-    const id = localStorage.getItem('id')
     try {
-      await axios.post(
+      const changeDataResponse = await axios.put(
         CHANGE_PASSWORD,
         {
+          userId,
           oldPassword,
           newPassword,
         },
@@ -52,10 +54,13 @@ function ChangePassword(props: any) {
           withCredentials: true,
         }
       )
+      console.log(changeDataResponse)
+      refreshToken(userId)
     } catch (error) {
-      refreshToken(error, id ? Number(id) : account.id)
+      console.error(error)
     }
   }
+
   const onCheckBtnClick = useCallback((id) => {
     setIconList((prevState) =>
       prevState.map((icon) =>
@@ -150,7 +155,7 @@ function ChangePassword(props: any) {
                 )}
               </div>
               <div className="contain-btn">
-                <button className="btn-login" onClick={(e) => changePassword}>
+                <button className="btn-login" onClick={changePassword}>
                   Change
                 </button>
               </div>

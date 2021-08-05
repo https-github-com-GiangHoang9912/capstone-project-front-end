@@ -24,7 +24,6 @@ import ChangePassword from '../screen/change-password'
 import UpdateExam from '../screen/update-exam'
 import NotFound from '../screen/404-not-found'
 import ForgotPassword from '../screen/forgot-password'
-
 import { refreshToken } from '../services/services'
 
 const App: FC = (props: any) => {
@@ -32,12 +31,11 @@ const App: FC = (props: any) => {
   const [isLogin, setIsLogin] = useState(false)
 
   useEffect(() => {
-    const id = localStorage.getItem('id')
-    const data = {
-      response: null,
-    }
-    refreshToken(data, id ? Number(id) : -1)
-      .then(() => { })
+    const id = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : -1
+    refreshToken(id)
+      .then((res) => {
+        console.info(res)
+      })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
           localStorage.clear()
@@ -99,7 +97,7 @@ const App: FC = (props: any) => {
             </Route>
             {role === 1 ? (
               <Route exact path="/manage-staffs" component={ManageStaffs}>
-                <ManageStaffs />
+                <ManageStaffs handleNotification={handleNotification} />
               </Route>
             ) : (
               ''
