@@ -27,8 +27,15 @@ const useStyles = makeStyles({
 })
 
 function ForgotPassword(props: any) {
-  const { className } = props
+  const { className, setIsLogin } = props
   const classes = useStyles()
+
+  const handleResetPassword = (e: any) => {
+    e.preventDefault()
+  }
+
+  setIsLogin(false)
+
   return (
     <div className={className}>
       <div className="container">
@@ -66,7 +73,7 @@ function ForgotPassword(props: any) {
                 <Button variant="contained" color="primary" className={classes.styleBtn}>
                   Clear Text
                 </Button>
-                <Button variant="contained" color="primary" className={classes.styleBtn}>
+                <Button variant="contained" color="primary" className={classes.styleBtn} onClick={handleResetPassword}>
                   Reset Password
                 </Button>
               </div>

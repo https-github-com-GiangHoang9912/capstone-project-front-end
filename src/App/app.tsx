@@ -23,6 +23,7 @@ import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
 import UpdateExam from '../screen/update-exam'
 import NotFound from '../screen/404-not-found'
+import ForgotPassword from '../screen/forgot-password'
 import { refreshToken } from '../services/services'
 
 const App: FC = (props: any) => {
@@ -85,7 +86,7 @@ const App: FC = (props: any) => {
             <Route exact path="/history" component={Profile}>
               <ViewHistory />
             </Route>
-            <Route exact path="/changePassword" component={Profile}>
+            <Route exact path="/change-password" component={Profile}>
               <ChangePassword />
             </Route>
             <Route exact path="/exam" component={Profile}>
@@ -103,6 +104,9 @@ const App: FC = (props: any) => {
             )}
             <Route exact path="/login" component={Login}>
               <Login setIsLogin={setIsLogin} />
+            </Route>
+            <Route exact path="/forgot-password" component={ForgotPassword}>
+              <ForgotPassword setIsLogin={setIsLogin} handleNotification={handleNotification} />
             </Route>
             <Route component={NotFound} />
           </Switch>

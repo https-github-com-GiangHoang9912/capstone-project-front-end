@@ -1,9 +1,7 @@
-import * as React from 'react'
-
 import GoogleLogin from 'react-google-login'
 import { FC, Dispatch, SetStateAction, useContext, useState, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import { useHistory, NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
@@ -288,9 +286,9 @@ const Login: FC<LoginProps> = (props) => {
                 <a className={classes.textForgot} href="#">
                   Change /
                 </a>
-                <a className={classes.textForgot} href="#">
+                <NavLink className={classes.textForgot} to="/forgot-password">
                   Forgot Password
-                </a>
+                </NavLink>
               </div>
             </form>
           </div>

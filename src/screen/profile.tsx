@@ -87,7 +87,6 @@ function Profile(props: any) {
                     id: userId,
                     firstName,
                     lastName,
-                    email,
                     address,
                     phone,
                     dob,
@@ -105,7 +104,6 @@ function Profile(props: any) {
             id: userId,
             firstName,
             lastName,
-            email,
             address,
             phone,
             dob,
@@ -142,7 +140,6 @@ function Profile(props: any) {
           setDob(response.data.dateOfBirth ? dobFormat : '')
           setImage(response.data.avatar ? response.data.avatar : 'avatar2.png')
         })
-      refreshToken(userId)
     } catch (error) {
       console.error(error)
     }
@@ -268,17 +265,9 @@ function Profile(props: any) {
                 type="text"
                 id="email"
                 className="input-bar "
-                onBlur={(e) =>
-                  validateInput(
-                    e.target.value,
-                    /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
-                    'Email must be in format: abcxya@gmail.com',
-                    'Email'
-                  )
-                }
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={editStatus}
+                disabled={true}
               />
               {inputError === 'Email' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
@@ -304,7 +293,7 @@ function Profile(props: any) {
             <div className="footer-info">
               <div>
                 <h3>Change Password</h3>
-                <NavLink to="/changePassword">
+                <NavLink to="/change-password">
                   <button className="btn btn-change">Go to change password</button>
                 </NavLink>
               </div>
