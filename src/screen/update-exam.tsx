@@ -260,10 +260,10 @@ function UpdateExam(props: any) {
     try {
       const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`)
       if (response && response.data) {
-        handleNotification('Success', `${response.status}: Delete question successful`)
+        handleNotification('Success', `${CONSTANT.MESSAGE("Question").DELETE_SUCCESS}`)
         setOpenDialogDelete(false)
       } else {
-        handleNotification('danger', `Delete question fail`);
+        handleNotification('danger', `${CONSTANT.MESSAGE("Delete Question").FAIL}`);
       }
       refreshToken(userId)
     } catch (error) {
@@ -293,9 +293,9 @@ function UpdateExam(props: any) {
       if (response && response.data) {
         console.log(response)
         setOpenDialogAdd(false)
-        handleNotification('Success', `${response.status}: Add questions successful`)
+        handleNotification('Success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
       } else {
-        handleNotification('danger', `Add questions to exam fail`);
+        handleNotification('danger', `${CONSTANT.MESSAGE("Add Question").CREATE_SUCCESS}`);
       }
       refreshToken(userId)
     } catch (error) {
@@ -363,10 +363,10 @@ function UpdateExam(props: any) {
         valueTypeAnswer,
       })
       if (response) {
-        handleNotification('Success', `${response.status}: Update answer for question successful`)
+        handleNotification('Success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`)
         setOpenDialogUpdate(false)
       } else {
-        handleNotification('danger', `Update answer for question fail`);
+        handleNotification('danger', `${CONSTANT.MESSAGE("Update Question").FAIL}`);
         console.log('Error create answer tf...!')
       }
       refreshToken(userId)
@@ -682,8 +682,10 @@ function UpdateExam(props: any) {
   return (
     <div className={className}>
       <div className="create-exam">
+        
         <div className="container-exam">
           <div className="main">
+          <h2>Update question for exam</h2>
             {/* <div className="text-subject">
               <h2>SSC101 Chapter 123</h2>
             </div> */}

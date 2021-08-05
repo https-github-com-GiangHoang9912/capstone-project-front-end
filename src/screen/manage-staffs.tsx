@@ -1,4 +1,4 @@
-import React, { useState, FC, useEffect, useCallback } from 'react'
+import React, { useState, FC, useEffect, useCallback,useRef } from 'react'
 import PropTypes from 'prop-types'
 import Button from '@material-ui/core/Button'
 import Chip from '@material-ui/core/Chip'
@@ -6,6 +6,7 @@ import axios from 'axios'
 import * as moment from 'moment'
 import { useTable, usePagination } from 'react-table'
 import BlockIcon from '@material-ui/icons/Block'
+import TextField from '@material-ui/core/TextField'
 import LockOpenIcon from '@material-ui/icons/LockOpen'
 import TransferWithinAStationIcon from '@material-ui/icons/TransferWithinAStation'
 import IconButton from '@material-ui/core/IconButton'
@@ -49,15 +50,17 @@ const UPDATE_ROLE_URL = `${CONSTANT.BASE_URL}/user/update-role`
 const GET_INFORMATION_URL = `${CONSTANT.BASE_URL}/user/get-information`
 
 function ManageStaffs(props: any) {
-  const { className } = props
+  const { className, handleNotification} = props
   const [isOpen, setIsOpen] = useState(false)
   const [isDisable, setIsDisable] = useState(false)
   const [progress, setProgress] = useState(0)
+  const typingTimeoutRef = useRef<any>(null);
   const [disableRole, setDisableRole] = useState(true)
   const [roleValue, setRoleValue] = useState(0)
   const [roleId, setRoleId] = useState(0)
   const [isOpenRole, setIsOpenRole] = useState(false)
   const [searchValue, setSearchValue] = useState('')
+  const [searchText, setSearchText] = useState('')
   const [user, setUser] = useState<User[]>([])
   const [userDetail, setUserDetail] = useState<any>({
     firstName: 'ba',
@@ -170,13 +173,19 @@ function ManageStaffs(props: any) {
     </div>
   )
 
-  const handleActive = (value: any, id: any) => {
+  const handleActive = async (value: any, id: any) => {
     setIsDisable(true)
     setProgress(progress + 20)
     const active = !value
-    axios.put(UPDATE_ACTIVE_URL, { id, active })
-    setProgress(100)
-    setIsDisable(false)
+    const response = await axios.put(UPDATE_ACTIVE_URL, { id, active })
+    if(response){
+      setProgress(100)
+      setIsDisable(false)
+      handleNotification('Success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`);
+    }else{
+      handleNotification('danger', `${CONSTANT.MESSAGE("Change User's Status").FAIL}`)
+    }
+   
   }
 
   const handleChangeRole = (id: any) => {
@@ -185,8 +194,8 @@ function ManageStaffs(props: any) {
   }
 
   useEffect(() => {
-    if (searchValue) {
-      axios.get(`${GET_USERS_SEARCH_URL}/${searchValue}`).then((response) => {
+    if (searchText) {
+      axios.get(`${GET_USERS_SEARCH_URL}/${searchText}`).then((response) => {
         setUser(response.data)
       })
     } else {
@@ -206,14 +215,22 @@ function ManageStaffs(props: any) {
     setIsOpen(false)
     setIsOpenRole(false)
   }
-
-  const handleDialogChangeRole = () => {
+  
+  const handleDialogChangeRole = async () => {
     setIsDisable(true)
     setProgress(progress + 20)
-    axios.put(UPDATE_ROLE_URL, { roleId, roleValue })
+    const response = await axios.put(UPDATE_ROLE_URL, { roleId, roleValue })
+    if(response){
     setProgress(100)
     setIsDisable(false)
     setIsOpenRole(false)
+    handleNotification('Success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`);
+    }else{
+    setProgress(100)
+    setIsDisable(false)
+    setIsOpenRole(false)
+    handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
+    }
   }
 
   const data = user
@@ -278,19 +295,29 @@ function ManageStaffs(props: any) {
   }
 
   const handleSearchValue = (e: any) => {
-    setSearchValue(e.target.value)
+    setSearchValue(e.target.value);
+    if(typingTimeoutRef.current){
+      clearTimeout(typingTimeoutRef.current);
+      }
+      typingTimeoutRef.current = setTimeout(()=>{
+         setSearchText(searchValue);
+      },200)
   }
 
   return (
     <div className={className}>
+      <div className="container">
       <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="search-box">
-        <input
-          type="text"
-          className="search-bar"
-          placeholder="Search account"
+        <TextField
+          id="outlined-search"
+          label="Search user"
+          variant="outlined"
+          size="small"
+          value={searchValue}
           onChange={handleSearchValue}
         />
+       
       </div>
       <table {...getTableProps()}>
         <thead>
@@ -354,6 +381,7 @@ function ManageStaffs(props: any) {
             ))}
           </select>
         </div>
+        </div>
       </div>
       <Dialog
         title="Profile"
@@ -413,7 +441,11 @@ const StyledAdmin = styled(ManageStaffs)`
     flex-direction: row;
     gap: 10px;
   }
-
+  .container{
+    margin: 7rem 1rem 1rem 1rem;
+    background-color: #fbfbfb;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
   .avt {
     background-color: orange;
     min-width: 50px;
@@ -434,19 +466,9 @@ const StyledAdmin = styled(ManageStaffs)`
     color: gray;
   }
   .search-box {
-    margin: 2rem 4.5rem 0 0;
     text-align: right;
-    margin-top: 8em;
-  }
-
-  .search-bar {
-    width: 20rem;
-    height: 2rem;
-    border-radius: 5px;
-    border: none;
-    outline: none;
-    padding: 0.5rem;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+    padding: 1rem;
+    
   }
 
   .pagin {

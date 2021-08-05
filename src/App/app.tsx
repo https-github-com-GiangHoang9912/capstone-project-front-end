@@ -96,7 +96,7 @@ const App: FC = (props: any) => {
             </Route>
             {role === 1 ? (
               <Route exact path="/manage-staffs" component={ManageStaffs}>
-                <ManageStaffs />
+                <ManageStaffs handleNotification={handleNotification} />
               </Route>
             ) : (
               ''
