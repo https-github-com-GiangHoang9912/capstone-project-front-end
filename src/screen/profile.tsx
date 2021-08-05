@@ -73,7 +73,7 @@ function Profile(props: any) {
           const uploadTask = storage.ref(`images/${file.name}`).put(file)
           uploadTask.on(
             'state_changed',
-            () => {},
+            () => { },
             (error) => {
               console.log(error)
             },
@@ -113,7 +113,7 @@ function Profile(props: any) {
           window.location.reload()
         }
       } catch (error) {
-        refreshToken(error, id ? id : account.id)
+        refreshToken(error, id ? Number(id) : account.id);
       }
     }
   }

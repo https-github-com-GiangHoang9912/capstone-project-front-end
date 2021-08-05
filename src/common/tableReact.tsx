@@ -11,8 +11,6 @@ TableReact.defaultProps = {
 }
 function TableReact(props: any) {
   const { className, columns,data,isPagination } = props
- 
-  console.log("abc",data);
   useTable({
     columns,
     data,
