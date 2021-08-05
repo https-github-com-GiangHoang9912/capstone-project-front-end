@@ -180,7 +180,7 @@ function ListExam(props: any) {
       if (response && response.data.length > 0) {
         setExams(response.data);
         setTextSearch('')
-        handleNotification('Success', `${response.status}: Search exam successfull`)
+        handleNotification('success', `${response.status}: Search exam successfull`)
       }
       else {
         setTextSearch('')
@@ -312,12 +312,12 @@ function ListExam(props: any) {
     try {
       const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
       console.log(response.data, 'delete')
-      if (response && response.data) {
+      if (response) {
         console.log(response)
         setOpenDialogDelete(false)
-        handleNotification('Success', `${response.status}: Delete exam successfull`)
+        handleNotification('success', `${CONSTANT.MESSAGE("Exam").DELETE_SUCCESS}`)
       } else {
-        handleNotification('danger', `Delete exam fail`)
+        handleNotification('danger', `${CONSTANT.MESSAGE("Delete Exam").FAIL}`)
       }
       refreshToken(idUser)
     } catch (error) {
@@ -437,11 +437,11 @@ function ListExam(props: any) {
         examName: txtNameExam,
       })
       if (response && response.data) {
-        handleNotification('Success', `${response.status}: Create exam successfull`);
+        handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
         setOpenDialogCreate(false);
         setTxtNameExam('');
       } else {
-        handleNotification('danger', `Create exam fail`);
+        handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
       }
       refreshToken(idUser)
     } catch (error) {
@@ -535,11 +535,11 @@ function ListExam(props: any) {
                   </span>
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleDeleteCancel} color="primary">
-                    Cancel
-                  </Button>
                   <Button onClick={() => handleDeleteAccept(idDelete)} color="secondary">
                     Delete
+                  </Button>
+                  <Button onClick={handleDeleteCancel} color="primary">
+                    Cancel
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -606,10 +606,12 @@ const StyleListExam = styled(ListExam)`
     justify-content: center;
     align-items: center;
     padding: 15px;
+    
   }
   .main {
     background: #fff;
-    border-radius: 10px;
+    border-radius: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     overflow: auto;
     align-items: center;
     padding: 5px 10px;

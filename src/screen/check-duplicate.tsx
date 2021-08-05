@@ -96,7 +96,7 @@ function Duplicate(props: any) {
         setVisibleResult(true)
         setProgress(100)
         setIsDisable(false)
-        handleNotification('success', `${response.status}: Successful`)
+        handleNotification('success', `${CONSTANT.MESSAGE().CHECK_SUCCESS}`)
         refreshToken(userId)
       }
     } catch (error) {
@@ -133,11 +133,11 @@ function Duplicate(props: any) {
       if (response && response.data) {
         setProgress(100)
         setIsDisableAddBank(false)
-        handleNotification('success', `${response.status}: Training data Successful`)
+        handleNotification('success', `${CONSTANT.MESSAGE().TRAIN_SUCCESS}`)
       } else {
         setProgress(100)
         setIsDisableAddBank(false)
-        handleNotification('danger', `Training data fail`)
+        handleNotification('danger', `${CONSTANT.MESSAGE("Training data").FAIL}`)
       }
       refreshToken(userId)
 
