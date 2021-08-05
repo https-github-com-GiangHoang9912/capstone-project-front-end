@@ -133,7 +133,7 @@ function ListExam(props: any) {
   const [scroll, setScroll] = useState('paper')
   const [idDelete, setIdDelete] = useState(0)
   const [nameExam, setNameExam] = useState('')
-  const [exams, setExams] = useState<IExam[]>([{}])
+  const [exams, setExams] = useState<IExam[]>([])
 
   const [subject, setSubject] = useState<Subject[]>([])
 
