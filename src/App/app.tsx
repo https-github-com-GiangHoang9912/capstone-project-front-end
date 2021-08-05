@@ -30,12 +30,11 @@ const App: FC = (props: any) => {
   const [isLogin, setIsLogin] = useState(false)
 
   useEffect(() => {
-    const id = localStorage.getItem('id')
-    const data = {
-      response: null,
-    }
-    refreshToken(data, id ? Number(id) : -1)
-      .then(() => { })
+    const id = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : -1
+    refreshToken(id)
+      .then((res) => {
+        console.info(res)
+      })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
           localStorage.clear()

@@ -158,7 +158,7 @@ function ListExam(props: any) {
   }, [])
 
   //* userid */
-  const idUser = localStorage.getItem('id') ? localStorage.getItem('id') : -1
+  const idUser = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
 
   //* Get Exam by userid */
   useEffect(() => {
@@ -186,8 +186,9 @@ function ListExam(props: any) {
         setTextSearch('')
         handleNotification('warning', `No exam with name '${textSearch}'`)
       }
+      refreshToken(idUser)
     } catch (error) {
-      refreshToken(error, idUser ? Number(idUser) : account.id)
+      console.error(error)
     }
   }
 
@@ -308,7 +309,6 @@ function ListExam(props: any) {
   }
 
   const handleDeleteAccept = async (id: number) => {
-    const userId = localStorage.getItem('id')
     try {
       const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
       console.log(response.data, 'delete')
@@ -319,8 +319,9 @@ function ListExam(props: any) {
       } else {
         handleNotification('danger', `Delete exam fail`)
       }
+      refreshToken(idUser)
     } catch (error) {
-      refreshToken(error, userId ? Number(userId) : account.id)
+      console.error(error)
     }
   }
 
@@ -430,7 +431,6 @@ function ListExam(props: any) {
 
   const handleCreateExam = async (e: any) => {
     e.preventDefault()
-    const userId = localStorage.getItem('id')
     try {
       const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
         subjectId,
@@ -443,8 +443,9 @@ function ListExam(props: any) {
       } else {
         handleNotification('danger', `Create exam fail`);
       }
+      refreshToken(idUser)
     } catch (error) {
-      refreshToken(error, userId ? Number(userId) : account.id)
+      console.error(error)
     }
   }
 

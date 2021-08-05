@@ -223,7 +223,7 @@ function UpdateExam(props: any) {
   const { idExam } = location.state.params
   const { idSubject } = location.state.params
   const { examName } = location.state.params
-  const idUser = localStorage.getItem('id') ? localStorage.getItem('id') : -1
+  const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
   //* Get question by idExam */
   useEffect(() => {
     setCorrectAnswerTypeTf('true')
@@ -257,7 +257,6 @@ function UpdateExam(props: any) {
     setNameQuestion(name)
   }
   const handleAcceptDialogDelete = async (id: number) => {
-    const userId = localStorage.getItem('id')
     try {
       const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`)
       if (response && response.data) {
@@ -266,8 +265,9 @@ function UpdateExam(props: any) {
       } else {
         handleNotification('danger', `Delete question fail`);
       }
+      refreshToken(userId)
     } catch (error) {
-      refreshToken(error, userId ? Number(userId) : account.id)
+      console.error(error)
     }
   }
   const handleCancelDialogDelete = () => {
@@ -283,7 +283,6 @@ function UpdateExam(props: any) {
 
   const handleSaveQuestion = async (e: any) => {
     e.preventDefault()
-    const userId = localStorage.getItem('id')
     try {
       const questionAdd = arrayCheck.map((item: any) => ({
         questionBankId: item,
@@ -298,8 +297,9 @@ function UpdateExam(props: any) {
       } else {
         handleNotification('danger', `Add questions to exam fail`);
       }
+      refreshToken(userId)
     } catch (error) {
-      refreshToken(error, userId ? Number(userId) : account.id)
+      console.error(error)
     }
   }
   const handleCloseDialogAdd = async (e: any) => {
@@ -356,7 +356,6 @@ function UpdateExam(props: any) {
 
   const handleSaveUpdateQuestion = async (e: any) => {
     e.preventDefault()
-    const userId = localStorage.getItem('id')
     try {
       let response = null;
       response = await axios.post(`${CREATE_ANSWERS_URL}/${idQuestion}`, {
@@ -370,8 +369,9 @@ function UpdateExam(props: any) {
         handleNotification('danger', `Update answer for question fail`);
         console.log('Error create answer tf...!')
       }
+      refreshToken(userId)
     } catch (error) {
-      refreshToken(error, userId ? Number(userId) : account.id)
+      console.error(error)
     }
   }
 

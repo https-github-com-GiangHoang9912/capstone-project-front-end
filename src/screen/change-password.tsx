@@ -40,7 +40,7 @@ function ChangePassword(props: any) {
   ])
   const changePassword = async (e: any) => {
     e.preventDefault()
-    const id = localStorage.getItem('id')
+    const id = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
     try {
       await axios.post(
         CHANGE_PASSWORD,
@@ -53,7 +53,7 @@ function ChangePassword(props: any) {
         }
       )
     } catch (error) {
-      refreshToken(error, id ? Number(id) : account.id)
+      refreshToken(id)
     }
   }
   const onCheckBtnClick = useCallback((id) => {

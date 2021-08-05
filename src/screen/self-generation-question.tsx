@@ -62,6 +62,7 @@ const SelfGenerate = (props: any) => {
   const classes = useStyles()
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
+  const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [questions, setQuestions] = useState<Question[]>([])
   const [isDuplicate, setIsDuplicate] = useState<boolean>(false)
@@ -94,7 +95,6 @@ const SelfGenerate = (props: any) => {
   }
   async function handleProgress(e: any) {
     e.preventDefault()
-    const id = localStorage.getItem('id')
     try {
       setIsDisable(true)
       setProgress(progress + 10)
@@ -110,8 +110,9 @@ const SelfGenerate = (props: any) => {
         setVisibleResult(true)
         setIsDisable(false)
       }
+      refreshToken(userId)
     } catch (error) {
-      refreshToken(error, id ? Number(id) : account.id)
+      console.error(error)
     }
   }
 
@@ -159,7 +160,6 @@ const SelfGenerate = (props: any) => {
     </div>
   )
   const handleCheckDuplication = async (text: String) => {
-    const userId = localStorage.getItem('id')
     try {
       await axios.get(GET_SUBJECT_URL).then((response) => {
         setSubjects(response.data)
@@ -167,8 +167,9 @@ const SelfGenerate = (props: any) => {
       })
       setIsOpen(true)
       setIsDuplicate(true)
+      refreshToken(userId)
     } catch (error) {
-      refreshToken(error, userId ? Number(userId) : account.id)
+      console.error(error)
     }
   }
   const handleInputAnswer = (index: number) => (e: any) => {

@@ -8,14 +8,14 @@ import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
-import Chip from '@material-ui/core/Chip';
-import DoneIcon from '@material-ui/icons/Done';
+import Chip from '@material-ui/core/Chip'
+import DoneIcon from '@material-ui/icons/Done'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
 import { TableCheckDuplicate } from '../common/table'
 import { AccountContext } from '../contexts/account-context'
- 
+
 Duplicate.propTypes = {
   className: PropTypes.string,
 }
@@ -43,15 +43,15 @@ const useStyles = makeStyles((theme) => ({
   chipDone: {
     marginLeft: '1rem',
     border: '1px solid #0fac31',
-    color: '#0fac31'
-  }
-})) 
+    color: '#0fac31',
+  },
+}))
 function Duplicate(props: any) {
   const { className, handleNotification } = props
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false)
   const [fileName, setFileName] = useState<string>('')
-  const [visibleResult, setVisibleResult] = useState<boolean>(true)
+  const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const [isAdd, setIsAdd] = useState<boolean>(false)
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
@@ -67,10 +67,10 @@ function Duplicate(props: any) {
     setFile(e.target.files[0])
     setFileName(e.target.files[0].name)
   }
-  const id = localStorage.getItem('id')
+  const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
   useEffect(() => {
     axios
-      .get(`${GET_ROLE_URL}/${id}`)
+      .get(`${GET_ROLE_URL}/${userId}`)
       .then((response) => {
         setRole(response.data.role)
       })
@@ -86,26 +86,22 @@ function Duplicate(props: any) {
       const response = await axios.post(MODEL_CHECK_DUPLICATE_URL, {
         question,
       })
-      .catch(async (error) => {
-        refreshToken(error, id ? Number(id) : account.id)
-      })
-    if (response && response.data) {
-      setResult(response.data)
-      if(response.data[0].point.toFixed(2) >= 0.6){
-         setIsAdd(false);
-      }else{
-        setIsAdd(true);
+      if (response && response.data) {
+        setResult(response.data)
+        if (response.data[0].point.toFixed(2) >= 0.6) {
+          setIsAdd(false)
+        } else {
+          setIsAdd(true)
+        }
+        setVisibleResult(true)
+        setProgress(100)
+        setIsDisable(false)
+        handleNotification('success', `${response.status}: Successful`)
+        refreshToken(userId)
       }
-      setVisibleResult(true)
-      setProgress(100)
-      setIsDisable(false)
-      handleNotification('success', `${response.status}: Successful`)
-    }
     } catch (error) {
-      refreshToken(error, id ? Number(id) : account.id)
-
+      console.error(error)
     }
-    
   }
 
   function handleInputQuestion(e: any) {
@@ -143,8 +139,10 @@ function Duplicate(props: any) {
         setIsDisableAddBank(false)
         handleNotification('danger', `Training data fail`)
       }
+      refreshToken(userId)
+
     } catch (error) {
-      refreshToken(error, id ? Number(id) : account.id)
+      console.error(error)
     }
   }
 
@@ -252,25 +250,31 @@ function Duplicate(props: any) {
             />
           </div>
           {visibleResult ? (
-          <div>
-          <TableCheckDuplicate results={result} />
-           {isAdd ? <div className="result-contain">
-           <p>
-             Able to add this question to bank
-             {/* Button add question to bank */}
-             <Chip
-             label="Add question"
-             clickable
-             icon={<DoneIcon />}
-             className={classes.chipDone}
-             variant="outlined"
-           />
-           </p>
-           </div> : <p style ={{color: '#d11c1c', fontSize:"0.9rem", margin:"2rem"}}>
-             Unable to add this question to bank</p>}
-          </div>
-          
-          ) : ' '}
+            <div>
+              <TableCheckDuplicate results={result} />
+              {isAdd ? (
+                <div className="result-contain">
+                  <p>
+                    Able to add this question to bank
+                    {/* Button add question to bank */}
+                    <Chip
+                      label="Add question"
+                      clickable
+                      icon={<DoneIcon />}
+                      className={classes.chipDone}
+                      variant="outlined"
+                    />
+                  </p>
+                </div>
+              ) : (
+                <p style={{ color: '#d11c1c', fontSize: '0.9rem', margin: '2rem' }}>
+                  Unable to add this question to bank
+                </p>
+              )}
+            </div>
+          ) : (
+            ' '
+          )}
         </div>
       </div>
     </div>
@@ -310,10 +314,10 @@ const StyleDuplicate = styled(Duplicate)`
     color: #10182f;
     border-bottom: 1px solid #dae1f5;
   }
-  .result-contain{
+  .result-contain {
     margin: 2rem;
   }
-  .result-contain p{
+  .result-contain p {
     color: #1ab93d;
     font-size: 0.9rem;
     text-align: center;
