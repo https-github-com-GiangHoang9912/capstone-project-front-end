@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import { useState, useEffect, FC } from 'react'
 
 import styled from 'styled-components'
-import ReactNotification, { store } from 'react-notifications-component'
 import { useDispatch, useSelector } from 'react-redux'
 import Notification from '../common/notification'
 import { RootState } from '../store'
@@ -23,6 +22,8 @@ import ManageStaffs from '../screen/manage-staffs'
 import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
 import UpdateExam from '../screen/update-exam'
+import NotFound from '../screen/404-not-found'
+import ForgotPassword from '../screen/forgot-password'
 import { refreshToken } from '../services/services'
 
 const App: FC = (props: any) => {
@@ -30,12 +31,11 @@ const App: FC = (props: any) => {
   const [isLogin, setIsLogin] = useState(false)
 
   useEffect(() => {
-    const id = localStorage.getItem('id')
-    const data = {
-      response: null,
-    }
-    refreshToken(data, id ? Number(id) : -1)
-      .then(() => {})
+    const id = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : -1
+    refreshToken(id)
+      .then((res) => {
+        console.info(res)
+      })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
           localStorage.clear()
@@ -86,18 +86,18 @@ const App: FC = (props: any) => {
             <Route exact path="/history" component={Profile}>
               <ViewHistory />
             </Route>
-            <Route exact path="/changePassword" component={Profile}>
+            <Route exact path="/change-password" component={Profile}>
               <ChangePassword />
             </Route>
             <Route exact path="/exam" component={Profile}>
-              <ListExam />
+              <ListExam handleNotification={handleNotification} />
             </Route>
             <Route exact path="/update-exam" component={Profile}>
-              <UpdateExam />
+              <UpdateExam handleNotification={handleNotification} />
             </Route>
             {role === 1 ? (
               <Route exact path="/manage-staffs" component={ManageStaffs}>
-                <ManageStaffs />
+                <ManageStaffs handleNotification={handleNotification} />
               </Route>
             ) : (
               ''
@@ -105,6 +105,10 @@ const App: FC = (props: any) => {
             <Route exact path="/login" component={Login}>
               <Login setIsLogin={setIsLogin} />
             </Route>
+            <Route exact path="/forgot-password" component={ForgotPassword}>
+              <ForgotPassword setIsLogin={setIsLogin} handleNotification={handleNotification} />
+            </Route>
+            <Route component={NotFound} />
           </Switch>
         </div>
       </AccountContextProvider>

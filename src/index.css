@@ -24,6 +24,7 @@ body {
 }
 
 .notification {
+  /* background-color: #5CB85C; */
   background-color: #f5f5f5;
   border-radius: 4px;
   position: relative;
@@ -36,12 +37,12 @@ body {
 }
 
 .mb-2 {
-  margin-bottom: .5rem!important;
+  margin-bottom: 0.5rem !important;
 }
 
 .notification.is-warning {
   background-color: #ffe08a;
-  color: rgba(0,0,0,.7);
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .notification.is-primary {

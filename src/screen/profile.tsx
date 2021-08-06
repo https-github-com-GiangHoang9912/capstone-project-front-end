@@ -44,12 +44,13 @@ function Profile(props: any) {
   const [address, setAddress] = useState<string>('')
   const [phone, setPhone] = useState<string>('')
   const [email, setEmail] = useState<string>('')
-  const [isInputValid, setIsInputValid] = useState<boolean>(false)
+  const [isInputValid, setIsInputValid] = useState<boolean>(true)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [inputError, setInputError] = useState<string>('')
   const [isDisable, setIsDisable] = useState(false)
   const [progress, setProgress] = useState(0)
   const [file, setFile] = useState<any>('')
+  const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
 
   function handleEdit() {
     setEditStatus(!editStatus)
@@ -64,9 +65,8 @@ function Profile(props: any) {
   const handleAccept = async () => {
     setIsOpen(false)
     setIsDisable(true)
-    setProgress(progress + 10)
     if (isInputValid) {
-      const id = Number(localStorage.getItem('id'))
+      setProgress(100)
       try {
         console.log(file)
         if (file) {
@@ -77,43 +77,43 @@ function Profile(props: any) {
             (error) => {
               console.log(error)
             },
-            () => {
-              storage
+            async () => {
+              await storage
                 .ref('images')
                 .child(file.name)
                 .getDownloadURL()
                 .then(async (url) => {
                   await axios.put(UPDATE_PROFILE_URL, {
-                    id,
+                    id: userId,
                     firstName,
                     lastName,
-                    email,
                     address,
                     phone,
                     dob,
                     avatar: url,
                   })
                   localStorage.setItem('avatar', url)
-                  setProgress(100)
                   setIsDisable(false)
                 })
+              refreshToken(userId)
+              window.location.reload()
             }
           )
         } else {
           await axios.put(UPDATE_PROFILE_URL, {
-            id,
+            id: userId,
             firstName,
             lastName,
-            email,
             address,
             phone,
             dob,
           })
-          setProgress(100)
           setIsDisable(false)
+          window.location.reload()
+          refreshToken(userId)
         }
       } catch (error) {
-        refreshToken(error, id ? Number(id) : account.id)
+        console.error(error)
       }
     }
   }
@@ -124,25 +124,25 @@ function Profile(props: any) {
   }
 
   useEffect(() => {
-    const username = localStorage.getItem('username')
-    const id = localStorage.getItem('id')
-    axios
-      .post(GET_INFORMATION_URL, {
-        username,
-      })
-      .then((response) => {
-        const dobFormat = moment.default(response.data.dateOfBirth).format('DD/MM/YYYY')
-        setFirstName(response.data.firstName ? response.data.firstName : '')
-        setLastName(response.data.lastName ? response.data.lastName : '')
-        setEmail(response.data.email ? response.data.email : '')
-        setAddress(response.data.address ? response.data.address : '')
-        setPhone(response.data.phone ? response.data.phone : '')
-        setDob(response.data.dateOfBirth ? dobFormat : '')
-        setImage(response.data.avatar ? response.data.avatar : 'avatar2.png')
-      })
-      .catch(async (error) => {
-        refreshToken(error, id ? Number(id) : account.id)
-      })
+    try {
+      const username = localStorage.getItem('username')
+      axios
+        .post(GET_INFORMATION_URL, {
+          username,
+        })
+        .then((response) => {
+          const dobFormat = moment.default(response.data.dateOfBirth).format('DD/MM/YYYY')
+          setFirstName(response.data.firstName ? response.data.firstName : '')
+          setLastName(response.data.lastName ? response.data.lastName : '')
+          setEmail(response.data.email ? response.data.email : '')
+          setAddress(response.data.address ? response.data.address : '')
+          setPhone(response.data.phone ? response.data.phone : '')
+          setDob(response.data.dateOfBirth ? dobFormat : '')
+          setImage(response.data.avatar ? response.data.avatar : 'avatar2.png')
+        })
+    } catch (error) {
+      console.error(error)
+    }
   }, [])
 
   const validateInput = (inputText: any, regex: any, error: string, errorType: string) => {
@@ -265,17 +265,9 @@ function Profile(props: any) {
                 type="text"
                 id="email"
                 className="input-bar "
-                onBlur={(e) =>
-                  validateInput(
-                    e.target.value,
-                    /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
-                    'Email must be in format: abcxya@gmail.com',
-                    'Email'
-                  )
-                }
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={editStatus}
+                disabled={true}
               />
               {inputError === 'Email' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
@@ -301,7 +293,7 @@ function Profile(props: any) {
             <div className="footer-info">
               <div>
                 <h3>Change Password</h3>
-                <NavLink to="/changePassword">
+                <NavLink to="/change-password">
                   <button className="btn btn-change">Go to change password</button>
                 </NavLink>
               </div>
@@ -394,7 +386,7 @@ const styleProfile = styled(Profile)`
     border: none;
     border-bottom: 1px solid #dae1f5;
   }
-  .input-bar:focus{
+  .input-bar:focus {
     border-bottom: 1px solid #306bf3;
   }
 

@@ -2,11 +2,12 @@ import { Dispatch, FC, SetStateAction } from 'react'
 
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
+import axios from 'axios'
 // MUI
 import { IconButton, AppBar, Toolbar } from '@material-ui/core'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'
-
+import * as CONSTANT from '../const'
 
 interface Styled {
   className?: string
@@ -29,13 +30,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
+const LOGOUT_URL = `${CONSTANT.BASE_URL}/logout`
+
 const Header: FC<HeaderProps> = (props) => {
   const { className, isOpen, setIsOpen } = props
   const username = localStorage.getItem('username')
   const avatar = localStorage.getItem('avatar')
   const classes = useStyles()
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const response = await axios.get(LOGOUT_URL)
+    console.log(response)
     localStorage.clear()
   }
 
@@ -159,7 +164,7 @@ const StyledHeader = styled(Header)`
   }
 
   #icon {
-    width: 90%;
+    width: 120%;
   }
 `
 

@@ -1,10 +1,12 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { faCheck, faLock, faEye } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components'
 import * as CONSTANT from '../const'
+import { refreshToken } from '../services/services'
+import { AccountContext } from '../contexts/account-context'
 
 ChangePassword.propTypes = {
   className: PropTypes.string,
@@ -14,12 +16,15 @@ ChangePassword.defaultProps = {
   className: '',
 }
 
-const CHANGE_PASSWORD = `${CONSTANT.BASE_URL}/changePassword`
+const CHANGE_PASSWORD = `${CONSTANT.BASE_URL}/user/change-password`
 function ChangePassword(props: any) {
   const { className } = props
-  const [oldPassword, setOldPassword] = useState<String>('');
-  const [newPassword, setNewPassword] = useState<String>('');
-  const [rePassword, setRePassword] = useState<String>('');
+  const { accountContextData } = useContext(AccountContext)
+  const account = accountContextData
+  const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
+  const [oldPassword, setOldPassword] = useState<string>('')
+  const [newPassword, setNewPassword] = useState<string>('')
+  const [rePassword, setRePassword] = useState<string>('')
   const [iconList, setIconList] = useState([
     {
       id: 1,
@@ -34,21 +39,28 @@ function ChangePassword(props: any) {
       showPassword: false,
     },
   ])
-   const changePassword = async(e: any) =>{
-    e.preventDefault();
-    const response = await axios
-          .post(
-            CHANGE_PASSWORD,
-            {
-              oldPassword,
-              newPassword,
-            },
-            {
-              withCredentials: true,
-            }
-          )
 
+  const changePassword = async (e: any) => {
+    e.preventDefault()
+    try {
+      const changeDataResponse = await axios.put(
+        CHANGE_PASSWORD,
+        {
+          userId,
+          oldPassword,
+          newPassword,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      console.log(changeDataResponse)
+      refreshToken(userId)
+    } catch (error) {
+      console.error(error)
+    }
   }
+
   const onCheckBtnClick = useCallback((id) => {
     setIconList((prevState) =>
       prevState.map((icon) =>
@@ -97,7 +109,7 @@ function ChangePassword(props: any) {
                   placeholder="Enter old password"
                   onChange={(e) => setOldPassword(e.target.value)}
                   required
-                  />
+                />
                 <span className="icon-pass">
                   <FontAwesomeIcon icon={faLock} />
                 </span>
@@ -136,10 +148,16 @@ function ChangePassword(props: any) {
                 <span className="icon-eye">
                   <FontAwesomeIcon icon={faEye} onClick={() => onCheckBtnClick(iconList[2].id)} />
                 </span>
-                {newPassword !== rePassword ? <p className="errorPass">Re-Enter Password does not match Password</p>: ' '}
+                {newPassword !== rePassword ? (
+                  <p className="errorPass">Re-Enter Password does not match Password</p>
+                ) : (
+                  ' '
+                )}
               </div>
               <div className="contain-btn">
-                <button className="btn-login" onClick={(e)=>changePassword}>Change</button>
+                <button className="btn-login" onClick={changePassword}>
+                  Change
+                </button>
               </div>
             </form>
           </div>
@@ -160,7 +178,7 @@ const StyledForgotPassword = styled(ChangePassword)`
     width: 100%;
     margin: 0 auto;
   }
-  
+
   .container {
     width: 100%;
     height: 100vh;
@@ -215,12 +233,12 @@ const StyledForgotPassword = styled(ChangePassword)`
   .input-pass:focus {
     animation: pulse-animation 1.5s infinite;
   }
-  .errorPass{
+  .errorPass {
     margin: 0 1rem;
-    color:red;
+    color: red;
     font-size: 0.8rem;
   }
- //** animation for input */
+  //** animation for input */
   @keyframes pulse-animation {
     0% {
       box-shadow: 0 0 0 0px rgba(32, 182, 45, 0.527);

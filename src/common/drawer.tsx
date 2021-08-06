@@ -67,27 +67,27 @@ function PersistentDrawerLeft(props: any) {
     {
       key: 2,
       icon: <Filter2Icon fontSize="small" />,
-      text: 'Check Duplicate',
+      text: 'Check Duplication',
       link: '/check-duplicate',
     },
     {
       key: 3,
       icon: <ContactSupportIcon fontSize="small" />,
-      text: 'Self-generate Question',
+      text: 'Self-generate Questions',
       link: '/self-generate',
     },
     {
       key: 4,
       icon: <SupervisorAccountIcon fontSize="small" />,
-      text: 'Manage Staffs',
+      text: 'Manage Accounts',
       link: '/manage-staffs',
     },
     {
       key: 5,
-      icon: <NoteAddIcon fontSize='small' />,
-      text: 'Manage Exam',
+      icon: <NoteAddIcon fontSize="small" />,
+      text: 'Manage Exams',
       link: '/exam',
-    }
+    },
   ]
 
   return (
@@ -103,7 +103,7 @@ function PersistentDrawerLeft(props: any) {
           {menuItems.map((item) => {
             const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
 
-            if (item.key === 4 && role !== 1) return ""
+            if (item.key === 4 && role !== 1) return ''
 
             return (
               <ListItem key={item.key}>

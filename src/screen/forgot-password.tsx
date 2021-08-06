@@ -22,13 +22,20 @@ const useStyles = makeStyles({
     height: 50,
     backgroundColor: '#1e90ff',
     cursor: 'pointer',
-    marginTop: 15
-  }
+    marginTop: 15,
+  },
 })
 
 function ForgotPassword(props: any) {
-  const { className } = props;
-  const classes = useStyles();
+  const { className, setIsLogin } = props
+  const classes = useStyles()
+
+  const handleResetPassword = (e: any) => {
+    e.preventDefault()
+  }
+
+  setIsLogin(false)
+
   return (
     <div className={className}>
       <div className="container">
@@ -63,16 +70,10 @@ function ForgotPassword(props: any) {
                 </span>
               </div>
               <div className="button-reset">
-                <Button variant="contained"
-                  color="primary"
-                  className={classes.styleBtn}
-                >
+                <Button variant="contained" color="primary" className={classes.styleBtn}>
                   Clear Text
                 </Button>
-                <Button variant="contained"
-                  color="primary"
-                  className={classes.styleBtn}
-                >
+                <Button variant="contained" color="primary" className={classes.styleBtn} onClick={handleResetPassword}>
                   Reset Password
                 </Button>
               </div>
@@ -169,7 +170,7 @@ const StyledForgotPassword = styled(ForgotPassword)`
     flex-direction: column;
     align-items: center;
   }
- 
+
   .avatar {
     height: 80px;
     width: 80px;

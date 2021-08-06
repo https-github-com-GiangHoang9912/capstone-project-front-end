@@ -5,18 +5,16 @@ import { useHistory } from 'react-router-dom'
 import TextField from '@material-ui/core/TextField'
 import Carousel from 'react-elastic-carousel'
 import Button from '@material-ui/core/Button'
-import Icon from '@material-ui/core/Icon'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
-import { faEdit, faPlayCircle, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
-import EditIcon from '@material-ui/icons/Edit'
+import Chip from '@material-ui/core/Chip';
+import DoneIcon from '@material-ui/icons/Done';
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import IconButton from '@material-ui/core/IconButton'
 import SvgIcon from '@material-ui/core/SvgIcon'
 import { AccountContext } from '../contexts/account-context'
 import Progress from '../common/progress'
 import Dialog from '../common/dialog'
-
 import Table from '../common/tableReact'
 
 import { refreshToken } from '../services/services'
@@ -28,6 +26,11 @@ const useStyles = makeStyles((theme) => ({
   root: {},
   btnGen: {
     margin: '20px 10px',
+  },
+  chipDone: {
+    marginLeft: '1rem',
+    border: '1px solid #0fac31',
+    color: '#0fac31',
   },
 }))
 
@@ -41,7 +44,12 @@ interface Question {
   text: string
 }
 
+interface Subject {
+  id: number
+  subjectName: string
+}
 const MODEL_SELF_GENERATION_URL = `${CONSTANT.BASE_URL}/self-generate`
+const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject `
 
 const SelfGenerate = (props: any) => {
   const { className, handleNotification } = props
@@ -54,7 +62,10 @@ const SelfGenerate = (props: any) => {
   const classes = useStyles()
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
+  const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
+  const [subjects, setSubjects] = useState<Subject[]>([])
   const [questions, setQuestions] = useState<Question[]>([])
+  const [isDuplicate, setIsDuplicate] = useState<boolean>(false)
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const [items, setItems] = useState<AnswerInput[]>([
     {
@@ -84,26 +95,27 @@ const SelfGenerate = (props: any) => {
   }
   async function handleProgress(e: any) {
     e.preventDefault()
-    setIsDisable(true)
-    const id = localStorage.getItem('id')
-    setProgress(progress + 10)
-    const response = await axios.post(MODEL_SELF_GENERATION_URL, items).catch(async (error) => {
-      refreshToken(error, id ? Number(id) : account.id)
-    })
-    if (response && response.data) {
-      const newArr = response.data.question?.map((item: string, index: number) => ({
-        id: index + 1,
-        text: item,
-      }))
-      setQuestions(newArr)
-      setProgress(100)
-      setVisibleResult(true)
-      setIsDisable(false)
+    try {
+      setIsDisable(true)
+      setProgress(progress + 10)
+      const response = await axios.post(MODEL_SELF_GENERATION_URL, items)
+      console.log(response)
+      if (response && response.data) {
+        const newArr = response.data.question?.map((item: string, index: number) => ({
+          id: index + 1,
+          text: item,
+        }))
+        setQuestions(newArr)
+        setProgress(100)
+        setVisibleResult(true)
+        setIsDisable(false)
+      }
+      refreshToken(userId)
+    } catch (error) {
+      console.error(error)
     }
   }
-  const handleDialogOpen = () => {
-    setIsOpen(true)
-  }
+
   const handleDialogClose = () => {
     setIsOpen(false)
   }
@@ -121,11 +133,45 @@ const SelfGenerate = (props: any) => {
       accessor: 'text',
     },
     {
-      Header: 'Edit',
-      Cell: (cell: any) => <EditIcon color="secondary" />,
+      Header: 'Check Duplication',
+      Cell: (cell: any) => (
+        <Chip
+          label="Check"
+          clickable
+          color="secondary"
+          onClick={() => handleCheckDuplication(cell.row.original.text)}
+          variant="outlined"
+        />
+      ),
     },
   ]
 
+  {
+    /* Content subject select dialog */
+  }
+  const subjectDialog = (
+    <div className={className}>
+      <h4>Select a subject to add a question</h4>
+      <select className="select-subject">
+        {subjects.map((sub) => (
+          <option value={sub.id}>{sub.subjectName}</option>
+        ))}
+      </select>
+    </div>
+  )
+  const handleCheckDuplication = async (text: String) => {
+    try {
+      await axios.get(GET_SUBJECT_URL).then((response) => {
+        setSubjects(response.data)
+        console.log(response.data)
+      })
+      setIsOpen(true)
+      setIsDuplicate(true)
+      refreshToken(userId)
+    } catch (error) {
+      console.error(error)
+    }
+  }
   const handleInputAnswer = (index: number) => (e: any) => {
     const newArr = [...items]
     newArr[index].answer = e.target.value
@@ -214,27 +260,16 @@ const SelfGenerate = (props: any) => {
           {visibleResult ? (
             <div>
               <Table columns={columns} data={questions} isPagination={false} />
-              <p className="note-box">
-                Go to the duplicate detection page to check the newly created question.
-              </p>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.btnGen}
-                onClick={handleDialogOpen}
-              >
-                Check duplicate for this question
-              </Button>
             </div>
           ) : (
             ' '
           )}
-
+          {/* Dialog show select subject to add  */}
           <Dialog
-            title="Go to Duplicate Detection"
-            message="Check duplicate this question with questions in the bank ?"
-            buttonAccept="Yes"
-            buttonCancel="No"
+            title="Add question"
+            buttonAccept="Add"
+            buttonCancel="Cancel"
+            content={subjectDialog}
             isOpen={isOpen}
             handleAccept={handleAccept}
             handleClose={handleDialogClose}
@@ -274,9 +309,25 @@ const SelfStyle = styled(SelfGenerate)`
     float: left;
   }
   .note-box {
-    color: #545d7a;
+    color: #89928c;
     margin: 10px;
     font-size: 0.9rem;
+  }
+  .result-contain {
+    margin-top: 2rem;
+  }
+  .result-contain p {
+    color: #1ab93d;
+    font-size: 0.9rem;
+  }
+  .select-subject {
+    width: 200px;
+    height: 24px;
+    border: none;
+    outline: none;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    border-bottom: 2px solid #303f9f;
   }
   .item-input {
     text-align: start;

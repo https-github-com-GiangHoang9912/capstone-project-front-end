@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,7 +8,8 @@ import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
-
+import Chip from '@material-ui/core/Chip'
+import DoneIcon from '@material-ui/icons/Done'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
@@ -25,7 +26,7 @@ Duplicate.defaultProps = {
 axios.defaults.withCredentials = true
 const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
 const ADD_FILE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/upload-dataset`
-
+const GET_ROLE_URL = `${CONSTANT.BASE_URL}/user/role`
 interface IQuestion {
   question: string
   point: number
@@ -39,6 +40,11 @@ const useStyles = makeStyles((theme) => ({
   btnDup: {
     margin: 10,
   },
+  chipDone: {
+    marginLeft: '1rem',
+    border: '1px solid #0fac31',
+    color: '#0fac31',
+  },
 }))
 function Duplicate(props: any) {
   const { className, handleNotification } = props
@@ -46,9 +52,11 @@ function Duplicate(props: any) {
   const [isOpen, setIsOpen] = useState(false)
   const [fileName, setFileName] = useState<string>('')
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
+  const [isAdd, setIsAdd] = useState<boolean>(false)
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
   const [progress, setProgress] = useState(0)
+  const [role, setRole] = useState(0)
   const [isDisable, setIsDisable] = useState(false)
   const [isDisableAddBank, setIsDisableAddBank] = useState(false)
   const [question, setQuestion] = useState<string>('')
@@ -59,25 +67,43 @@ function Duplicate(props: any) {
     setFile(e.target.files[0])
     setFileName(e.target.files[0].name)
   }
-  const id = localStorage.getItem('id')
+  const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
+  useEffect(() => {
+    axios
+      .get(`${GET_ROLE_URL}/${userId}`)
+      .then((response) => {
+        setRole(response.data.role)
+      })
+      .catch((err) => {
+        console.log('Failed to fetch data: ', err.message)
+      })
+  }, [])
+
   async function handleCheck() {
-    setIsDisable(true)
-    setProgress(progress + 10)
-    const response = await axios
-      .post(MODEL_CHECK_DUPLICATE_URL, {
+    try {
+      setIsDisable(true)
+      setProgress(progress + 10)
+      const response = await axios.post(MODEL_CHECK_DUPLICATE_URL, {
         question,
       })
-      .catch(async (error) => {
-        refreshToken(error, id ? Number(id) : account.id)
-      })
-    if (response && response.data) {
-      setResult(response.data)
-      setVisibleResult(true)
-      setProgress(100)
-      setIsDisable(false)
-      handleNotification('success', `${response.status}: Successful`)
+      if (response && response.data) {
+        setResult(response.data)
+        if (response.data[0].point.toFixed(2) >= 0.6) {
+          setIsAdd(false)
+        } else {
+          setIsAdd(true)
+        }
+        setVisibleResult(true)
+        setProgress(100)
+        setIsDisable(false)
+        handleNotification('success', `${CONSTANT.MESSAGE().CHECK_SUCCESS}`)
+        refreshToken(userId)
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
+
   function handleInputQuestion(e: any) {
     setQuestion(e.target.value)
   }
@@ -96,22 +122,27 @@ function Duplicate(props: any) {
 
   const handleAddFileBank = async (e: any) => {
     e.preventDefault()
-    setIsDisableAddBank(true)
-    setProgress(progress + 10)
-    const formData = new FormData()
-    formData.append('train', file, file.name)
+    try {
+      setIsDisableAddBank(true)
+      setProgress(progress + 10)
+      const formData = new FormData()
+      formData.append('train', file, file.name)
 
-    const response = await axios.post(ADD_FILE_DATASET_URL, formData).catch(async (error) => {
-      refreshToken(error, id ? Number(id) : account.id)
-    })
-    if (response && response.data) {
-      setProgress(100)
-      setIsDisableAddBank(false)
-      handleNotification('success', `${response.status}: Training data Successful`)
-    } else {
-      setProgress(100)
-      setIsDisableAddBank(false)
-      handleNotification('danger', `Training data fail`)
+      const response = await axios.post(ADD_FILE_DATASET_URL, formData)
+
+      if (response && response.data) {
+        setProgress(100)
+        setIsDisableAddBank(false)
+        handleNotification('success', `${CONSTANT.MESSAGE().TRAIN_SUCCESS}`)
+      } else {
+        setProgress(100)
+        setIsDisableAddBank(false)
+        handleNotification('danger', `${CONSTANT.MESSAGE("Training data").FAIL}`)
+      }
+      refreshToken(userId)
+
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -119,44 +150,48 @@ function Duplicate(props: any) {
     <div className={className}>
       <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="container">
-        <div className="control control-left">
-          <div className="import-bank">
-            <h2 className="select">Import a new Bank</h2>
-            <div className="input-bank">
-              <input type="file" accept=".csv" onChange={handleFileChange} title=" " />
+        {role !== 3 ? (
+          <div className="control control-left">
+            <div className="import-bank">
+              <h2 className="select">Import a new Bank</h2>
+              <div className="input-bank">
+                <input type="file" accept=".csv" onChange={handleFileChange} title=" " />
+              </div>
+              <p className="file-rule">Bank input must be .csv file</p>
+              <p className="bank-name">Bank name: {fileName}</p>
+              {fileName.includes('.csv') ? (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className={classes.btnDup}
+                  onClick={handleAddFileBank}
+                  disabled={isDisableAddBank}
+                >
+                  Add Bank
+                </Button>
+              ) : (
+                ' '
+              )}
+              <div className="guide-line">
+                <p id="gl-left">
+                  <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Only
+                  Staff and Admin can input question bank, dataset to system.
+                </p>
+              </div>
             </div>
-            <p className="file-rule">Bank input must be .csv file</p>
-            <p className="bank-name">Bank name: {fileName}</p>
-            {fileName.includes('.csv') ? (
-              <Button
-                variant="contained"
-                color="secondary"
-                className={classes.btnDup}
-                onClick={handleAddFileBank}
-                disabled={isDisableAddBank}
-              >
-                Add Bank
-              </Button>
-            ) : (
-              ' '
-            )}
-            <div className="guide-line">
-              <p id="gl-left">
-                <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Only Staff
-                and Admin can input question bank, dataset to system.
-              </p>
+            <div className="convert-csv">
+              <div className="csv-img" />
+              <div className="csv-link">
+                <a href="https://convertio.co/vn/doc-csv/" target="_blank" rel="noreferrer">
+                  <h3>Convert file to CSV</h3>
+                </a>
+                <p>Go to CSV convert page and convert your file to CSV format</p>
+              </div>
             </div>
           </div>
-          <div className="convert-csv">
-            <div className="csv-img" />
-            <div className="csv-link">
-              <a href="https://convertio.co/vn/doc-csv/" target="_blank" rel="noreferrer">
-                <h3>Convert file to CSV</h3>
-              </a>
-              <p>Go to CSV convert page and convert your file to CSV format</p>
-            </div>
-          </div>
-        </div>
+        ) : (
+          ''
+        )}
         <div className="control control-right">
           <h2>Enter your question here:</h2>
           <TextField
@@ -214,7 +249,32 @@ function Duplicate(props: any) {
               handleClose={handleDialogClose}
             />
           </div>
-          {visibleResult ? <TableCheckDuplicate results={result} /> : ' '}
+          {visibleResult ? (
+            <div>
+              <TableCheckDuplicate results={result} />
+              {isAdd ? (
+                <div className="result-contain">
+                  <p>
+                    Able to add this question to bank
+                    {/* Button add question to bank */}
+                    <Chip
+                      label="Add question"
+                      clickable
+                      icon={<DoneIcon />}
+                      className={classes.chipDone}
+                      variant="outlined"
+                    />
+                  </p>
+                </div>
+              ) : (
+                <p style={{ color: '#d11c1c', fontSize: '0.9rem', margin: '2rem' }}>
+                  Unable to add this question to bank
+                </p>
+              )}
+            </div>
+          ) : (
+            ' '
+          )}
         </div>
       </div>
     </div>
@@ -228,7 +288,6 @@ const StyleDuplicate = styled(Duplicate)`
   .container {
     margin: 0.5rem;
     padding: 5em 10px 10px 10px;
-    font-size: 16px;
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
@@ -254,6 +313,14 @@ const StyleDuplicate = styled(Duplicate)`
     font-size: 20px;
     color: #10182f;
     border-bottom: 1px solid #dae1f5;
+  }
+  .result-contain {
+    margin: 2rem;
+  }
+  .result-contain p {
+    color: #1ab93d;
+    font-size: 0.9rem;
+    text-align: center;
   }
   .import-bank {
     width: 100%;
