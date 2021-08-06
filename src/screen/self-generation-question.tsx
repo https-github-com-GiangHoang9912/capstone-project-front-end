@@ -4,11 +4,13 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useHistory } from 'react-router-dom'
 import TextField from '@material-ui/core/TextField'
 import Carousel from 'react-elastic-carousel'
+import Select from '@material-ui/core/Select'
+import Input from '@material-ui/core/Input'
 import Button from '@material-ui/core/Button'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
-import Chip from '@material-ui/core/Chip';
-import DoneIcon from '@material-ui/icons/Done';
+import Chip from '@material-ui/core/Chip'
+import DoneIcon from '@material-ui/icons/Done'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import IconButton from '@material-ui/core/IconButton'
 import SvgIcon from '@material-ui/core/SvgIcon'
@@ -49,13 +51,19 @@ interface Subject {
   subjectName: string
 }
 const MODEL_SELF_GENERATION_URL = `${CONSTANT.BASE_URL}/self-generate`
-const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject `
+const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`
+const ADD_SENTENCE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/train-sentences`
+const ADD_QUESTION_TO_BANK = `${CONSTANT.BASE_URL}/question-bank/create`
+const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
 
 const SelfGenerate = (props: any) => {
   const { className, handleNotification } = props
   const [showProgress, setShowProgress] = useState<Boolean>(false)
   const [isOpen, setIsOpen] = useState(false)
   const [isDisable, setIsDisable] = useState(false)
+  const [dialogContent, setDialogContent] = useState<any>()
+  const [subjectId, setSubjectId] = useState<Number>(1)
+  const [sentence, setSentence] = useState('')
   const [progress, setProgress] = useState(0)
   const [tagetIndex, setTagetIndex] = useState(1)
   const history = useHistory()
@@ -119,8 +127,29 @@ const SelfGenerate = (props: any) => {
   const handleDialogClose = () => {
     setIsOpen(false)
   }
-  const handleAccept = () => {
-    history.push('/check-duplicate')
+
+  const handleChange = (event: any) => {
+    setSubjectId(Number(event.target.value))
+  }
+
+  const handleAccept = async () => {
+    try {
+      setIsOpen(false)
+
+      Promise.all([
+        await axios.post(ADD_SENTENCE_DATASET_URL, {
+          question: sentence,
+        }),
+        await axios.post(ADD_QUESTION_TO_BANK, {
+          question: sentence,
+          subjectId,
+        }),
+      ])
+
+      setSentence('')
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const columns = [
@@ -133,10 +162,10 @@ const SelfGenerate = (props: any) => {
       accessor: 'text',
     },
     {
-      Header: 'Check Duplication',
+      Header: 'Add to bank',
       Cell: (cell: any) => (
         <Chip
-          label="Check"
+          label="Add"
           clickable
           color="secondary"
           onClick={() => handleCheckDuplication(cell.row.original.text)}
@@ -149,24 +178,54 @@ const SelfGenerate = (props: any) => {
   {
     /* Content subject select dialog */
   }
-  const subjectDialog = (
+  const subjectDialogContent = (
     <div className={className}>
       <h4>Select a subject to add a question</h4>
-      <select className="select-subject">
-        {subjects.map((sub) => (
+      <Select
+        className="select-subject"
+        native
+        value={subjectId}
+        onChange={handleChange}
+        input={<Input id="demo-dialog-native" />}
+      >
+        {subjects.map((sub: Subject) => (
           <option value={sub.id}>{sub.subjectName}</option>
         ))}
-      </select>
+      </Select>
     </div>
   )
-  const handleCheckDuplication = async (text: String) => {
+
+  const duplicatedDialogContent = (
+    <div className={className}>
+      <h4>{sentence} was duplicate</h4>
+    </div>
+  )
+
+  const handleCheckDuplication = async (text: string) => {
     try {
       await axios.get(GET_SUBJECT_URL).then((response) => {
         setSubjects(response.data)
         console.log(response.data)
       })
-      setIsOpen(true)
-      setIsDuplicate(true)
+
+      setSentence(() => text)
+
+      const res = await axios.post(MODEL_CHECK_DUPLICATE_URL, {
+        question: text,
+      })
+
+      const condition = res && res.data.length > 0 && res.data[0].point > CONSTANT.CONFIDENT.point
+
+      setIsDuplicate(condition)
+
+      if (condition) {
+        setDialogContent(duplicatedDialogContent)
+        setIsOpen(true)
+      } else {
+        setDialogContent(subjectDialogContent)
+        setIsOpen(true)
+      }
+
       refreshToken(userId)
     } catch (error) {
       console.error(error)
@@ -269,7 +328,7 @@ const SelfGenerate = (props: any) => {
             title="Add question"
             buttonAccept="Add"
             buttonCancel="Cancel"
-            content={subjectDialog}
+            content={dialogContent}
             isOpen={isOpen}
             handleAccept={handleAccept}
             handleClose={handleDialogClose}
