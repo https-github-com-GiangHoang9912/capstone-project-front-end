@@ -11,17 +11,19 @@ export const HISTORY_TYPE = {
   CHANGE_PASSWORD: 4,
 }
 
-export const MESSAGE = (props?:any)=> {
+export const MESSAGE = (props?: any) => {
   const message = {
-  ADD_SUCCESS: "Add Successfully !!",
-  DELETE_SUCCESS: `${props} Deleted Successfully !!`,
-  UPDATE_SUCCESS: "Update Successfully !!",
-  CHECK_SUCCESS: "Question Checked Successfully !!",
-  TRAIN_SUCCESS: "Training Data Successfully !!",
-  CREATE_SUCCESS: "Create Successfully !!",
-  CHANGE_SUCCESS: `${props}Role Changed Successfully !!`,
-  FAIL: `Fail to ${props}`,
-  
-  } 
+    ADD_SUCCESS: 'Add Successfully !!',
+    DELETE_SUCCESS: `${props} Deleted Successfully !!`,
+    UPDATE_SUCCESS: 'Update Successfully !!',
+    CHECK_SUCCESS: 'Question Checked Successfully !!',
+    TRAIN_SUCCESS: 'Training Data Successfully !!',
+    CREATE_SUCCESS: 'Create Successfully !!',
+    CHANGE_SUCCESS: `${props}Role Changed Successfully !!`,
+    FAIL: `Fail to ${props}`,
+  }
   return message
+}
+export const CONFIDENT = {
+  point: 0.6,
 }
