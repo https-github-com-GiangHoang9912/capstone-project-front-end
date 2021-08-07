@@ -12,7 +12,7 @@ import { setNotification } from '../store/actions/notifications'
 import HomePage from '../screen/home'
 import CheckDuplicate from '../screen/check-duplicate'
 import SelfGenerate from '../screen/self-generation-question'
-import Header from '../common/header'
+import Header from '../common/header' 
 import PersistentDrawerLeft from '../common/drawer'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
@@ -27,8 +27,10 @@ import ForgotPassword from '../screen/forgot-password'
 import { refreshToken } from '../services/services'
 
 const App: FC = (props: any) => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isMenuOpen, setIsMenuOpen] = useState(true)
   const [isLogin, setIsLogin] = useState(false)
+  const [isForgotPassword, setIsForgotPassword] = useState(false)
+
 
   useEffect(() => {
     const id = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : -1
@@ -46,9 +48,8 @@ const App: FC = (props: any) => {
 
   const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
 
-  const toggleMenuClass = isOpen ? 'menu-open' : 'menu-close'
+  const toggleMenuClass = isMenuOpen  ? 'menu-open' : 'menu-close'
   const toggleHeaderClass = !isLogin ? 'header-open' : ''
-
   const dispatch = useDispatch()
   const { message, type } = useSelector((state: RootState) => state.notification)
 
@@ -61,11 +62,12 @@ const App: FC = (props: any) => {
       {message && <Notification message={message} types={type} />}
       <AccountContextProvider>
         <Header
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
+          isOpen={isMenuOpen}
+          setIsOpen={setIsMenuOpen}
+          isForgotPassword={isForgotPassword}
           className={isLogin ? 'hidden-component' : ''}
         />
-        <PersistentDrawerLeft isOpen={isOpen} className={isLogin ? 'hidden-component' : ''} />
+        <PersistentDrawerLeft isOpen={isMenuOpen} className={isLogin ? 'hidden-component' : ''} />
         <div className={`main-content ${toggleMenuClass} ${toggleHeaderClass}`}>
           <Switch>
             <Route exact path="/">
@@ -87,7 +89,7 @@ const App: FC = (props: any) => {
               <ViewHistory />
             </Route>
             <Route exact path="/change-password" component={Profile}>
-              <ChangePassword />
+              <ChangePassword handleNotification={handleNotification} />
             </Route>
             <Route exact path="/exam" component={Profile}>
               <ListExam handleNotification={handleNotification} />
@@ -106,7 +108,11 @@ const App: FC = (props: any) => {
               <Login setIsLogin={setIsLogin} />
             </Route>
             <Route exact path="/forgot-password" component={ForgotPassword}>
-              <ForgotPassword setIsLogin={setIsLogin} handleNotification={handleNotification} />
+              <ForgotPassword
+                setIsForgotPassword={setIsForgotPassword}
+                setIsMenuOpen={setIsMenuOpen}
+                handleNotification={handleNotification}
+              />
             </Route>
             <Route component={NotFound} />
           </Switch>

@@ -82,6 +82,8 @@ const SelfGenerate = (props: any) => {
     },
   ])
 
+  const idUser = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
+
   const addItem = () => {
     if (items.length === 10) return
     const newArr = [...items]
@@ -145,7 +147,7 @@ const SelfGenerate = (props: any) => {
           subjectId,
         }),
       ])
-
+      refreshToken(idUser)
       setSentence('')
     } catch (error) {
       console.error(error)

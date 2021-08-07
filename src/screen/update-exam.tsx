@@ -188,7 +188,6 @@ function UpdateExam(props: any) {
   const history = useHistory()
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
-  const typingTimeoutRef = useRef(-1)
   const [openDialogAdd, setOpenDialogAdd] = useState(false) // for event click add
   const [openDialogDelete, setOpenDialogDelete] = useState(false)
   const [idQuestion, setIdQuestion] = useState(0)
@@ -329,7 +328,6 @@ function UpdateExam(props: any) {
     currentQuestionAnswerGroup.splice(index, 1)
     const newArr = [...currentQuestionAnswerGroup]
     setCurrentQuestionAnswerGroup(newArr)
-    console.log(newArr)
   }
 
   //* Dialog edit question in exams
@@ -340,11 +338,9 @@ function UpdateExam(props: any) {
       if (item.correct) setAnswerCorrect(item.answer)
     })
     setIdQuestion(questionId)
-    // console.log(questionId);
     axios
       .get(`${GET_QUESTION_DETAIL_URL}/${questionId}`)
       .then((response) => {
-        console.log(response.data)
         setQuestion(response.data)
       })
       .catch((err) => {
@@ -382,8 +378,6 @@ function UpdateExam(props: any) {
 
   useEffect(() => {
     if (valueTypeAnswer === 'tf' && currentQuestionAnswerGroup.length <= 0) {
-      console.log('True false choice')
-      console.log('id: ', idQuestion)
       const answerGroupDefault = [
         {
           questionId: idQuestion,
@@ -404,7 +398,6 @@ function UpdateExam(props: any) {
           },
         },
       ]
-      console.log('defaultAnswerGroup', answerGroupDefault)
       setDefaultAnswerGroup(answerGroupDefault)
     }
   }, [valueTypeAnswer])
@@ -414,16 +407,11 @@ function UpdateExam(props: any) {
     setValueTypeAnswer(event.target.value)
     if (currentQuestionAnswerGroup.length == 0)
       setCurrentQuestionAnswerGroup([...defaultAnswerGroup])
-    console.log(valueTypeAnswer)
-    console.log('length: ', currentQuestionAnswerGroup.length)
-    console.log('id: ', idQuestion)
   }
   //* Event when click radio button tf
   const handleChangeCorrectTf = (event: any) => {
     setCorrectAnswerTypeTf(event.target.value)
-    console.log(event.target.value)
     const newResult = currentQuestionAnswerGroup.map((item: AnswerGroup, index: number) => {
-      console.log(index == event.target.value)
       const itemAnswer = { ...item }
       itemAnswer.correct = false
       if (item.answer.answerText.toLowerCase() === event.target.value) {
@@ -431,7 +419,6 @@ function UpdateExam(props: any) {
       }
       return itemAnswer
     })
-    console.log('new ggg', newResult)
     setCurrentQuestionAnswerGroup(() => newResult)
   }
   //* Event when click multiple choice
@@ -445,7 +432,6 @@ function UpdateExam(props: any) {
       }
       return itemAnswer
     })
-    console.log('new', newAnswers)
     setCurrentQuestionAnswerGroup(newAnswers)
   }
 
