@@ -352,53 +352,50 @@ function ManageStaffs(props: any) {
             })}
           </tbody>
         </table>
-        {data.length > 5 ?
-        <div className="pagin">
-          <div className="btn-group">
+      
+        <div className="pagination">
+        {data.length <= pageSize? (
+         <div className="pagin-page" />
+         ) : (
+          <div>
+          <button className="btnChange" onClick={() => previousPage()} disabled={!canPreviousPage}>
+            {'<'}
+          </button>{' '}
+          {arr.map((item, index) => (
             <button
-              className="btnChange"
-              onClick={() => previousPage()}
-              disabled={!canPreviousPage}
+              className={pageIndex === index ? ' pageNumber pageActive' : 'pageNumber '}
+              onClick={() => gotoPage(item - 1)}
             >
-              {'<'}
-            </button>{' '}
-            {arr.map((item, index) => (
-              <button
-                className={pageIndex === index ? ' pageNumber pageActive' : 'pageNumber '}
-                onClick={() => gotoPage(item - 1)}
-              >
-                {item}
-              </button>
-            ))}
-            <button className="btnChange" onClick={() => nextPage()} disabled={!canNextPage}>
-              {'>'}
-            </button>{' '}
+              {item}
+            </button>
+          ))}
+          <button className="btnChange" onClick={() => nextPage()} disabled={!canNextPage}>
+            {'>'}
+          </button>{' '}
+          <span>
+            Page{' '}
+            <strong>
+              {pageIndex + 1} of {pageOptions.length}
+            </strong>{' '}
+          </span>
           </div>
-          <div className="pagin-number">
-            <span>
-              Page{' '}
-              <strong>
-                {pageIndex + 1} of {pageOptions.length}
-              </strong>{' '}
-            </span>
-
-            <select
-              className="pageSize"
-              value={pageSize}
-              onChange={(e) => {
-                setPageSize(Number(e.target.value))
-              }}
-            >
-              {[5, 10, 30, 50].map((pageSizes) => (
-                <option key={pageSizes} value={pageSizes}>
-                  Show {pageSizes}
-                </option>
-              ))}
-            </select>
+       )}
+      <div>
+          <select
+            value={pageSize}
+            className="select-page"
+            onChange={(e) => {
+              setPageSize(Number(e.target.value))
+            }}
+          >
+            {[5, 10, 15, 50].map((pageSizes) => (
+              <option key={pageSizes} value={pageSizes}>
+                Show {pageSizes}
+              </option>
+            ))}
+          </select>
           </div>
         </div>
-        : ''}
-      </div>
 
       <Dialog
         title="Profile"
@@ -417,6 +414,7 @@ function ManageStaffs(props: any) {
         handleAccept={handleDialogChangeRole}
         handleClose={handleDialogClose}
       />
+    </div>
     </div>
   )
 }
@@ -497,19 +495,23 @@ const StyledAdmin = styled(ManageStaffs)`
     padding: 1rem;
   }
 
-  .pagin {
+  .pagination {
     width: 80%;
     margin: auto;
     display: flex;
-    flex-direction: row-reverse;
     justify-content: space-between;
     align-items: center;
     text-align: center;
   }
+  .pagin-page{
+    width:100%;
+  }
   .pagin-number {
     margin: 1rem;
   }
-
+  .select-page{
+    margin: 1.3rem;
+  }
   .pageSize {
     border: none;
     outline: none;
