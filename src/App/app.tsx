@@ -31,17 +31,20 @@ const App: FC = (props: any) => {
   const [isLogin, setIsLogin] = useState(false)
   const [isForgotPassword, setIsForgotPassword] = useState(false)
 
+  const [isStatus, setIsStatus] = useState(401)
 
   useEffect(() => {
     const id = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : -1
     refreshToken(id)
       .then((res) => {
         console.info(res)
+        setIsStatus(200)
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
           localStorage.clear()
           handleNotification('danger', `${err.response.status}: Unauthorized`)
+          setIsStatus(401)
         }
       })
   }, [])
@@ -69,6 +72,7 @@ const App: FC = (props: any) => {
         />
         <PersistentDrawerLeft isOpen={isMenuOpen} className={isLogin ? 'hidden-component' : ''} />
         <div className={`main-content ${toggleMenuClass} ${toggleHeaderClass}`}>
+          {isStatus === 401 ? <Redirect to="/login" /> : <Redirect to="/" />}
           <Switch>
             <Route exact path="/">
               <HomePage />
