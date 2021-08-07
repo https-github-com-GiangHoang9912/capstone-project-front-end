@@ -15,7 +15,7 @@ function TableReact(props: any) {
     columns,
     data,
   })
-
+  console.log(data.length, "da")
   useTable({ columns, data }, usePagination)
   const {
     getTableProps,
@@ -72,7 +72,7 @@ function TableReact(props: any) {
           })}
         </tbody>
       </table>
-      {!isPagination ? (
+      {!isPagination || data.length <= 5? (
         ' '
       ) : (
         <div className="pagination">
