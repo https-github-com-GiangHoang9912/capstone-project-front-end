@@ -111,6 +111,12 @@ body {
 .main-content {
   width: 100%;
   min-width: 40rem;
+  transition: margin 0ms;
+}
+
+.main-content-transition {
+  width: 100%;
+  min-width: 40rem;
   transition: margin 500ms;
 }
 

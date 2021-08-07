@@ -53,6 +53,7 @@ const App: FC = (props: any) => {
 
   const toggleMenuClass = isMenuOpen  ? 'menu-open' : 'menu-close'
   const toggleHeaderClass = !isLogin ? 'header-open' : ''
+  const mainContent = isLogin || isForgotPassword ? 'main-content' : 'main-content-transition'
   const dispatch = useDispatch()
   const { message, type } = useSelector((state: RootState) => state.notification)
 
@@ -69,9 +70,11 @@ const App: FC = (props: any) => {
           setIsOpen={setIsMenuOpen}
           isForgotPassword={isForgotPassword}
           className={isLogin ? 'hidden-component' : ''}
+          setIsLogin={setIsLogin}
+          setIsForgotPassword={setIsForgotPassword}
         />
-        <PersistentDrawerLeft isOpen={isMenuOpen} className={isLogin ? 'hidden-component' : ''} />
-        <div className={`main-content ${toggleMenuClass} ${toggleHeaderClass}`}>
+        <PersistentDrawerLeft isForgotPassword={isForgotPassword} isOpen={isMenuOpen} className={isLogin ? 'hidden-component' : ''} />
+        <div className={`${mainContent} ${toggleMenuClass} ${toggleHeaderClass}`}>
           {isStatus === 401 ? <Redirect to="/login" /> : <Redirect to="/" />}
           <Switch>
             <Route exact path="/">
