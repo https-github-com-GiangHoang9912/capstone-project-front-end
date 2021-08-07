@@ -29,6 +29,8 @@ import { refreshToken } from '../services/services'
 const App: FC = (props: any) => {
   const [isOpen, setIsOpen] = useState(true)
   const [isLogin, setIsLogin] = useState(false)
+  const [isForgotPassword, setIsForgotPassword] = useState(true)
+
 
   useEffect(() => {
     const id = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : -1
@@ -46,8 +48,11 @@ const App: FC = (props: any) => {
 
   const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
 
-  const toggleMenuClass = isOpen ? 'menu-open' : 'menu-close'
+  let toggleMenuClass = isOpen  ? 'menu-open' : 'menu-close'
+
+  if(isForgotPassword) toggleMenuClass = 'menu-open'
   const toggleHeaderClass = !isLogin ? 'header-open' : ''
+
 
   const dispatch = useDispatch()
   const { message, type } = useSelector((state: RootState) => state.notification)
@@ -87,7 +92,7 @@ const App: FC = (props: any) => {
               <ViewHistory />
             </Route>
             <Route exact path="/change-password" component={Profile}>
-              <ChangePassword />
+              <ChangePassword handleNotification={handleNotification} />
             </Route>
             <Route exact path="/exam" component={Profile}>
               <ListExam handleNotification={handleNotification} />
@@ -105,8 +110,8 @@ const App: FC = (props: any) => {
             <Route exact path="/login" component={Login}>
               <Login setIsLogin={setIsLogin} />
             </Route>
-            <Route exact path="/forgot-password">
-              <ForgotPassword handleNotification={handleNotification} />
+            <Route exact path="/forgot-password" component={ForgotPassword}>
+              <ForgotPassword setIsForgotPassword={setIsForgotPassword} handleNotification={handleNotification} />
             </Route>
             <Route component={NotFound} />
           </Switch>

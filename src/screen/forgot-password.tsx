@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect} from 'react'
 
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
@@ -102,12 +102,20 @@ const useStyles = makeStyles({
 })
 
 function ForgotPassword(props: any) {
-  const { className, handleNotification } = props
+  const { className, handleNotification, setIsForgotPassword } = props
   const classes = useStyles()
 
   const handleResetPassword = (e: any) => {
     e.preventDefault()
   }
+
+  useEffect(() => {
+    setIsForgotPassword?.(true)
+    return () => {
+      setIsForgotPassword?.(false)
+    }
+  }, [])
+  // setIsForgotPassword?.(true)
 
   // setIsLogin(false)
   return (

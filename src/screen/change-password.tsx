@@ -18,13 +18,14 @@ ChangePassword.defaultProps = {
 
 const CHANGE_PASSWORD = `${CONSTANT.BASE_URL}/user/change-password`
 function ChangePassword(props: any) {
-  const { className } = props
+  const { className, handleNotification } = props
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
   const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
   const [oldPassword, setOldPassword] = useState<string>('')
   const [newPassword, setNewPassword] = useState<string>('')
   const [rePassword, setRePassword] = useState<string>('')
+  const [validatePassword, setValidatePassword] = useState<boolean>(false)
   const [iconList, setIconList] = useState([
     {
       id: 1,
@@ -40,9 +41,21 @@ function ChangePassword(props: any) {
     },
   ])
 
+  const idUser = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
+
+  const handleValidatePassword = (password: string) => {
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}/
+    return (regex.test(password));
+  }
+
   const changePassword = async (e: any) => {
     e.preventDefault()
     try {
+      if (handleValidatePassword(newPassword)) {
+        setValidatePassword(true)
+      } else {
+        setValidatePassword(false)
+      }
       const changeDataResponse = await axios.put(
         CHANGE_PASSWORD,
         {
@@ -54,8 +67,13 @@ function ChangePassword(props: any) {
           withCredentials: true,
         }
       )
-      console.log(changeDataResponse)
-      refreshToken(userId)
+      console.log('changeDataResponse', changeDataResponse);
+      if (changeDataResponse.data.status == 200 && validatePassword) {
+        handleNotification('success', `${CONSTANT.MESSAGE().CHANGE_PASSWORD_SUCCESS}`)
+      } else {
+        handleNotification('danger', `${CONSTANT.MESSAGE('Change Password').FAIL}`)
+      }
+      refreshToken(idUser)
     } catch (error) {
       console.error(error)
     }
@@ -70,6 +88,15 @@ function ChangePassword(props: any) {
       )
     )
   }, [])
+
+  const handleOnchange = (e: any) => {
+    setNewPassword(e.target.value);
+    if (handleValidatePassword(e.target.value)) {
+      setValidatePassword(true);
+    } else {
+      setValidatePassword(false);
+    }
+  }
 
   return (
     <div className={className}>
@@ -123,7 +150,7 @@ function ChangePassword(props: any) {
                   key={iconList[1].id}
                   className="input-pass"
                   placeholder="Enter new password"
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  onChange={handleOnchange}
                   required
                 />
                 <span className="icon-pass">
@@ -148,8 +175,16 @@ function ChangePassword(props: any) {
                 <span className="icon-eye">
                   <FontAwesomeIcon icon={faEye} onClick={() => onCheckBtnClick(iconList[2].id)} />
                 </span>
+              </div>
+              <div>
                 {newPassword !== rePassword ? (
-                  <p className="errorPass">Re-Enter Password does not match Password</p>
+                  <span className="errorPass">Re-Enter Password does not match Password</span>
+                ) : (
+                  ' '
+                )}
+                {validatePassword == false && newPassword.length > 0 ? (
+                  <span className="errorPass">New password is out of the norm, look to the
+                    right to see the rule. </span>
                 ) : (
                   ' '
                 )}
@@ -234,7 +269,8 @@ const StyledForgotPassword = styled(ChangePassword)`
     animation: pulse-animation 1.5s infinite;
   }
   .errorPass {
-    margin: 0 1rem;
+    display: block;
+    margin: 0.2rem 1rem;
     color: red;
     font-size: 0.8rem;
   }
@@ -342,9 +378,9 @@ const StyledForgotPassword = styled(ChangePassword)`
   }
 
   /* Responsive */
-  @media (max-width: 992px) {
+  @media (max-width: 62rem) {
     .wrap-login {
-      padding: 177px 90px 33px 85px;
+      padding: 40px 90px 60px 85px;
     }
 
     .rules-account {
@@ -356,9 +392,10 @@ const StyledForgotPassword = styled(ChangePassword)`
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 48rem) {
     .wrap-login {
-      padding: 100px 80px 33px 80px;
+
+      padding: 40px 80px 81px 80px;
       display: flex;
       flex-direction: column;
       text-align: center;
@@ -372,20 +409,18 @@ const StyledForgotPassword = styled(ChangePassword)`
     }
     .title-h2 {
       display: inline-block;
-      font-size: 20px;
-      width: 200px;
-      margin-left: 80px;
+      font-size: 1.25rem;
+      width: 12.5rem;
+      margin-left: 9.375rem;
     }
   }
 
-  @media (max-width: 576px) {
+  @media (max-width: 36rem) {
     .wrap-login {
-      padding: 100px 15px 33px 15px;
-    }
-    .wrap-login {
-      padding: 100px 80px 33px 80px;
+      padding: 40px 80px 81px 80px;
       display: flex;
       flex-direction: column;
+      width: 65%;
     }
     .login-area-form {
       width: 100%;
@@ -400,9 +435,20 @@ const StyledForgotPassword = styled(ChangePassword)`
 
     .title-h2 {
       display: inline-block;
-      font-size: 20px;
-      width: 200px;
-      margin-left: 80px;
+      font-size: 1.25rem;
+      width: 12.5rem;
+      margin-left: 1.375rem;
+    }
+
+    .input-pass {
+      padding: 0 30px 0 46px;
+    }
+
+    .icon-eye {
+      padding-right: 8px;
+    }
+    .container{
+      overflow: hidden;
     }
   }
 `
