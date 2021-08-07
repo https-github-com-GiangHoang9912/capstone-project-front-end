@@ -13,6 +13,7 @@ interface Styled {
   className?: string
   isOpen?: Boolean
   setIsOpen?: Dispatch<SetStateAction<boolean>>
+  isForgotPassword: boolean
 }
 type HeaderProps = {} & Styled
 
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const LOGOUT_URL = `${CONSTANT.BASE_URL}/logout`
 
 const Header: FC<HeaderProps> = (props) => {
-  const { className, isOpen, setIsOpen } = props
+  const { className, isOpen, setIsOpen, isForgotPassword } = props
   const username = localStorage.getItem('username')
   const avatar = localStorage.getItem('avatar')
   const classes = useStyles()
@@ -47,17 +48,22 @@ const Header: FC<HeaderProps> = (props) => {
   return (
     <AppBar color="inherit" className={className}>
       <Toolbar>
-        <IconButton
-          edge="start"
-          className={classes.menuButton}
-          color="inherit"
-          aria-label="menu"
-          onClick={() => {
-            setIsOpen?.(!isOpen)
-          }}
-        >
-          <MenuIcon />
-        </IconButton>
+        {
+          !isForgotPassword ?
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+              onClick={() => {
+                setIsOpen?.(!isOpen)
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+            : ''
+        }
+
         <div className={classes.title}>
           <NavLink to="/home">
             <img

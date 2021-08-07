@@ -102,7 +102,7 @@ const useStyles = makeStyles({
 })
 
 function ForgotPassword(props: any) {
-  const { className, handleNotification, setIsForgotPassword } = props
+  const { className, handleNotification, setIsForgotPassword, setIsMenuOpen } = props
   const classes = useStyles()
 
   const handleResetPassword = (e: any) => {
@@ -111,8 +111,10 @@ function ForgotPassword(props: any) {
 
   useEffect(() => {
     setIsForgotPassword?.(true)
+    setIsMenuOpen?.(false)
     return () => {
       setIsForgotPassword?.(false)
+      setIsMenuOpen?.(true)
     }
   }, [])
   // setIsForgotPassword?.(true)
