@@ -29,7 +29,7 @@ import { refreshToken } from '../services/services'
 const App: FC = (props: any) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true)
   const [isLogin, setIsLogin] = useState(false)
-  const [isForgotPassword, setIsForgotPassword] = useState(false)
+  const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false)
 
 
   useEffect(() => {
