@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
+import Select from '@material-ui/core/Select'
+import Input from '@material-ui/core/Input'
 import LoadingBar from 'react-top-loading-bar'
 import Chip from '@material-ui/core/Chip'
 import DoneIcon from '@material-ui/icons/Done'
@@ -27,11 +29,17 @@ axios.defaults.withCredentials = true
 const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
 const ADD_FILE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/upload-dataset`
 const GET_ROLE_URL = `${CONSTANT.BASE_URL}/user/role`
+const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`
+const ADD_SENTENCE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/train-sentences`
+const ADD_QUESTION_TO_BANK = `${CONSTANT.BASE_URL}/question-bank/create`
 interface IQuestion {
   question: string
   point: number
 }
-
+interface Subject {
+  id: number
+  subjectName: string
+}
 const useStyles = makeStyles((theme) => ({
   root: {},
   inputQuestion: {
@@ -53,12 +61,15 @@ function Duplicate(props: any) {
   const [fileName, setFileName] = useState<string>('')
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const [isAdd, setIsAdd] = useState<boolean>(false)
+  const [openDialogAdd,setOpenDialogAdd] = useState<boolean>(false);
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
   const [progress, setProgress] = useState(0)
   const [role, setRole] = useState(0)
   const [isDisable, setIsDisable] = useState(false)
   const [isDisableAddBank, setIsDisableAddBank] = useState(false)
+  const [subjectId, setSubjectId] = useState<Number>(1)
+  const [subjects, setSubjects] = useState<Subject[]>([])
   const [question, setQuestion] = useState<string>('')
   const [result, setResult] = useState<IQuestion[]>([])
   const [file, setFile] = useState<any>()
@@ -116,9 +127,56 @@ function Duplicate(props: any) {
     setQuestion('')
     setIsOpen(false)
   }
+  const clickAddQuestion = ()=>{
+      axios.get(GET_SUBJECT_URL).then((response) => {
+      setSubjects(response.data)
+    })
+    setOpenDialogAdd(true)
+  }
+  const handleAcceptAdd = async () => {
+    try {
+      setOpenDialogAdd(false)
+      console.log(question,"abb");
+      console.log(subjectId, "sjb")
+      Promise.all([
+        await axios.post(ADD_SENTENCE_DATASET_URL, {
+          question,
+        }),
+        await axios.post(ADD_QUESTION_TO_BANK, {
+          question,
+          subjectId,
+        }),
+      ])
+    } catch (error) {
+      console.error(error)
+    }
+    refreshToken(userId)
+  }
   const handleDialogClose = () => {
     setIsOpen(false)
+    setOpenDialogAdd(false)
   }
+
+  const handleChange = (event: any) => {
+    setSubjectId(Number(event.target.value))
+  }
+
+  const subjectDialogContent = (
+    <div className={className}>
+      <h4>Select a subject to add a question</h4>
+      <Select
+        className="select-subject"
+        native
+        value={subjectId}
+        onChange={handleChange}
+        input={<Input id="demo-dialog-native" />}
+      >
+        {subjects.map((sub: Subject) => (
+          <option value={sub.id}>{sub.subjectName}</option>
+        ))}
+      </Select>
+    </div>
+  )
 
   const handleAddFileBank = async (e: any) => {
     e.preventDefault()
@@ -248,6 +306,15 @@ function Duplicate(props: any) {
               handleAccept={handleAcceptClear}
               handleClose={handleDialogClose}
             />
+             <Dialog
+              title="Add question"
+              buttonAccept="Add"
+              buttonCancel="Cancel"
+              content={subjectDialogContent}
+              isOpen={openDialogAdd}
+              handleAccept={handleAcceptAdd}
+              handleClose={handleDialogClose}
+            />
           </div>
           {visibleResult ? (
             <div>
@@ -261,6 +328,7 @@ function Duplicate(props: any) {
                       label="Add question"
                       clickable
                       icon={<DoneIcon />}
+                      onClick={clickAddQuestion}
                       className={classes.chipDone}
                       variant="outlined"
                     />

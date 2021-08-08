@@ -14,6 +14,8 @@ interface Styled {
   isOpen?: Boolean
   setIsOpen?: Dispatch<SetStateAction<boolean>>
   isForgotPassword: boolean
+  setIsLogin?: Dispatch<SetStateAction<boolean>>
+  setIsForgotPassword?: Dispatch<SetStateAction<boolean>>
 }
 type HeaderProps = {} & Styled
 
@@ -34,13 +36,15 @@ const useStyles = makeStyles((theme: Theme) =>
 const LOGOUT_URL = `${CONSTANT.BASE_URL}/logout`
 
 const Header: FC<HeaderProps> = (props) => {
-  const { className, isOpen, setIsOpen, isForgotPassword } = props
+  const { className, isOpen, setIsOpen, isForgotPassword, setIsLogin, setIsForgotPassword } = props
   const username = localStorage.getItem('username')
   const avatar = localStorage.getItem('avatar')
   const classes = useStyles()
 
   const handleLogout = async () => {
     const response = await axios.get(LOGOUT_URL)
+    setIsLogin?.(true)
+    setIsForgotPassword?.(false)
     console.log(response)
     localStorage.clear()
   }

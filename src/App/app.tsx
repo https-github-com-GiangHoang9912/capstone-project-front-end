@@ -31,17 +31,20 @@ const App: FC = (props: any) => {
   const [isLogin, setIsLogin] = useState(false)
   const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false)
 
+  const [isStatus, setIsStatus] = useState(401)
 
   useEffect(() => {
     const id = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : -1
     refreshToken(id)
       .then((res) => {
         console.info(res)
+        setIsStatus(200)
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
           localStorage.clear()
           handleNotification('danger', `${err.response.status}: Unauthorized`)
+          setIsStatus(401)
         }
       })
   }, [])
@@ -50,6 +53,7 @@ const App: FC = (props: any) => {
 
   const toggleMenuClass = isMenuOpen  ? 'menu-open' : 'menu-close'
   const toggleHeaderClass = !isLogin ? 'header-open' : ''
+  const mainContent = isLogin || isForgotPassword ? 'main-content' : 'main-content-transition'
   const dispatch = useDispatch()
   const { message, type } = useSelector((state: RootState) => state.notification)
 
@@ -66,9 +70,12 @@ const App: FC = (props: any) => {
           setIsOpen={setIsMenuOpen}
           isForgotPassword={isForgotPassword}
           className={isLogin ? 'hidden-component' : ''}
+          setIsLogin={setIsLogin}
+          setIsForgotPassword={setIsForgotPassword}
         />
-        <PersistentDrawerLeft isOpen={isMenuOpen} className={isLogin ? 'hidden-component' : ''} />
-        <div className={`main-content ${toggleMenuClass} ${toggleHeaderClass}`}>
+        <PersistentDrawerLeft isForgotPassword={isForgotPassword} isOpen={isMenuOpen} className={isLogin ? 'hidden-component' : ''} />
+        <div className={`${mainContent} ${toggleMenuClass} ${toggleHeaderClass}`}>
+          {isStatus === 401 ? <Redirect to="/login" /> : <Redirect to="/" />}
           <Switch>
             <Route exact path="/">
               <HomePage />
