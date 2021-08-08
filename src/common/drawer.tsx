@@ -56,7 +56,8 @@ const customTheme = createMuiTheme({
 })
 
 function PersistentDrawerLeft(props: any) {
-  const { isOpen, className } = props
+  const { isOpen, className, isForgotPassword } = props
+  console.log(isForgotPassword)
   const menuItems = [
     {
       key: 1,
@@ -96,7 +97,7 @@ function PersistentDrawerLeft(props: any) {
         className={className}
         variant="persistent"
         anchor="left"
-        transitionDuration={500}
+        transitionDuration={isForgotPassword ? 0 : 500}
         open={isOpen}
       >
         <List>

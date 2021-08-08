@@ -50,6 +50,7 @@ function Profile(props: any) {
   const [isDisable, setIsDisable] = useState(false)
   const [progress, setProgress] = useState(0)
   const [file, setFile] = useState<any>('')
+  const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
 
   function handleEdit() {
     setEditStatus(!editStatus)
@@ -66,7 +67,6 @@ function Profile(props: any) {
     setIsDisable(true)
     if (isInputValid) {
       setProgress(100)
-      const id = Number(localStorage.getItem('id'))
       try {
         console.log(file)
         if (file) {
@@ -84,10 +84,9 @@ function Profile(props: any) {
                 .getDownloadURL()
                 .then(async (url) => {
                   await axios.put(UPDATE_PROFILE_URL, {
-                    id,
+                    id: userId,
                     firstName,
                     lastName,
-                    email,
                     address,
                     phone,
                     dob,
@@ -96,24 +95,25 @@ function Profile(props: any) {
                   localStorage.setItem('avatar', url)
                   setIsDisable(false)
                 })
+              refreshToken(userId)
               window.location.reload()
             }
           )
         } else {
           await axios.put(UPDATE_PROFILE_URL, {
-            id,
+            id: userId,
             firstName,
             lastName,
-            email,
             address,
             phone,
             dob,
           })
           setIsDisable(false)
           window.location.reload()
+          refreshToken(userId)
         }
       } catch (error) {
-        refreshToken(error, id ? id : account.id)
+        console.error(error)
       }
     }
   }
@@ -124,25 +124,25 @@ function Profile(props: any) {
   }
 
   useEffect(() => {
-    const username = localStorage.getItem('username')
-    const id = localStorage.getItem('id')
-    axios
-      .post(GET_INFORMATION_URL, {
-        username,
-      })
-      .then((response) => {
-        const dobFormat = moment.default(response.data.dateOfBirth).format('DD/MM/YYYY')
-        setFirstName(response.data.firstName ? response.data.firstName : '')
-        setLastName(response.data.lastName ? response.data.lastName : '')
-        setEmail(response.data.email ? response.data.email : '')
-        setAddress(response.data.address ? response.data.address : '')
-        setPhone(response.data.phone ? response.data.phone : '')
-        setDob(response.data.dateOfBirth ? dobFormat : '')
-        setImage(response.data.avatar ? response.data.avatar : 'avatar2.png')
-      })
-      .catch(async (error) => {
-        refreshToken(error, id ? Number(id) : account.id)
-      })
+    try {
+      const username = localStorage.getItem('username')
+      axios
+        .post(GET_INFORMATION_URL, {
+          username,
+        })
+        .then((response) => {
+          const dobFormat = moment.default(response.data.dateOfBirth).format('DD/MM/YYYY')
+          setFirstName(response.data.firstName ? response.data.firstName : '')
+          setLastName(response.data.lastName ? response.data.lastName : '')
+          setEmail(response.data.email ? response.data.email : '')
+          setAddress(response.data.address ? response.data.address : '')
+          setPhone(response.data.phone ? response.data.phone : '')
+          setDob(response.data.dateOfBirth ? dobFormat : '')
+          setImage(response.data.avatar ? response.data.avatar : 'avatar2.png')
+        })
+    } catch (error) {
+      console.error(error)
+    }
   }, [])
 
   const validateInput = (inputText: any, regex: any, error: string, errorType: string) => {
@@ -265,17 +265,9 @@ function Profile(props: any) {
                 type="text"
                 id="email"
                 className="input-bar "
-                onBlur={(e) =>
-                  validateInput(
-                    e.target.value,
-                    /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
-                    'Email must be in format: abcxya@gmail.com',
-                    'Email'
-                  )
-                }
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={editStatus}
+                disabled={true}
               />
               {inputError === 'Email' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
@@ -301,7 +293,7 @@ function Profile(props: any) {
             <div className="footer-info">
               <div>
                 <h3>Change Password</h3>
-                <NavLink to="/changePassword">
+                <NavLink to="/change-password">
                   <button className="btn btn-change">Go to change password</button>
                 </NavLink>
               </div>
@@ -375,6 +367,25 @@ const styleProfile = styled(Profile)`
     color: red;
     font-weight: 500px;
     margin: 0 0 0.7rem 0.5rem;
+  }
+  input::-webkit-file-upload-button {
+    padding: 5px 10px;
+    background-color: #303f9f;
+    border: none;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    color: #fff;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    transition: 100ms ease-out;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  input::-webkit-file-upload-button:hover {
+    background-color: #35367a;
+  }
+  
+  input[type='file'] {
+    font-size: 0px;
   }
   img {
     width: 200px;

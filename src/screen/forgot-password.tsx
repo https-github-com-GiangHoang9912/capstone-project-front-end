@@ -1,10 +1,9 @@
-import React from 'react'
+import {useEffect} from 'react'
 
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope, faUserCircle } from '@fortawesome/free-solid-svg-icons'
+import LockIcon from '@material-ui/icons/Lock';
 import { Button, makeStyles } from '@material-ui/core'
 
 import styled from 'styled-components'
@@ -17,61 +16,142 @@ ForgotPassword.defaultProps = {
   className: '',
 }
 const useStyles = makeStyles({
+  container: {
+    overflow: 'hidden',
+    fontFamily: 'Arial',
+    background: '#f5f6fa',
+    height: '100vh',
+    width: '100%',
+    justifyFontent: 'center',
+  },
   styleBtn: {
-    width: 250,
-    height: 50,
+    width: '100%',
+    height: 30,
     backgroundColor: '#1e90ff',
     cursor: 'pointer',
     marginTop: 15,
+    fontSize: '0.8rem',
+    fontWeight: 700,
+    lineHeight: '1.5',
+    padding: ' 20px 55px',
+    '@media(max-width: 45.875rem)': {
+      fontSize: '0.65rem',
+      padding: ' 20px 66px'
+    },
+    '&:focus': {
+      outline: 'none',
+    }
   },
+  iconLock: {
+    fontSize: '7rem'
+  },
+  formForgot: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    margin: ' 0 auto',
+    marginTop: '10%',
+    border: '1px solid #fff',
+    padding: '20px 30px 50px 30px',
+    backgroundColor: '#fff',
+    width: '35%',
+    boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+    '@media(max-width: 61.875rem)': {
+      marginTop: '17%',
+      width: '70%',
+    }
+  },
+  txtEmail: {
+    fontFamily: ' sans-serif',
+    fontSize: ' 18px',
+    lineHeight: 1.5,
+    padding: '20px 30px',
+    color: ' #666666',
+    display: 'block',
+    width: '100%',
+    background: '#ecf0f1',
+    height: '50px',
+    cursor: 'pointer',
+    border: 'none',
+    '&:hover': {
+      cursor: 'pointer',
+    },
+    '&:focus': {
+      border: '1px solid #4ad428',
+      outline: 'none',
+    }
+  },
+  inputName: {
+    position: 'relative',
+  },
+  inputContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: '40px',
+    alignItems: 'center',
+  },
+  messGuide: {
+    marginBottom: '1rem'
+  },
+  titleForgot: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  }
 })
 
 function ForgotPassword(props: any) {
-  const { className } = props
+  const { className, handleNotification, setIsForgotPassword, setIsMenuOpen } = props
   const classes = useStyles()
+
+  const handleResetPassword = (e: any) => {
+    e.preventDefault()
+  }
+
+  useEffect(() => {
+    setIsForgotPassword?.(true)
+    setIsMenuOpen?.(false)
+    return () => {
+      setIsForgotPassword?.(false)
+      setIsMenuOpen?.(true)
+    }
+  }, [])
+  // setIsForgotPassword?.(true)
+
+  // setIsLogin(false)
   return (
-    <div className={className}>
-      <div className="container">
-        <div className="form-forgot">
-          <form action="#">
-            <h1 className="title">Forgot Password</h1>
-            <img src="avatar2.png" className="avatar" alt="" />
-            <h3 className="mess-guide">Enter your account and email:</h3>
-            <div className="input-content">
-              <div className="input-name">
-                <input
-                  className="text-name"
-                  type="text"
-                  id="uname"
-                  placeholder="Enter username"
-                  required
-                />
-                <span className="icon">
-                  <FontAwesomeIcon icon={faUserCircle} />
-                </span>
-              </div>
-              <div className="input-email">
-                <input
-                  className="text-name"
-                  type="email"
-                  id="uname"
-                  placeholder="Enter email"
-                  required
-                />
-                <span className="icon">
-                  <FontAwesomeIcon icon={faEnvelope} />
-                </span>
-              </div>
-              <div className="button-reset">
-                <Button variant="contained" color="primary" className={classes.styleBtn}>
-                  Clear Text
-                </Button>
-                <Button variant="contained" color="primary" className={classes.styleBtn}>
-                  Reset Password
-                </Button>
-              </div>
+    <div>
+      <div className={classes.container}>
+        <div className={classes.formForgot}>
+          <div className={classes.titleForgot}>
+            <LockIcon className={classes.iconLock} />
+            <h3 className={classes.messGuide}>Trouble Logging In?</h3>
+            <span className='infor-reset' style={{
+              width: '65%',
+              color: '#A1A1A1'
+            }}>Enter email, phone, or username and we'll send you a
+              link to get back into your account</span>
+          </div>
+          <div className={classes.inputContent}>
+            <div className={classes.inputName}>
+              <input
+                className={classes.txtEmail}
+                type="text"
+                id="uname"
+                placeholder="Email, Phone, or Username"
+                required
+                style={{
+                  fontSize: '13px'
+                }}
+              />
             </div>
-          </form>
+            <div className="button-reset">
+              <Button variant="contained" color="primary" className={classes.styleBtn}>
+                Send Login Link
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -80,107 +160,7 @@ function ForgotPassword(props: any) {
 
 const StyledForgotPassword = styled(ForgotPassword)`
   .container::-webkit-scrollbar {
-    display: none;
-  }
-  .container {
-    overflow: hidden;
-    font-family: Arial;
-    background: #f5f6fa;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center center;
-    height: 100vh;
-    width: 100%;
-    justify-content: center;
-    -ms-overflow-style: none;
-  }
-
-  //** css for form login  */
-  .form-forgot {
-    justify-content: center;
-    width: 500px;
-    height: 530px;
-    margin: 0 auto;
-    margin-top: 10%;
-    border: 1px solid #fff;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  }
-
-  //** css for title */
-  .form-forgot h1 {
-    text-align: center;
-    display: block;
-    margin-bottom: 10px;
-    color: #2c3e50;
-  }
-
-  //** css for input  */
-  .form-forgot input {
-    font-family: sans-serif;
-    font-size: 18px;
-    line-height: 1.5;
-    color: #666666;
-    display: block;
-    width: 250px;
-    background: #ecf0f1;
-    height: 50px;
-    cursor: pointer;
-    border: none;
-    padding: 0 30px 0 50px;
-  }
-
-  .form-forgot input:hover {
-    cursor: pointer;
-  }
-
-  .input-name,
-  .input-email {
-    position: relative;
-    z-index: auto;
-    margin-bottom: 15px;
-  }
-
-  .icon {
-    display: flex;
-    align-items: center;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    height: 100%;
-    padding-left: 15px;
-    font-size: 20px;
-  }
-  //* css for button */
-  .form-forgot button,
-  input:focus {
-    outline: none;
-  }
-  .button-reset {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .avatar {
-    height: 80px;
-    width: 80px;
-    margin-bottom: 20px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .mess-guide {
-    margin-bottom: 20px;
-  }
-
-  .input-content {
-    display: flex;
-    flex-direction: column;
-    margin-top: 40px;
-    align-items: center;
+    display: none,
   }
 `
 export default StyledForgotPassword

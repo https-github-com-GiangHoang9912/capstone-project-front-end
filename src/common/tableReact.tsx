@@ -10,16 +10,12 @@ TableReact.defaultProps = {
   className: '',
 }
 function TableReact(props: any) {
-  const { className } = props
-  const columns: any = useMemo(() => props.columns, props.columns)
-  const data: any = useMemo(() => props.data, props.data)
-  const isPagination: boolean = useMemo(() => props.isPagination, props.isPagination)
-
+  const { className, columns,data,isPagination } = props
   useTable({
     columns,
     data,
   })
-
+  
   useTable({ columns, data }, usePagination)
   const {
     getTableProps,
@@ -76,10 +72,12 @@ function TableReact(props: any) {
           })}
         </tbody>
       </table>
-      {!isPagination ? (
-        ' '
-      ) : (
+     
         <div className="pagination">
+        {!isPagination || data.length <= pageSize? (
+        <div className="pagin-page" />
+      ) : (
+          <div>
           <button className="btnChange" onClick={() => previousPage()} disabled={!canPreviousPage}>
             {'<'}
           </button>{' '}
@@ -100,8 +98,13 @@ function TableReact(props: any) {
               {pageIndex + 1} of {pageOptions.length}
             </strong>{' '}
           </span>
+          </div>
+      )}
+      {isPagination ?
+      <div>
           <select
             value={pageSize}
+            className="select-page"
             onChange={(e) => {
               setPageSize(Number(e.target.value))
             }}
@@ -112,8 +115,10 @@ function TableReact(props: any) {
               </option>
             ))}
           </select>
+          </div>
+          : ' '}
         </div>
-      )}
+      
     </div>
   )
 }
@@ -129,6 +134,7 @@ const StyleTable = styled(TableReact)`
     width: 100%;
     border-collapse: collapse;
     margin: 0rem 0rem;
+   
   }
 
   th {
@@ -154,6 +160,12 @@ const StyleTable = styled(TableReact)`
   .pagination {
     margin: 1rem;
     text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .pagin-page{
+    width:100%;
   }
   .pageSize {
     border: none;
@@ -162,6 +174,9 @@ const StyleTable = styled(TableReact)`
     margin-left: 1rem;
     border-bottom: 2px solid #303f9f;
     background: none;
+  }
+  .select-page{
+    margin: 1.3rem;
   }
   .btnChange {
     color: #303f9f;

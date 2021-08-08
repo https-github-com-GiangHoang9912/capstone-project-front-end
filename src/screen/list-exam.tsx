@@ -121,7 +121,7 @@ const CREATE_EXAM_URL = `${CONSTANT.BASE_URL}/exam/create-exam`
 const DELETE_EXAM_URL = `${CONSTANT.BASE_URL}/exam/delete-exam`
 
 function ListExam(props: any) {
-  const { className } = props
+  const { className, handleNotification } = props
   const classes = useStyles()
   const history = useHistory()
   const { accountContextData } = useContext(AccountContext)
@@ -133,7 +133,7 @@ function ListExam(props: any) {
   const [scroll, setScroll] = useState('paper')
   const [idDelete, setIdDelete] = useState(0)
   const [nameExam, setNameExam] = useState('')
-  const [exams, setExams] = useState<IExam[]>([{}])
+  const [exams, setExams] = useState<IExam[]>([])
 
   const [subject, setSubject] = useState<Subject[]>([])
 
@@ -142,6 +142,7 @@ function ListExam(props: any) {
   const [question, setQuestion] = useState<Question[]>([])
 
   const [answers, setAnswers] = useState<Answer[]>([])
+
 
   //* Get subject */
   useEffect(() => {
@@ -157,7 +158,7 @@ function ListExam(props: any) {
   }, [])
 
   //* userid */
-  const idUser = localStorage.getItem('id') ? localStorage.getItem('id') : -1
+  const idUser = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
 
   //* Get Exam by userid */
   useEffect(() => {
@@ -172,17 +173,21 @@ function ListExam(props: any) {
   }, [openDialogCreate, openDialogDelete])
 
   //* Get Exam by name */
-  function getExamByName(name: string) {
-    axios
-      .get(`${GET_EXAM_BY_NAME_URL}/${idUser}/search/${name}`)
-      .then((response) => {
-        console.log('Exam By Name   : ', response.data)
-        setExams(response.data)
+  async function getExamByName(name: string) {
+    try {
+      const response = await axios.get(`${GET_EXAM_BY_NAME_URL}/${idUser}/search/${name}`);
+      if (response && response.data.length > 0) {
+        setExams(response.data);
         setTextSearch('')
-      })
-      .catch((err) => {
-        console.log('Failed to fetch exam by name: ', err.message)
-      })
+      }
+      else {
+        setTextSearch('')
+        handleNotification('warning', `${CONSTANT.MESSAGE('Search Exam With Name').FAIL}'${textSearch}'`)
+      }
+      refreshToken(idUser)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   //* Get Question */
@@ -301,17 +306,18 @@ function ListExam(props: any) {
     setOpenDialogDelete(false)
   }
 
-  const handleDeleteClose = async (id: number) => {
-    const userId = localStorage.getItem('id')
+  const handleDeleteAccept = async (id: number) => {
     try {
-      const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`)
+      const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
       if (response) {
-        console.log(response)
         setOpenDialogDelete(false)
+        handleNotification('success', `${CONSTANT.MESSAGE("Exam").DELETE_SUCCESS}`)
+      } else {
+        handleNotification('danger', `${CONSTANT.MESSAGE("Delete Exam").FAIL}`)
       }
-      console.log(response)
+      refreshToken(idUser)
     } catch (error) {
-      refreshToken(error, userId ? Number(userId) : account.id)
+      console.error(error)
     }
   }
 
@@ -366,7 +372,7 @@ function ListExam(props: any) {
   )
 
   //* Body create exam dialog */
-  const body = (
+  const bodyCreateExam = (
     <div className={classes.paper}>
       <div className={classes.containerCreate}>
         <div className={classes.bank}>
@@ -421,18 +427,21 @@ function ListExam(props: any) {
 
   const handleCreateExam = async (e: any) => {
     e.preventDefault()
-    const userId = localStorage.getItem('id')
     try {
       const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
         subjectId,
         examName: txtNameExam,
       })
-      if (response) {
-        console.log(response)
-        setOpenDialogCreate(false)
+      if (response && response.data) {
+        handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
+        setOpenDialogCreate(false);
+        setTxtNameExam('');
+      } else {
+        handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
       }
+      refreshToken(idUser)
     } catch (error) {
-      refreshToken(error, userId ? Number(userId) : account.id)
+      console.error(error)
     }
   }
 
@@ -489,13 +498,13 @@ function ListExam(props: any) {
                 >
                   <h3>Fill the form to create New Exam</h3>
                 </DialogTitle>
-                <DialogContent>{body}</DialogContent>
+                <DialogContent>{bodyCreateExam}</DialogContent>
                 <DialogActions>
-                  <Button onClick={handleCloseCreate} color="primary">
-                    Cancel
-                  </Button>
                   <Button color="primary" onClick={handleCreateExam}>
                     Create
+                  </Button>
+                  <Button onClick={handleCloseCreate} color="primary">
+                    Cancel
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -522,11 +531,11 @@ function ListExam(props: any) {
                   </span>
                 </DialogContent>
                 <DialogActions>
+                  <Button onClick={() => handleDeleteAccept(idDelete)} color="secondary">
+                    Delete
+                  </Button>
                   <Button onClick={handleDeleteCancel} color="primary">
                     Cancel
-                  </Button>
-                  <Button onClick={() => handleDeleteClose(idDelete)} color="secondary">
-                    Delete
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -593,10 +602,12 @@ const StyleListExam = styled(ListExam)`
     justify-content: center;
     align-items: center;
     padding: 15px;
+    
   }
   .main {
     background: #fff;
-    border-radius: 10px;
+    border-radius: 5px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     overflow: auto;
     align-items: center;
     padding: 5px 10px;

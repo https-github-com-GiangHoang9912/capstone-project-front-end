@@ -7,8 +7,11 @@ import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
+import Select from '@material-ui/core/Select'
+import Input from '@material-ui/core/Input'
 import LoadingBar from 'react-top-loading-bar'
-
+import Chip from '@material-ui/core/Chip'
+import DoneIcon from '@material-ui/icons/Done'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
@@ -26,11 +29,17 @@ axios.defaults.withCredentials = true
 const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
 const ADD_FILE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/upload-dataset`
 const GET_ROLE_URL = `${CONSTANT.BASE_URL}/user/role`
+const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`
+const ADD_SENTENCE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/train-sentences`
+const ADD_QUESTION_TO_BANK = `${CONSTANT.BASE_URL}/question-bank/create`
 interface IQuestion {
   question: string
   point: number
 }
-
+interface Subject {
+  id: number
+  subjectName: string
+}
 const useStyles = makeStyles((theme) => ({
   root: {},
   inputQuestion: {
@@ -39,6 +48,11 @@ const useStyles = makeStyles((theme) => ({
   btnDup: {
     margin: 10,
   },
+  chipDone: {
+    marginLeft: '1rem',
+    border: '1px solid #0fac31',
+    color: '#0fac31',
+  },
 }))
 function Duplicate(props: any) {
   const { className, handleNotification } = props
@@ -46,12 +60,16 @@ function Duplicate(props: any) {
   const [isOpen, setIsOpen] = useState(false)
   const [fileName, setFileName] = useState<string>('')
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
+  const [isAdd, setIsAdd] = useState<boolean>(false)
+  const [openDialogAdd,setOpenDialogAdd] = useState<boolean>(false);
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
   const [progress, setProgress] = useState(0)
   const [role, setRole] = useState(0)
   const [isDisable, setIsDisable] = useState(false)
   const [isDisableAddBank, setIsDisableAddBank] = useState(false)
+  const [subjectId, setSubjectId] = useState<Number>(1)
+  const [subjects, setSubjects] = useState<Subject[]>([])
   const [question, setQuestion] = useState<string>('')
   const [result, setResult] = useState<IQuestion[]>([])
   const [file, setFile] = useState<any>()
@@ -60,10 +78,10 @@ function Duplicate(props: any) {
     setFile(e.target.files[0])
     setFileName(e.target.files[0].name)
   }
-  const id = localStorage.getItem('id')
+  const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
   useEffect(() => {
     axios
-      .get(`${GET_ROLE_URL}/${id}`)
+      .get(`${GET_ROLE_URL}/${userId}`)
       .then((response) => {
         setRole(response.data.role)
       })
@@ -81,13 +99,19 @@ function Duplicate(props: any) {
       })
       if (response && response.data) {
         setResult(response.data)
+        if (response.data[0].point.toFixed(2) >= 0.6) {
+          setIsAdd(false)
+        } else {
+          setIsAdd(true)
+        }
         setVisibleResult(true)
         setProgress(100)
         setIsDisable(false)
-        handleNotification('success', `${response.status}: Successful`)
+        handleNotification('success', `${CONSTANT.MESSAGE().CHECK_SUCCESS}`)
+        refreshToken(userId)
       }
     } catch (error) {
-      refreshToken(error, id ? Number(id) : account.id)
+      console.error(error)
     }
   }
 
@@ -103,9 +127,56 @@ function Duplicate(props: any) {
     setQuestion('')
     setIsOpen(false)
   }
+  const clickAddQuestion = ()=>{
+      axios.get(GET_SUBJECT_URL).then((response) => {
+      setSubjects(response.data)
+    })
+    setOpenDialogAdd(true)
+  }
+  const handleAcceptAdd = async () => {
+    try {
+      setOpenDialogAdd(false)
+      console.log(question,"abb");
+      console.log(subjectId, "sjb")
+      Promise.all([
+        await axios.post(ADD_SENTENCE_DATASET_URL, {
+          question,
+        }),
+        await axios.post(ADD_QUESTION_TO_BANK, {
+          question,
+          subjectId,
+        }),
+      ])
+    } catch (error) {
+      console.error(error)
+    }
+    refreshToken(userId)
+  }
   const handleDialogClose = () => {
     setIsOpen(false)
+    setOpenDialogAdd(false)
   }
+
+  const handleChange = (event: any) => {
+    setSubjectId(Number(event.target.value))
+  }
+
+  const subjectDialogContent = (
+    <div className={className}>
+      <h4>Select a subject to add a question</h4>
+      <Select
+        className="select-subject"
+        native
+        value={subjectId}
+        onChange={handleChange}
+        input={<Input id="demo-dialog-native" />}
+      >
+        {subjects.map((sub: Subject) => (
+          <option value={sub.id}>{sub.subjectName}</option>
+        ))}
+      </Select>
+    </div>
+  )
 
   const handleAddFileBank = async (e: any) => {
     e.preventDefault()
@@ -120,14 +191,16 @@ function Duplicate(props: any) {
       if (response && response.data) {
         setProgress(100)
         setIsDisableAddBank(false)
-        handleNotification('success', `${response.status}: Training data Successful`)
+        handleNotification('success', `${CONSTANT.MESSAGE().TRAIN_SUCCESS}`)
       } else {
         setProgress(100)
         setIsDisableAddBank(false)
-        handleNotification('danger', `Training data fail`)
+        handleNotification('danger', `${CONSTANT.MESSAGE("Training data").FAIL}`)
       }
+      refreshToken(userId)
+
     } catch (error) {
-      refreshToken(error, id ? Number(id) : account.id)
+      console.error(error)
     }
   }
 
@@ -233,8 +306,43 @@ function Duplicate(props: any) {
               handleAccept={handleAcceptClear}
               handleClose={handleDialogClose}
             />
+             <Dialog
+              title="Add question"
+              buttonAccept="Add"
+              buttonCancel="Cancel"
+              content={subjectDialogContent}
+              isOpen={openDialogAdd}
+              handleAccept={handleAcceptAdd}
+              handleClose={handleDialogClose}
+            />
           </div>
-          {visibleResult ? <TableCheckDuplicate results={result} /> : ' '}
+          {visibleResult ? (
+            <div>
+              <TableCheckDuplicate results={result} />
+              {isAdd ? (
+                <div className="result-contain">
+                  <p>
+                    Able to add this question to bank
+                    {/* Button add question to bank */}
+                    <Chip
+                      label="Add question"
+                      clickable
+                      icon={<DoneIcon />}
+                      onClick={clickAddQuestion}
+                      className={classes.chipDone}
+                      variant="outlined"
+                    />
+                  </p>
+                </div>
+              ) : (
+                <p style={{ color: '#d11c1c', fontSize: '0.9rem', margin: '2rem' }}>
+                  Unable to add this question to bank
+                </p>
+              )}
+            </div>
+          ) : (
+            ' '
+          )}
         </div>
       </div>
     </div>
@@ -248,7 +356,6 @@ const StyleDuplicate = styled(Duplicate)`
   .container {
     margin: 0.5rem;
     padding: 5em 10px 10px 10px;
-    font-size: 16px;
     display: flex;
     flex-direction: row-reverse;
     justify-content: center;
@@ -274,6 +381,14 @@ const StyleDuplicate = styled(Duplicate)`
     font-size: 20px;
     color: #10182f;
     border-bottom: 1px solid #dae1f5;
+  }
+  .result-contain {
+    margin: 2rem;
+  }
+  .result-contain p {
+    color: #1ab93d;
+    font-size: 0.9rem;
+    text-align: center;
   }
   .import-bank {
     width: 100%;
