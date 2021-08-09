@@ -100,6 +100,7 @@ const useStyles = makeStyles((theme) => ({
   titleView: {},
   showAnswer: {
     marginLeft: '1.5rem',
+    color: '#2f6473'
   },
   dialogPaper: {
     minHeight: '30vh',
@@ -185,7 +186,7 @@ function ListExam(props: any) {
       }
       else {
         setTextSearch('')
-        handleNotification('warning', `${CONSTANT.MESSAGE('Search Exam With Name').FAIL}'${textSearch}'`)
+        handleNotification('warning', `${CONSTANT.MESSAGE('no exam with name ').SEARCH_NOT_FOUND}'${textSearch}'`)
       }
       refreshToken(idUser)
     } catch (error) {
@@ -294,6 +295,8 @@ function ListExam(props: any) {
   const handleCloseCreate = () => {
     setOpenDialogCreate(false)
     setTxtNameExam('')
+    setCheckError(false)
+    setTextError('')
   }
   const onTxtNameExamChange = useCallback((e) => {
     setTxtNameExam(e.target.value)
@@ -353,7 +356,7 @@ function ListExam(props: any) {
               <div className="answer">
                 {ques.answerGroup.map((ansGroup: AnswerGroup, ansIndex: number) => (
                   <p className={classes.showAnswer}>
-                    {String.fromCharCode(65 + ansIndex)}. {ansGroup.answer.answerText}
+                    {String.fromCharCode(97 + ansIndex)}. {ansGroup.answer.answerText}
                   </p>
                 ))}
               </div>
@@ -567,6 +570,7 @@ function ListExam(props: any) {
                   style={{
                     fontWeight: 'bold',
                     textAlign: 'center',
+                    padding: '5px'
                   }}
                 >
                   <h3>{nameExam}</h3>

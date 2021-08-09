@@ -22,6 +22,9 @@ export const MESSAGE = (props?: any) => {
     CREATE_SUCCESS: 'Create Successfully !!',
     CHANGE_SUCCESS: `${props}Role Changed Successfully !!`,
     FAIL: `Fail to ${props}`,
+    SEARCH_NOT_FOUND: `Not found ${props}`,
+    NO_QUESTION_SELECTED: `Add fail, No questions selected !!`,
+    NO_ANSWER: `Update fail, you must add answer to update`,
   }
   return message
 }
