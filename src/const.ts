@@ -17,6 +17,7 @@ export const MESSAGE = (props?: any) => {
     DELETE_SUCCESS: `${props} Deleted Successfully !!`,
     UPDATE_SUCCESS: 'Update Successfully !!',
     CHECK_SUCCESS: 'Question Checked Successfully !!',
+    CHANGE_PASSWORD_SUCCESS: 'Change Passsword Successfully !!',
     TRAIN_SUCCESS: 'Training Data Successfully !!',
     CREATE_SUCCESS: 'Create Successfully !!',
     CHANGE_SUCCESS: `${props}Role Changed Successfully !!`,

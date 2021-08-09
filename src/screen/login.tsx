@@ -283,10 +283,7 @@ const Login: FC<LoginProps> = (props) => {
                 />
               </div>
               <div className={classes.textProcess}>
-                <a className={classes.textForgot} href="#">
-                  Change /
-                </a>
-                <NavLink className={classes.textForgot} to="/forgot-password">
+                <NavLink to="/forgot-Password" className={classes.textForgot}>
                   Forgot Password
                 </NavLink>
               </div>
