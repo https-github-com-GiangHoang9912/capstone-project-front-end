@@ -22,6 +22,9 @@ export const MESSAGE = (props?: any) => {
     CREATE_SUCCESS: 'Create Successfully !!',
     CHANGE_SUCCESS: `${props}Role Changed Successfully !!`,
     FAIL: `Fail to ${props}`,
+    BLANK_INPUT: "Input is empty !!!",
+    GEN_SUCCESS: "Generate question successfully"
+
   }
   return message
 }

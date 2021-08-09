@@ -22,7 +22,7 @@ DialogComponent.defaultProps = {
   className: '',
 }
 
-function DialogComponent(props: any) {
+function DialogComponent(props?: any) {
   const {
     className,
     title,

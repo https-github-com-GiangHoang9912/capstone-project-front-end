@@ -75,7 +75,7 @@ const App: FC = (props: any) => {
         />
         <PersistentDrawerLeft isForgotPassword={isForgotPassword} isOpen={isMenuOpen} className={isLogin ? 'hidden-component' : ''} />
         <div className={`${mainContent} ${toggleMenuClass} ${toggleHeaderClass}`}>
-          {isStatus === 401 ? <Redirect to="/login" /> : <Redirect to="/" />}
+          {isStatus === 401 ? <Redirect to="/login" /> : ''}
           <Switch>
             <Route exact path="/">
               <HomePage />

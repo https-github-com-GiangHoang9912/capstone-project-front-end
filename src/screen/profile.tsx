@@ -68,7 +68,6 @@ function Profile(props: any) {
     if (isInputValid) {
       setProgress(100)
       try {
-        console.log(file)
         if (file) {
           const uploadTask = storage.ref(`images/${file.name}`).put(file)
           uploadTask.on(

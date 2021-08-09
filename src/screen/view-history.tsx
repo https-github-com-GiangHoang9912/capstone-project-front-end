@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faTrash,
   faQuestionCircle,
   faCopy,
   faIdCard,
@@ -59,7 +58,6 @@ function ViewHistory(props: any) {
     setSelect(e.target.value)
     if (e.target.value == '------') setHistories([])
     axios.get(`${GET_HISTORY_URL}/${userId}/${e.target.value}`).then((response) => {
-      console.log(response.data)
       setHistories(response.data)
     })
   }
