@@ -27,28 +27,33 @@ import ForgotPassword from '../screen/forgot-password'
 import { refreshToken } from '../services/services'
 
 const App: FC = (props: any) => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isMenuOpen, setIsMenuOpen] = useState(true)
   const [isLogin, setIsLogin] = useState(false)
+  const [isForgotPassword, setIsForgotPassword] = useState(false)
+
+  const [isStatus, setIsStatus] = useState(401)
 
   useEffect(() => {
     const id = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : -1
     refreshToken(id)
       .then((res) => {
         console.info(res)
+        setIsStatus(200)
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
           localStorage.clear()
           handleNotification('danger', `${err.response.status}: Unauthorized`)
+          setIsStatus(401)
         }
       })
   }, [])
 
   const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
 
-  const toggleMenuClass = isOpen ? 'menu-open' : 'menu-close'
+  const toggleMenuClass = isMenuOpen ? 'menu-open' : 'menu-close'
   const toggleHeaderClass = !isLogin ? 'header-open' : ''
-
+  const mainContent = isLogin || isForgotPassword ? 'main-content' : 'main-content-transition'
   const dispatch = useDispatch()
   const { message, type } = useSelector((state: RootState) => state.notification)
 
@@ -61,12 +66,20 @@ const App: FC = (props: any) => {
       {message && <Notification message={message} types={type} />}
       <AccountContextProvider>
         <Header
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
+          isOpen={isMenuOpen}
+          setIsOpen={setIsMenuOpen}
+          isForgotPassword={isForgotPassword}
+          className={isLogin ? 'hidden-component' : ''}
+          setIsLogin={setIsLogin}
+          setIsForgotPassword={setIsForgotPassword}
+        />
+        <PersistentDrawerLeft
+          isForgotPassword={isForgotPassword}
+          isOpen={isMenuOpen}
           className={isLogin ? 'hidden-component' : ''}
         />
-        <PersistentDrawerLeft isOpen={isOpen} className={isLogin ? 'hidden-component' : ''} />
-        <div className={`main-content ${toggleMenuClass} ${toggleHeaderClass}`}>
+        <div className={`${mainContent} ${toggleMenuClass} ${toggleHeaderClass}`}>
+          {/* {isStatus === 401 ? <Redirect to="/login" /> : ""} */}
           <Switch>
             <Route exact path="/">
               <HomePage />
@@ -87,7 +100,7 @@ const App: FC = (props: any) => {
               <ViewHistory />
             </Route>
             <Route exact path="/change-password" component={Profile}>
-              <ChangePassword />
+              <ChangePassword handleNotification={handleNotification} />
             </Route>
             <Route exact path="/exam" component={Profile}>
               <ListExam handleNotification={handleNotification} />
@@ -103,10 +116,14 @@ const App: FC = (props: any) => {
               ''
             )}
             <Route exact path="/login" component={Login}>
-              <Login setIsLogin={setIsLogin} />
+              <Login setIsLogin={setIsLogin} handleNotification={handleNotification} />
             </Route>
             <Route exact path="/forgot-password" component={ForgotPassword}>
-              <ForgotPassword setIsLogin={setIsLogin} handleNotification={handleNotification} />
+              <ForgotPassword
+                setIsForgotPassword={setIsForgotPassword}
+                setIsMenuOpen={setIsMenuOpen}
+                handleNotification={handleNotification}
+              />
             </Route>
             <Route component={NotFound} />
           </Switch>

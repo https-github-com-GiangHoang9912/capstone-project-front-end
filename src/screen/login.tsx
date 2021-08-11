@@ -16,6 +16,7 @@ import { AccountContext } from '../contexts/account-context'
 interface IProps {
   className?: string
   setIsLogin?: Dispatch<SetStateAction<boolean>>
+  handleNotification?: any
 }
 type LoginProps = {} & IProps
 
@@ -130,9 +131,10 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Login: FC<LoginProps> = (props) => {
-  const { className, setIsLogin } = props
+  const { className, setIsLogin, handleNotification } = props
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(true)
   const classes = useStyles()
   const history = useHistory()
   const { setInformation } = useContext(AccountContext)
@@ -149,17 +151,23 @@ const Login: FC<LoginProps> = (props) => {
     if (container.current) container.current.style.display = 'none'
   }
 
+  if (container.current) {
+    console.log('?????')
+  }
+
   const HandleLogin = (e: any) => {
     e.preventDefault()
     if (container.current) {
       container.current.style.display = 'block'
-      lottie.loadAnimation({
-        container: container.current,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        animationData: location,
-      })
+      if (loading) {
+        lottie.loadAnimation({
+          container: container.current,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          animationData: location,
+        })
+      }
       setTimeout(async () => {
         const response = await axios
           .post(
@@ -176,7 +184,7 @@ const Login: FC<LoginProps> = (props) => {
             console.log(err)
             stopLoading()
           })
-        if (response && response.data) {
+        if (response && response.data && response.data.statusCode !== 401) {
           setInformation(response.data)
           console.log(response.data)
           stopLoading()
@@ -189,7 +197,11 @@ const Login: FC<LoginProps> = (props) => {
             response.data.profile ? response.data.profile.avatar : 'avatar2.png'
           )
           history.push('/Home')
+        } else {
+          stopLoading()
+          handleNotification('danger', `${CONSTANT.MESSAGE('Login').FAIL}`)
         }
+        setLoading(false)
       }, 2000)
     }
   }
@@ -197,13 +209,15 @@ const Login: FC<LoginProps> = (props) => {
   const responseGoogle = (googleRes?: any) => {
     if (container.current && googleRes.profileObj) {
       container.current.style.display = 'block'
-      lottie.loadAnimation({
-        container: container.current,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        animationData: location,
-      })
+      if (loading) {
+        lottie.loadAnimation({
+          container: container.current,
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          animationData: location,
+        })
+      }
       setTimeout(async () => {
         const response = await axios
           .post(LOGIN_WITH_GOOGLE_API, googleRes.profileObj, {
@@ -213,7 +227,7 @@ const Login: FC<LoginProps> = (props) => {
             console.log(err)
             stopLoading()
           })
-        if (response && response.data) {
+        if (response && response.data && response.data.statusCode !== 401) {
           setInformation(response.data)
           console.log(response.data)
           stopLoading()
@@ -225,7 +239,11 @@ const Login: FC<LoginProps> = (props) => {
             response.data.profile ? response.data.profile.avatar : 'avatar2.png'
           )
           history.push('/Home')
+        } else {
+          stopLoading()
+          handleNotification('danger', `${CONSTANT.MESSAGE('Login').FAIL}`)
         }
+        setLoading(false)
       }, 2000)
     }
   }
@@ -283,10 +301,7 @@ const Login: FC<LoginProps> = (props) => {
                 />
               </div>
               <div className={classes.textProcess}>
-                <a className={classes.textForgot} href="#">
-                  Change /
-                </a>
-                <NavLink className={classes.textForgot} to="/forgot-password">
+                <NavLink to="/forgot-Password" className={classes.textForgot}>
                   Forgot Password
                 </NavLink>
               </div>

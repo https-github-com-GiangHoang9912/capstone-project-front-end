@@ -13,7 +13,7 @@ body {
   position: absolute;
   z-index: 20000;
   position: fixed;
-  top: 5em;
+  top: 1em;
   right: 1em;
 }
 
@@ -109,6 +109,12 @@ body {
 }
 
 .main-content {
+  width: 100%;
+  min-width: 40rem;
+  transition: margin 0ms;
+}
+
+.main-content-transition {
   width: 100%;
   min-width: 40rem;
   transition: margin 500ms;

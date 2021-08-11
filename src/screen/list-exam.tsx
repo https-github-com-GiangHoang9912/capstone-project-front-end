@@ -133,7 +133,7 @@ function ListExam(props: any) {
   const [scroll, setScroll] = useState('paper')
   const [idDelete, setIdDelete] = useState(0)
   const [nameExam, setNameExam] = useState('')
-  const [exams, setExams] = useState<IExam[]>([{}])
+  const [exams, setExams] = useState<IExam[]>([])
 
   const [subject, setSubject] = useState<Subject[]>([])
 
@@ -176,15 +176,13 @@ function ListExam(props: any) {
   async function getExamByName(name: string) {
     try {
       const response = await axios.get(`${GET_EXAM_BY_NAME_URL}/${idUser}/search/${name}`);
-      console.log('Exam by name', response.data);
       if (response && response.data.length > 0) {
         setExams(response.data);
         setTextSearch('')
-        handleNotification('success', `${response.status}: Search exam successfull`)
       }
       else {
         setTextSearch('')
-        handleNotification('warning', `No exam with name '${textSearch}'`)
+        handleNotification('warning', `${CONSTANT.MESSAGE('Search Exam With Name').FAIL}'${textSearch}'`)
       }
       refreshToken(idUser)
     } catch (error) {
@@ -311,9 +309,7 @@ function ListExam(props: any) {
   const handleDeleteAccept = async (id: number) => {
     try {
       const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
-      console.log(response.data, 'delete')
       if (response) {
-        console.log(response)
         setOpenDialogDelete(false)
         handleNotification('success', `${CONSTANT.MESSAGE("Exam").DELETE_SUCCESS}`)
       } else {
@@ -595,7 +591,7 @@ const StyleListExam = styled(ListExam)`
   }
   .container {
     width: 100%;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     overflow: auto;
     display: -webkit-box;
     display: -webkit-flex;

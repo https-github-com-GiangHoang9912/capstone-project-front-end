@@ -368,6 +368,25 @@ const styleProfile = styled(Profile)`
     font-weight: 500px;
     margin: 0 0 0.7rem 0.5rem;
   }
+  input::-webkit-file-upload-button {
+    padding: 5px 10px;
+    background-color: #303f9f;
+    border: none;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    color: #fff;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    transition: 100ms ease-out;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  input::-webkit-file-upload-button:hover {
+    background-color: #35367a;
+  }
+  
+  input[type='file'] {
+    font-size: 0px;
+  }
   img {
     width: 200px;
   }
