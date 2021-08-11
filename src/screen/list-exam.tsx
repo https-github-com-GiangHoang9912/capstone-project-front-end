@@ -100,6 +100,7 @@ const useStyles = makeStyles((theme) => ({
   titleView: {},
   showAnswer: {
     marginLeft: '1.5rem',
+    color: '#2f6473'
   },
   dialogPaper: {
     minHeight: '30vh',
@@ -130,6 +131,9 @@ function ListExam(props: any) {
   const [openDialogCreate, setOpenDialogCreate] = useState(false)
   const [openDialogDelete, setOpenDialogDelete] = useState(false)
   const [openDialogView, setOpenDialogView] = useState(false)
+  const [checkError, setCheckError] = useState(false)
+  const [textError, setTextError] = useState('')
+
   const [scroll, setScroll] = useState('paper')
   const [idDelete, setIdDelete] = useState(0)
   const [nameExam, setNameExam] = useState('')
@@ -182,7 +186,7 @@ function ListExam(props: any) {
       }
       else {
         setTextSearch('')
-        handleNotification('warning', `${CONSTANT.MESSAGE('Search Exam With Name').FAIL}'${textSearch}'`)
+        handleNotification('warning', `${CONSTANT.MESSAGE('no exam with name ').SEARCH_NOT_FOUND}'${textSearch}'`)
       }
       refreshToken(idUser)
     } catch (error) {
@@ -290,9 +294,13 @@ function ListExam(props: any) {
 
   const handleCloseCreate = () => {
     setOpenDialogCreate(false)
+    setTxtNameExam('')
+    setCheckError(false)
+    setTextError('')
   }
   const onTxtNameExamChange = useCallback((e) => {
     setTxtNameExam(e.target.value)
+    setCheckError(false)
   }, [])
 
   //* event when click delete */
@@ -348,7 +356,7 @@ function ListExam(props: any) {
               <div className="answer">
                 {ques.answerGroup.map((ansGroup: AnswerGroup, ansIndex: number) => (
                   <p className={classes.showAnswer}>
-                    {String.fromCharCode(65 + ansIndex)}. {ansGroup.answer.answerText}
+                    {String.fromCharCode(97 + ansIndex)}. {ansGroup.answer.answerText}
                   </p>
                 ))}
               </div>
@@ -400,12 +408,14 @@ function ListExam(props: any) {
         <div className={classes.nameExam}>
           <span>Enter name new bank: </span>
           <TextField
+            error={checkError}
             className={classes.txtNameExam}
             id="outlined-basic"
             label="Enter name"
             variant="outlined"
             value={txtNameExam}
             onChange={onTxtNameExamChange}
+            helperText={textError}
             required
           />
           <p style={{ color: '#30336b' }}>
@@ -428,18 +438,27 @@ function ListExam(props: any) {
   const handleCreateExam = async (e: any) => {
     e.preventDefault()
     try {
-      const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
-        subjectId,
-        examName: txtNameExam,
-      })
-      if (response && response.data) {
-        handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
-        setOpenDialogCreate(false);
-        setTxtNameExam('');
+      if (txtNameExam.trim().length > 0) {
+        const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
+          subjectId,
+          examName: txtNameExam,
+        })
+        if (response && response.data) {
+          handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
+          setOpenDialogCreate(false);
+          setTxtNameExam('');
+        } else {
+          handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
+        }
+        setCheckError(false)
+        setTextError('')
+        refreshToken(idUser)
       } else {
+        setCheckError(true)
+        setTextError('Name exam cannot be empty!')
         handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
+
       }
-      refreshToken(idUser)
     } catch (error) {
       console.error(error)
     }
@@ -551,6 +570,7 @@ function ListExam(props: any) {
                   style={{
                     fontWeight: 'bold',
                     textAlign: 'center',
+                    padding: '5px'
                   }}
                 >
                   <h3>{nameExam}</h3>
