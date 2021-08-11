@@ -12,7 +12,7 @@ import { setNotification } from '../store/actions/notifications'
 import HomePage from '../screen/home'
 import CheckDuplicate from '../screen/check-duplicate'
 import SelfGenerate from '../screen/self-generation-question'
-import Header from '../common/header' 
+import Header from '../common/header'
 import PersistentDrawerLeft from '../common/drawer'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
@@ -51,7 +51,7 @@ const App: FC = (props: any) => {
 
   const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
 
-  const toggleMenuClass = isMenuOpen  ? 'menu-open' : 'menu-close'
+  const toggleMenuClass = isMenuOpen ? 'menu-open' : 'menu-close'
   const toggleHeaderClass = !isLogin ? 'header-open' : ''
   const mainContent = isLogin || isForgotPassword ? 'main-content' : 'main-content-transition'
   const dispatch = useDispatch()
@@ -73,9 +73,13 @@ const App: FC = (props: any) => {
           setIsLogin={setIsLogin}
           setIsForgotPassword={setIsForgotPassword}
         />
-        <PersistentDrawerLeft isForgotPassword={isForgotPassword} isOpen={isMenuOpen} className={isLogin ? 'hidden-component' : ''} />
+        <PersistentDrawerLeft
+          isForgotPassword={isForgotPassword}
+          isOpen={isMenuOpen}
+          className={isLogin ? 'hidden-component' : ''}
+        />
         <div className={`${mainContent} ${toggleMenuClass} ${toggleHeaderClass}`}>
-          {isStatus === 401 ? <Redirect to="/login" /> : ''}
+          {/* {isStatus === 401 ? <Redirect to="/login" /> : ""} */}
           <Switch>
             <Route exact path="/">
               <HomePage />
@@ -112,7 +116,7 @@ const App: FC = (props: any) => {
               ''
             )}
             <Route exact path="/login" component={Login}>
-              <Login setIsLogin={setIsLogin} />
+              <Login setIsLogin={setIsLogin} handleNotification={handleNotification} />
             </Route>
             <Route exact path="/forgot-password" component={ForgotPassword}>
               <ForgotPassword
