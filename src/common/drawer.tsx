@@ -57,7 +57,6 @@ const customTheme = createMuiTheme({
 
 function PersistentDrawerLeft(props: any) {
   const { isOpen, className, isForgotPassword } = props
-  console.log(isForgotPassword)
   const menuItems = [
     {
       key: 1,

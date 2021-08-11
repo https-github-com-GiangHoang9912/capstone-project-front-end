@@ -172,6 +172,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  titleOfExam: {
+    marginTop: '4rem',
+    lineHeight: '2rem',
+    fontWeight: 600,
+  }
 }))
 
 const GET_QUESTIONS_URL = `${CONSTANT.BASE_URL}/questions/examId`
@@ -238,7 +243,7 @@ function UpdateExam(props: any) {
 
   //* Get question bank by subject id */
   useEffect(() => {
-    console.log('update:', idSubject)
+    // console.log('update:', idSubject)
     axios
       .get(`${GET_QUESTIONBANK_URL}/${idSubject}`)
       .then((response) => {
@@ -287,16 +292,21 @@ function UpdateExam(props: any) {
         questionBankId: item,
         examId: idExam,
       }))
-      const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd);
-      console.log('data', response.data)
-      if (response && response.data) {
-        console.log(response)
-        setOpenDialogAdd(false)
-        handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
+      if (questionAdd.length != 0) {
+        const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd);
+        console.log('data', response.data)
+        if (response && response.data) {
+          console.log(response)
+          setOpenDialogAdd(false)
+          handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
+        } else {
+          handleNotification('danger', `${CONSTANT.MESSAGE("Add Question").FAIL}`);
+        }
+        refreshToken(userId)
       } else {
-        handleNotification('danger', `${CONSTANT.MESSAGE("Add Question").CREATE_SUCCESS}`);
+        handleNotification('danger', `${CONSTANT.MESSAGE("Add Question").NO_QUESTION_SELECTED}`);
       }
-      refreshToken(userId)
+
     } catch (error) {
       console.error(error)
     }
@@ -321,6 +331,7 @@ function UpdateExam(props: any) {
   const handleInputAnswer = (index: number) => (e: any) => {
     const newArr = [...currentQuestionAnswerGroup]
     newArr[index].answer.answerText = e.target.value
+    console.log(newArr)
     setCurrentQuestionAnswerGroup(newArr)
   }
 
@@ -353,18 +364,35 @@ function UpdateExam(props: any) {
   const handleSaveUpdateQuestion = async (e: any) => {
     e.preventDefault()
     try {
-      let response = null;
-      response = await axios.post(`${CREATE_ANSWERS_URL}/${idQuestion}`, {
-        currentQuestionAnswerGroup,
-        valueTypeAnswer,
-      })
-      if (response) {
-        handleNotification('success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`)
-        setOpenDialogUpdate(false)
+      console.log('lengh', currentQuestionAnswerGroup.length)
+      console.log('currentQuestionAnswerGroup', currentQuestionAnswerGroup)
+      console.log('valueTypeAnswer', valueTypeAnswer)
+      if (currentQuestionAnswerGroup.length > 0) {
+        const elementIsEmpty = currentQuestionAnswerGroup.filter((item: any) => item.answer.answerText.trim().length <= 0);
+        if (elementIsEmpty.length == 0) {
+          let response = null;
+          response = await axios.post(`${CREATE_ANSWERS_URL}/${idQuestion}`, {
+            currentQuestionAnswerGroup,
+            valueTypeAnswer,
+          })
+          if (response) {
+            console.log('success')
+            handleNotification('success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`)
+            setOpenDialogUpdate(false)
+          } else {
+            handleNotification('danger', `${CONSTANT.MESSAGE("Update Question").FAIL}`);
+            console.log('Error create answer tf...!')
+            setOpenDialogUpdate(true)
+          }
+        } else {
+          handleNotification('danger', `${CONSTANT.MESSAGE("Update question cause answer is empty").FAIL}`)
+          setOpenDialogUpdate(true)
+        }
       } else {
-        handleNotification('danger', `${CONSTANT.MESSAGE("Update Question").FAIL}`);
-        console.log('Error create answer tf...!')
+        handleNotification('danger', `${CONSTANT.MESSAGE("Update Question").NO_ANSWER}`)
+        setOpenDialogUpdate(true)
       }
+
       refreshToken(userId)
     } catch (error) {
       console.error(error)
@@ -534,13 +562,18 @@ function UpdateExam(props: any) {
                 />
                 <span className="sttQuestion" style={{
                   margin: '0px 10px',
-                  color: '#000000',
+                  fontSize: ' 1rem',
+                  fontWeight: 700,
+                  color: '#495057'
+
                 }}>
                   {index + 1}.{' '}
                   <span
                     style={{
                       margin: '0px 10px',
-                      color: '#000000',
+                      fontWeight: 700,
+                      fontSize: ' 1rem',
+                      color: '#2f6473'
                     }}
                   >
                     {quesBank.questionText}
@@ -556,14 +589,15 @@ function UpdateExam(props: any) {
   )
 
   useEffect(() => {
-    console.log(answerCorrect)
-    console.log(valueTypeAnswer)
+    // console.log(answerCorrect)
+    // console.log(valueTypeAnswer)
     setValueTypeAnswer('multiple')
     if (answerCorrect && (answerCorrect.id === 1 || answerCorrect.id === 2)) {
       setValueTypeAnswer('tf')
       setCorrectAnswerTypeTf(answerCorrect.answerText.toLowerCase())
     }
     if (currentQuestionAnswerGroup.length > 0) {
+      // console.log('value co san', currentQuestionAnswerGroup)
       currentQuestionAnswerGroup.forEach((item, index) => {
         if (item.correct) setValueCorrectAnswer(`${index}`)
       })
@@ -668,13 +702,12 @@ function UpdateExam(props: any) {
   return (
     <div className={className}>
       <div className="create-exam">
-        
+
         <div className="container-exam">
           <div className="main">
-          <h2>Update question for exam</h2>
-            {/* <div className="text-subject">
-              <h2>SSC101 Chapter 123</h2>
-            </div> */}
+            <div className={classes.titleOfExam}>
+              <h2 style={{ color: '#495057', fontFamily: 'inherit' }}>{subject?.subjectName} - {examName}</h2>
+            </div>
             <div className="content-exam">
               <Table columns={columns} data={questions} isPagination={false} />
             </div>
@@ -699,11 +732,7 @@ function UpdateExam(props: any) {
                 }}
               >
                 <span>
-                  Do you want delete
-                  <span style={{ fontWeight: 'bold', margin: '0 0.5rem' }}>
-                    "{nameQuestion}"
-                  </span>{' '}
-                  question???
+                  Do you want delete this question???
                 </span>
               </DialogContent>
               <DialogActions>
@@ -819,7 +848,7 @@ const StyledUpdateExam = styled(UpdateExam)`
   }
   .content-exam {
     width: 90%;
-    margin-top: 7%;
+    /* margin-top: 7%; */
     height: 500px;
     border: 1px solid black;
     background-color: #fff;
