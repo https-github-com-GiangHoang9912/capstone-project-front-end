@@ -111,7 +111,7 @@ function Duplicate(props: any) {
         refreshToken(userId)
       }
     } catch (error) {
-      console.error(error)
+      handleNotification('danger', `${CONSTANT.MESSAGE("Check duplication").FAIL}`)
     }
   }
 
@@ -136,8 +136,6 @@ function Duplicate(props: any) {
   const handleAcceptAdd = async () => {
     try {
       setOpenDialogAdd(false)
-      console.log(question,"abb");
-      console.log(subjectId, "sjb")
       Promise.all([
         await axios.post(ADD_SENTENCE_DATASET_URL, {
           question,
@@ -148,7 +146,7 @@ function Duplicate(props: any) {
         }),
       ])
     } catch (error) {
-      console.error(error)
+      handleNotification('danger', `${CONSTANT.MESSAGE("Add to bank").FAIL}`)
     }
     refreshToken(userId)
   }
@@ -200,7 +198,7 @@ function Duplicate(props: any) {
       refreshToken(userId)
 
     } catch (error) {
-      console.error(error)
+      handleNotification('danger', `${CONSTANT.MESSAGE("Training data").FAIL}`)
     }
   }
 
