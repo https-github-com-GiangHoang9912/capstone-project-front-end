@@ -37,7 +37,7 @@ function Profile(props: any) {
   const [isOpen, setIsOpen] = useState(false)
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
-  const [image, setImage] = useState<string>('avatar2.png')
+  const [image, setImage] = useState<string>('images/avatar2.png')
   const [firstName, setFirstName] = useState<string>('')
   const [lastName, setLastName] = useState<string>('')
   const [dob, setDob] = useState<string>('a')
@@ -137,7 +137,7 @@ function Profile(props: any) {
           setAddress(response.data.address ? response.data.address : '')
           setPhone(response.data.phone ? response.data.phone : '')
           setDob(response.data.dateOfBirth ? dobFormat : '')
-          setImage(response.data.avatar ? response.data.avatar : 'avatar2.png')
+          setImage(response.data.avatar ? response.data.avatar : 'images/avatar2.png')
         })
     } catch (error) {
       console.error(error)

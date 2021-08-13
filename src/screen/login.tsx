@@ -194,7 +194,7 @@ const Login: FC<LoginProps> = (props) => {
           localStorage.setItem('username', response.data.username)
           localStorage.setItem(
             'avatar',
-            response.data.profile ? response.data.profile.avatar : 'avatar2.png'
+            response.data.profile ? response.data.profile.avatar : 'images/avatar2.png'
           )
           history.push('/Home')
         } else {
@@ -255,7 +255,7 @@ const Login: FC<LoginProps> = (props) => {
         <div className={classes.container}>
           <div className={classes.wrapLogin}>
             <div className={classes.imgShow}>
-              <img src="desk.png" alt="IMG" />
+              <img src="images/desk.png" alt="IMG" />
             </div>
             <form className={classes.loginAreaForm} onSubmit={HandleLogin}>
               <span className={classes.loginFormTitle}>DDSGQ</span>
