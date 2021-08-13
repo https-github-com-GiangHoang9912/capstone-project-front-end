@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
-import { useHistory } from 'react-router-dom'
 import TextField from '@material-ui/core/TextField'
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Carousel from 'react-elastic-carousel'
 import Select from '@material-ui/core/Select'
 import Input from '@material-ui/core/Input'
@@ -10,12 +10,10 @@ import Button from '@material-ui/core/Button'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
 import Chip from '@material-ui/core/Chip'
-import DoneIcon from '@material-ui/icons/Done'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import IconButton from '@material-ui/core/IconButton'
 import SvgIcon from '@material-ui/core/SvgIcon'
 import { AccountContext } from '../contexts/account-context'
-import Progress from '../common/progress'
 import Dialog from '../common/dialog'
 import Table from '../common/tableReact'
 
@@ -58,7 +56,6 @@ const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
 
 const SelfGenerate = (props: any) => {
   const { className, handleNotification } = props
-  const [showProgress, setShowProgress] = useState<Boolean>(false)
   const [isOpen, setIsOpen] = useState(false)
   const [isDisable, setIsDisable] = useState(false)
   const [dialogContent, setDialogContent] = useState<any>()
@@ -66,7 +63,6 @@ const SelfGenerate = (props: any) => {
   const [sentence, setSentence] = useState('')
   const [progress, setProgress] = useState(0)
   const [tagetIndex, setTagetIndex] = useState(1)
-  const history = useHistory()
   const classes = useStyles()
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
@@ -105,24 +101,29 @@ const SelfGenerate = (props: any) => {
   }
   async function handleProgress(e: any) {
     e.preventDefault()
-    try {
-      setIsDisable(true)
-      setProgress(progress + 10)
-      const response = await axios.post(MODEL_SELF_GENERATION_URL, items)
-      console.log(response)
-      if (response && response.data) {
-        const newArr = response.data.question?.map((item: string, index: number) => ({
-          id: index + 1,
-          text: item,
-        }))
-        setQuestions(newArr)
-        setProgress(100)
-        setVisibleResult(true)
-        setIsDisable(false)
+    if (!items[0].answer || !items[0].context) {
+      handleNotification('danger', `${CONSTANT.MESSAGE().BLANK_INPUT}`)
+    } else {
+      try {
+        setIsDisable(true)
+        setProgress(progress + 10)
+        const response = await axios.post(MODEL_SELF_GENERATION_URL, items)
+        console.log(response)
+        if (response && response.data) {
+          const newArr = response.data.question?.map((item: string, index: number) => ({
+            id: index + 1,
+            text: item,
+          }))
+          setQuestions(newArr)
+          setProgress(100)
+          setVisibleResult(true)
+          setIsDisable(false)
+          handleNotification('success', `${CONSTANT.MESSAGE().GEN_SUCCESS}`)
+        }
+        refreshToken(userId)
+      } catch (error) {
+        console.error(error)
       }
-      refreshToken(userId)
-    } catch (error) {
-      console.error(error)
     }
   }
 
@@ -283,12 +284,12 @@ const SelfGenerate = (props: any) => {
                   id="standard-full-width"
                   multiline
                   placeholder="Input Context"
-                  style={{ margin: 8 }}
+                  rows={3}
                   rowsMax={10}
+                  style={{ margin: 8 }}
                   fullWidth
                   variant="outlined"
                   value={item.context}
-                  rows={3}
                   onChange={handleInputContext(index)}
                 />
 
@@ -316,7 +317,7 @@ const SelfGenerate = (props: any) => {
           </Button>
           <br />
           {/* call components ProgressBar */}
-          {showProgress ? <Progress percentage={60} /> : ''}
+          
           {/* Display question generated */}
           {visibleResult ? (
             <div>
