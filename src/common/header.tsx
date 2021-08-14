@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     menuButton: {
       marginRight: theme.spacing(2),
+      color: '#303f9f'
     },
     title: {
       flexGrow: 1,

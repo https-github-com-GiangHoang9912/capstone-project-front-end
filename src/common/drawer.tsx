@@ -33,6 +33,7 @@ makeStyles((theme: Theme) =>
     drawer: {
       width: drawerWidth,
       flexShrink: 0,
+     
     },
   })
 )
@@ -43,11 +44,12 @@ const customTheme = createMuiTheme({
     MuiDrawer: {
       // Name of the rule
       paper: {
-        // Some CSS
+        // Some CSS 
         width: drawerWidth,
         marginTop: '73px',
         zIndex: 1,
-        backgroundColor: '#1f2937',
+        border: 'none',
+        background: 'linear-gradient(to right, #5691c8, #454eca)',
         color: '#c5c5c5',
         padding: '0 0.5rem',
       },
@@ -57,7 +59,6 @@ const customTheme = createMuiTheme({
 
 function PersistentDrawerLeft(props: any) {
   const { isOpen, className, isForgotPassword } = props
-  console.log(isForgotPassword)
   const menuItems = [
     {
       key: 1,
@@ -127,14 +128,15 @@ export default styled(PersistentDrawerLeft)`
   margin-top: 77px;
   border-top: 0;
   .active-li {
-    background: #374151;
+    background: #303f9f;
     font-weight: bold;
-    color: #f2f4f6;
+    color: #fff;
     border-radius: 10px;
   }
   li {
     height: 50px;
     padding: 0;
+    color: #fff;
     margin: 10px 0;
     font-size: 0.9rem;
     a {
@@ -150,7 +152,7 @@ export default styled(PersistentDrawerLeft)`
     }
   }
   li:hover {
-    background-color: #374151;
+    background-color: #303f9f;
     border-radius: 10px;
   }
 `

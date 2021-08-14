@@ -1,12 +1,13 @@
-import {useEffect} from 'react'
+import { useState, useEffect, useContext } from 'react'
 
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
-
-import LockIcon from '@material-ui/icons/Lock';
+import LockIcon from '@material-ui/icons/Lock'
 import { Button, makeStyles } from '@material-ui/core'
-
+import axios from 'axios'
 import styled from 'styled-components'
+import * as CONSTANT from '../const'
+
+axios.defaults.withCredentials = true
 
 ForgotPassword.propTypes = {
   className: PropTypes.string,
@@ -36,14 +37,14 @@ const useStyles = makeStyles({
     padding: ' 20px 55px',
     '@media(max-width: 45.875rem)': {
       fontSize: '0.65rem',
-      padding: ' 20px 66px'
+      padding: ' 20px 66px',
     },
     '&:focus': {
       outline: 'none',
-    }
+    },
   },
   iconLock: {
-    fontSize: '7rem'
+    fontSize: '7rem',
   },
   formForgot: {
     display: 'flex',
@@ -60,7 +61,7 @@ const useStyles = makeStyles({
     '@media(max-width: 61.875rem)': {
       marginTop: '17%',
       width: '70%',
-    }
+    },
   },
   txtEmail: {
     fontFamily: ' sans-serif',
@@ -80,7 +81,7 @@ const useStyles = makeStyles({
     '&:focus': {
       border: '1px solid #4ad428',
       outline: 'none',
-    }
+    },
   },
   inputName: {
     position: 'relative',
@@ -92,22 +93,21 @@ const useStyles = makeStyles({
     alignItems: 'center',
   },
   messGuide: {
-    marginBottom: '1rem'
+    marginBottom: '1rem',
   },
   titleForgot: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-  }
+  },
 })
+
+const FORGOT_PASSWORD = `${CONSTANT.BASE_URL}/forgot-password`
 
 function ForgotPassword(props: any) {
   const { className, handleNotification, setIsForgotPassword, setIsMenuOpen } = props
   const classes = useStyles()
-
-  const handleResetPassword = (e: any) => {
-    e.preventDefault()
-  }
+  const [email, setEmail] = useState('')
 
   useEffect(() => {
     setIsForgotPassword?.(true)
@@ -117,9 +117,22 @@ function ForgotPassword(props: any) {
       setIsMenuOpen?.(true)
     }
   }, [])
-  // setIsForgotPassword?.(true)
 
-  // setIsLogin(false)
+  const handleForgotPassword = async () => {
+    try {
+      const forgotResponse = await axios.post(FORGOT_PASSWORD, {
+        email,
+      })
+      if (forgotResponse && forgotResponse.status === 200) {
+        handleNotification('success', `${CONSTANT.MESSAGE().SEND_MAIL_SUCCESS}`)
+      } else {
+        handleNotification('danger', `${CONSTANT.MESSAGE('Change Password').FAIL}`)
+      }
+    } catch (error) {
+      // handleNotification('danger', `${CONSTANT.MESSAGE('Change Password').FAIL}`)
+    }
+  }
+
   return (
     <div>
       <div className={classes.container}>
@@ -127,11 +140,16 @@ function ForgotPassword(props: any) {
           <div className={classes.titleForgot}>
             <LockIcon className={classes.iconLock} />
             <h3 className={classes.messGuide}>Trouble Logging In?</h3>
-            <span className='infor-reset' style={{
-              width: '65%',
-              color: '#A1A1A1'
-            }}>Enter email, phone, or username and we'll send you a
-              link to get back into your account</span>
+            <span
+              className="infor-reset"
+              style={{
+                width: '65%',
+                color: '#A1A1A1',
+              }}
+            >
+              Enter email, phone, or username and we'll send you a link to get back into your
+              account
+            </span>
           </div>
           <div className={classes.inputContent}>
             <div className={classes.inputName}>
@@ -141,13 +159,20 @@ function ForgotPassword(props: any) {
                 id="uname"
                 placeholder="Email, Phone, or Username"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 style={{
-                  fontSize: '13px'
+                  fontSize: '13px',
                 }}
               />
             </div>
             <div className="button-reset">
-              <Button variant="contained" color="primary" className={classes.styleBtn}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.styleBtn}
+                onClick={handleForgotPassword}
+              >
                 Send Login Link
               </Button>
             </div>
@@ -160,7 +185,7 @@ function ForgotPassword(props: any) {
 
 const StyledForgotPassword = styled(ForgotPassword)`
   .container::-webkit-scrollbar {
-    display: none,
+    display: none;
   }
 `
 export default StyledForgotPassword

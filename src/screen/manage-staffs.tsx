@@ -111,7 +111,7 @@ function ManageStaffs(props: any) {
 
   const renderNameBox: FC<any> = ({
     row: {
-      original: { isMale },
+      original: { role },
     },
     cell: { value },
   }) => (
@@ -127,7 +127,7 @@ function ManageStaffs(props: any) {
         <Button className="name" onClick={() => handleDialogOpen(value)}>
           {value}
         </Button>
-        <div className="gender">{isMale ? 'Male' : 'Female'}</div>
+        <div className="gender">{role === 2 ? 'Staff' : 'User'}</div>
       </div>
     </div>
   )
@@ -298,10 +298,17 @@ function ManageStaffs(props: any) {
     arr.push(i)
   }
 
-  const handleSearchValue = (e: any) => {
+  const handleSearchValue = useCallback((e: any) => {
     setSearchValue(e.target.value)
-  }
+    if(!searchValue){
+      axios.get(`${GET_USERS_URL}`).then((response) => {
+        setUser(response.data)
+      })
+    }
+  },[])
+
   const searchAccount = ()=>{
+    
     axios.get(`${GET_USERS_SEARCH_URL}/${searchValue}`).then((response) => {
       setUser(response.data)
     })
@@ -316,7 +323,6 @@ function ManageStaffs(props: any) {
             id="outlined-search"
             label="Search user"
             variant="outlined"
-            type="search"
             size="small"
             value={searchValue}
             onChange={handleSearchValue}
@@ -478,6 +484,9 @@ const StyledAdmin = styled(ManageStaffs)`
      border: none;
      outline: none;
      border-radius: 5px;
+   }
+   .btn-search:hover {
+     filter: grayscale(50%)
    }
   .name {
     padding: 0;

@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faTrash,
   faQuestionCircle,
   faCopy,
   faIdCard,
@@ -59,7 +58,6 @@ function ViewHistory(props: any) {
     setSelect(e.target.value)
     if (e.target.value == '------') setHistories([])
     axios.get(`${GET_HISTORY_URL}/${userId}/${e.target.value}`).then((response) => {
-      console.log(response.data)
       setHistories(response.data)
     })
   }
@@ -68,7 +66,6 @@ function ViewHistory(props: any) {
     <div className={className}>
       <div className="container">
         <div className="main-left">
-          {/* <span className="text">Clear all activity history ❌</span> */}
           <p className="text">Filter by Activity </p>
           <select className="filter-select" onChange={search} value={typeId}>
             <option key="------" value="------">
@@ -98,17 +95,25 @@ function ViewHistory(props: any) {
             {histories.map((item: History, index: number) => (
               <div className="item-history" key={index}>
                 <div className="item-activity">
-                  <p className="activity-title">
+                  <div className="activity-title">
                     <span className="item-date">
                       {moment.default(item.date).format('DD/MM/YYYY')}
                     </span>
+                    <span>
                     {item.typeId === CONSTANT.HISTORY_TYPE.DUPLICATE ? (
+                      <>
                       <FontAwesomeIcon icon={faCopy} className="item-icon" />
+                       Check duplication:{' '} 
+                      </>
+                      
                     ) : (
                       ''
                     )}
                     {item.typeId === CONSTANT.HISTORY_TYPE.GENERATE ? (
+                      <>
                       <FontAwesomeIcon icon={faQuestionCircle} className="item-icon" />
+                      Self-Generation question:{' '} 
+                      </>
                     ) : (
                       ''
                     )}
@@ -122,12 +127,11 @@ function ViewHistory(props: any) {
                     ) : (
                       ''
                     )}
-                    {item.description}
-                  </p>
+                    <i>{item.description}</i>
+                    </span>
+                  </div>
                 </div>
-                <div className="item-delete">
-                  <FontAwesomeIcon icon={faTrash} />
-                </div>
+               
               </div>
             ))}
           </div>
@@ -206,8 +210,9 @@ const StyleViewHistory = styled(ViewHistory)`
     width: 80%;
   }
   .activity-title {
-    font-size: 16px;
-    font-weight: 400;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
   }
   .item-icon {
     color: #303f9f;
