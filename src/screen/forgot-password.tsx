@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 
 import PropTypes from 'prop-types'
+import LoadingBar from 'react-top-loading-bar'
 import LockIcon from '@material-ui/icons/Lock'
 import { Button, makeStyles } from '@material-ui/core'
 import axios from 'axios'
@@ -108,6 +109,7 @@ function ForgotPassword(props: any) {
   const { className, handleNotification, setIsForgotPassword, setIsMenuOpen } = props
   const classes = useStyles()
   const [email, setEmail] = useState('')
+  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
     setIsForgotPassword?.(true)
@@ -120,21 +122,26 @@ function ForgotPassword(props: any) {
 
   const handleForgotPassword = async () => {
     try {
+      setProgress(progress + 10)
       const forgotResponse = await axios.post(FORGOT_PASSWORD, {
         email,
       })
       if (forgotResponse && forgotResponse.status === 200) {
+        setProgress(100)
         handleNotification('success', `${CONSTANT.MESSAGE().SEND_MAIL_SUCCESS}`)
       } else {
+        setProgress(100)
         handleNotification('danger', `${CONSTANT.MESSAGE('Reset Password').FAIL}`)
       }
     } catch (error) {
+      setProgress(100)
       handleNotification('danger', `${CONSTANT.MESSAGE('Reset Password').FAIL}`)
     }
   }
 
   return (
     <div>
+      <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className={classes.container}>
         <div className={classes.formForgot}>
           <div className={classes.titleForgot}>
