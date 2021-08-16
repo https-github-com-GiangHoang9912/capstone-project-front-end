@@ -102,7 +102,7 @@ const useStyles = makeStyles({
   },
 })
 
-const FORGOT_PASSWORD = `${CONSTANT.BASE_URL}/forgot-password`
+const FORGOT_PASSWORD = `${CONSTANT.BASE_URL}/verify-user`
 
 function ForgotPassword(props: any) {
   const { className, handleNotification, setIsForgotPassword, setIsMenuOpen } = props
@@ -126,10 +126,10 @@ function ForgotPassword(props: any) {
       if (forgotResponse && forgotResponse.status === 200) {
         handleNotification('success', `${CONSTANT.MESSAGE().SEND_MAIL_SUCCESS}`)
       } else {
-        handleNotification('danger', `${CONSTANT.MESSAGE('Change Password').FAIL}`)
+        handleNotification('danger', `${CONSTANT.MESSAGE('Reset Password').FAIL}`)
       }
     } catch (error) {
-      // handleNotification('danger', `${CONSTANT.MESSAGE('Change Password').FAIL}`)
+      handleNotification('danger', `${CONSTANT.MESSAGE('Reset Password').FAIL}`)
     }
   }
 
