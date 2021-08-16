@@ -83,20 +83,20 @@ const Header: FC<HeaderProps> = (props) => {
             <div className="account-box">
               <NavLink to="/profile" className="right-menu user">
                 <div className="avt">
-                  <img id="avatar" src={avatar || 'avatar2.png'} alt="avt" />
+                  <img id="avatar" src={avatar || 'images/avatar2.png'} alt="avt" />
                 </div>
-                <div className="txt">{username}</div>
+                
                 <span className="tooltiptext">Edit Profile</span>
               </NavLink>
               <NavLink onClick={handleLogout} to="/login" className="right-menu log-out">
                 <div className="avt">
                   <img
                     id="icon"
-                    src="https://image.flaticon.com/icons/png/512/1828/1828427.png"
+                    src="https://image.flaticon.com/icons/png/512/1828/1828490.png"
                     alt="logout-img"
                   />
                 </div>
-                <div className="txt">Logout</div>
+               
               </NavLink>
             </div>
           ) : (
@@ -127,9 +127,7 @@ const StyledHeader = styled(Header)`
     text-decoration: none;
   }
 
-  .cmsIcon {
-    transform: scale(0.9);
-  }
+  
 
   .right-menu {
     padding: 5px;
@@ -171,6 +169,7 @@ const StyledHeader = styled(Header)`
   #avatar {
     width: 40px;
     height: 40px;
+    border: 1px solid #e2e7fa;
     border-radius: 100%;
   }
 

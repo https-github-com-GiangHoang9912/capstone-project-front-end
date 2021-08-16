@@ -12,7 +12,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
-
+import Button from '@material-ui/core/Button'
 import * as moment from 'moment'
 import Dialog from '../common/dialog'
 import { AccountContext } from '../contexts/account-context'
@@ -47,14 +47,11 @@ function Profile(props: any) {
   const [isInputValid, setIsInputValid] = useState<boolean>(true)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [inputError, setInputError] = useState<string>('')
-  const [isDisable, setIsDisable] = useState(false)
   const [progress, setProgress] = useState(0)
   const [file, setFile] = useState<any>('')
   const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
 
-  function handleEdit() {
-    setEditStatus(!editStatus)
-  }
+  
   function handleEditProfile() {
     setIsOpen(true)
     setEditStatus(!editStatus)
@@ -64,7 +61,7 @@ function Profile(props: any) {
   }
   const handleAccept = async () => {
     setIsOpen(false)
-    setIsDisable(true)
+  
     if (isInputValid) {
       setProgress(100)
       try {
@@ -92,7 +89,7 @@ function Profile(props: any) {
                     avatar: url,
                   })
                   localStorage.setItem('avatar', url)
-                  setIsDisable(false)
+                  
                 })
               refreshToken(userId)
               window.location.reload()
@@ -107,7 +104,7 @@ function Profile(props: any) {
             phone,
             dob,
           })
-          setIsDisable(false)
+        
           window.location.reload()
           refreshToken(userId)
         }
@@ -178,7 +175,7 @@ function Profile(props: any) {
                 }
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                disabled={editStatus}
+                
               />
               {inputError === 'fname' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
@@ -195,7 +192,7 @@ function Profile(props: any) {
                 }
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                disabled={editStatus}
+                
               />
               {inputError === 'lname' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
@@ -217,7 +214,7 @@ function Profile(props: any) {
                 }
                 value={dob}
                 onChange={(e) => setDob(e.target.value)}
-                disabled={editStatus}
+               
               />
               {inputError === 'dob' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
@@ -231,7 +228,7 @@ function Profile(props: any) {
                 className="input-bar"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                disabled={editStatus}
+                
               />
             </div>
             <div className="form-info">
@@ -252,7 +249,7 @@ function Profile(props: any) {
                 }
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                disabled={editStatus}
+      
               />
               {inputError === 'Phone' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
@@ -270,16 +267,10 @@ function Profile(props: any) {
               />
               {inputError === 'Email' ? <p className="errorMessage">{errorMessage}</p> : ''}
             </div>
-
-            {editStatus ? (
-              <button className="btn-edit" onClick={handleEdit}>
-                Edit Profile
-              </button>
-            ) : (
-              <button className="btn-edit" onClick={handleEditProfile} disabled={isDisable}>
-                Save{' '}
-              </button>
-            )}
+             
+              <Button variant="contained" color="primary" disabled={!isInputValid} onClick={handleEditProfile}>
+              Save
+             </Button>
             <Dialog
               title="Update profile"
               message="Save all profile infomation changes"
@@ -312,7 +303,6 @@ function Profile(props: any) {
               id="file"
               className="input-file"
               onChange={handleFileChange}
-              disabled={editStatus}
             />
           </div>
         </div>

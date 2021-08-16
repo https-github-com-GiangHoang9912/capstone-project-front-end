@@ -426,6 +426,7 @@ function ManageStaffs(props: any) {
 }
 
 const StyledAdmin = styled(ManageStaffs)`
+
   table {
     border-collapse: collapse !important;
     margin: auto;
@@ -463,7 +464,8 @@ const StyledAdmin = styled(ManageStaffs)`
     gap: 10px;
   }
   .container {
-    margin: 7rem 1rem 1rem 1rem;
+    overflow: auto;
+    margin: 6rem 1.5rem 1.5rem 1.5rem;
     background-color: #fbfbfb;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
