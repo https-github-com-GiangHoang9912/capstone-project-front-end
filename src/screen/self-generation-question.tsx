@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
@@ -60,7 +60,7 @@ const SelfGenerate = (props: any) => {
   const [isDisable, setIsDisable] = useState(false)
   const [dialogContent, setDialogContent] = useState<any>()
   const [subjectId, setSubjectId] = useState<Number>(1)
-  const [sentence, setSentence] = useState('')
+  const [dialogSentence, setDialogSentence] = useState('')
   const [progress, setProgress] = useState(0)
   const [tagetIndex, setTagetIndex] = useState(1)
   const classes = useStyles()
@@ -89,7 +89,6 @@ const SelfGenerate = (props: any) => {
     })
     setItems(newArr)
     setTagetIndex(items.length)
-    console.log(tagetIndex)
   }
 
   const removeItem = (index: number) => (e: any) => {
@@ -108,7 +107,6 @@ const SelfGenerate = (props: any) => {
         setIsDisable(true)
         setProgress(progress + 10)
         const response = await axios.post(MODEL_SELF_GENERATION_URL, items)
-        console.log(response)
         if (response && response.data) {
           const newArr = response.data.question?.map((item: string, index: number) => ({
             id: index + 1,
@@ -141,15 +139,16 @@ const SelfGenerate = (props: any) => {
 
       Promise.all([
         await axios.post(ADD_SENTENCE_DATASET_URL, {
-          question: sentence,
+          question: dialogSentence,
         }),
         await axios.post(ADD_QUESTION_TO_BANK, {
-          question: sentence,
+          question: dialogSentence,
           subjectId,
         }),
       ])
       refreshToken(idUser)
-      setSentence('')
+      
+      setDialogSentence('')
     } catch (error) {
       console.error(error)
     }
@@ -171,17 +170,20 @@ const SelfGenerate = (props: any) => {
           label="Add"
           clickable
           color="secondary"
-          onClick={() => handleCheckDuplication(cell.row.original.text)}
+          onClick={() => handleCheckDuplicationThenAdd(cell.row.original.text)}
           variant="outlined"
         />
       ),
     },
   ]
 
-  {
-    /* Content subject select dialog */
-  }
-  const subjectDialogContent = (
+  const duplicatedDialogContent = (
+    <div className={className}>
+      <h4>{dialogSentence} was duplicate</h4>
+    </div>
+  )
+
+  const selectSubjectDialogContent = (
     <div className={className}>
       <h4>Select a subject to add a question</h4>
       <Select
@@ -198,37 +200,31 @@ const SelfGenerate = (props: any) => {
     </div>
   )
 
-  const duplicatedDialogContent = (
-    <div className={className}>
-      <h4>{sentence} was duplicate</h4>
-    </div>
-  )
+  useEffect(() => {
+    if (isDuplicate) {
+      setDialogContent(duplicatedDialogContent)
+    } else {
+      setDialogContent(selectSubjectDialogContent)
+    }
+  }, [dialogSentence])
 
-  const handleCheckDuplication = async (text: string) => {
+  const handleCheckDuplicationThenAdd = async (text: string) => {
     try {
       await axios.get(GET_SUBJECT_URL).then((response) => {
         setSubjects(response.data)
         console.log(response.data)
       })
 
-      setSentence(() => text)
+      setDialogSentence(text)
 
       const res = await axios.post(MODEL_CHECK_DUPLICATE_URL, {
         question: text,
       })
 
-      const condition = res && res.data.length > 0 && res.data[0].point > CONSTANT.CONFIDENT.point
+      const duplicateCondition = res && res.data.length > 0 && res.data[0].point > CONSTANT.CONFIDENT.point
 
-      setIsDuplicate(condition)
-
-      if (condition) {
-        setDialogContent(duplicatedDialogContent)
-        setIsOpen(true)
-      } else {
-        setDialogContent(subjectDialogContent)
-        setIsOpen(true)
-      }
-
+      setIsDuplicate(duplicateCondition)
+      setIsOpen(true)
       refreshToken(userId)
     } catch (error) {
       console.error(error)
