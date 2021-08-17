@@ -77,7 +77,7 @@ function ManageStaffs(props: any) {
   }) => (
     <div className="action-btns">
       <IconButton className="icon-button">
-        {value ? (
+        {!value ? (
           <LockOpenIcon fontSize="medium" color="primary" onClick={() => handleActive(value, id)} />
         ) : (
           <BlockIcon fontSize="medium" color="secondary" onClick={() => handleActive(value, id)} />
@@ -101,7 +101,7 @@ function ManageStaffs(props: any) {
     },
   }) => (
     <div>
-      {active ? (
+      {!active ? (
         <Chip label="Blocked" color="secondary" className="status-chip" />
       ) : (
         <Chip label="Active" color="primary" className="status-chip" />

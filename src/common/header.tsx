@@ -104,11 +104,11 @@ const Header: FC<HeaderProps> = (props) => {
               <div className="avt">
                 <img
                   id="icon"
-                  src="https://image.flaticon.com/icons/png/512/1828/1828395.png"
+                  src="https://image.flaticon.com/icons/png/128/1828/1828490.png"
                   alt="logout-img"
                 />
               </div>
-              <div className="txt">Login</div>
+              
             </NavLink>
           )}
         </div>
