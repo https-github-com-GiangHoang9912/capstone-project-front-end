@@ -156,10 +156,6 @@ const SelfGenerate = (props: any) => {
 
   const columns = [
     {
-      Header: 'No. ',
-      accessor: 'id',
-    },
-    {
       Header: 'Question',
       accessor: 'text',
     },
