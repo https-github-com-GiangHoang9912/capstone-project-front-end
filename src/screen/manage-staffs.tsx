@@ -240,10 +240,7 @@ function ManageStaffs(props: any) {
   const data = user
   const columns = React.useMemo(
     () => [
-      {
-        Header: 'ID',
-        accessor: 'id',
-      },
+
       {
         Header: 'Account',
         accessor: 'username',
@@ -339,6 +336,7 @@ function ManageStaffs(props: any) {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>No. </th>
                 {headerGroup.headers.map((column) => (
                   <th {...column.getHeaderProps()}>{column.render('Header')}</th>
                 ))}
@@ -346,10 +344,11 @@ function ManageStaffs(props: any) {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {page.map((row) => {
+            {page.map((row, index) => {
               prepareRow(row)
               return (
                 <tr {...row.getRowProps()}>
+                  <td>{(index+1) + (pageIndex)*pageSize}</td>
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                   ))}
