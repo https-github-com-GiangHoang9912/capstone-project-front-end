@@ -476,10 +476,7 @@ function UpdateExam(props: any) {
   }
 
   const columns = [
-    {
-      Header: 'ID',
-      accessor: 'id',
-    },
+    
     {
       Header: 'Question',
       accessor: 'questionBank.questionText',

@@ -91,6 +91,7 @@ function Duplicate(props: any) {
   }, [])
 
   async function handleCheck() {
+    if(question){
     try {
       setIsDisable(true)
       setProgress(progress + 10)
@@ -113,6 +114,9 @@ function Duplicate(props: any) {
     } catch (error) {
       handleNotification('danger', `${CONSTANT.MESSAGE("Check duplication").FAIL}`)
     }
+  }else{
+    handleNotification('danger', `${CONSTANT.MESSAGE().BLANK_INPUT}`)
+  }
   }
 
   function handleInputQuestion(e: any) {
@@ -193,12 +197,12 @@ function Duplicate(props: any) {
       } else {
         setProgress(100)
         setIsDisableAddBank(false)
-        handleNotification('danger', `${CONSTANT.MESSAGE("Training data").FAIL}`)
+        handleNotification('danger', `${CONSTANT.MESSAGE("Upload data").FAIL}`)
       }
       refreshToken(userId)
 
     } catch (error) {
-      handleNotification('danger', `${CONSTANT.MESSAGE("Training data").FAIL}`)
+      handleNotification('danger', `${CONSTANT.MESSAGE("Upload data").FAIL}`)
     }
   }
 
@@ -209,11 +213,11 @@ function Duplicate(props: any) {
         {role !== 3 ? (
           <div className="control control-left">
             <div className="import-bank">
-              <h2 className="select">Import a new Bank</h2>
+              <h2 className="select">Import new Bank</h2>
               <div className="input-bank">
                 <input type="file" accept=".csv" onChange={handleFileChange} title=" " />
               </div>
-              <p className="file-rule">Bank input must be .csv file</p>
+              <p className="file-rule">Must be .csv file</p>
               <p className="bank-name">Bank name: {fileName}</p>
               {fileName.includes('.csv') ? (
                 <Button
@@ -249,7 +253,7 @@ function Duplicate(props: any) {
           ''
         )}
         <div className="control control-right">
-          <h2>Enter your question here:</h2>
+          <h2>Enter your question:</h2>
           <TextField
             id="outlined-multiline-static"
             multiline
@@ -260,24 +264,7 @@ function Duplicate(props: any) {
             onChange={handleInputQuestion}
             className={classes.inputQuestion}
           />
-          <div className="guide-line">
-            <p>
-              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Enter the
-              question in the Question box then press Check button. Processing will take a couple of
-              time.
-            </p>
-            <p>
-              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Input
-              questions should be grammatically correct to get the best results
-            </p>
-            <p>
-              {' '}
-              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> If the
-              results returned to the question is not duplicated with question in the bank, you can
-              add them to your bank.{' '}
-            </p>
-          </div>
-          <div className="button-group">
+            <div className="button-group">
             <Button
               variant="contained"
               color="primary"
@@ -314,6 +301,19 @@ function Duplicate(props: any) {
               handleClose={handleDialogClose}
             />
           </div>
+          <div className="guide-line">
+            <p>
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Processing will take a couple of time.
+            </p>
+            <p>
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Questions should be grammatically correct to get the best results
+            </p>
+            <p>
+              {' '}
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />  If the results is "not duplicated", you can add them to your bank.
+            </p>
+          </div>
+        
           {visibleResult ? (
             <div>
               <TableCheckDuplicate results={result} />
@@ -474,12 +474,13 @@ const StyleDuplicate = styled(Duplicate)`
     margin: 0 5px;
   }
   .guide-line {
-    margin: 50px 20px;
+    margin: 1rem;
     text-align: start;
   }
   .guide-line p {
     width: 60%;
-    margin: 10px 0px 0px 100px;
+    margin: auto;
+    line-height: 1.5rem;
     font-size: 0.9rem;
     color: #545d7a;
   }
@@ -488,8 +489,9 @@ const StyleDuplicate = styled(Duplicate)`
     margin: 0;
   }
   .button-group {
-    width: 30%;
+    width: 40%;
     margin: auto;
+    padding: 1rem;
     display: flex;
     justify-content: space-around;
     align-items: center;

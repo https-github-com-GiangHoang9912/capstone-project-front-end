@@ -77,7 +77,7 @@ function ManageStaffs(props: any) {
   }) => (
     <div className="action-btns">
       <IconButton className="icon-button">
-        {value ? (
+        {!value ? (
           <LockOpenIcon fontSize="medium" color="primary" onClick={() => handleActive(value, id)} />
         ) : (
           <BlockIcon fontSize="medium" color="secondary" onClick={() => handleActive(value, id)} />
@@ -101,7 +101,7 @@ function ManageStaffs(props: any) {
     },
   }) => (
     <div>
-      {active ? (
+      {!active ? (
         <Chip label="Blocked" color="secondary" className="status-chip" />
       ) : (
         <Chip label="Active" color="primary" className="status-chip" />
@@ -240,10 +240,7 @@ function ManageStaffs(props: any) {
   const data = user
   const columns = React.useMemo(
     () => [
-      {
-        Header: 'ID',
-        accessor: 'id',
-      },
+
       {
         Header: 'Account',
         accessor: 'username',
@@ -339,6 +336,7 @@ function ManageStaffs(props: any) {
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
+                <th>No. </th>
                 {headerGroup.headers.map((column) => (
                   <th {...column.getHeaderProps()}>{column.render('Header')}</th>
                 ))}
@@ -346,10 +344,11 @@ function ManageStaffs(props: any) {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {page.map((row) => {
+            {page.map((row, index) => {
               prepareRow(row)
               return (
                 <tr {...row.getRowProps()}>
+                  <td>{(index+1) + (pageIndex)*pageSize}</td>
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                   ))}
@@ -426,6 +425,7 @@ function ManageStaffs(props: any) {
 }
 
 const StyledAdmin = styled(ManageStaffs)`
+
   table {
     border-collapse: collapse !important;
     margin: auto;
@@ -463,7 +463,8 @@ const StyledAdmin = styled(ManageStaffs)`
     gap: 10px;
   }
   .container {
-    margin: 7rem 1rem 1rem 1rem;
+    overflow: auto;
+    margin: 6rem 1.5rem 1.5rem 1.5rem;
     background-color: #fbfbfb;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }

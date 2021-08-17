@@ -225,10 +225,6 @@ function ListExam(props: any) {
 
   const columns = [
     {
-      Header: 'ID',
-      accessor: 'id',
-    },
-    {
       Header: 'Exam Name',
       accessor: 'examName',
     },

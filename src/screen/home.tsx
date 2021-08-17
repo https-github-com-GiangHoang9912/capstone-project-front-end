@@ -1,6 +1,8 @@
 import styled from 'styled-components'
+import React, {useRef } from 'react'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
+import { Link, animateScroll as scroll } from "react-scroll";
 import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -15,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
   root: {},
   btn: {
     color: 'white',
-    width: 500,
-    height: 248,
-    marginTop: '1rem',
+    width: 200,
+    height: 200,
+    margin: '1rem',
     boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
     backgroundSize: "cover",
     transition: 'filter 0.5s ease-in-out',
@@ -25,29 +27,56 @@ const useStyles = makeStyles((theme) => ({
        filter: 'grayscale(60%)',
       
     },
+    '@media (max-width: 780px)' : {
+      width: 330,
+      height: 330,
+      marginTop: '2rem',
+    }
     
   },
   btnCheck: {
     backgroundImage: 'url("images/duplicate.png")',
   },
   btnSelf: {
-    backgroundImage: 'url("images/Self-Generated Questions.png")',
+    backgroundImage: 'url("images/self.png")',
   },
   btnExam: {
-    width: 1024,
-    height: 300,
     backgroundImage: 'url("images/Exam.png")',
-    '@media (max-width: 780px)' : {
-      width: 500,
-      height: 248,
-      backgroundImage: 'url("images/Exam-res.png")',
-    }
   },
+  btnScroll: {
+    '@media (max-width: 780px)' : {
+      width: 100,
+      height: 30,
+      fontSize: '0.5rem',
+      marginTop: '2rem',
+    }
+  }
   
 }))
+
+
 function HomePage(props: any) {
   const { className } = props
   const classes = useStyles()
+  const infos = [
+    {
+      title: "AI Technology",
+      description: "Using machine learning and natural language processing technology in Artifical Intelligence.",
+      image: "images/machine.png"
+    },
+    {
+      title: "High Accuracy",
+      description: "The accuracy when solving the problem is very high",
+      image: "images/accuracy.png"
+    },
+    {
+      title: "Security System",
+      description: "All input data is encrypted to ensure the security of information",
+      image: "images/security.png"
+    },
+
+  ]
+  
   return (
     <div className={className}>
       <div className="container">
@@ -55,11 +84,22 @@ function HomePage(props: any) {
           <div className="intro">
           <h1 className="intro-title">DDSQG</h1>
           <h2 className="intro-sub">Duplicate Detection and Self-Generation Question based on answers</h2>
-          <img src="/images/ai.png" alt="ai" />
+          <Link
+                to="main-function"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={700}
+              ><Button variant="contained" color="secondary" className={classes.btnScroll}>
+              Get Started
+            </Button></Link>
           </div>
+     
         </div>
-        <h2 className="main-ft title-task">Main Features</h2>
-        <div className="function-contain">
+        <div className="home-title">
+        <h2 className="main-ft title-task main-function">Main Features</h2>
+        <p>Check duplicate questions, self-generated questions, create and manage your own exam</p>
+        </div>
         <div className="function">
           <NavLink to="/check-duplicate" className="link">
             <Button variant="contained" color="primary" className={`${classes.btnCheck} ${classes.btn}`} /> 
@@ -71,31 +111,25 @@ function HomePage(props: any) {
             <Button variant="contained" color="primary" className={`${classes.btnExam} ${classes.btn}`} />
           </NavLink>
         </div>
+        <div className="home-title">
+        <h2 className="main-ft title-task">About our system</h2>
+        <p>Artifical Intelligence Technology to solve the problem, high accuracy and security</p>
         </div>
-        <h2 className="main-ft title-task">Technology</h2>
         <div className="technology-contain">
         <div className="technology">
+           {infos.map(info =>(
+            <div className="technology-item">
             <div className="tech-img">
-               <img src="https://t4.ftcdn.net/jpg/04/11/50/99/240_F_411509944_NHQwlYfg1td6fBQyyHLdlfltmlv8cmAp.jpg" />
+               <img src={info.image} />
             </div>
             <div className="tech-text">
-               <h3>Natural language processing (NLP)</h3>
-               <p>NLP focuses on the interactions between human and computer natural language. 
-                 NLP has the ability to automate support, 
-                 enhance user experience, and analyze and respond</p>
+               <h3>{info.title}</h3>
+               <p>{info.description}</p>
             </div>
+            </div>
+           ))}
         </div>
-        <div className="technology reverse">
-            <div className="tech-img">
-               <img src="https://www.techiexpert.com/wp-content/uploads/2020/06/Machine-Learning-in-Mobile-App-360x180.jpeg" />
-            </div>
-            <div className="tech-text">
-               <h3>Machine Learning</h3>
-               <p>Machine learning is a branch of artificial intelligence (AI) and
-                 computer science which focuses on the use of data and algorithms to imitate the way that humans learn,
-                  gradually improving its accuracy.</p>
-            </div>
-        </div>
+       
         </div>
       </div>
     </div>
@@ -104,27 +138,25 @@ function HomePage(props: any) {
 
 const HomeStyled = styled(HomePage)`
   width: 100%;
-  height: 100vh;
-  .container {
+  .container{
     width: 100%;
-    min-height: 100vh;
-    padding: 4em 0;
     background-color: #fff;
   }
   .introduction {
     width: 100%;
-    height: 100vh;
+    height: 650px;
     background-image: 
       url('images/banner.png');
     background-repeat: no-repeat;
-    background-size: contain;
-    /* background: linear-gradient(to right, #0072ff, #00c6ff);  */
+    background-size: cover;
+   
 
   }
+  
   .intro{
     text-align: start;
-    width: 50%;
-    padding: 5rem 0rem 0rem 8rem;
+    width: 40%;
+    padding: 5rem 0rem 0rem 10rem;
   }
   .intro-title {
     font-size: 4rem;
@@ -143,12 +175,17 @@ const HomeStyled = styled(HomePage)`
     line-height: 32px;
     margin: 20px 0 50px 0;
   }
+  .home-title{
+    text-align: center;
+    margin-top: 1rem;
+  }
+
   .main-ft{
     font-size: 30px;
-    text-align: start;
-    margin: 4rem 0 3rem 2rem;
+    margin: 4rem 0 0  2rem;
     line-height: 40px;
   }
+  
   .link {
     text-decoration: none;
   }
@@ -164,60 +201,88 @@ const HomeStyled = styled(HomePage)`
     background: #e2e7fa;
     text-decoration: none;
   }
-  .function-contain{
-    width: 100%;
-  }
+ 
   .function {
-    width: 1040px;
+    width: 80%;
+    padding: 1rem;
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    align-items: center;
+    justify-content: center;
   }
   .technology-contain{
     width: 100%;
+    margin: 1rem 0;
     
   }
   .technology{
-    width: 1040px;
+    width: 80%;
     margin: 0 auto;
     display: flex;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
-  .reverse{
-    display: flex;
-    flex-direction: row-reverse;
-    
-  }
-  .tech-img{
-    width: 50%;
+  .technology-item{
+    text-align: center;
+    margin: 1rem;
+    border: 1px solid #e2e7fa;
+    width: 30%;
+    min-height: 300px;
   }
   .tech-img img{
-   width: 100%;
-   filter: brightness(1.6)
+   margin-top: 1rem;
+   width: 50%;
   }
   .tech-text{
-   width: 50%;
-   padding: 15px;
+   padding: 10px;
+   border-radius: 5px;
    background-color: #fff;
   }
   .tech-text h3{
     font-size: 1.1rem;
-    margin: 2rem 0;
+    margin: 1rem 0 0.2rem 0;
     width: auto;
     padding: 0.5rem;
-    background-color: #5691c8;
   }
   @media screen and (max-width: 780px) {
     .function, .technology {
-      width: 780px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       box-shadow: none;
     }
-    
+
+    .introduction{
+      height: 400px;
+    }
+    .introduction img{
+      margin-bottom: 1rem;
+    }
+    .intro{
+      width: 60%;
+      padding: 5rem 0rem 0rem 6rem;
+      margin: 0;
+    }
+    .intro-title{
+      font-size: 2rem;
+    }
+    .intro-sub{
+      font-size: 1rem;
+      margin: 0;
+    }
+    .technology-item{
+      width: 70%
+    }
+  }
+  @media screen and (min-device-width: 781px) and (max-device-width: 1024px) {
+     .function, .technology{
+       width: 100%;
+     }
+     .intro{
+      width: 60%;
+      padding: 5rem 0rem 0rem 10rem;
+      margin: 0;
+    }
   }
 `
 export default HomeStyled
