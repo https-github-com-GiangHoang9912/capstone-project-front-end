@@ -129,10 +129,6 @@ const SelfGenerate = (props: any) => {
     setIsOpen(false)
   }
 
-  const handleChange = (event: any) => {
-    setSubjectId(Number(event.target.value))
-  }
-
   const handleAccept = async () => {
     try {
       setIsOpen(false)
@@ -186,7 +182,7 @@ const SelfGenerate = (props: any) => {
         className="select-subject"
         native
         value={subjectId}
-        onChange={handleChange}
+        onChange={(event: any) => setSubjectId(Number(event.target.value))}
         input={<Input id="demo-dialog-native" />}
       >
         {subjects.map((sub: Subject) => (
@@ -202,7 +198,7 @@ const SelfGenerate = (props: any) => {
     } else {
       setDialogContent(selectSubjectDialogContent)
     }
-  }, [dialogSentence])
+  }, [dialogSentence, subjectId])
 
   const handleCheckDuplicationThenAdd = async (text: string) => {
     try {
@@ -211,8 +207,6 @@ const SelfGenerate = (props: any) => {
         console.log(response.data)
       })
 
-      setDialogSentence(text)
-
       const res = await axios.post(MODEL_CHECK_DUPLICATE_URL, {
         question: text,
       })
@@ -220,6 +214,7 @@ const SelfGenerate = (props: any) => {
       const duplicateCondition = res && res.data.length > 0 && res.data[0].point > CONSTANT.CONFIDENT.point
 
       setIsDuplicate(duplicateCondition)
+      setDialogSentence(text)
       setIsOpen(true)
       refreshToken(userId)
     } catch (error) {
