@@ -85,13 +85,8 @@ const Header: FC<HeaderProps> = (props) => {
                 <div className="avt">
                   <img id="avatar" src={avatar || 'images/avatar2.png'} alt="avt" />
                 </div>
-<<<<<<< Updated upstream
                 
-                <span className="tooltiptext">Edit Profile</span>
-=======
-                <div className="txt">{username}</div>
                 <span className="tooltiptext">View Profile</span>
->>>>>>> Stashed changes
               </NavLink>
               <NavLink onClick={handleLogout} to="/login" className="right-menu log-out">
                 <div className="avt">
