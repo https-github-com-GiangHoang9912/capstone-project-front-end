@@ -51,7 +51,10 @@ const App: FC = (props: any) => {
 
   const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
 
-  const toggleMenuClass = isMenuOpen ? 'menu-open' : 'menu-close'
+  let toggleMenuClass = isMenuOpen ? 'menu-open' : 'menu-close'
+  if(isLogin) {
+    toggleMenuClass = ''
+  }
   const toggleHeaderClass = !isLogin ? 'header-open' : ''
   const mainContent = isLogin || isForgotPassword ? 'main-content' : 'main-content-transition'
   const dispatch = useDispatch()

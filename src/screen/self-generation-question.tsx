@@ -211,8 +211,6 @@ const SelfGenerate = (props: any) => {
         console.log(response.data)
       })
 
-      setDialogSentence(text)
-
       const res = await axios.post(MODEL_CHECK_DUPLICATE_URL, {
         question: text,
       })
@@ -220,6 +218,7 @@ const SelfGenerate = (props: any) => {
       const duplicateCondition = res && res.data.length > 0 && res.data[0].point > CONSTANT.CONFIDENT.point
 
       setIsDuplicate(duplicateCondition)
+      setDialogSentence(text)
       setIsOpen(true)
       refreshToken(userId)
     } catch (error) {
