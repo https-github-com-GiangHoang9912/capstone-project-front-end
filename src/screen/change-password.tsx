@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useContext } from 'react'
 import PropTypes from 'prop-types'
-import { useHistory } from 'react-router-dom'
+import LoadingBar from 'react-top-loading-bar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { faCheck, faLock, faEye } from '@fortawesome/free-solid-svg-icons'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import { AccountContext } from '../contexts/account-context'
@@ -25,6 +26,7 @@ function ChangePassword(props: any) {
   const account = accountContextData
   const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
   const [oldPassword, setOldPassword] = useState<string>('')
+  const [progress, setProgress] = useState(0)
   const [newPassword, setNewPassword] = useState<string>('')
   const [rePassword, setRePassword] = useState<string>('')
   const [validatePassword, setValidatePassword] = useState<boolean>(false)
@@ -47,7 +49,7 @@ function ChangePassword(props: any) {
 
   const handleValidatePassword = (password: string) => {
     const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}/
-    return (regex.test(password));
+    return regex.test(password)
   }
 
   const changePassword = async (e: any) => {
@@ -55,157 +57,157 @@ function ChangePassword(props: any) {
     try {
       if (handleValidatePassword(newPassword)) {
         setValidatePassword(true)
+        setProgress(progress + 10)
+        const changeDataResponse = await axios.put(
+          CHANGE_PASSWORD,
+          {
+            userId,
+            oldPassword,
+            newPassword,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        console.log('changeDataResponse', changeDataResponse)
+        if (changeDataResponse.data.status == 200 && validatePassword) {
+          handleNotification('success', `${CONSTANT.MESSAGE().CHANGE_PASSWORD_SUCCESS}`)
+          history.push('/login')
+        } else {
+          setValidatePassword(false)
+        }
+        refreshToken(userId)
+      } 
+    }catch(error){
+      console.log(error)
+    }
+  }
+  const onCheckBtnClick = useCallback((id) => {
+      setIconList((prevState) =>
+        prevState.map((icon) =>
+          icon.id === id
+            ? { ...icon, showPassword: !icon.showPassword }
+            : { ...icon, showPassword: icon.showPassword }
+        )
+      )
+    }, [])
+
+    const handleOnchange = (e: any) => {
+      setNewPassword(e.target.value)
+      if (handleValidatePassword(e.target.value)) {
+        setValidatePassword(true)
       } else {
         setValidatePassword(false)
       }
-      const changeDataResponse = await axios.put(
-        CHANGE_PASSWORD,
-        {
-          userId,
-          oldPassword,
-          newPassword,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      console.log('changeDataResponse', changeDataResponse);
-      if (changeDataResponse.data.status == 200 && validatePassword) {
-        handleNotification('success', `${CONSTANT.MESSAGE().CHANGE_PASSWORD_SUCCESS}`)
-        history.push('/login')
-      } else {
-        handleNotification('danger', `${CONSTANT.MESSAGE('Change Password').FAIL}`)
-      }
-      refreshToken(idUser)
-    } catch (error) {
-      console.error(error)
     }
-  }
 
-  const onCheckBtnClick = useCallback((id) => {
-    setIconList((prevState) =>
-      prevState.map((icon) =>
-        icon.id === id
-          ? { ...icon, showPassword: !icon.showPassword }
-          : { ...icon, showPassword: icon.showPassword }
-      )
-    )
-  }, [])
-
-  const handleOnchange = (e: any) => {
-    setNewPassword(e.target.value);
-    if (handleValidatePassword(e.target.value)) {
-      setValidatePassword(true);
-    } else {
-      setValidatePassword(false);
-    }
-  }
-
-  return (
-    <div className={className}>
-      <div className="limiter">
-        <div className="container">
-          <div className="wrap-login">
-            <div className="rules-account">
-              <div className="title">
-                <h2 className="title-h2">Change Password</h2>
+    return (
+      <div className={className}>
+        <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
+        <div className="limiter">
+          <div className="container">
+            <div className="wrap-login">
+              <div className="rules-account">
+                <div className="title">
+                  <h2 className="title-h2">Change Password</h2>
+                </div>
+                <div className="detail-rules">
+                  <h5>Password must contains: </h5>
+                  <p>
+                    <FontAwesomeIcon className="checked" icon={faCheck} />
+                    At least 6 characters.
+                  </p>
+                  <p>
+                    <FontAwesomeIcon className="checked" icon={faCheck} />
+                    At least 1 upper case letter (A-Z).
+                  </p>
+                  <p>
+                    <FontAwesomeIcon className="checked" icon={faCheck} />
+                    At least 1 lower case letter (a-z).
+                  </p>
+                  <p>
+                    <FontAwesomeIcon className="checked" icon={faCheck} />
+                    At least 1 number (0-9).
+                  </p>
+                </div>
               </div>
-              <div className="detail-rules">
-                <h5>Password must contains: </h5>
-                <p>
-                  <FontAwesomeIcon className="checked" icon={faCheck} />
-                  At least 6 characters.
-                </p>
-                <p>
-                  <FontAwesomeIcon className="checked" icon={faCheck} />
-                  At least 1 upper case letter (A-Z).
-                </p>
-                <p>
-                  <FontAwesomeIcon className="checked" icon={faCheck} />
-                  At least 1 lower case letter (a-z).
-                </p>
-                <p>
-                  <FontAwesomeIcon className="checked" icon={faCheck} />
-                  At least 1 number (0-9).
-                </p>
-              </div>
+              <form className="login-area-form">
+                <div className="password">
+                  <input
+                    type={iconList[0].showPassword ? 'text' : 'password'}
+                    key={iconList[0].id}
+                    className="input-pass"
+                    placeholder="Enter old password"
+                    onChange={(e) => setOldPassword(e.target.value)}
+                    required
+                  />
+                  <span className="icon-pass">
+                    <FontAwesomeIcon icon={faLock} />
+                  </span>
+                  <span className="icon-eye">
+                    <FontAwesomeIcon icon={faEye} onClick={() => onCheckBtnClick(iconList[0].id)} />
+                  </span>
+                </div>
+                <div className="password">
+                  <input
+                    type={iconList[1].showPassword ? 'text' : 'password'}
+                    key={iconList[1].id}
+                    className="input-pass"
+                    placeholder="Enter new password"
+                    onChange={handleOnchange}
+                    required
+                  />
+                  <span className="icon-pass">
+                    <FontAwesomeIcon icon={faLock} />
+                  </span>
+                  <span className="icon-eye">
+                    <FontAwesomeIcon icon={faEye} onClick={() => onCheckBtnClick(iconList[1].id)} />
+                  </span>
+                </div>
+                <div className="password">
+                  <input
+                    type={iconList[2].showPassword ? 'text' : 'password'}
+                    key={iconList[2].id}
+                    className="input-pass"
+                    placeholder="Re_Enter new password"
+                    onChange={(e) => setRePassword(e.target.value)}
+                    required
+                  />
+                  <span className="icon-pass">
+                    <FontAwesomeIcon icon={faLock} />
+                  </span>
+                  <span className="icon-eye">
+                    <FontAwesomeIcon icon={faEye} onClick={() => onCheckBtnClick(iconList[2].id)} />
+                  </span>
+                </div>
+                <div>
+                  {newPassword !== rePassword ? (
+                    <span className="errorPass">Re-Enter Password does not match Password</span>
+                  ) : (
+                    ' '
+                  )}
+                  {validatePassword == false && newPassword.length > 0 ? (
+                    <span className="errorPass">
+                      New password is out of the norm, look to the right to see the rule.{' '}
+                    </span>
+                  ) : (
+                    ' '
+                  )}
+                </div>
+                <div className="contain-btn">
+                  <button className="btn-login" onClick={changePassword}>
+                    Change
+                  </button>
+                </div>
+              </form>
             </div>
-            <form className="login-area-form">
-              <div className="password">
-                <input
-                  type={iconList[0].showPassword ? 'text' : 'password'}
-                  key={iconList[0].id}
-                  className="input-pass"
-                  placeholder="Enter old password"
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  required
-                />
-                <span className="icon-pass">
-                  <FontAwesomeIcon icon={faLock} />
-                </span>
-                <span className="icon-eye">
-                  <FontAwesomeIcon icon={faEye} onClick={() => onCheckBtnClick(iconList[0].id)} />
-                </span>
-              </div>
-              <div className="password">
-                <input
-                  type={iconList[1].showPassword ? 'text' : 'password'}
-                  key={iconList[1].id}
-                  className="input-pass"
-                  placeholder="Enter new password"
-                  onChange={handleOnchange}
-                  required
-                />
-                <span className="icon-pass">
-                  <FontAwesomeIcon icon={faLock} />
-                </span>
-                <span className="icon-eye">
-                  <FontAwesomeIcon icon={faEye} onClick={() => onCheckBtnClick(iconList[1].id)} />
-                </span>
-              </div>
-              <div className="password">
-                <input
-                  type={iconList[2].showPassword ? 'text' : 'password'}
-                  key={iconList[2].id}
-                  className="input-pass"
-                  placeholder="Re_Enter new password"
-                  onChange={(e) => setRePassword(e.target.value)}
-                  required
-                />
-                <span className="icon-pass">
-                  <FontAwesomeIcon icon={faLock} />
-                </span>
-                <span className="icon-eye">
-                  <FontAwesomeIcon icon={faEye} onClick={() => onCheckBtnClick(iconList[2].id)} />
-                </span>
-              </div>
-              <div>
-                {newPassword !== rePassword ? (
-                  <span className="errorPass">Re-Enter Password does not match Password</span>
-                ) : (
-                  ' '
-                )}
-                {validatePassword == false && newPassword.length > 0 ? (
-                  <span className="errorPass">New password is out of the norm, look to the
-                    right to see the rule. </span>
-                ) : (
-                  ' '
-                )}
-              </div>
-              <div className="contain-btn">
-                <button className="btn-login" onClick={changePassword}>
-                  Change
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
 
-const StyledForgotPassword = styled(ChangePassword)`
+  const StyledForgotPassword = styled(ChangePassword)`
   body,
   html {
     height: 100%;
@@ -397,7 +399,6 @@ const StyledForgotPassword = styled(ChangePassword)`
 
   @media (max-width: 48rem) {
     .wrap-login {
-
       padding: 40px 80px 81px 80px;
       display: flex;
       flex-direction: column;
@@ -450,9 +451,9 @@ const StyledForgotPassword = styled(ChangePassword)`
     .icon-eye {
       padding-right: 8px;
     }
-    .container{
+    .container {
       overflow: hidden;
     }
   }
 `
-export default StyledForgotPassword
+  export default StyledForgotPassword

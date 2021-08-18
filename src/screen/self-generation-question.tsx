@@ -81,7 +81,7 @@ const SelfGenerate = (props: any) => {
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [questions, setQuestions] = useState<Question[]>([])
   const [isDuplicate, setIsDuplicate] = useState<boolean>(false)
-  const [visibleResult, setVisibleResult] = useState<boolean>(false)
+  const [visibleResult, setVisibleResult] = useState<boolean>(true)
   const [items, setItems] = useState<AnswerInput[]>([
     {
       answer: '',
@@ -102,6 +102,11 @@ const SelfGenerate = (props: any) => {
     setTagetIndex(items.length)
     // console.log(tagetIndex)
   }
+
+  const newArrMe = [{
+    id: 11,
+    text: 'kaka'
+  }]
 
   async function handleProgress(e: any) {
     e.preventDefault()
@@ -379,7 +384,7 @@ const SelfGenerate = (props: any) => {
           {/* Display question generated */}
           {visibleResult ? (
             <div>
-              <Table columns={columns} data={questions} isPagination={false} />
+              <Table columns={columns} data={newArrMe} isPagination={false} />
             </div>
           ) : (
             ' '

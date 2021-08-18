@@ -127,7 +127,7 @@ function ViewHistory(props: any) {
                     ) : (
                       ''
                     )}
-                    <i>{item.description}</i>
+                   {item.description}
                     </span>
                   </div>
                 </div>

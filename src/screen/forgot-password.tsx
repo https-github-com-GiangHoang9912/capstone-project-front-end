@@ -1,14 +1,13 @@
 import { useState, useEffect, useContext } from 'react'
 
 import PropTypes from 'prop-types'
+import LoadingBar from 'react-top-loading-bar'
 import LockIcon from '@material-ui/icons/Lock'
 import TextField from '@material-ui/core/TextField'
 import { Button, makeStyles } from '@material-ui/core'
 import axios from 'axios'
 import styled from 'styled-components'
-// import { Redirect } from 'react-router-dom'
 import { useHistory, NavLink, Redirect } from 'react-router-dom'
-import LoadingBar from 'react-top-loading-bar'
 import * as CONSTANT from '../const'
 
 axios.defaults.withCredentials = true
@@ -106,7 +105,7 @@ const useStyles = makeStyles({
   },
 })
 
-const FORGOT_PASSWORD = `${CONSTANT.BASE_URL}/forgot-password`
+const FORGOT_PASSWORD = `${CONSTANT.BASE_URL}/verify-user`
 
 function validateEmail(email: string) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -147,17 +146,18 @@ function ForgotPassword(props: any) {
         email,
       })
       if (forgotResponse && forgotResponse.status === 200) {
+        setProgress(100)
         handleNotification('success', `${CONSTANT.MESSAGE().SEND_MAIL_SUCCESS}`)
         setEmail('')
         setProgress(100)
         history.push('/login')
       } else {
-        handleNotification('danger', `${CONSTANT.MESSAGE('Change Password').FAIL}`)
         setProgress(100)
+        handleNotification('danger', `${CONSTANT.MESSAGE('Reset Password').FAIL}`)
       }
     } catch (error) {
-      handleNotification('danger', `${CONSTANT.MESSAGE('Change Password hic').FAIL}`)
       setProgress(100)
+      handleNotification('danger', `${CONSTANT.MESSAGE('Reset Password').FAIL}`)
     }
   }
 

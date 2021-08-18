@@ -186,6 +186,7 @@ const Login: FC<LoginProps> = (props) => {
           .catch((err) => {
             console.log(err)
             stopLoading()
+            setLoading(false)
           })
         if (response && response.data && response.data.statusCode !== 401) {
           setInformation(response.data)
@@ -229,6 +230,7 @@ const Login: FC<LoginProps> = (props) => {
           .catch((err) => {
             console.log(err)
             stopLoading()
+            setLoading(false)
           })
         if (response && response.data && response.data.statusCode !== 401) {
           setInformation(response.data)
