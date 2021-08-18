@@ -56,7 +56,7 @@ function ViewHistory(props: any) {
 
   const search = (e: any) => {
     setSelect(e.target.value)
-    if (e.target.value == '------') setHistories([])
+    if (e.target.value === '------') setHistories([])
     axios.get(`${GET_HISTORY_URL}/${userId}/${e.target.value}`).then((response) => {
       setHistories(response.data)
     })

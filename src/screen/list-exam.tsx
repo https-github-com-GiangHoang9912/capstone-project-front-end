@@ -18,6 +18,8 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import axios from 'axios'
 import * as moment from 'moment'
+import LoadingBar from 'react-top-loading-bar'
+// import Progress from '../common/progress'
 import * as CONSTANT from '../const'
 import { AccountContext } from '../contexts/account-context'
 import { refreshToken } from '../services/services'
@@ -133,7 +135,8 @@ function ListExam(props: any) {
   const [openDialogView, setOpenDialogView] = useState(false)
   const [checkError, setCheckError] = useState(false)
   const [textError, setTextError] = useState('')
-
+  const [progress, setProgress] = useState(0)
+  const [showProgress, setShowProgress] = useState<Boolean>(false)
   const [scroll, setScroll] = useState('paper')
   const [idDelete, setIdDelete] = useState(0)
   const [nameExam, setNameExam] = useState('')
@@ -153,7 +156,6 @@ function ListExam(props: any) {
     axios
       .get(`${GET_SUBJECT_URL}`)
       .then((response) => {
-        // console.log('Subject data', response.data);
         setSubject(response.data)
       })
       .catch((err) => {
@@ -195,19 +197,22 @@ function ListExam(props: any) {
   }
 
   //* Get Question */
-  function takeContentByExam(idExam: number, titleExam: string) {
+  async function takeContentByExam(idExam: number, titleExam: string) {
     setOpenDialogView(true)
     setScroll(scroll)
     setNameExam(titleExam)
-    axios
-      .get(`${GET_QUESTIONS_URL}/${idExam}`)
-      .then((response) => {
-        console.log('question detail data: ', response.data)
+    try {
+      const response = await axios.get(`${GET_QUESTIONS_URL}/${idExam}`);
+      if (response && response.data) {
         setQuestion(response.data[0].question)
-      })
-      .catch((err) => {
-        console.log('Failed to get data question by examID: ', err.message)
-      })
+
+      } else {
+        setQuestion([])
+      }
+      refreshToken(idUser)
+    } catch (error) {
+      console.log('Failed to get data question by examID: ', error.message)
+    }
   }
 
   //* event when click edit */
@@ -217,9 +222,6 @@ function ListExam(props: any) {
       idSubject,
       examName,
     }
-
-    console.log('????? infor ', infor)
-
     history.push('/update-exam', { params: infor })
   }
 
@@ -348,6 +350,7 @@ function ListExam(props: any) {
                   style={{
                     fontWeight: 'bold',
                     color: '#2F6473',
+                    padding: '5px'
                   }}
                 >
                   {index + 1}. {ques.questionBank.questionText}
@@ -438,15 +441,24 @@ function ListExam(props: any) {
   const handleCreateExam = async (e: any) => {
     e.preventDefault()
     try {
+      setProgress(progress + 10)
       if (txtNameExam.trim().length > 0) {
+        const checkNameExamDuplicate = exams.filter((exam: any) =>
+          exam.examName?.toLowerCase() === txtNameExam.trim().toLowerCase())
+        if (checkNameExamDuplicate.length > 0) {
+          handleNotification('warning', `${CONSTANT.MESSAGE("Create quiz due to duplicate name").FAIL}`);
+          return;
+        }
         const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
           subjectId,
           examName: txtNameExam,
         })
+
         if (response && response.data) {
           handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
           setOpenDialogCreate(false);
           setTxtNameExam('');
+          setProgress(100)
         } else {
           handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
         }
@@ -457,15 +469,17 @@ function ListExam(props: any) {
         setCheckError(true)
         setTextError('Name exam cannot be empty!')
         handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
-
+        setProgress(100)
       }
     } catch (error) {
+      setProgress(100)
       console.error(error)
     }
   }
 
   return (
     <div className={className}>
+      <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="limiter">
         <div className="container">
           <div className="main">

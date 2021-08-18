@@ -8,6 +8,7 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
+import LoadingBar from 'react-top-loading-bar'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -222,6 +223,7 @@ function UpdateExam(props: any) {
   const [valueTypeAnswer, setValueTypeAnswer] = useState('tf')
   const [correctAnswerTypeTf, setCorrectAnswerTypeTf] = useState('true')
   const [valueCorrectAnswer, setValueCorrectAnswer] = useState('0')
+  const [progress, setProgress] = useState(0)
 
   const location: any = useLocation()
   const { idExam } = location.state.params
@@ -288,27 +290,30 @@ function UpdateExam(props: any) {
   const handleSaveQuestion = async (e: any) => {
     e.preventDefault()
     try {
+      setProgress(progress + 10)
       const questionAdd = arrayCheck.map((item: any) => ({
         questionBankId: item,
         examId: idExam,
       }))
       if (questionAdd.length != 0) {
         const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd);
-        console.log('data', response.data)
         if (response && response.data) {
           console.log(response)
           setOpenDialogAdd(false)
           handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
+          setProgress(100)
         } else {
           handleNotification('danger', `${CONSTANT.MESSAGE("Add Question").FAIL}`);
         }
         refreshToken(userId)
       } else {
         handleNotification('danger', `${CONSTANT.MESSAGE("Add Question").NO_QUESTION_SELECTED}`);
+        setProgress(100)
       }
 
     } catch (error) {
       console.error(error)
+      setProgress(100)
     }
   }
   const handleCloseDialogAdd = async (e: any) => {
@@ -364,9 +369,10 @@ function UpdateExam(props: any) {
   const handleSaveUpdateQuestion = async (e: any) => {
     e.preventDefault()
     try {
-      console.log('lengh', currentQuestionAnswerGroup.length)
-      console.log('currentQuestionAnswerGroup', currentQuestionAnswerGroup)
-      console.log('valueTypeAnswer', valueTypeAnswer)
+      // console.log('lengh', currentQuestionAnswerGroup.length)
+      // console.log('currentQuestionAnswerGroup', currentQuestionAnswerGroup)
+      // console.log('valueTypeAnswer', valueTypeAnswer)
+      setProgress(progress + 10)
       if (currentQuestionAnswerGroup.length > 0) {
         const elementIsEmpty = currentQuestionAnswerGroup.filter((item: any) => item.answer.answerText.trim().length <= 0);
         if (elementIsEmpty.length == 0) {
@@ -378,6 +384,7 @@ function UpdateExam(props: any) {
           if (response) {
             console.log('success')
             handleNotification('success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`)
+            setProgress(100)
             setOpenDialogUpdate(false)
           } else {
             handleNotification('danger', `${CONSTANT.MESSAGE("Update Question").FAIL}`);
@@ -385,7 +392,7 @@ function UpdateExam(props: any) {
             setOpenDialogUpdate(true)
           }
         } else {
-          handleNotification('danger', `${CONSTANT.MESSAGE("Update question cause answer is empty").FAIL}`)
+          handleNotification('danger', `${CONSTANT.MESSAGE("update question cause answer is empty").FAIL}`)
           setOpenDialogUpdate(true)
         }
       } else {
@@ -395,6 +402,7 @@ function UpdateExam(props: any) {
 
       refreshToken(userId)
     } catch (error) {
+      setProgress(100)
       console.error(error)
     }
   }
@@ -701,8 +709,8 @@ function UpdateExam(props: any) {
 
   return (
     <div className={className}>
+      <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="create-exam">
-
         <div className="container-exam">
           <div className="main">
             <div className={classes.titleOfExam}>

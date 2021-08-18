@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useContext } from 'react'
 import PropTypes from 'prop-types'
+import { useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { faCheck, faLock, faEye } from '@fortawesome/free-solid-svg-icons'
@@ -19,6 +20,7 @@ ChangePassword.defaultProps = {
 const CHANGE_PASSWORD = `${CONSTANT.BASE_URL}/user/change-password`
 function ChangePassword(props: any) {
   const { className, handleNotification } = props
+  const history = useHistory()
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
   const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
@@ -70,6 +72,7 @@ function ChangePassword(props: any) {
       console.log('changeDataResponse', changeDataResponse);
       if (changeDataResponse.data.status == 200 && validatePassword) {
         handleNotification('success', `${CONSTANT.MESSAGE().CHANGE_PASSWORD_SUCCESS}`)
+        history.push('/login')
       } else {
         handleNotification('danger', `${CONSTANT.MESSAGE('Change Password').FAIL}`)
       }

@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
+import { useHistory } from 'react-router-dom'
 import TextField from '@material-ui/core/TextField'
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Carousel from 'react-elastic-carousel'
 import Select from '@material-ui/core/Select'
 import Input from '@material-ui/core/Input'
@@ -10,11 +10,18 @@ import Button from '@material-ui/core/Button'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
 import Chip from '@material-ui/core/Chip'
+import DoneIcon from '@material-ui/icons/Done'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import IconButton from '@material-ui/core/IconButton'
 import SvgIcon from '@material-ui/core/SvgIcon'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogCustom from '../common/dialog'
+
 import { AccountContext } from '../contexts/account-context'
-import Dialog from '../common/dialog'
+import Progress from '../common/progress'
 import Table from '../common/tableReact'
 
 import { refreshToken } from '../services/services'
@@ -56,16 +63,20 @@ const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
 
 const SelfGenerate = (props: any) => {
   const { className, handleNotification } = props
+  const [showProgress, setShowProgress] = useState<Boolean>(false)
   const [isOpen, setIsOpen] = useState(false)
+  const [openDialogRemove, setOpenDialogRemove] = useState(false)
   const [isDisable, setIsDisable] = useState(false)
   const [dialogContent, setDialogContent] = useState<any>()
   const [subjectId, setSubjectId] = useState<Number>(1)
   const [sentence, setSentence] = useState('')
   const [progress, setProgress] = useState(0)
   const [tagetIndex, setTagetIndex] = useState(1)
+  const history = useHistory()
   const classes = useStyles()
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
+  const [idRemove, setIdRemove] = useState(0)
   const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [questions, setQuestions] = useState<Question[]>([])
@@ -89,41 +100,32 @@ const SelfGenerate = (props: any) => {
     })
     setItems(newArr)
     setTagetIndex(items.length)
-    console.log(tagetIndex)
+    // console.log(tagetIndex)
   }
 
-  const removeItem = (index: number) => (e: any) => {
-    e.preventDefault()
-    if (items.length === 1) return
-    items.splice(index, 1)
-    const newArr = [...items]
-    setItems(newArr)
-  }
   async function handleProgress(e: any) {
     e.preventDefault()
-    if (!items[0].answer || !items[0].context) {
-      handleNotification('danger', `${CONSTANT.MESSAGE().BLANK_INPUT}`)
-    } else {
-      try {
-        setIsDisable(true)
-        setProgress(progress + 10)
-        const response = await axios.post(MODEL_SELF_GENERATION_URL, items)
-        console.log(response)
-        if (response && response.data) {
-          const newArr = response.data.question?.map((item: string, index: number) => ({
-            id: index + 1,
-            text: item,
-          }))
-          setQuestions(newArr)
-          setProgress(100)
-          setVisibleResult(true)
-          setIsDisable(false)
-          handleNotification('success', `${CONSTANT.MESSAGE().GEN_SUCCESS}`)
-        }
-        refreshToken(userId)
-      } catch (error) {
-        console.error(error)
+    try {
+      setIsDisable(true)
+      setProgress(progress + 10)
+      const response = await axios.post(MODEL_SELF_GENERATION_URL, items)
+      console.log(response)
+      if (response && response.data) {
+        const newArr = response.data.question?.map((item: string, index: number) => ({
+          id: index + 1,
+          text: item,
+        }))
+        setQuestions(newArr)
+        setProgress(100)
+        setVisibleResult(true)
+        setIsDisable(false)
+        handleNotification('success', `${CONSTANT.MESSAGE().GEN_SUCCESS}`)
       }
+      refreshToken(userId)
+    } catch (error) {
+      console.error(error)
+      setProgress(100)
+      handleNotification('danger', `${CONSTANT.MESSAGE('Generate Questions !!').FAIL}`)
     }
   }
 
@@ -246,6 +248,30 @@ const SelfGenerate = (props: any) => {
     setItems(newArr)
   }
 
+  const removeItem = (index: number) => (e: any) => {
+    e.preventDefault()
+    setIdRemove(index)
+    if (index === 0) {
+      setOpenDialogRemove(false)
+    } else {
+      setOpenDialogRemove(true)
+    }
+  }
+
+  const handleAcceptRemove = (index: number) => (e: any) => {
+    e.preventDefault()
+    if (items.length === 1) return
+    items.splice(index, 1)
+    const newArr = [...items]
+    setItems(newArr)
+    setOpenDialogRemove(false)
+  }
+
+  const handleDialogCloseRemove = (e: any) => {
+    e.preventDefault()
+    setOpenDialogRemove(false)
+  }
+
   return (
     <div className={className}>
       <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
@@ -265,7 +291,6 @@ const SelfGenerate = (props: any) => {
                     </SvgIcon>
                   </IconButton>
                 </div>
-
                 <p className="label">Input Answers {index + 1}</p>
                 <TextField
                   id="standard-full-width"
@@ -284,12 +309,12 @@ const SelfGenerate = (props: any) => {
                   id="standard-full-width"
                   multiline
                   placeholder="Input Context"
-                  rows={3}
-                  rowsMax={10}
                   style={{ margin: 8 }}
+                  rowsMax={10}
                   fullWidth
                   variant="outlined"
                   value={item.context}
+                  rows={3}
                   onChange={handleInputContext(index)}
                 />
 
@@ -302,6 +327,39 @@ const SelfGenerate = (props: any) => {
               </div>
             ))}
           </Carousel>
+          {/* Dialog confirm remove iteam self generate */}
+          <div>
+            <Dialog open={openDialogRemove} onClose={handleDialogCloseRemove}>
+              <DialogTitle
+                style={{
+                  backgroundColor: '#ff6b81',
+                  color: '#ffffff',
+                  fontWeight: 'bold',
+                  padding: '5px 24px',
+                }}
+              >
+                <h3 className="title-delete">Delete</h3>
+              </DialogTitle>
+              <DialogContent
+                style={{
+                  padding: '35px 24px',
+                }}
+              >
+                <span>
+                  Do you want delete this section ?
+                </span>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleAcceptRemove(idRemove)} color="secondary">
+                  Delete
+                </Button>
+                <Button onClick={handleDialogCloseRemove} color="primary">
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
+
+          </div>
           <div className="controls-wrapper">
             <AddCircleIcon color="primary" style={{ fontSize: 40 }} onClick={addItem} />
           </div>
@@ -317,7 +375,7 @@ const SelfGenerate = (props: any) => {
           </Button>
           <br />
           {/* call components ProgressBar */}
-          
+          {showProgress ? <Progress percentage={60} /> : ''}
           {/* Display question generated */}
           {visibleResult ? (
             <div>
@@ -327,7 +385,7 @@ const SelfGenerate = (props: any) => {
             ' '
           )}
           {/* Dialog show select subject to add  */}
-          <Dialog
+          <DialogCustom
             title="Add question"
             buttonAccept="Add"
             buttonCancel="Cancel"
@@ -356,7 +414,7 @@ const SelfStyle = styled(SelfGenerate)`
     margin-top: 6em;
   }
   .form-container h2 {
-    padding-top: 1.5em;
+    padding-top: 0.5em;
   }
   form {
     width: 80%;
