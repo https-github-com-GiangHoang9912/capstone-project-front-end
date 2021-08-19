@@ -145,7 +145,7 @@ const SelfGenerate = (props: any) => {
   const handleAccept = async () => {
     try {
       setIsOpen(false)
-      setProgress(progress + 10)
+
       Promise.all([
         await axios.post(ADD_SENTENCE_DATASET_URL, {
           question: sentence,
@@ -155,14 +155,10 @@ const SelfGenerate = (props: any) => {
           subjectId,
         }),
       ])
-      setProgress(100)
-      handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
       refreshToken(idUser)
       setSentence('')
     } catch (error) {
       console.error(error)
-      setProgress(100)
-      handleNotification('danger', `${CONSTANT.MESSAGE("Add Questions").FAIL}`)
     }
   }
 
@@ -217,7 +213,6 @@ const SelfGenerate = (props: any) => {
 
   const handleCheckDuplication = async (text: string) => {
     try {
-      setProgress(progress + 10)
       await axios.get(GET_SUBJECT_URL).then((response) => {
         setSubjects(response.data)
         console.log(response.data)
@@ -236,17 +231,14 @@ const SelfGenerate = (props: any) => {
       if (condition) {
         setDialogContent(duplicatedDialogContent)
         setIsOpen(true)
-        setProgress(100)
       } else {
         setDialogContent(subjectDialogContent)
         setIsOpen(true)
-        setProgress(100)
       }
 
       refreshToken(userId)
     } catch (error) {
       console.error(error)
-      setProgress(100)
     }
   }
   const handleInputAnswer = (index: number) => (e: any) => {
