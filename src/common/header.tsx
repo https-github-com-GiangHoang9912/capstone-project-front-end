@@ -86,7 +86,7 @@ const Header: FC<HeaderProps> = (props) => {
                   <img id="avatar" src={avatar || 'images/avatar2.png'} alt="avt" />
                 </div>
                 
-                <span className="tooltiptext">Edit Profile</span>
+                <span className="tooltiptext">View Profile</span>
               </NavLink>
               <NavLink onClick={handleLogout} to="/login" className="right-menu log-out">
                 <div className="avt">

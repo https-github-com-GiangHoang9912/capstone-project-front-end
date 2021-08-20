@@ -1,8 +1,8 @@
-import React, { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
-import { useHistory } from 'react-router-dom'
 import TextField from '@material-ui/core/TextField'
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Carousel from 'react-elastic-carousel'
 import Select from '@material-ui/core/Select'
 import Input from '@material-ui/core/Input'
@@ -10,18 +10,11 @@ import Button from '@material-ui/core/Button'
 import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
 import Chip from '@material-ui/core/Chip'
-import DoneIcon from '@material-ui/icons/Done'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import IconButton from '@material-ui/core/IconButton'
 import SvgIcon from '@material-ui/core/SvgIcon'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogCustom from '../common/dialog'
-
 import { AccountContext } from '../contexts/account-context'
-import Progress from '../common/progress'
+import Dialog from '../common/dialog'
 import Table from '../common/tableReact'
 
 import { refreshToken } from '../services/services'
@@ -63,25 +56,21 @@ const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
 
 const SelfGenerate = (props: any) => {
   const { className, handleNotification } = props
-  const [showProgress, setShowProgress] = useState<Boolean>(false)
   const [isOpen, setIsOpen] = useState(false)
-  const [openDialogRemove, setOpenDialogRemove] = useState(false)
   const [isDisable, setIsDisable] = useState(false)
   const [dialogContent, setDialogContent] = useState<any>()
   const [subjectId, setSubjectId] = useState<Number>(1)
-  const [sentence, setSentence] = useState('')
+  const [dialogSentence, setDialogSentence] = useState('')
   const [progress, setProgress] = useState(0)
   const [tagetIndex, setTagetIndex] = useState(1)
-  const history = useHistory()
   const classes = useStyles()
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
-  const [idRemove, setIdRemove] = useState(0)
   const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
   const [subjects, setSubjects] = useState<Subject[]>([])
   const [questions, setQuestions] = useState<Question[]>([])
   const [isDuplicate, setIsDuplicate] = useState<boolean>(false)
-  const [visibleResult, setVisibleResult] = useState<boolean>(true)
+  const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const [items, setItems] = useState<AnswerInput[]>([
     {
       answer: '',
@@ -100,46 +89,44 @@ const SelfGenerate = (props: any) => {
     })
     setItems(newArr)
     setTagetIndex(items.length)
-    // console.log(tagetIndex)
   }
 
-  const newArrMe = [{
-    id: 11,
-    text: 'kaka'
-  }]
-
+  const removeItem = (index: number) => (e: any) => {
+    e.preventDefault()
+    if (items.length === 1) return
+    items.splice(index, 1)
+    const newArr = [...items]
+    setItems(newArr)
+  }
   async function handleProgress(e: any) {
     e.preventDefault()
-    try {
-      setIsDisable(true)
-      setProgress(progress + 10)
-      const response = await axios.post(MODEL_SELF_GENERATION_URL, items)
-      console.log(response)
-      if (response && response.data) {
-        const newArr = response.data.question?.map((item: string, index: number) => ({
-          id: index + 1,
-          text: item,
-        }))
-        setQuestions(newArr)
-        setProgress(100)
-        setVisibleResult(true)
-        setIsDisable(false)
-        handleNotification('success', `${CONSTANT.MESSAGE().GEN_SUCCESS}`)
+    if (!items[0].answer || !items[0].context) {
+      handleNotification('danger', `${CONSTANT.MESSAGE().BLANK_INPUT}`)
+    } else {
+      try {
+        setIsDisable(true)
+        setProgress(progress + 10)
+        const response = await axios.post(MODEL_SELF_GENERATION_URL, items)
+        if (response && response.data) {
+          const newArr = response.data.question?.map((item: string, index: number) => ({
+            id: index + 1,
+            text: item,
+          }))
+          setQuestions(newArr)
+          setProgress(100)
+          setVisibleResult(true)
+          setIsDisable(false)
+          handleNotification('success', `${CONSTANT.MESSAGE().GEN_SUCCESS}`)
+        }
+        refreshToken(userId)
+      } catch (error) {
+        console.error(error)
       }
-      refreshToken(userId)
-    } catch (error) {
-      console.error(error)
-      setProgress(100)
-      handleNotification('danger', `${CONSTANT.MESSAGE('Generate Questions !!').FAIL}`)
     }
   }
 
   const handleDialogClose = () => {
     setIsOpen(false)
-  }
-
-  const handleChange = (event: any) => {
-    setSubjectId(Number(event.target.value))
   }
 
   const handleAccept = async () => {
@@ -148,25 +135,22 @@ const SelfGenerate = (props: any) => {
 
       Promise.all([
         await axios.post(ADD_SENTENCE_DATASET_URL, {
-          question: sentence,
+          question: dialogSentence,
         }),
         await axios.post(ADD_QUESTION_TO_BANK, {
-          question: sentence,
+          question: dialogSentence,
           subjectId,
         }),
       ])
       refreshToken(idUser)
-      setSentence('')
+      
+      setDialogSentence('')
     } catch (error) {
       console.error(error)
     }
   }
 
   const columns = [
-    {
-      Header: 'No. ',
-      accessor: 'id',
-    },
     {
       Header: 'Question',
       accessor: 'text',
@@ -178,24 +162,27 @@ const SelfGenerate = (props: any) => {
           label="Add"
           clickable
           color="secondary"
-          onClick={() => handleCheckDuplication(cell.row.original.text)}
+          onClick={() => handleCheckDuplicationThenAdd(cell.row.original.text)}
           variant="outlined"
         />
       ),
     },
   ]
 
-  {
-    /* Content subject select dialog */
-  }
-  const subjectDialogContent = (
+  const duplicatedDialogContent = (
+    <div className={className}>
+      <h4>{dialogSentence} was duplicate</h4>
+    </div>
+  )
+
+  const selectSubjectDialogContent = (
     <div className={className}>
       <h4>Select a subject to add a question</h4>
       <Select
         className="select-subject"
         native
         value={subjectId}
-        onChange={handleChange}
+        onChange={(event: any) => setSubjectId(Number(event.target.value))}
         input={<Input id="demo-dialog-native" />}
       >
         {subjects.map((sub: Subject) => (
@@ -205,37 +192,30 @@ const SelfGenerate = (props: any) => {
     </div>
   )
 
-  const duplicatedDialogContent = (
-    <div className={className}>
-      <h4>{sentence} was duplicate</h4>
-    </div>
-  )
+  useEffect(() => {
+    if (isDuplicate) {
+      setDialogContent(duplicatedDialogContent)
+    } else {
+      setDialogContent(selectSubjectDialogContent)
+    }
+  }, [dialogSentence, subjectId])
 
-  const handleCheckDuplication = async (text: string) => {
+  const handleCheckDuplicationThenAdd = async (text: string) => {
     try {
       await axios.get(GET_SUBJECT_URL).then((response) => {
         setSubjects(response.data)
         console.log(response.data)
       })
 
-      setSentence(() => text)
-
       const res = await axios.post(MODEL_CHECK_DUPLICATE_URL, {
         question: text,
       })
 
-      const condition = res && res.data.length > 0 && res.data[0].point > CONSTANT.CONFIDENT.point
+      const duplicateCondition = res && res.data.length > 0 && res.data[0].point > CONSTANT.CONFIDENT.point
 
-      setIsDuplicate(condition)
-
-      if (condition) {
-        setDialogContent(duplicatedDialogContent)
-        setIsOpen(true)
-      } else {
-        setDialogContent(subjectDialogContent)
-        setIsOpen(true)
-      }
-
+      setIsDuplicate(duplicateCondition)
+      setDialogSentence(text)
+      setIsOpen(true)
       refreshToken(userId)
     } catch (error) {
       console.error(error)
@@ -251,30 +231,6 @@ const SelfGenerate = (props: any) => {
     const newArr = [...items]
     newArr[index].context = e.target.value
     setItems(newArr)
-  }
-
-  const removeItem = (index: number) => (e: any) => {
-    e.preventDefault()
-    setIdRemove(index)
-    if (index === 0) {
-      setOpenDialogRemove(false)
-    } else {
-      setOpenDialogRemove(true)
-    }
-  }
-
-  const handleAcceptRemove = (index: number) => (e: any) => {
-    e.preventDefault()
-    if (items.length === 1) return
-    items.splice(index, 1)
-    const newArr = [...items]
-    setItems(newArr)
-    setOpenDialogRemove(false)
-  }
-
-  const handleDialogCloseRemove = (e: any) => {
-    e.preventDefault()
-    setOpenDialogRemove(false)
   }
 
   return (
@@ -296,6 +252,7 @@ const SelfGenerate = (props: any) => {
                     </SvgIcon>
                   </IconButton>
                 </div>
+
                 <p className="label">Input Answers {index + 1}</p>
                 <TextField
                   id="standard-full-width"
@@ -314,12 +271,12 @@ const SelfGenerate = (props: any) => {
                   id="standard-full-width"
                   multiline
                   placeholder="Input Context"
-                  style={{ margin: 8 }}
+                  rows={3}
                   rowsMax={10}
+                  style={{ margin: 8 }}
                   fullWidth
                   variant="outlined"
                   value={item.context}
-                  rows={3}
                   onChange={handleInputContext(index)}
                 />
 
@@ -332,39 +289,6 @@ const SelfGenerate = (props: any) => {
               </div>
             ))}
           </Carousel>
-          {/* Dialog confirm remove iteam self generate */}
-          <div>
-            <Dialog open={openDialogRemove} onClose={handleDialogCloseRemove}>
-              <DialogTitle
-                style={{
-                  backgroundColor: '#ff6b81',
-                  color: '#ffffff',
-                  fontWeight: 'bold',
-                  padding: '5px 24px',
-                }}
-              >
-                <h3 className="title-delete">Delete</h3>
-              </DialogTitle>
-              <DialogContent
-                style={{
-                  padding: '35px 24px',
-                }}
-              >
-                <span>
-                  Do you want delete this section ?
-                </span>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleAcceptRemove(idRemove)} color="secondary">
-                  Delete
-                </Button>
-                <Button onClick={handleDialogCloseRemove} color="primary">
-                  Cancel
-                </Button>
-              </DialogActions>
-            </Dialog>
-
-          </div>
           <div className="controls-wrapper">
             <AddCircleIcon color="primary" style={{ fontSize: 40 }} onClick={addItem} />
           </div>
@@ -380,17 +304,17 @@ const SelfGenerate = (props: any) => {
           </Button>
           <br />
           {/* call components ProgressBar */}
-          {showProgress ? <Progress percentage={60} /> : ''}
+          
           {/* Display question generated */}
           {visibleResult ? (
             <div>
-              <Table columns={columns} data={newArrMe} isPagination={false} />
+              <Table columns={columns} data={questions} isPagination={false} />
             </div>
           ) : (
             ' '
           )}
           {/* Dialog show select subject to add  */}
-          <DialogCustom
+          <Dialog
             title="Add question"
             buttonAccept="Add"
             buttonCancel="Cancel"
@@ -419,7 +343,7 @@ const SelfStyle = styled(SelfGenerate)`
     margin-top: 6em;
   }
   .form-container h2 {
-    padding-top: 0.5em;
+    padding-top: 1.5em;
   }
   form {
     width: 80%;
@@ -461,12 +385,10 @@ const SelfStyle = styled(SelfGenerate)`
     border-radius: 5px;
     box-shadow: rgba(118, 176, 230, 0.2) 4px 8px 24px;
   }
-
   .item-delete {
     display: flex;
     justify-content: flex-end;
   }
-
   .controls-wrapper {
     display: flex;
     text-align: start;
@@ -474,7 +396,6 @@ const SelfStyle = styled(SelfGenerate)`
     margin: auto;
     justify-content: flex-end;
   }
-
   .icon-delete {
     display: flex;
     justify-content: flex-end;
@@ -483,18 +404,15 @@ const SelfStyle = styled(SelfGenerate)`
     font-size: 3em !important;
     padding-right: 2.5em;
   }
-
   .svg-icon {
     width: 1em;
     height: 1em;
   }
-
   .svg-icon path,
   .svg-icon polygon,
   .svg-icon rect {
     fill: #ca3434;
   }
-
   .svg-icon circle {
     stroke: #ca3434;
     stroke-width: 1;
