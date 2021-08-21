@@ -197,7 +197,9 @@ function Duplicate(props: any) {
   }
   const addSubject = async () => {
     try {
-      const response = await axios.post(`${ADD_SUBJECT_URL}/${subjectName}`)
+      const response = await axios.post(`${ADD_SUBJECT_URL}`, {
+        subjectName
+      })
       if (response && response.data) {
         handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
         axios.get(GET_SUBJECT_URL).then((res) => {
