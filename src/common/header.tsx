@@ -73,7 +73,7 @@ const Header: FC<HeaderProps> = (props) => {
           <NavLink to="/home">
             <img
               className="cmsIcon"
-              src="https://cmshn.fpt.edu.vn/pluginfile.php/1/core_admin/logocompact/0x70/1597744132/2020-FPTU-Eng.png"
+              src="images/ddsgq.png"
               alt=""
             />
           </NavLink>
@@ -127,7 +127,7 @@ const StyledHeader = styled(Header)`
     text-decoration: none;
   }
 
-  
+
 
   .right-menu {
     padding: 5px;
