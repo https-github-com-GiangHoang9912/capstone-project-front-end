@@ -46,12 +46,16 @@ const customTheme = createMuiTheme({
       paper: {
         // Some CSS 
         width: drawerWidth,
-        marginTop: '73px',
+        marginTop: '62px',
         zIndex: 1,
         border: 'none',
-        background: 'linear-gradient(to right, #5691c8, #454eca)',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        filter: 'brightness(1.1)',
+        background: 'url("https://static.vecteezy.com/system/resources/previews/002/063/012/non_2x/abstract-connecting-dots-and-lines-with-geometric-background-modern-technology-connection-science-polygonal-structure-background-illustration-vector.jpg")',
         color: '#c5c5c5',
         padding: '0 0.5rem',
+        boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px;'
       },
     },
   },
@@ -128,7 +132,7 @@ export default styled(PersistentDrawerLeft)`
   margin-top: 77px;
   border-top: 0;
   .active-li {
-    background: #303f9f;
+    background: #424c9e;
     font-weight: bold;
     color: #fff;
     border-radius: 10px;
@@ -136,7 +140,8 @@ export default styled(PersistentDrawerLeft)`
   li {
     height: 50px;
     padding: 0;
-    color: #fff;
+    color: #000;
+    font-weight: 400;
     margin: 10px 0;
     font-size: 0.9rem;
     a {
@@ -152,7 +157,7 @@ export default styled(PersistentDrawerLeft)`
     }
   }
   li:hover {
-    background-color: #303f9f;
+    background-color: #6f7bdb;
     border-radius: 10px;
   }
 `

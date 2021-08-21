@@ -15,34 +15,7 @@ HomePage.defaultProps = {
 
 const useStyles = makeStyles((theme) => ({
   root: {},
-  btn: {
-    color: 'white',
-    width: 200,
-    height: 200,
-    margin: '1rem',
-    boxShadow: '0 3px 5px 2px rgba(0, 0, 0, .3)',
-    backgroundSize: "cover",
-    transition: 'filter 0.5s ease-in-out',
-    '&:hover': {
-       filter: 'grayscale(60%)',
-      
-    },
-    '@media (max-width: 780px)' : {
-      width: 330,
-      height: 330,
-      marginTop: '2rem',
-    }
-    
-  },
-  btnCheck: {
-    backgroundImage: 'url("images/duplicate.png")',
-  },
-  btnSelf: {
-    backgroundImage: 'url("images/self.png")',
-  },
-  btnExam: {
-    backgroundImage: 'url("images/Exam.png")',
-  },
+
   btnScroll: {
     '@media (max-width: 780px)' : {
       width: 100,
@@ -90,7 +63,7 @@ function HomePage(props: any) {
                 smooth={true}
                 offset={-70}
                 duration={700}
-              ><Button variant="contained" color="secondary" className={classes.btnScroll}>
+              ><Button variant="contained" color="primary" className={classes.btnScroll}>
               Get Started
             </Button></Link>
           </div>
@@ -102,14 +75,22 @@ function HomePage(props: any) {
         </div>
         <div className="function">
           <NavLink to="/check-duplicate" className="link">
-            <Button variant="contained" color="primary" className={`${classes.btnCheck} ${classes.btn}`} /> 
+        
+            <div className="item item-check"> 
+            <h2 className="function-title">Check Duplication</h2>
+           </div>
           </NavLink>
           <NavLink to="/self-generate" className="link">
-            <Button variant="contained" color="primary" className={`${classes.btnSelf} ${classes.btn}`} />
+          <div className="item item-self"> 
+            <h2 className="function-title">Self-generated Question</h2>
+          </div>
           </NavLink>
           <NavLink to="/exam" className="link">
-            <Button variant="contained" color="primary" className={`${classes.btnExam} ${classes.btn}`} />
+          <div className="item item-exam"> 
+            <h2 className="function-title">Create Exam</h2>
+          </div>
           </NavLink>
+          
         </div>
         <div className="home-title">
         <h2 className="main-ft title-task">About our system</h2>
@@ -140,23 +121,26 @@ const HomeStyled = styled(HomePage)`
   width: 100%;
   .container{
     width: 100%;
-    background-color: #fff;
+    background-color: #f8f8f8;
   }
   .introduction {
     width: 100%;
-    height: 650px;
-    background-image: 
-      url('images/banner.png');
+    height: 680px;
+    padding: 4rem 2rem;
+    border:none;
+    background-image: url('https://assodigitale.it/wp-content/uploads/2019/12/in-che-modo-lascesa-del-trading-finanziario-influenza-la-fintech.jpg');
     background-repeat: no-repeat;
+    filter: brightness(1.1);
     background-size: cover;
-   
-
   }
   
   .intro{
     text-align: start;
     width: 40%;
-    padding: 5rem 0rem 0rem 10rem;
+    margin: 2rem 0rem;
+    padding: 2rem;
+
+    
   }
   .intro-title {
     font-size: 4rem;
@@ -182,7 +166,7 @@ const HomeStyled = styled(HomePage)`
 
   .main-ft{
     font-size: 30px;
-    margin: 4rem 0 0  2rem;
+    margin: 6rem 0 0  2rem;
     line-height: 40px;
   }
   
@@ -203,13 +187,59 @@ const HomeStyled = styled(HomePage)`
   }
  
   .function {
-    width: 80%;
     padding: 1rem;
-    margin: 0 auto;
+    margin: 1rem;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+  }
+  .function-title{
+    color: #fff;
+    width: 100%;
+    font-size: 2.2rem;
+    padding: 1rem 2rem;
+    transition:  visibility 0.3s linear 300ms;
+    font-weight: 700;
+  }
+  .item{
+    margin: 1rem;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 480px;
+    border-radius: 10px;
+    box-shadow: 0 3px 5px 2px rgba(0, 0, 0, .3);
+    height: 300px;
+    background-size: cover;
+    transition: filter 0.3s ease-in-out;
+  }
+  .item:hover{
+    filter: brightness(1.6);
+  }
+  .item:hover  .function-title{
+    text-shadow: 3px 3px rgba(0, 0, 0, 0.8);
+  }
+  .item-check{
+    background-image: linear-gradient(
+      rgba(0, 0, 0, 0.3),
+      rgba(0, 0, 0, 0.3)
+    ), url("https://cdn.zmescience.com/wp-content/uploads/2020/01/ai-and-dev-1024x575.jpg")
+  }
+  .item-self{
+    background-image:linear-gradient(
+      rgba(0, 0, 0, 0.3),
+      rgba(0, 0, 0, 0.3)
+    ), url("https://itchronicles.com/wp-content/uploads/2021/06/Natural-Language-Processing-Jobs-1024x528.jpg")
+  }
+  .item-exam{
+    width: 1000px;
+    height: 200px;
+    background-image: linear-gradient(
+      rgba(0, 0, 0, 0.3),
+      rgba(0, 0, 0, 0.3)
+    ), url("https://www.nremt.org/getmedia/706353d5-fae7-4431-b71a-b88c91d4b931/exam-header.jpg?width=800&height=200")
   }
   .technology-contain{
     width: 100%;
@@ -224,6 +254,9 @@ const HomeStyled = styled(HomePage)`
   .technology-item{
     text-align: center;
     margin: 1rem;
+    background-color:#fff;
+    border-radius: 5px;
+    
     border: 1px solid #e2e7fa;
     width: 30%;
     min-height: 300px;
@@ -260,7 +293,7 @@ const HomeStyled = styled(HomePage)`
     }
     .intro{
       width: 60%;
-      padding: 5rem 0rem 0rem 6rem;
+      padding: 0rem 0rem 0rem 1rem;
       margin: 0;
     }
     .intro-title{
@@ -273,15 +306,27 @@ const HomeStyled = styled(HomePage)`
     .technology-item{
       width: 70%
     }
+    .item-exam{
+      width: 480px;
+      height: 300px;
+    }
   }
-  @media screen and (min-device-width: 781px) and (max-device-width: 1024px) {
+  @media screen and (min-device-width: 781px) and (max-device-width: 1172px) {
      .function, .technology{
        width: 100%;
      }
      .intro{
       width: 60%;
-      padding: 5rem 0rem 0rem 10rem;
+      padding: 1rem 0rem 0rem 3rem;
       margin: 0;
+    }
+    .item{
+      width: 620px;
+      height: 320px;
+    }
+    .item-exam{
+      width: 620px;
+      height: 320px;
     }
   }
 `
