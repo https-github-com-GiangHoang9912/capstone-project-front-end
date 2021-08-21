@@ -217,6 +217,7 @@ function Duplicate(props: any) {
       setProgress(progress + 10)
       const formData = new FormData()
       formData.append('train', file, file.name)
+      formData.append('subject', `${subjectId}`)
 
       const response = await axios.post(ADD_FILE_DATASET_URL, formData)
 
