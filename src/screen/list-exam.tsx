@@ -153,13 +153,15 @@ function ListExam(props: any) {
 
   //* Get subject */
   useEffect(() => {
+    console.log('url', GET_SUBJECT_URL)
     axios
       .get(`${GET_SUBJECT_URL}`)
       .then((response) => {
-        setSubject(response.data)
+        console.log('laalala', response.data)
+        setSubject(() => response.data)
       })
       .catch((err) => {
-        console.log('Failed to fetch data subject by userID: ', err.message)
+        console.log('Failed to fetch data subject: ', err.message)
       })
   }, [])
 
@@ -457,6 +459,7 @@ function ListExam(props: any) {
           setProgress(100)
         } else {
           handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
+          setProgress(100)
         }
         setCheckError(false)
         setTextError('')

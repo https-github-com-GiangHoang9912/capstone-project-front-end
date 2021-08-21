@@ -1,4 +1,4 @@
-import react, { useState, useEffect, useRef, useCallback, useContext } from 'react'
+import react, { useRef, useState, useEffect, useCallback, useContext } from 'react'
 import PropTypes from 'prop-types'
 
 // import Checkbox from '@material-ui/core/Checkbox';
@@ -21,6 +21,7 @@ import styled from 'styled-components'
 import axios from 'axios'
 import TextField from '@material-ui/core/TextField'
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle'
+import SearchIcon from '@material-ui/icons/Search';
 import DialogCustom from '../common/dialog'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
@@ -177,6 +178,24 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '4rem',
     lineHeight: '2rem',
     fontWeight: 600,
+  },
+  searchQuestions: {
+    position: 'relative'
+  },
+  searchIcon: {
+    position: 'absolute',
+    top: '50%',
+    left: '12px',
+    transform: 'translateY(-10px)'
+  },
+  fieldInputQuestions: {
+    // marginTop: '-5px',
+    // marginBottom: '10px',
+  },
+  containerQuestions: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
   }
 }))
 
@@ -186,6 +205,7 @@ const DELETE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/delete`
 const GET_QUESTIONBANK_URL = `${CONSTANT.BASE_URL}/subject`
 const CREATE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/create`
 const CREATE_ANSWERS_URL = `${CONSTANT.BASE_URL}/answers-groups/create`
+
 
 function UpdateExam(props: any) {
   const { className, handleNotification } = props
@@ -198,6 +218,8 @@ function UpdateExam(props: any) {
   const [openDialogDelete, setOpenDialogDelete] = useState(false)
   const [idQuestion, setIdQuestion] = useState(0)
   const [nameQuestion, setNameQuestion] = useState('')
+  const [searchValue, setSearchValue] = useState('')
+  const [textSearch, setTextSearch] = useState('')
   const [openDialogUpdate, setOpenDialogUpdate] = useState(false)
   const [currentQuestionAnswerGroup, setCurrentQuestionAnswerGroup] = useState<AnswerGroup[]>([])
   const [defaultAnswerGroup, setDefaultAnswerGroup] = useState<AnswerGroup[]>([])
@@ -205,26 +227,17 @@ function UpdateExam(props: any) {
   const arrayCheck = new Array<number>()
   const [question, setQuestion] = useState<Question>()
   const [questions, setQuestions] = useState<QuestionJoinTable[]>([
-    {
-      id: 1,
-      questionBankId: 1,
-      answerGroupId: 1,
-      examId: 1,
-      questionBank: {
-        id: 1,
-        questionText: '',
-        subjectId: 1,
-      },
-      answerGroup: [],
-    },
   ])
 
   const [subject, setSubject] = useState<Subject>()
+  const typingTimeoutRef = useRef<any>(null);
   const [valueTypeAnswer, setValueTypeAnswer] = useState('tf')
   const [correctAnswerTypeTf, setCorrectAnswerTypeTf] = useState('true')
   const [valueCorrectAnswer, setValueCorrectAnswer] = useState('0')
   const [progress, setProgress] = useState(0)
-
+  const [checkError, setCheckError] = useState(false)
+  const [textError, setTextError] = useState('')
+  const [nameSubjectBank, setNameSubjectBank] = useState('')
   const location: any = useLocation()
   const { idExam } = location.state.params
   const { idSubject } = location.state.params
@@ -245,11 +258,11 @@ function UpdateExam(props: any) {
 
   //* Get question bank by subject id */
   useEffect(() => {
-    // console.log('update:', idSubject)
     axios
       .get(`${GET_QUESTIONBANK_URL}/${idSubject}`)
       .then((response) => {
         setSubject(response.data[0])
+        setNameSubjectBank(response.data[0].subjectName)
       })
       .catch((err) => {
         console.log('Failed to get question bank by id subject: ', err.message)
@@ -281,6 +294,9 @@ function UpdateExam(props: any) {
   }
   /** event click button add */
   const handleClickAddQuestion = () => {
+    setTextSearch('')
+    setSearchValue('')
+
     setOpenDialogAdd(true)
     setScroll(scroll)
   }
@@ -302,8 +318,11 @@ function UpdateExam(props: any) {
           setOpenDialogAdd(false)
           handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
           setProgress(100)
+          setSearchValue('')
+          setTextSearch('')
         } else {
           handleNotification('danger', `${CONSTANT.MESSAGE("Add Question").FAIL}`);
+          setProgress(100)
         }
         refreshToken(userId)
       } else {
@@ -314,10 +333,14 @@ function UpdateExam(props: any) {
     } catch (error) {
       console.error(error)
       setProgress(100)
+      setSearchValue('')
+      setTextSearch('')
     }
   }
-  const handleCloseDialogAdd = async (e: any) => {
+  const handleCloseDialogAdd = (e: any) => {
     e.preventDefault()
+    setSearchValue('')
+    setTextSearch('')
     setOpenDialogAdd(false)
   }
 
@@ -336,7 +359,6 @@ function UpdateExam(props: any) {
   const handleInputAnswer = (index: number) => (e: any) => {
     const newArr = [...currentQuestionAnswerGroup]
     newArr[index].answer.answerText = e.target.value
-    console.log(newArr)
     setCurrentQuestionAnswerGroup(newArr)
   }
 
@@ -369,9 +391,6 @@ function UpdateExam(props: any) {
   const handleSaveUpdateQuestion = async (e: any) => {
     e.preventDefault()
     try {
-      // console.log('lengh', currentQuestionAnswerGroup.length)
-      // console.log('currentQuestionAnswerGroup', currentQuestionAnswerGroup)
-      // console.log('valueTypeAnswer', valueTypeAnswer)
       setProgress(progress + 10)
       if (currentQuestionAnswerGroup.length > 0) {
         const elementIsEmpty = currentQuestionAnswerGroup.filter((item: any) => item.answer.answerText.trim().length <= 0);
@@ -390,14 +409,17 @@ function UpdateExam(props: any) {
             handleNotification('danger', `${CONSTANT.MESSAGE("Update Question").FAIL}`);
             console.log('Error create answer tf...!')
             setOpenDialogUpdate(true)
+            setProgress(100)
           }
         } else {
           handleNotification('danger', `${CONSTANT.MESSAGE("update question cause answer is empty").FAIL}`)
           setOpenDialogUpdate(true)
+          setProgress(100)
         }
       } else {
         handleNotification('danger', `${CONSTANT.MESSAGE("Update Question").NO_ANSWER}`)
         setOpenDialogUpdate(true)
+        setProgress(100)
       }
 
       refreshToken(userId)
@@ -471,6 +493,53 @@ function UpdateExam(props: any) {
     setCurrentQuestionAnswerGroup(newAnswers)
   }
 
+  //* get question bank by name **/
+  useEffect(() => {
+    async function getQuestionBank() {
+      try {
+        const responseQuestion = await axios.post(`${GET_QUESTIONBANK_URL}/search/`, {
+          idSubject,
+          textSearch
+        });
+        console.log(responseQuestion)
+        if (responseQuestion.data.length === 0) {
+          setTextError(`No question with name: ${textSearch}`)
+          setCheckError(true)
+          setSubject(responseQuestion.data[0])
+          return
+        }
+        setSubject(responseQuestion.data[0])
+        setCheckError(false)
+        setTextError('')
+      } catch (err) {
+        console.log('Message: ', err)
+      }
+    }
+    getQuestionBank()
+  }, [textSearch, openDialogAdd])
+
+  //* onChange value search **/
+  const handleSearchValue = async (event: any) => {
+    setSearchValue(event.target.value);
+    if (event.target.value === '') {
+      await axios
+        .get(`${GET_QUESTIONBANK_URL}/${idSubject}`)
+        .then((response) => {
+          setSubject(response.data[0])
+        })
+        .catch((err) => {
+          console.log('Failed to get question bank by id subject: ', err.message)
+        })
+    }
+    // console.log(searchValue)
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    typingTimeoutRef.current = setTimeout(async () => {
+      setTextSearch(event.target.value)
+    }, 300)
+  }
+
   const titleDialogUpdate = (
     <div>
       <h3>
@@ -484,7 +553,7 @@ function UpdateExam(props: any) {
   }
 
   const columns = [
-    
+
     {
       Header: 'Question',
       accessor: 'questionBank.questionText',
@@ -711,7 +780,7 @@ function UpdateExam(props: any) {
         <div className="container-exam">
           <div className="main">
             <div className={classes.titleOfExam}>
-              <h2 style={{ color: '#495057', fontFamily: 'inherit' }}>{subject?.subjectName} - {examName}</h2>
+              <h2 style={{ color: '#495057', fontFamily: 'inherit' }}>{nameSubjectBank} - {examName}</h2>
             </div>
             <div className="content-exam">
               <Table columns={columns} data={questions} isPagination={false} />
@@ -768,12 +837,32 @@ function UpdateExam(props: any) {
             >
               <DialogTitle id="alert-dialog-title">
                 <div className={classes.title}>
-                  <h2 className={classes.titleExam}>{subject?.subjectName} Bank</h2>
+                  <h2 className={classes.titleExam}>{nameSubjectBank} Bank</h2>
                 </div>
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  {bodyAddQuestion}
+                  <div className={classes.containerQuestions}>
+                    <div className={classes.searchQuestions}>
+                      <TextField
+                        className={classes.fieldInputQuestions}
+                        id="outlined-search"
+                        label="Search questions"
+                        variant="outlined"
+                        size="small"
+                        value={searchValue}
+                        onChange={handleSearchValue}
+                        helperText={textError}
+                        error={checkError}
+                      />
+                      {/* <SearchIcon
+                        className={classes.searchIcon}
+                        fontSize="small"
+                      // onClick={() => handleDeleteAnswer(index)}
+                      /> */}
+                    </div>
+                    {bodyAddQuestion}
+                  </div>
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
@@ -816,6 +905,10 @@ const StyledUpdateExam = styled(UpdateExam)`
     height: 100%;
     font-family: sans-serif;
     background-color: '#FFFFF';
+  }
+
+  .searchQuestions {
+
   }
 
   .multiple {

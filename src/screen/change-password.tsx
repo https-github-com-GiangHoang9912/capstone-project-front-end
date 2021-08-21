@@ -45,8 +45,6 @@ function ChangePassword(props: any) {
     },
   ])
 
-  const idUser = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
-
   const handleValidatePassword = (password: string) => {
     const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}/
     return regex.test(password)
