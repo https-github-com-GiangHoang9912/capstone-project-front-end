@@ -93,7 +93,8 @@ const useStyles = makeStyles((theme) => ({
   },
   txtNameExam: {
     marginTop: '1rem',
-    width: '200px',
+    marginBottom: '1rem',
+    width: '300px',
     height: '80px',
     marginLeft: '17px',
   },
@@ -157,7 +158,7 @@ function ListExam(props: any) {
     axios
       .get(`${GET_SUBJECT_URL}`)
       .then((response) => {
-        console.log('laalala', response.data)
+        // console.log('laalala', response.data)
         setSubject(() => response.data)
       })
       .catch((err) => {
@@ -298,10 +299,7 @@ function ListExam(props: any) {
     setCheckError(false)
     setTextError('')
   }
-  const onTxtNameExamChange = useCallback((e) => {
-    setTxtNameExam(e.target.value)
-    setCheckError(false)
-  }, [])
+
 
   //* event when click delete */
   const handleDelete = (id: number, titleExam: string) => {
@@ -335,6 +333,70 @@ function ListExam(props: any) {
   const onTextSearchChange = useCallback((e) => {
     setTextSearch(e.target.value)
   }, [])
+
+  const validateNameExam = (inputName: string) => {
+    const myRegex = /(?=^.{3,}$)(?=.*)(?=.*[a-z]).*$/;
+    return myRegex.test(String(inputName).toLowerCase());
+  }
+
+  const checkDuplicateName = (inputName: string, listItem: any) => {
+    const resultDuplicate = listItem.filter((exam: any) =>
+      exam.examName?.toLowerCase() === inputName.trim().toLowerCase())
+    if (resultDuplicate.length > 0) {
+      return true
+    }
+    return false;
+  }
+
+  const onTxtNameExamChange = useCallback((e) => {
+    setTxtNameExam(e.target.value)
+    setCheckError(false)
+    setTextError('')
+    const checkNameExamDuplicate = checkDuplicateName(e.target.value, exams);
+    if (!validateNameExam(e.target.value.trim())) {
+      setCheckError(true)
+      setTextError('Name must be at least 3 characters including one letter!')
+    }
+    if (checkNameExamDuplicate) {
+      setCheckError(true)
+      setTextError('Name exam is duplicate!')
+    }
+  }, [txtNameExam])
+
+  const handleCreateExam = async (e: any) => {
+    e.preventDefault()
+    try {
+      setProgress(progress + 10)
+      if (validateNameExam(txtNameExam.trim())) {
+        const checkNameExamDuplicate = checkDuplicateName(txtNameExam, exams);
+        if (checkNameExamDuplicate) {
+          setProgress(100)
+          return;
+        }
+        const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
+          subjectId,
+          examName: txtNameExam,
+        })
+        if (response && response.data) {
+          handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
+          setOpenDialogCreate(false);
+          setTxtNameExam('');
+          setProgress(100)
+        } else {
+          handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
+          setProgress(100)
+        }
+      }
+      refreshToken(idUser)
+      setProgress(100)
+    } catch (error) {
+      setProgress(100)
+      handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
+      console.error(error)
+      refreshToken(idUser)
+    }
+  }
+
 
   //* Body view exam dialog */
   const bodyView = (
@@ -436,45 +498,6 @@ function ListExam(props: any) {
     </div>
   )
 
-  const handleCreateExam = async (e: any) => {
-    e.preventDefault()
-    try {
-      setProgress(progress + 10)
-      if (txtNameExam.trim().length > 0) {
-        const checkNameExamDuplicate = exams.filter((exam: any) =>
-          exam.examName?.toLowerCase() === txtNameExam.trim().toLowerCase())
-        if (checkNameExamDuplicate.length > 0) {
-          handleNotification('warning', `${CONSTANT.MESSAGE("Create quiz due to duplicate name").FAIL}`);
-          return;
-        }
-        const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
-          subjectId,
-          examName: txtNameExam,
-        })
-
-        if (response && response.data) {
-          handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
-          setOpenDialogCreate(false);
-          setTxtNameExam('');
-          setProgress(100)
-        } else {
-          handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
-          setProgress(100)
-        }
-        setCheckError(false)
-        setTextError('')
-        refreshToken(idUser)
-      } else {
-        setCheckError(true)
-        setTextError('Name exam cannot be empty!')
-        handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
-        setProgress(100)
-      }
-    } catch (error) {
-      setProgress(100)
-      console.error(error)
-    }
-  }
 
   return (
     <div className={className}>

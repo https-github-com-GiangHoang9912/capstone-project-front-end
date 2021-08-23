@@ -41,11 +41,6 @@ interface IExam {
   userId?: number
   subject?: {}
 }
-interface Subject {
-  id: number
-  subjectName: string
-}
-
 interface Answer {
   id?: number
   answerText: string
@@ -73,15 +68,15 @@ interface Question {
   examId: number
   questionBankId: number
 }
-interface Subject {
+interface ISubject {
   id: number
   subjectName: string
   questionBank: QuestionBank[]
 }
 interface QuestionBank {
-  idQuestion: number
-  questionText: string
-  subjectId: number
+  idQuestion?: number
+  questionText?: string
+  subjectId?: number
   checked?: boolean
 }
 
@@ -180,17 +175,19 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
   },
   searchQuestions: {
-    position: 'relative'
-  },
-  searchIcon: {
-    position: 'absolute',
-    top: '50%',
-    left: '12px',
-    transform: 'translateY(-10px)'
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flexWrap: 'wrap'
+
   },
   fieldInputQuestions: {
-    // marginTop: '-5px',
-    // marginBottom: '10px',
+    flexBasis: '45%'
+  },
+  totalQues: {
+    flexBasis: '45%',
+    color: '#272822',
+    fontWeight: 550
   },
   containerQuestions: {
     display: 'flex',
@@ -226,10 +223,11 @@ function UpdateExam(props: any) {
   const [answerCorrect, setAnswerCorrect] = useState<Answer | undefined>(undefined)
   const arrayCheck = new Array<number>()
   const [question, setQuestion] = useState<Question>()
-  const [questions, setQuestions] = useState<QuestionJoinTable[]>([
-  ])
+  const [questions, setQuestions] = useState<QuestionJoinTable[]>([])
 
-  const [subject, setSubject] = useState<Subject>()
+  const [questionBank, setQuestionBank] = useState<QuestionBank[]>([])
+  const [toltalQuestion, setToltalQuestion] = useState(0)
+  const [subject, setSubject] = useState<ISubject | undefined>(undefined)
   const typingTimeoutRef = useRef<any>(null);
   const [valueTypeAnswer, setValueTypeAnswer] = useState('tf')
   const [correctAnswerTypeTf, setCorrectAnswerTypeTf] = useState('true')
@@ -263,6 +261,7 @@ function UpdateExam(props: any) {
       .then((response) => {
         setSubject(response.data[0])
         setNameSubjectBank(response.data[0].subjectName)
+        setQuestionBank(response.data[0].questionBank)
       })
       .catch((err) => {
         console.log('Failed to get question bank by id subject: ', err.message)
@@ -493,29 +492,32 @@ function UpdateExam(props: any) {
     setCurrentQuestionAnswerGroup(newAnswers)
   }
 
+  const checkQuestionExistInDialog = (initialList: any, listChange: any) => {
+    let countQuestion = 0;
+    initialList?.map((quesBank: any, index: number) => {
+      const isExist = listChange.some((item: any) => item.questionBankId === quesBank.id)
+      if (!isExist) {
+        countQuestion += 1;
+      }
+    })
+    return countQuestion;
+  }
+
+
   //* get question bank by name **/
   useEffect(() => {
-    async function getQuestionBank() {
-      try {
-        const responseQuestion = await axios.post(`${GET_QUESTIONBANK_URL}/search/`, {
-          idSubject,
-          textSearch
-        });
-        console.log(responseQuestion)
-        if (responseQuestion.data.length === 0) {
-          setTextError(`No question with name: ${textSearch}`)
-          setCheckError(true)
-          setSubject(responseQuestion.data[0])
-          return
-        }
-        setSubject(responseQuestion.data[0])
-        setCheckError(false)
-        setTextError('')
-      } catch (err) {
-        console.log('Message: ', err)
-      }
+    try {
+      const resultQuestion: any = subject?.questionBank?.filter(
+        (questionItem: any) =>
+          questionItem?.questionText?.toLowerCase().includes(textSearch.trim().toLowerCase())
+      );
+      setQuestionBank(resultQuestion)
+      const countQuestion = checkQuestionExistInDialog(resultQuestion, questions)
+      console.log('resultQuestion', resultQuestion)
+      setToltalQuestion(countQuestion)
+    } catch (err) {
+      console.log('Message: ', err)
     }
-    getQuestionBank()
   }, [textSearch, openDialogAdd])
 
   //* onChange value search **/
@@ -526,12 +528,12 @@ function UpdateExam(props: any) {
         .get(`${GET_QUESTIONBANK_URL}/${idSubject}`)
         .then((response) => {
           setSubject(response.data[0])
+          setQuestionBank(response.data[0].questionBank)
         })
         .catch((err) => {
           console.log('Failed to get question bank by id subject: ', err.message)
         })
     }
-    // console.log(searchValue)
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
     }
@@ -614,7 +616,7 @@ function UpdateExam(props: any) {
   const bodyAddQuestion = (
     <div className={classes.paper}>
       <div className={classes.contentExam}>
-        {subject?.questionBank.map((quesBank: any, index: number) => {
+        {questionBank?.map((quesBank: any, index: number) => {
           const isExist = questions.some((item) => item.questionBankId === quesBank.id)
           if (!isExist) {
             return (
@@ -663,15 +665,12 @@ function UpdateExam(props: any) {
   )
 
   useEffect(() => {
-    // console.log(answerCorrect)
-    // console.log(valueTypeAnswer)
     setValueTypeAnswer('multiple')
     if (answerCorrect && (answerCorrect.id === 1 || answerCorrect.id === 2)) {
       setValueTypeAnswer('tf')
       setCorrectAnswerTypeTf(answerCorrect.answerText.toLowerCase())
     }
     if (currentQuestionAnswerGroup.length > 0) {
-      // console.log('value co san', currentQuestionAnswerGroup)
       currentQuestionAnswerGroup.forEach((item, index) => {
         if (item.correct) setValueCorrectAnswer(`${index}`)
       })
@@ -855,11 +854,9 @@ function UpdateExam(props: any) {
                         helperText={textError}
                         error={checkError}
                       />
-                      {/* <SearchIcon
-                        className={classes.searchIcon}
-                        fontSize="small"
-                      // onClick={() => handleDeleteAnswer(index)}
-                      /> */}
+                      <span className={classes.totalQues}>
+                        Total questions: {toltalQuestion}
+                      </span>
                     </div>
                     {bodyAddQuestion}
                   </div>
@@ -905,10 +902,6 @@ const StyledUpdateExam = styled(UpdateExam)`
     height: 100%;
     font-family: sans-serif;
     background-color: '#FFFFF';
-  }
-
-  .searchQuestions {
-
   }
 
   .multiple {
