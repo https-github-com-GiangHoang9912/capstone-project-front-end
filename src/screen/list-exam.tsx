@@ -314,7 +314,10 @@ function ListExam(props: any) {
 
   const handleDeleteAccept = async (id: number) => {
     try {
-      const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
+      const response = await axios.post(`${DELETE_EXAM_URL}/${id}`, {
+        idUser,
+        id
+      });
       if (response) {
         setOpenDialogDelete(false)
         handleNotification('success', `${CONSTANT.MESSAGE("Exam").DELETE_SUCCESS}`)
