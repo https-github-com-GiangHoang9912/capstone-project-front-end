@@ -44,7 +44,7 @@ interface Subject {
 const useStyles = makeStyles((theme) => ({
   root: {},
   inputQuestion: {
-    width: '80%',
+    width: '100%',
   },
   btnDup: {
     margin: 10,
@@ -91,6 +91,7 @@ function Duplicate(props: any) {
   const [isDuplicateSubject, setIsDuplicateSubject] = useState(false)
   const [duplicateSubject, setDuplicateSubject] = useState<String>('')
   const [isOpenDialogSubject,setIsOpenDialogSubject] = useState(false)
+  const [isValidQues, setIsValidQues] = useState(true)
 
   function handleFileChange(e: any) {
     setFile(e.target.files[0])
@@ -113,8 +114,12 @@ function Duplicate(props: any) {
       setSubjects(response.data)
     })
   }, [])
+
   async function handleCheck() {
-    if (question) {
+    const validQuestionRegex = /(([A-Za-z])+(\s)+){2,}/
+    const isValidQuestion = validQuestionRegex.test(question)
+    if (isValidQuestion) {
+      setIsValidQues(true)
       try {
         setIsDisable(true)
         setProgress(progress + 10)
@@ -138,7 +143,7 @@ function Duplicate(props: any) {
         handleNotification('danger', `${CONSTANT.MESSAGE('Check duplication').FAIL}`)
       }
     } else {
-      handleNotification('danger', `${CONSTANT.MESSAGE().BLANK_INPUT}`)
+      setIsValidQues(false)
     }
   }
 
@@ -366,16 +371,26 @@ function Duplicate(props: any) {
         )}
         <div className="control control-right">
           <h2>Enter your question:</h2>
-          <TextField
-            id="outlined-multiline-static"
-            multiline
-            rowsMax={6}
-            variant="outlined"
-            label="Question"
-            value={question}
-            onChange={handleInputQuestion}
-            className={classes.inputQuestion}
-          />
+          <div className="ques-input-box">
+            <TextField
+              id="outlined-multiline-static"
+              multiline
+              rowsMax={6}
+              variant="outlined"
+              label="Question"
+              value={question}
+              onChange={handleInputQuestion}
+              className={classes.inputQuestion}
+            />
+            {
+              isValidQues
+                ? ''
+                : <p className='warning'>
+                  ⚠ The text you entered is not a question or too short!
+                </p>
+            }
+          </div>
+
           <div className="button-group">
             <Button
               variant="contained"
@@ -455,7 +470,7 @@ function Duplicate(props: any) {
                   </p>
                 </div>
               ) : (
-                <p style={{ color: '#d11c1c', fontSize: '0.9rem', margin: '2rem' }}>
+                <p className='warning'>
                   Duplicate detection, still add this question to bank 
                   <Chip
                       label="Add question"
@@ -492,6 +507,17 @@ const StyleDuplicate = styled(Duplicate)`
     /* box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
       rgba(17, 17, 26, 0.1) 0px 16px 56px; */
   }
+
+  .warning { 
+    color: red;
+    margin: 1rem 0.5rem;
+    text-align: left;
+  }
+  .ques-input-box {
+    width: 80%;
+    margin: auto;
+  }
+
   .control {
     flex: 1 1 auto;
     margin: 10px;

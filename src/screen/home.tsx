@@ -125,7 +125,7 @@ const HomeStyled = styled(HomePage)`
   }
   .introduction {
     width: 100%;
-    height: 680px;
+    height: 100vh;
     padding: 4rem 2rem;
     border:none;
     background-image: url('https://assodigitale.it/wp-content/uploads/2019/12/in-che-modo-lascesa-del-trading-finanziario-influenza-la-fintech.jpg');

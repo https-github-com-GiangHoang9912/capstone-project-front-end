@@ -66,7 +66,7 @@ const SelfGenerate = (props: any) => {
   const [showProgress, setShowProgress] = useState<Boolean>(false)
   const [isOpen, setIsOpen] = useState(false)
   const [openDialogRemove, setOpenDialogRemove] = useState(false)
-  const [isDisable, setIsDisable] = useState(false)
+  const [isDisable, setIsDisable] = useState(true)
   const [dialogContent, setDialogContent] = useState<any>()
   const [subjectId, setSubjectId] = useState<Number>(1)
   const [dialogSentence, setDialogSentence] = useState('')
@@ -232,16 +232,25 @@ const SelfGenerate = (props: any) => {
       setItems(newArr)
     }
 
-    const handleInputContext = (index: number) => (e: any) => {
+    const validQuestionRegex = /([A-Za-z])+(\s)+/
+
+    const handleInputContext = (index: number, input: string) => (e: any) => {
       const newArr = [...items]
       newArr[index].context = e.target.value
       setItems(newArr)
+  
+      const isValidInput = !!input && validQuestionRegex.test(input)
+      if(!isValidInput) {
+        setIsDisable(true)
+      } else {
+        setIsDisable(false)
+      }
     }
 
-    const removeItem = (index: number) => (e: any) => {
+    const removeItem = (index: number, arrayLength: number) => (e: any) => {
       e.preventDefault()
       setIdRemove(index)
-      if (index === 0) {
+      if (index === 0 && arrayLength === 1) {
         setOpenDialogRemove(false)
       } else {
         setOpenDialogRemove(true)
@@ -268,7 +277,7 @@ const SelfGenerate = (props: any) => {
         <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
         <div className="form-container">
           <h2>Self Generation Questions</h2>
-          <form>
+          <form onSubmit={handleProgress}>
             {/* Nhap cau tra loi */}
             <br />
 
@@ -276,7 +285,7 @@ const SelfGenerate = (props: any) => {
               {items.map((item, index) => (
                 <div className="item-input" key={index}>
                   <div className="icon-delete">
-                    <IconButton aria-label="delete" onClick={removeItem(index)}>
+                    <IconButton aria-label="delete" onClick={removeItem(index, items.length)}>
                       <SvgIcon className="svg-icon" viewBox="0 0 20 20">
                         <path d="M10.185,1.417c-4.741,0-8.583,3.842-8.583,8.583c0,4.74,3.842,8.582,8.583,8.582S18.768,14.74,18.768,10C18.768,5.259,14.926,1.417,10.185,1.417 M10.185,17.68c-4.235,0-7.679-3.445-7.679-7.68c0-4.235,3.444-7.679,7.679-7.679S17.864,5.765,17.864,10C17.864,14.234,14.42,17.68,10.185,17.68 M10.824,10l2.842-2.844c0.178-0.176,0.178-0.46,0-0.637c-0.177-0.178-0.461-0.178-0.637,0l-2.844,2.841L7.341,6.52c-0.176-0.178-0.46-0.178-0.637,0c-0.178,0.176-0.178,0.461,0,0.637L9.546,10l-2.841,2.844c-0.178,0.176-0.178,0.461,0,0.637c0.178,0.178,0.459,0.178,0.637,0l2.844-2.841l2.844,2.841c0.178,0.178,0.459,0.178,0.637,0c0.178-0.176,0.178-0.461,0-0.637L10.824,10z" />
                       </SvgIcon>
@@ -286,11 +295,12 @@ const SelfGenerate = (props: any) => {
                   <TextField
                     id="standard-full-width"
                     style={{ margin: 8 }}
-                    placeholder="Input answer"
+                    placeholder="Enter a answer"
                     variant="outlined"
                     fullWidth
                     margin="normal"
                     value={item.answer}
+                    required={true}
                     onChange={handleInputAnswer(index)}
                   />
                   <br />
@@ -298,15 +308,21 @@ const SelfGenerate = (props: any) => {
                   <p className="label">Context {index + 1}</p>
                   <TextField
                     id="standard-full-width"
+                    className="context-field"
                     multiline
-                    placeholder="Input Context"
+                    placeholder="Enter the Context"
                     style={{ margin: 8 }}
                     rowsMax={10}
                     fullWidth
                     variant="outlined"
                     value={item.context}
                     rows={3}
-                    onChange={handleInputContext(index)}
+                    onChange={handleInputContext(index, item.context)}
+                    required={true}
+                    error={!!item.context && !validQuestionRegex.test(item.context) }
+                    helperText={!!item.context && !validQuestionRegex.test(item.context) 
+                      ? '⚠ The text you entered is not valid or too short!' 
+                      : ''}
                   />
 
                   <p className="note-box">
@@ -358,9 +374,9 @@ const SelfGenerate = (props: any) => {
             <Button
               variant="contained"
               color="primary"
-              onClick={handleProgress}
               className={classes.btnGen}
               disabled={isDisable}
+              type='submit'
             >
               Generate
             </Button>
@@ -412,6 +428,14 @@ const SelfGenerate = (props: any) => {
     margin: auto;
     padding-bottom: 1rem;
   }
+
+  .context-field p{
+    color: red;
+    margin: 1rem 0.5rem;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
   .label {
     font-size: 18px;
     font-weight: 600;
