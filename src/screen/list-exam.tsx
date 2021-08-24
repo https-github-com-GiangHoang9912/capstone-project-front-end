@@ -18,6 +18,8 @@ import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import axios from 'axios'
 import * as moment from 'moment'
+import LoadingBar from 'react-top-loading-bar'
+// import Progress from '../common/progress'
 import * as CONSTANT from '../const'
 import { AccountContext } from '../contexts/account-context'
 import { refreshToken } from '../services/services'
@@ -91,7 +93,8 @@ const useStyles = makeStyles((theme) => ({
   },
   txtNameExam: {
     marginTop: '1rem',
-    width: '200px',
+    marginBottom: '1rem',
+    width: '300px',
     height: '80px',
     marginLeft: '17px',
   },
@@ -133,7 +136,8 @@ function ListExam(props: any) {
   const [openDialogView, setOpenDialogView] = useState(false)
   const [checkError, setCheckError] = useState(false)
   const [textError, setTextError] = useState('')
-
+  const [progress, setProgress] = useState(0)
+  const [showProgress, setShowProgress] = useState<Boolean>(false)
   const [scroll, setScroll] = useState('paper')
   const [idDelete, setIdDelete] = useState(0)
   const [nameExam, setNameExam] = useState('')
@@ -150,14 +154,15 @@ function ListExam(props: any) {
 
   //* Get subject */
   useEffect(() => {
+    console.log('url', GET_SUBJECT_URL)
     axios
       .get(`${GET_SUBJECT_URL}`)
       .then((response) => {
-        // console.log('Subject data', response.data);
-        setSubject(response.data)
+        // console.log('laalala', response.data)
+        setSubject(() => response.data)
       })
       .catch((err) => {
-        console.log('Failed to fetch data subject by userID: ', err.message)
+        console.log('Failed to fetch data subject: ', err.message)
       })
   }, [])
 
@@ -195,19 +200,22 @@ function ListExam(props: any) {
   }
 
   //* Get Question */
-  function takeContentByExam(idExam: number, titleExam: string) {
+  async function takeContentByExam(idExam: number, titleExam: string) {
     setOpenDialogView(true)
     setScroll(scroll)
     setNameExam(titleExam)
-    axios
-      .get(`${GET_QUESTIONS_URL}/${idExam}`)
-      .then((response) => {
-        console.log('question detail data: ', response.data)
+    try {
+      const response = await axios.get(`${GET_QUESTIONS_URL}/${idExam}`);
+      if (response && response.data) {
         setQuestion(response.data[0].question)
-      })
-      .catch((err) => {
-        console.log('Failed to get data question by examID: ', err.message)
-      })
+
+      } else {
+        setQuestion([])
+      }
+      refreshToken(idUser)
+    } catch (error) {
+      console.log('Failed to get data question by examID: ', error.message)
+    }
   }
 
   //* event when click edit */
@@ -217,9 +225,6 @@ function ListExam(props: any) {
       idSubject,
       examName,
     }
-
-    console.log('????? infor ', infor)
-
     history.push('/update-exam', { params: infor })
   }
 
@@ -294,10 +299,7 @@ function ListExam(props: any) {
     setCheckError(false)
     setTextError('')
   }
-  const onTxtNameExamChange = useCallback((e) => {
-    setTxtNameExam(e.target.value)
-    setCheckError(false)
-  }, [])
+
 
   //* event when click delete */
   const handleDelete = (id: number, titleExam: string) => {
@@ -312,7 +314,7 @@ function ListExam(props: any) {
 
   const handleDeleteAccept = async (id: number) => {
     try {
-      const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
+      const response = await axios.post(`${DELETE_EXAM_URL}/${id}`);
       if (response) {
         setOpenDialogDelete(false)
         handleNotification('success', `${CONSTANT.MESSAGE("Exam").DELETE_SUCCESS}`)
@@ -332,6 +334,73 @@ function ListExam(props: any) {
     setTextSearch(e.target.value)
   }, [])
 
+  const validateNameExam = (inputName: string) => {
+    const myRegex = /(?=^.{3,}$)(?=.*)(?=.*[a-z]).*$/;
+    return myRegex.test(String(inputName).toLowerCase());
+  }
+
+  const checkDuplicateName = (inputName: string, listItem: any) => {
+    const resultDuplicate = listItem.filter((exam: any) =>
+      exam.examName?.toLowerCase() === inputName.trim().toLowerCase())
+    if (resultDuplicate.length > 0) {
+      return true
+    }
+    return false;
+  }
+
+  const onTxtNameExamChange = useCallback((e) => {
+    setTxtNameExam(e.target.value)
+    setCheckError(false)
+    setTextError('')
+    const checkNameExamDuplicate = checkDuplicateName(e.target.value, exams);
+    if (!validateNameExam(e.target.value.trim())) {
+      setCheckError(true)
+      setTextError('Name must be at least 3 characters including one letter!')
+    }
+    if (checkNameExamDuplicate) {
+      setCheckError(true)
+      setTextError('Name exam is duplicate!')
+    }
+  }, [txtNameExam])
+
+  const handleCreateExam = async (e: any) => {
+    e.preventDefault()
+    try {
+      if (validateNameExam(txtNameExam.trim())) {
+        const checkNameExamDuplicate = checkDuplicateName(txtNameExam, exams);
+        if (checkNameExamDuplicate) {
+          setProgress(100)
+          return;
+        }
+        const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
+          subjectId,
+          examName: txtNameExam,
+        })
+        if (response && response.data) {
+          handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
+          setOpenDialogCreate(false);
+          setTxtNameExam('');
+          setProgress(100)
+        } else {
+          handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
+          setProgress(100)
+        }
+      } else {
+        setProgress(progress + 10)
+        setCheckError(true)
+        setTextError('Name can not is blank!!!')
+      }
+      refreshToken(idUser)
+      setProgress(100)
+    } catch (error) {
+      setProgress(100)
+      handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
+      console.error(error)
+      refreshToken(idUser)
+    }
+  }
+
+
   //* Body view exam dialog */
   const bodyView = (
     <div className={classes.paper}>
@@ -344,6 +413,7 @@ function ListExam(props: any) {
                   style={{
                     fontWeight: 'bold',
                     color: '#2F6473',
+                    padding: '5px'
                   }}
                 >
                   {index + 1}. {ques.questionBank.questionText}
@@ -431,37 +501,10 @@ function ListExam(props: any) {
     </div>
   )
 
-  const handleCreateExam = async (e: any) => {
-    e.preventDefault()
-    try {
-      if (txtNameExam.trim().length > 0) {
-        const response = await axios.post(`${CREATE_EXAM_URL}/${idUser}`, {
-          subjectId,
-          examName: txtNameExam,
-        })
-        if (response && response.data) {
-          handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
-          setOpenDialogCreate(false);
-          setTxtNameExam('');
-        } else {
-          handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
-        }
-        setCheckError(false)
-        setTextError('')
-        refreshToken(idUser)
-      } else {
-        setCheckError(true)
-        setTextError('Name exam cannot be empty!')
-        handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
-
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
 
   return (
     <div className={className}>
+      <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="limiter">
         <div className="container">
           <div className="main">
