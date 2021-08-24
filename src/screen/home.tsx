@@ -55,7 +55,7 @@ function HomePage(props: any) {
       <div className="container">
         <div className="introduction">
           <div className="intro">
-          <h1 className="intro-title">DDSQG</h1>
+          <h1 className="intro-title">DDSGQ</h1>
           <h2 className="intro-sub">Duplicate Detection and Self-Generation Question based on answers</h2>
           <Link
                 to="main-function"
