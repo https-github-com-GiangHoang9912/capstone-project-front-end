@@ -3,9 +3,11 @@ import { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import LoadingBar from 'react-top-loading-bar'
 import LockIcon from '@material-ui/icons/Lock'
+import TextField from '@material-ui/core/TextField'
 import { Button, makeStyles } from '@material-ui/core'
 import axios from 'axios'
 import styled from 'styled-components'
+import { useHistory, NavLink, Redirect } from 'react-router-dom'
 import * as CONSTANT from '../const'
 
 axios.defaults.withCredentials = true
@@ -105,10 +107,18 @@ const useStyles = makeStyles({
 
 const FORGOT_PASSWORD = `${CONSTANT.BASE_URL}/verify-user`
 
+function validateEmail(email: string) {
+  const myRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return myRegex.test(String(email).toLowerCase());
+}
+
 function ForgotPassword(props: any) {
   const { className, handleNotification, setIsForgotPassword, setIsMenuOpen } = props
   const classes = useStyles()
   const [email, setEmail] = useState('')
+  const [checkError, setCheckError] = useState(false)
+  const [textError, setTextError] = useState('')
+  const history = useHistory()
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
@@ -123,12 +133,24 @@ function ForgotPassword(props: any) {
   const handleForgotPassword = async () => {
     try {
       setProgress(progress + 10)
+      if (!validateEmail(email)) {
+        handleNotification('warning', `${CONSTANT.MESSAGE('Change Password, Input wrong format mail ! ').FAIL}`)
+        setCheckError(true)
+        setTextError('You must enter the correct email address')
+        setProgress(100)
+        return
+      }
+      setCheckError(false)
+      setTextError('')
       const forgotResponse = await axios.post(FORGOT_PASSWORD, {
         email,
       })
       if (forgotResponse && forgotResponse.status === 200) {
         setProgress(100)
         handleNotification('success', `${CONSTANT.MESSAGE().SEND_MAIL_SUCCESS}`)
+        setEmail('')
+        setProgress(100)
+        history.push('/login')
       } else {
         setProgress(100)
         handleNotification('danger', `${CONSTANT.MESSAGE('Reset Password').FAIL}`)
@@ -154,39 +176,49 @@ function ForgotPassword(props: any) {
                 color: '#A1A1A1',
               }}
             >
-              Enter email, phone, or username and we'll send you a link to get back into your
+              Enter email we'll send you a link to get back into your
               account
             </span>
           </div>
           <div className={classes.inputContent}>
-            <div className={classes.inputName}>
-              <input
+            <div>
+              <TextField
+                error={checkError}
+                id="outlined-basic"
+                label="Enter your email"
+                variant="outlined"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                helperText={textError}
+                required
+              />
+            {/* <input
                 className={classes.txtEmail}
                 type="text"
                 id="uname"
-                placeholder="Email, Phone, or Username"
+                placeholder="Enter email to get password"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={{
                   fontSize: '13px',
                 }}
-              />
-            </div>
-            <div className="button-reset">
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.styleBtn}
-                onClick={handleForgotPassword}
-              >
-                Send Login Link
-              </Button>
-            </div>
+              /> */}
+          </div>
+          <div className="button-reset">
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.styleBtn}
+              onClick={handleForgotPassword}
+            >
+              Send Login Link
+            </Button>
           </div>
         </div>
       </div>
     </div>
+    </div >
   )
 }
 
