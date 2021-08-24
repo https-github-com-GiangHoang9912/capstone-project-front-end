@@ -514,7 +514,6 @@ function UpdateExam(props: any) {
       );
       setQuestionBank(resultQuestion)
       const countQuestion = checkQuestionExistInDialog(resultQuestion, questions)
-      console.log('resultQuestion', resultQuestion)
       setToltalQuestion(countQuestion)
     } catch (err) {
       console.log('Message: ', err)

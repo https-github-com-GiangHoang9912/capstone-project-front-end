@@ -314,10 +314,7 @@ function ListExam(props: any) {
 
   const handleDeleteAccept = async (id: number) => {
     try {
-      const response = await axios.post(`${DELETE_EXAM_URL}/${id}`, {
-        idUser,
-        id
-      });
+      const response = await axios.post(`${DELETE_EXAM_URL}/${id}`);
       if (response) {
         setOpenDialogDelete(false)
         handleNotification('success', `${CONSTANT.MESSAGE("Exam").DELETE_SUCCESS}`)
@@ -369,7 +366,6 @@ function ListExam(props: any) {
   const handleCreateExam = async (e: any) => {
     e.preventDefault()
     try {
-      setProgress(progress + 10)
       if (validateNameExam(txtNameExam.trim())) {
         const checkNameExamDuplicate = checkDuplicateName(txtNameExam, exams);
         if (checkNameExamDuplicate) {
@@ -389,6 +385,10 @@ function ListExam(props: any) {
           handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
           setProgress(100)
         }
+      } else {
+        setProgress(progress + 10)
+        setCheckError(true)
+        setTextError('Name can not is blank!!!')
       }
       refreshToken(idUser)
       setProgress(100)
