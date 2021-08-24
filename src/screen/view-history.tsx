@@ -9,6 +9,8 @@ import {
   faLock,
   faExclamationCircle,
   IconDefinition,
+  faFileAlt,
+  faEdit
 } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import * as moment from 'moment'
@@ -100,38 +102,48 @@ function ViewHistory(props: any) {
                       {moment.default(item.date).format('DD/MM/YYYY')}
                     </span>
                     <span>
-                    {item.typeId === CONSTANT.HISTORY_TYPE.DUPLICATE ? (
-                      <>
-                      <FontAwesomeIcon icon={faCopy} className="item-icon" />
-                       Check duplication:{' '} 
-                      </>
-                      
-                    ) : (
-                      ''
-                    )}
-                    {item.typeId === CONSTANT.HISTORY_TYPE.GENERATE ? (
-                      <>
-                      <FontAwesomeIcon icon={faQuestionCircle} className="item-icon" />
-                      Self-Generation question:{' '} 
-                      </>
-                    ) : (
-                      ''
-                    )}
-                    {item.typeId === CONSTANT.HISTORY_TYPE.UPDATE_PROFILE ? (
-                      <FontAwesomeIcon icon={faIdCard} className="item-icon" />
-                    ) : (
-                      ''
-                    )}
-                    {item.typeId === CONSTANT.HISTORY_TYPE.CHANGE_PASSWORD ? (
-                      <FontAwesomeIcon icon={faLock} className="item-icon" />
-                    ) : (
-                      ''
-                    )}
-                   {item.description}
+                      {item.typeId === CONSTANT.HISTORY_TYPE.DUPLICATE ? (
+                        <>
+                          <FontAwesomeIcon icon={faCopy} className="item-icon" />
+                          Check duplication:{' '}
+                        </>
+
+                      ) : (
+                        ''
+                      )}
+                      {item.typeId === CONSTANT.HISTORY_TYPE.GENERATE ? (
+                        <>
+                          <FontAwesomeIcon icon={faQuestionCircle} className="item-icon" />
+                          Self-Generation question:{' '}
+                        </>
+                      ) : (
+                        ''
+                      )}
+                      {item.typeId === CONSTANT.HISTORY_TYPE.UPDATE_PROFILE ? (
+                        <FontAwesomeIcon icon={faIdCard} className="item-icon" />
+                      ) : (
+                        ''
+                      )}
+                      {item.typeId === CONSTANT.HISTORY_TYPE.CHANGE_PASSWORD ? (
+                        <FontAwesomeIcon icon={faLock} className="item-icon" />
+                      ) : (
+                        ''
+                      )}
+                      {item.typeId === CONSTANT.HISTORY_TYPE.CREATE_EXAM ? (
+                        <FontAwesomeIcon icon={faFileAlt} className="item-icon" />
+                      ) : (
+                        ''
+                      )}
+                      {item.typeId === CONSTANT.HISTORY_TYPE.EDIT_EXAM ? (
+                        <FontAwesomeIcon icon={faEdit} className="item-icon" />
+                      ) : (
+                        ''
+                      )}
+                      {item.description}
                     </span>
                   </div>
                 </div>
-               
+
               </div>
             ))}
           </div>

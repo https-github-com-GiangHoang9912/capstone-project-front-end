@@ -311,7 +311,7 @@ function UpdateExam(props: any) {
         examId: idExam,
       }))
       if (questionAdd.length != 0) {
-        const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd);
+        const response = await axios.post(`${CREATE_QUESTION_URL}/${userId}`, questionAdd);
         if (response && response.data) {
           console.log(response)
           setOpenDialogAdd(false)
@@ -398,15 +398,16 @@ function UpdateExam(props: any) {
           response = await axios.post(`${CREATE_ANSWERS_URL}/${idQuestion}`, {
             currentQuestionAnswerGroup,
             valueTypeAnswer,
+            userId
           })
           if (response) {
-            console.log('success')
+            // console.log('success')
             handleNotification('success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`)
             setProgress(100)
             setOpenDialogUpdate(false)
           } else {
             handleNotification('danger', `${CONSTANT.MESSAGE("Update Question").FAIL}`);
-            console.log('Error create answer tf...!')
+            // console.log('Error create answer tf...!')
             setOpenDialogUpdate(true)
             setProgress(100)
           }
@@ -513,7 +514,6 @@ function UpdateExam(props: any) {
       );
       setQuestionBank(resultQuestion)
       const countQuestion = checkQuestionExistInDialog(resultQuestion, questions)
-      console.log('resultQuestion', resultQuestion)
       setToltalQuestion(countQuestion)
     } catch (err) {
       console.log('Message: ', err)
