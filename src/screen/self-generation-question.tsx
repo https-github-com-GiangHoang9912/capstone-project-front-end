@@ -57,7 +57,7 @@ const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
 const SelfGenerate = (props: any) => {
   const { className, handleNotification } = props
   const [isOpen, setIsOpen] = useState(false)
-  const [isDisable, setIsDisable] = useState(false)
+  const [isDisable, setIsDisable] = useState(true)
   const [dialogContent, setDialogContent] = useState<any>()
   const [subjectId, setSubjectId] = useState<Number>(1)
   const [dialogSentence, setDialogSentence] = useState('')
@@ -227,10 +227,19 @@ const SelfGenerate = (props: any) => {
     setItems(newArr)
   }
 
-  const handleInputContext = (index: number) => (e: any) => {
+  const validQuestionRegex = /([A-Za-z])+(\s)+/
+
+  const handleInputContext = (index: number, input: string) => (e: any) => {
     const newArr = [...items]
     newArr[index].context = e.target.value
     setItems(newArr)
+
+    const isValidInput = !!input && validQuestionRegex.test(input)
+    if(!isValidInput) {
+      setIsDisable(true)
+    } else {
+      setIsDisable(false)
+    }
   }
 
   return (
@@ -238,7 +247,7 @@ const SelfGenerate = (props: any) => {
       <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="form-container">
         <h2>Self Generation Questions</h2>
-        <form>
+        <form onSubmit={handleProgress}>
           {/* Nhap cau tra loi */}
           <br />
 
@@ -257,11 +266,12 @@ const SelfGenerate = (props: any) => {
                 <TextField
                   id="standard-full-width"
                   style={{ margin: 8 }}
-                  placeholder="Input answer"
+                  placeholder="Enter a answer"
                   variant="outlined"
                   fullWidth
                   margin="normal"
                   value={item.answer}
+                  required={true}
                   onChange={handleInputAnswer(index)}
                 />
                 <br />
@@ -270,14 +280,17 @@ const SelfGenerate = (props: any) => {
                 <TextField
                   id="standard-full-width"
                   multiline
-                  placeholder="Input Context"
+                  placeholder="Enter the context"
                   rows={3}
                   rowsMax={10}
                   style={{ margin: 8 }}
                   fullWidth
                   variant="outlined"
                   value={item.context}
-                  onChange={handleInputContext(index)}
+                  onChange={handleInputContext(index, item.context)}
+                  required={true}
+                  error={!!item.context && !validQuestionRegex.test(item.context) }
+                  helperText={!!item.context && !validQuestionRegex.test(item.context) ? '⚠ The text you entered is not valid or too short!' : ''}
                 />
 
                 <p className="note-box">
@@ -296,9 +309,9 @@ const SelfGenerate = (props: any) => {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleProgress}
             className={classes.btnGen}
             disabled={isDisable}
+            type='submit'
           >
             Generate
           </Button>
