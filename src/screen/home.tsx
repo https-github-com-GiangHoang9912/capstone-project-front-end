@@ -311,7 +311,7 @@ const HomeStyled = styled(HomePage)`
       height: 300px;
     }
   }
-  @media screen and (min-device-width: 781px) and (max-device-width: 1172px) {
+  @media screen and (min-device-width: 781px) and (max-device-width: 1304px) {
      .function, .technology{
        width: 100%;
      }
@@ -326,6 +326,16 @@ const HomeStyled = styled(HomePage)`
     }
     .item-exam{
       width: 620px;
+      height: 320px;
+    }
+  }
+  @media screen and (min-device-width: 2000px){
+    .item{
+      width: 500px;
+      height: 320px;
+    }
+    .item-exam{
+      width: 500px;
       height: 320px;
     }
   }

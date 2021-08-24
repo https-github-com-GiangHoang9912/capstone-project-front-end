@@ -39,7 +39,7 @@ interface IQuestion {
 }
 interface Subject {
   id: number
-  subjectName: string
+  subjectName: String
 }
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -54,10 +54,18 @@ const useStyles = makeStyles((theme) => ({
     border: '1px solid #0fac31',
     color: '#0fac31',
   },
+  chipView: {
+    border: '1px solid #424c9e',
+    color: '#424c9e',
+    marginLeft:5
+  },
+  chipSubject: {
+    margin: 10
+  },
   inputSubject: {
-    width: 120,
+    width: 140,
     height: 20,
-    margin: 7,
+    margin: '7px 4px',
   },
 }))
 function Duplicate(props: any) {
@@ -80,6 +88,9 @@ function Duplicate(props: any) {
   const [result, setResult] = useState<IQuestion[]>([])
   const [file, setFile] = useState<any>()
   const [subjectName, setSubjectName] = useState<String>()
+  const [isDuplicateSubject, setIsDuplicateSubject] = useState(false)
+  const [duplicateSubject, setDuplicateSubject] = useState<String>('')
+  const [isOpenDialogSubject,setIsOpenDialogSubject] = useState(false)
 
   function handleFileChange(e: any) {
     setFile(e.target.files[0])
@@ -161,6 +172,7 @@ function Duplicate(props: any) {
           subjectId,
         }),
       ])
+      handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
     } catch (error) {
       handleNotification('danger', `${CONSTANT.MESSAGE('Add to bank').FAIL}`)
     }
@@ -191,25 +203,46 @@ function Duplicate(props: any) {
       </Select>
     </div>
   )
-
+  const subjectDialogList = (
+    <div className={className}>
+       {subjects.map((subject: Subject) => (
+          <Chip label={subject.subjectName} className={classes.chipSubject}/>
+        ))}
+    </div>
+  )
+  const handleOpenListSubject = () =>{
+    setIsOpenDialogSubject(true);
+  }
+  const handleCloseListSubject = () =>{
+    setIsOpenDialogSubject(false);
+  }
   const handleSubjectName = (e: any) => {
     setSubjectName(e.target.value)
   }
+
   const addSubject = async () => {
-    try {
-      const response = await axios.post(`${ADD_SUBJECT_URL}`, {
-        subjectName
-      })
-      if (response && response.data) {
-        handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
-        axios.get(GET_SUBJECT_URL).then((res) => {
-          setSubjects(res.data)
+    const subj = subjects.find((name) => name.subjectName === subjectName)
+    if (subj) {
+      setIsDuplicateSubject(true)
+      setDuplicateSubject('Existing subject ')
+    } else {
+      setIsDuplicateSubject(false)
+      setDuplicateSubject('')
+      try {
+        const response = await axios.post(`${ADD_SUBJECT_URL}`, {
+          subjectName,
         })
-      } else {
+        if (response && response.data) {
+          handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
+          axios.get(GET_SUBJECT_URL).then((res) => {
+            setSubjects(res.data)
+          })
+        } else {
+          handleNotification('danger', `${CONSTANT.MESSAGE('Create New Subject').FAIL}`)
+        }
+      } catch {
         handleNotification('danger', `${CONSTANT.MESSAGE('Create New Subject').FAIL}`)
       }
-    } catch {
-      handleNotification('danger', `${CONSTANT.MESSAGE('Create New Subject').FAIL}`)
     }
   }
   const handleAddFileBank = async (e: any) => {
@@ -291,9 +324,11 @@ function Duplicate(props: any) {
               <h4>Create new subject</h4>
               <TextField
                 id="outlined"
+                error={isDuplicateSubject}
                 variant="outlined"
                 label="Subject"
                 size="small"
+                helperText={duplicateSubject}
                 value={subjectName}
                 onChange={handleSubjectName}
                 className={classes.inputSubject}
@@ -307,6 +342,14 @@ function Duplicate(props: any) {
               >
                 Add
               </Button>
+              <br />
+              <Chip
+                label="View Subject"
+                clickable
+                onClick={handleOpenListSubject}
+                className={classes.chipView}
+                variant="outlined"
+              />
             </div>
             <div className="convert-csv">
               <div className="csv-img" />
@@ -369,6 +412,13 @@ function Duplicate(props: any) {
               handleAccept={handleAcceptAdd}
               handleClose={handleDialogClose}
             />
+             <Dialog
+              title="Subjects"
+              buttonCancel="Close"
+              content={subjectDialogList}
+              isOpen={isOpenDialogSubject}
+              handleClose={handleCloseListSubject}
+            />
           </div>
           <div className="guide-line">
             <p>
@@ -392,7 +442,7 @@ function Duplicate(props: any) {
               {isAdd ? (
                 <div className="result-contain">
                   <p>
-                    Able to add this question to bank
+                    No duplicate, able to add this question to bank
                     {/* Button add question to bank */}
                     <Chip
                       label="Add question"
@@ -406,7 +456,15 @@ function Duplicate(props: any) {
                 </div>
               ) : (
                 <p style={{ color: '#d11c1c', fontSize: '0.9rem', margin: '2rem' }}>
-                  Unable to add this question to bank
+                  Duplicate detection, still add this question to bank 
+                  <Chip
+                      label="Add question"
+                      clickable
+                      icon={<DoneIcon />}
+                      onClick={clickAddQuestion}
+                      className={classes.chipDone}
+                      variant="outlined"
+                    />
                 </p>
               )}
             </div>

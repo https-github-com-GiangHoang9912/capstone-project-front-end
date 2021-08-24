@@ -23,7 +23,7 @@ export const MESSAGE = (props?: any) => {
     CHANGE_SUCCESS: `${props}Role Changed Successfully !!`,
     FAIL: `Fail to ${props}`,
     BLANK_INPUT: "Input is empty !!!",
-    GEN_SUCCESS: "Generate question successfully",
+    GEN_SUCCESS: "Generate Question Successfully !!",
     SEARCH_NOT_FOUND: `Not found ${props}`,
     NO_QUESTION_SELECTED: `Add fail, No questions selected !!`,
     NO_ANSWER: `Update fail, you must add answer to update`,

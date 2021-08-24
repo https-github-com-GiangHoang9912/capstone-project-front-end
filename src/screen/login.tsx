@@ -97,6 +97,9 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: '1.5',
     color: '#666666',
     textDecoration: 'none',
+    '&:hover': {
+      color: '#0e8ed8',
+    }
   },
   textProcess: {
     marginTop: '15px',
