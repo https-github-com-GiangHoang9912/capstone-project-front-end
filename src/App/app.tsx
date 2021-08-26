@@ -31,28 +31,26 @@ const App: FC = (props: any) => {
   const [isLogin, setIsLogin] = useState(false)
   const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false)
 
-  const [isStatus, setIsStatus] = useState(401)
-
   useEffect(() => {
     const id = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : -1
-    refreshToken(id)
-      .then((res) => {
-        console.info(res)
-        setIsStatus(200)
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 401) {
-          localStorage.clear()
-          handleNotification('danger', `${err.response.status}: Unauthorized`)
-          setIsStatus(401)
-        }
-      })
+    if (id !== -1) {
+      refreshToken(id)
+        .then((res) => {
+          console.info(res)
+        })
+        .catch((err) => {
+          if (err.response && err.response.status === 401) {
+            localStorage.clear()
+            handleNotification('danger', `${err.response.status}: Unauthorized`)
+          }
+        })
+    }
   }, [])
 
   const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
 
   let toggleMenuClass = isMenuOpen ? 'menu-open' : 'menu-close'
-  if(isLogin) {
+  if (isLogin) {
     toggleMenuClass = ''
   }
   const toggleHeaderClass = !isLogin ? 'header-open' : ''
