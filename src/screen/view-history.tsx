@@ -55,7 +55,11 @@ function ViewHistory(props: any) {
       setActivity(response.data)
     })
   }, [])
-
+  useEffect(() => {
+    axios.get(`${GET_HISTORY_URL}/${userId}/${'all'}`).then((response) => {
+      setHistories(response.data)
+    })
+  }, [])
   const search = (e: any) => {
     setSelect(e.target.value)
     if (e.target.value === '------') setHistories([])
@@ -70,9 +74,6 @@ function ViewHistory(props: any) {
         <div className="main-left">
           <p className="text">Filter by Activity </p>
           <select className="filter-select" onChange={search} value={typeId}>
-            <option key="------" value="------">
-              ------
-            </option>
             <option key="all" value="all">
               All
             </option>

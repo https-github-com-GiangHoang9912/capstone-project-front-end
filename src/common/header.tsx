@@ -1,12 +1,17 @@
-import { Dispatch, FC, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction, useState } from 'react'
 
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import axios from 'axios'
-// MUI
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 import { IconButton, AppBar, Toolbar } from '@material-ui/core'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import HistoryIcon from '@material-ui/icons/History';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import * as CONSTANT from '../const'
 
 interface Styled {
@@ -31,6 +36,12 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       flexGrow: 1,
     },
+    username: {
+      width: 'auto'
+    },
+    icon: {
+      marginRight: 10
+    }
   })
 )
 
@@ -41,7 +52,18 @@ const Header: FC<HeaderProps> = (props) => {
   const username = localStorage.getItem('username')
   const avatar = localStorage.getItem('avatar')
   const classes = useStyles()
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const usernameSplit:any= username?.split('@');
+  const newUsername = username ? usernameSplit[0]: '';
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const handleLogout = async () => {
     const response = await axios.get(LOGOUT_URL)
     setIsLogin?.(true)
@@ -81,34 +103,44 @@ const Header: FC<HeaderProps> = (props) => {
         <div className="account-box">
           {username ? (
             <div className="account-box">
-              <NavLink to="/profile" className="right-menu user">
-                <div className="avt">
+              <div className="user">
+              <div className="avt"> 
                   <img id="avatar" src={avatar || 'images/avatar2.png'} alt="avt" />
-                </div>
-                
-                <span className="tooltiptext">View Profile</span>
-              </NavLink>
-              <NavLink onClick={handleLogout} to="/login" className="right-menu log-out">
-                <div className="avt">
-                  <img
-                    id="icon"
-                    src="https://image.flaticon.com/icons/png/512/1828/1828490.png"
-                    alt="logout-img"
-                  />
+                  <Button className={classes.username} onClick={handleClick}>
+                      {newUsername}
+                    </Button>
                 </div>
                
-              </NavLink>
+                <Menu
+                  id="simple-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <NavLink to="/profile"><MenuItem onClick={handleClose}>
+                    <AccountCircleIcon className={classes.icon}/>Profile</MenuItem></NavLink>
+                    <NavLink to="/history"><MenuItem onClick={handleClose}>
+                    <HistoryIcon className={classes.icon}/>View History</MenuItem></NavLink>
+                  <NavLink onClick={handleLogout} to="/login">
+                    <MenuItem onClick={handleClose}><ExitToAppIcon className={classes.icon}/>Logout
+                    </MenuItem></NavLink>
+                </Menu>
+              </div>
+        
+            
             </div>
           ) : (
             <NavLink onClick={handleLogout} to="/login" className="right-menu log-out">
-              <div className="avt">
+              <div>
                 <img
                   id="icon"
                   src="https://image.flaticon.com/icons/png/128/1828/1828490.png"
                   alt="logout-img"
                 />
+                
               </div>
-              
+              <p className="login-p">Login</p>
             </NavLink>
           )}
         </div>
@@ -126,9 +158,6 @@ const StyledHeader = styled(Header)`
   .account-box a {
     text-decoration: none;
   }
-
-
-
   .right-menu {
     padding: 5px;
   }
@@ -163,18 +192,23 @@ const StyledHeader = styled(Header)`
 
   .avt {
     margin: auto;
-    width: 2rem;
+    display: flex; 
+    justify-content: center;
+    align-items: center;
   }
 
   #avatar {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border: 1px solid #e2e7fa;
     border-radius: 100%;
   }
-
+  .login-p{
+    font-size: 0.9rem;
+  }
   #icon {
-    width: 120%;
+    width: 30px;
+    height:30px;
   }
 `
 
