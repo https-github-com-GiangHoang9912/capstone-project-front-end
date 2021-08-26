@@ -55,7 +55,7 @@ function HomePage(props: any) {
       <div className="container">
         <div className="introduction">
           <div className="intro">
-          <h1 className="intro-title">DDSQG</h1>
+          <h1 className="intro-title">DDSGQ</h1>
           <h2 className="intro-sub">Duplicate Detection and Self-Generation Question based on answers</h2>
           <Link
                 to="main-function"
@@ -125,7 +125,7 @@ const HomeStyled = styled(HomePage)`
   }
   .introduction {
     width: 100%;
-    height: 680px;
+    height: 100vh;
     padding: 4rem 2rem;
     border:none;
     background-image: url('https://assodigitale.it/wp-content/uploads/2019/12/in-che-modo-lascesa-del-trading-finanziario-influenza-la-fintech.jpg');
