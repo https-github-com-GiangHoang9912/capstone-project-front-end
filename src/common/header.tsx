@@ -95,7 +95,7 @@ const Header: FC<HeaderProps> = (props) => {
           <NavLink to="/home">
             <img
               className="cmsIcon"
-              src="images/ddsgq.png"
+              src="images/DDSGQ.png"
               alt=""
             />
           </NavLink>
