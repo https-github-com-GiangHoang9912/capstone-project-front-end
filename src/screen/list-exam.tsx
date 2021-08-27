@@ -376,12 +376,17 @@ function ListExam(props: any) {
           subjectId,
           examName: txtNameExam,
         })
-        if (response && response.data) {
+
+        console.log(response)
+
+        if (response && response.data && response.data.statusCode === 200) {
           handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
           setOpenDialogCreate(false);
           setTxtNameExam('');
           setProgress(100)
         } else {
+          setCheckError(true)
+          setTextError(response.data.message)
           handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
           setProgress(100)
         }
@@ -395,7 +400,6 @@ function ListExam(props: any) {
     } catch (error) {
       setProgress(100)
       handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
-      console.error(error)
       refreshToken(idUser)
     }
   }
