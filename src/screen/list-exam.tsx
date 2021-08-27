@@ -407,7 +407,7 @@ function ListExam(props: any) {
       {question.length !== 0 ? (
         <div className={classes.containerCreate}>
           {question.map((ques: Question, index: number) => (
-            <div>
+            <div key={index}>
               <div className="question">
                 <p
                   style={{
@@ -421,7 +421,7 @@ function ListExam(props: any) {
               </div>
               <div className="answer">
                 {ques.answerGroup.map((ansGroup: AnswerGroup, ansIndex: number) => (
-                  <p className={classes.showAnswer}>
+                  <p key={ansIndex} className={classes.showAnswer}>
                     {String.fromCharCode(97 + ansIndex)}. {ansGroup.answer.answerText}
                   </p>
                 ))}
@@ -463,8 +463,8 @@ function ListExam(props: any) {
                   onChange={handleChange}
                   input={<Input id="demo-dialog-native" />}
                 >
-                  {subject.map((sub: Subject) => (
-                    <option value={sub.id}>{sub.subjectName}</option>
+                  {subject.map((sub: Subject, index) => (
+                    <option key={index} value={sub.id}>{sub.subjectName}</option>
                   ))}
                 </Select>
               </FormControl>
