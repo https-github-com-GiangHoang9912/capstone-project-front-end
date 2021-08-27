@@ -137,6 +137,7 @@ function Duplicate(props: any) {
         setProgress(progress + 10)
         const response = await axios.post(MODEL_CHECK_DUPLICATE_URL, {
           question,
+          subjectId
         })
         if (response && response.data) {
           setResult(response.data)
