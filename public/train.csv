@@ -1,0 +1,32 @@
+sentence,tag
+"Who is NOT reader of system requirements?",1
+"Who is the reader of user requirements?",2
+"Which is non-functional requirement?",3
+"Which is system requirement?",4
+"Which is correct definition of requirements consistency?",5
+"In the requirement statements for a library management system below, which is NOT a non-functional requirement?",6
+"In below statements, which is NOT a correct definition for requirement measures?",7
+"Given following activities in the requirement engineering process:",8
+"Which is the output of almost requirement engineering activities?",9
+"Which is NOT an input of the requirement engineering process?",10
+"Which are outputs of the requirement engineering process?",11
+"Among outputs of the requirement engineering process, which output visualizes the system from different perspective?",12
+"Which is the correct statement about the process models?",13
+"What is the role of requirement engineer?",14
+"Which is the soonest output of the requirement engineering process?",15
+"Why is it necessary to have requirement feasibility study phase?",16
+"Which is NOT a factor for almost feasibility study to base on for its decision?",17
+"Which is NOT an input of the requirement elicitation phase",18
+"What is NOT a purpose of the requirement analysing?",19
+"Given that you are at the “Requirements classification and organization” step during the elicitation and analysis phase, what is next step?",20
+"The target of requirement realism checking is to answer which of following questions?",21
+"Which is NOT a technique of the requirement validation?",22
+"Which is not an activity during the requirements review?",23
+"What don’t you have to prepare in requirement management planning?",24
+"Which is NOT an activity during requirement change management process?",25
+"What is the purpose of the requirement source traceability?",26
+"What are contents including on critical systems specification?",27
+"How many stage introduced on iterative process of risk analysis?",28
+"What item below is including on iterative process of risk analysis?",29
+"They predicted that, by the 21st century, a large proportion of software would be developed using formal methods. This prediction has not come true. How many main reasons introduced in text book for this conclution",30
+

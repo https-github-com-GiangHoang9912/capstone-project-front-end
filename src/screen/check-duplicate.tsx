@@ -57,10 +57,10 @@ const useStyles = makeStyles((theme) => ({
   chipView: {
     border: '1px solid #424c9e',
     color: '#424c9e',
-    marginLeft:5
+    marginLeft: 5,
   },
   chipSubject: {
-    margin: 10
+    margin: 10,
   },
   inputSubject: {
     width: 140,
@@ -90,7 +90,8 @@ function Duplicate(props: any) {
   const [subjectName, setSubjectName] = useState<String>()
   const [isDuplicateSubject, setIsDuplicateSubject] = useState(false)
   const [duplicateSubject, setDuplicateSubject] = useState<String>('')
-  const [isOpenDialogSubject,setIsOpenDialogSubject] = useState(false)
+  const [isOpenDialogSubject, setIsOpenDialogSubject] = useState(false)
+  const [isOpenDialogFormat, setIsOpenDialogFormat] = useState(false)
   const [isValidQues, setIsValidQues] = useState(true)
 
   function handleFileChange(e: any) {
@@ -186,11 +187,44 @@ function Duplicate(props: any) {
   const handleDialogClose = () => {
     setIsOpen(false)
     setOpenDialogAdd(false)
+    setIsOpenDialogFormat(false)
   }
-
+  const handleOpenDialogFormat = () => {
+    setIsOpenDialogFormat(true)
+  }
   const handleChange = (event: any) => {
     setSubjectId(Number(event.target.value))
   }
+
+  const formatDialog = (
+    <div className={className}>
+      <p className="format-guideline">
+        {' '}
+        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+        File bank name must be "train.csv"
+      </p>
+      <p className="format-guideline">
+        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+        The content of the bank file is written in the form:
+        <br /> <li>The first line is "sentence,tag"</li>
+        <br /> <li>The next line is question, tag</li>
+      </p>
+      <p className="format-guideline">
+        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+        Download file sample
+      </p>
+      <a href="train.csv" target="blank">
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.btnDup}
+        disabled={isDisableAddBank}
+      >
+        Download sample
+      </Button>
+      </a>
+    </div>
+  )
 
   const subjectDialogContent = (
     <div className={className}>
@@ -210,16 +244,16 @@ function Duplicate(props: any) {
   )
   const subjectDialogList = (
     <div className={className}>
-       {subjects.map((subject: Subject) => (
-          <Chip label={subject.subjectName} className={classes.chipSubject}/>
-        ))}
+      {subjects.map((subject: Subject) => (
+        <Chip label={subject.subjectName} className={classes.chipSubject} />
+      ))}
     </div>
   )
-  const handleOpenListSubject = () =>{
-    setIsOpenDialogSubject(true);
+  const handleOpenListSubject = () => {
+    setIsOpenDialogSubject(true)
   }
-  const handleCloseListSubject = () =>{
-    setIsOpenDialogSubject(false);
+  const handleCloseListSubject = () => {
+    setIsOpenDialogSubject(false)
   }
   const handleSubjectName = (e: any) => {
     setSubjectName(e.target.value)
@@ -318,10 +352,17 @@ function Duplicate(props: any) {
               ) : (
                 ' '
               )}
-              <div className="guide-line">
+              <div className="guide-line" style={{ textAlign: 'center' }}>
                 <p id="gl-left">
-                  <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Only
-                  Staff and Admin can input question bank, dataset to system.
+                  <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+                  View the file bank format
+                  <Chip
+                    label="View Format"
+                    clickable
+                    onClick={handleOpenDialogFormat}
+                    className={classes.chipView}
+                    variant="outlined"
+                  />
                 </p>
               </div>
             </div>
@@ -382,13 +423,11 @@ function Duplicate(props: any) {
               onChange={handleInputQuestion}
               className={classes.inputQuestion}
             />
-            {
-              isValidQues
-                ? ''
-                : <p className='warning'>
-                  ⚠ The text you entered is not a question or too short!
-                </p>
-            }
+            {isValidQues ? (
+              ''
+            ) : (
+              <p className="warning">⚠ The text you entered is not a question or too short!</p>
+            )}
           </div>
 
           <div className="button-group">
@@ -427,12 +466,19 @@ function Duplicate(props: any) {
               handleAccept={handleAcceptAdd}
               handleClose={handleDialogClose}
             />
-             <Dialog
+            <Dialog
               title="Subjects"
               buttonCancel="Close"
               content={subjectDialogList}
               isOpen={isOpenDialogSubject}
               handleClose={handleCloseListSubject}
+            />
+             <Dialog
+              title="Format file bank"
+              buttonCancel="Close"
+              content={formatDialog}
+              isOpen={isOpenDialogFormat}
+              handleClose={handleDialogClose}
             />
           </div>
           <div className="guide-line">
@@ -470,16 +516,16 @@ function Duplicate(props: any) {
                   </p>
                 </div>
               ) : (
-                <p className='warning'>
-                  Duplicate detection, still add this question to bank 
+                <p className="warning">
+                  Duplicate detection, still add this question to bank
                   <Chip
-                      label="Add question"
-                      clickable
-                      icon={<DoneIcon />}
-                      onClick={clickAddQuestion}
-                      className={classes.chipDone}
-                      variant="outlined"
-                    />
+                    label="Add question"
+                    clickable
+                    icon={<DoneIcon />}
+                    onClick={clickAddQuestion}
+                    className={classes.chipDone}
+                    variant="outlined"
+                  />
                 </p>
               )}
             </div>
@@ -508,7 +554,7 @@ const StyleDuplicate = styled(Duplicate)`
       rgba(17, 17, 26, 0.1) 0px 16px 56px; */
   }
 
-  .warning { 
+  .warning {
     color: red;
     margin: 1rem 0.5rem;
     text-align: left;
@@ -654,6 +700,15 @@ const StyleDuplicate = styled(Duplicate)`
   #gl-left {
     width: 100%;
     margin: 0;
+  }
+  .format-guideline {
+    font-size: 1rem;
+    color: #545d7a;
+    margin: 1rem 0;
+  }
+  .format-guideline li{
+    
+    margin: 0.4rem 0 0 2rem;
   }
   .button-group {
     width: 40%;
