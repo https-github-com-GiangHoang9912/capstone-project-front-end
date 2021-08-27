@@ -300,6 +300,7 @@ function Profile(props: any) {
             <input
               type="file"
               name="file"
+              accept="image/*"
               id="file"
               className="input-file"
               onChange={handleFileChange}
