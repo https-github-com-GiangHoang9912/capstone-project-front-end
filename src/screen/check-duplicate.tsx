@@ -12,6 +12,8 @@ import Input from '@material-ui/core/Input'
 import LoadingBar from 'react-top-loading-bar'
 import Chip from '@material-ui/core/Chip'
 import DoneIcon from '@material-ui/icons/Done'
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
@@ -57,16 +59,23 @@ const useStyles = makeStyles((theme) => ({
   chipView: {
     border: '1px solid #424c9e',
     color: '#424c9e',
-    marginLeft:5
+    marginLeft: 5,
   },
   chipSubject: {
-    margin: 10
+    margin: 10,
   },
   inputSubject: {
     width: 140,
     height: 20,
     margin: '7px 4px',
   },
+  inputQB: {
+    width: 600,
+    margin: '1.2rem'
+  },
+  chipAddQB:{
+    margin: '2rem 1rem'
+  }
 }))
 function Duplicate(props: any) {
   const { className, handleNotification } = props
@@ -90,8 +99,11 @@ function Duplicate(props: any) {
   const [subjectName, setSubjectName] = useState<String>()
   const [isDuplicateSubject, setIsDuplicateSubject] = useState(false)
   const [duplicateSubject, setDuplicateSubject] = useState<String>('')
-  const [isOpenDialogSubject,setIsOpenDialogSubject] = useState(false)
+  const [isOpenDialogSubject, setIsOpenDialogSubject] = useState(false)
+  const [isOpenDialogFormat, setIsOpenDialogFormat] = useState(false)
+  const [isOpenDialogForm, setIsOpenDialogForm] = useState(false)
   const [isValidQues, setIsValidQues] = useState(true)
+  const [listQuestion, setListQuestion] = useState<string[]>([''])
 
   function handleFileChange(e: any) {
     setFile(e.target.files[0])
@@ -186,12 +198,109 @@ function Duplicate(props: any) {
   const handleDialogClose = () => {
     setIsOpen(false)
     setOpenDialogAdd(false)
+    setIsOpenDialogFormat(false)
+    setIsOpenDialogForm(false)
   }
-
+  const handleOpenDialogForm = () =>{
+    setIsOpenDialogForm(true)
+  }
+  const handleOpenDialogFormat = () => {
+    setIsOpenDialogFormat(true)
+  }
   const handleChange = (event: any) => {
     setSubjectId(Number(event.target.value))
   }
 
+  const formatDialog = (
+    <div className={className}>
+      <p className="format-guideline">
+        {' '}
+        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+        Download the sample file and edit it
+      </p>
+      <p className="format-guideline">
+        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+        The content of the bank file is written in the form:
+        <br /> <li>The first line is "sentence,tag"</li>
+        <br /> <li>The next line is question, tag</li>
+      </p>
+      <p className="format-guideline">
+        {' '}
+        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+        Replace all questions from the second line in the sample file with new questions
+      </p>
+      <p className="format-guideline">
+        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+        File sample:
+      </p>
+      <a href="train.csv" target="blank">
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.btnDup}
+        disabled={isDisableAddBank}
+      >
+        Download sample
+      </Button>
+      </a>
+    </div>
+  )
+
+  const addQuestion = ()=>{
+    const newList = [...listQuestion]
+    newList.push('');
+    setListQuestion(newList)
+    console.log(listQuestion.length)
+  }
+  const deleteQuestion = (idx:number) =>{
+    const newList = [...listQuestion]
+    newList.splice(idx, 1)
+    setListQuestion(newList)
+  }
+  const handleQuestionValue = (index: number)=>(e:any)=>{
+    const newList = [...listQuestion]
+    newList[index] = e.target.value;
+    setListQuestion(newList)
+  }
+  const handleDialogFormAccept= ()=>{
+    setIsOpenDialogForm(false);
+    console.log(listQuestion);
+
+  }
+  const formBankDialog = (
+    <div className={className}>
+      {listQuestion.map((ques, index)=>(
+        <div className="bank-item">
+         <TextField
+         id="outlined-basic"
+         value={ques}
+         className={classes.inputQB}
+         multiline
+         rowsMax={2}
+         onChange={handleQuestionValue(index)}
+         label={`Question ${index + 1}`}
+         variant="outlined"
+         placeholder="Enter question"
+  
+       />
+       <RemoveCircleIcon
+         fontSize="medium"
+         color="secondary"
+         onClick={() => deleteQuestion(index)}
+       />
+        </div>
+      ))}
+        <Chip
+        avatar={<AddCircleIcon />}
+        label="New question"
+        clickable
+        color="primary"
+        className={classes.chipAddQB}
+        onClick={addQuestion}
+      />
+    </div>
+  )
+  
   const subjectDialogContent = (
     <div className={className}>
       <h4>Select a subject to add a question</h4>
@@ -210,16 +319,16 @@ function Duplicate(props: any) {
   )
   const subjectDialogList = (
     <div className={className}>
-       {subjects.map((subject: Subject) => (
-          <Chip label={subject.subjectName} className={classes.chipSubject}/>
-        ))}
+      {subjects.map((subject: Subject) => (
+        <Chip label={subject.subjectName} className={classes.chipSubject} />
+      ))}
     </div>
   )
-  const handleOpenListSubject = () =>{
-    setIsOpenDialogSubject(true);
+  const handleOpenListSubject = () => {
+    setIsOpenDialogSubject(true)
   }
-  const handleCloseListSubject = () =>{
-    setIsOpenDialogSubject(false);
+  const handleCloseListSubject = () => {
+    setIsOpenDialogSubject(false)
   }
   const handleSubjectName = (e: any) => {
     setSubjectName(e.target.value)
@@ -318,12 +427,36 @@ function Duplicate(props: any) {
               ) : (
                 ' '
               )}
-              <div className="guide-line">
+              <div className="guide-line" style={{ textAlign: 'center' }}>
                 <p id="gl-left">
-                  <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Only
-                  Staff and Admin can input question bank, dataset to system.
+                  <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+                  View the guideline to import file question bank
+                  <br />
+                  <Chip
+                    label="View guideline"
+                    clickable
+                    onClick={handleOpenDialogFormat}
+                    className={classes.chipView}
+                    variant="outlined"
+                  />
                 </p>
               </div>
+              
+            </div>
+            <div className="create-bank">
+            <h2 className="select">Create New Bank</h2>
+            <p className="gl-bank">
+            <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+                 Enter the question in the input field to create new file bank
+                 </p>
+                <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleOpenDialogForm}
+                disabled={isDisable}
+                >
+                Create new bank
+              </Button>
             </div>
             <div className="add-subject">
               <h4>Create new subject</h4>
@@ -356,15 +489,7 @@ function Duplicate(props: any) {
                 variant="outlined"
               />
             </div>
-            <div className="convert-csv">
-              <div className="csv-img" />
-              <div className="csv-link">
-                <a href="https://convertio.co/vn/doc-csv/" target="_blank" rel="noreferrer">
-                  <h3>Convert file to CSV</h3>
-                </a>
-                <p>Go to CSV convert page and convert your file to CSV format</p>
-              </div>
-            </div>
+          
           </div>
         ) : (
           ''
@@ -382,13 +507,11 @@ function Duplicate(props: any) {
               onChange={handleInputQuestion}
               className={classes.inputQuestion}
             />
-            {
-              isValidQues
-                ? ''
-                : <p className='warning'>
-                  ⚠ The text you entered is not a question or too short!
-                </p>
-            }
+            {isValidQues ? (
+              ''
+            ) : (
+              <p className="warning">⚠ The text you entered is not a question or too short!</p>
+            )}
           </div>
 
           <div className="button-group">
@@ -427,12 +550,28 @@ function Duplicate(props: any) {
               handleAccept={handleAcceptAdd}
               handleClose={handleDialogClose}
             />
-             <Dialog
+            <Dialog
               title="Subjects"
               buttonCancel="Close"
               content={subjectDialogList}
               isOpen={isOpenDialogSubject}
               handleClose={handleCloseListSubject}
+            />
+             <Dialog
+              title="Format file bank"
+              buttonCancel="Close"
+              content={formatDialog}
+              isOpen={isOpenDialogFormat}
+              handleClose={handleDialogClose}
+            />
+             <Dialog
+              title="Creat New Bank"
+              buttonAccept="Save"
+              buttonCancel="Close"
+              content={formBankDialog}
+              isOpen={isOpenDialogForm}
+              handleAccept={handleDialogFormAccept}
+              handleClose={handleDialogClose}
             />
           </div>
           <div className="guide-line">
@@ -470,16 +609,16 @@ function Duplicate(props: any) {
                   </p>
                 </div>
               ) : (
-                <p className='warning'>
-                  Duplicate detection, still add this question to bank 
+                <p className="warning">
+                  Duplicate detection, still add this question to bank
                   <Chip
-                      label="Add question"
-                      clickable
-                      icon={<DoneIcon />}
-                      onClick={clickAddQuestion}
-                      className={classes.chipDone}
-                      variant="outlined"
-                    />
+                    label="Add question"
+                    clickable
+                    icon={<DoneIcon />}
+                    onClick={clickAddQuestion}
+                    className={classes.chipDone}
+                    variant="outlined"
+                  />
                 </p>
               )}
             </div>
@@ -508,7 +647,7 @@ const StyleDuplicate = styled(Duplicate)`
       rgba(17, 17, 26, 0.1) 0px 16px 56px; */
   }
 
-  .warning { 
+  .warning {
     color: red;
     margin: 1rem 0.5rem;
     text-align: left;
@@ -582,13 +721,16 @@ const StyleDuplicate = styled(Duplicate)`
     margin: 0;
     font-size: 0.9rem;
   }
-  .add-subject {
+  .add-subject, .create-bank {
     padding: 1em;
     margin-top: 1em;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     background-color: #fff;
     text-align: start;
     border-radius: 5px;
+  }
+  .create-bank{
+    text-align: center;
   }
   .control-right {
     width: 50%;
@@ -651,9 +793,23 @@ const StyleDuplicate = styled(Duplicate)`
     font-size: 0.9rem;
     color: #545d7a;
   }
+  .gl-bank{
+    font-size: 0.9rem;
+    color: #545d7a;
+    margin: 1rem;
+  }
   #gl-left {
     width: 100%;
     margin: 0;
+  }
+  .format-guideline {
+    font-size: 1rem;
+    color: #545d7a;
+    margin: 1rem 0;
+  }
+  .format-guideline li{
+    
+    margin: 0.4rem 0 0 2rem;
   }
   .button-group {
     width: 40%;
@@ -661,6 +817,11 @@ const StyleDuplicate = styled(Duplicate)`
     padding: 1rem;
     display: flex;
     justify-content: space-around;
+    align-items: center;
+  }
+  .bank-item{
+    display: flex;
+    justify-content: center;
     align-items: center;
   }
   .control-right {
