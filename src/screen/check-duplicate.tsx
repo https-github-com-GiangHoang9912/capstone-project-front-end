@@ -265,7 +265,19 @@ function Duplicate(props: any) {
   }
   const handleDialogFormAccept = () => {
     setIsOpenDialogForm(false)
-    console.log(listQuestion)
+    const dataCsv = listQuestion.map((e, index) => [`"${e.replaceAll(`"`, `'`)}"`, index])
+    dataCsv.unshift(['sentence', 'tag'])
+
+    const csvContent = `data:text/csv;charset=utf-8,${dataCsv.map((e) => e.join(',')).join('\n')}`
+
+    const encodedUri = encodeURI(csvContent)
+
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', 'train.csv')
+    document.body.appendChild(link)
+
+    link.click()
   }
   const formBankDialog = (
     <div className={className}>
@@ -311,7 +323,9 @@ function Duplicate(props: any) {
         input={<Input id="demo-dialog-native" />}
       >
         {subjects.map((sub: Subject, index) => (
-          <option key={index} value={sub.id}>{sub.subjectName}</option>
+          <option key={index} value={sub.id}>
+            {sub.subjectName}
+          </option>
         ))}
       </Select>
     </div>
@@ -409,7 +423,9 @@ function Duplicate(props: any) {
                       input={<Input id="demo-dialog-native" />}
                     >
                       {subjects.map((sub: Subject, index) => (
-                        <option key={index} value={sub.id}>{sub.subjectName}</option>
+                        <option key={index} value={sub.id}>
+                          {sub.subjectName}
+                        </option>
                       ))}
                     </Select>
                   </div>
@@ -519,7 +535,9 @@ function Duplicate(props: any) {
               input={<Input id="demo-dialog-native" />}
             >
               {subjects.map((sub: Subject, index) => (
-                <option key={index} value={sub.id}>{sub.subjectName}</option>
+                <option key={index} value={sub.id}>
+                  {sub.subjectName}
+                </option>
               ))}
             </Select>
           </div>
