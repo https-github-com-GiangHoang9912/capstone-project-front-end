@@ -1,8 +1,8 @@
-import react, { useRef, useState, useEffect, useCallback, useContext } from 'react'
+import { useRef, useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 
 // import Checkbox from '@material-ui/core/Checkbox';
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory, useLocation, NavLink } from 'react-router-dom'
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -15,6 +15,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { Button, makeStyles } from '@material-ui/core'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import styled from 'styled-components'
@@ -170,9 +171,39 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   titleOfExam: {
-    marginTop: '4rem',
     lineHeight: '2rem',
     fontWeight: 600,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  containerBack: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '3rem',
+    width: '100%',
+    textAlign: 'start',
+    '&:hover': {
+      cursor: 'pointer',
+      color: '#3F51B5'
+    },
+  },
+  textBack: {
+    color: '#545d7a',
+    fontWeight: 400,
+    fontSize: ' 0.8rem',
+    '&:hover': {
+      cursor: 'pointer',
+      color: '#3F51B5'
+    },
+  },
+  iconBack: {
+    color: '#545d7a',
+    fontWeight: 400,
+    '&:hover': {
+      cursor: 'pointer',
+      color: '#3F51B5'
+    },
   },
   searchQuestions: {
     display: 'flex',
@@ -235,11 +266,14 @@ function UpdateExam(props: any) {
   const [progress, setProgress] = useState(0)
   const [checkError, setCheckError] = useState(false)
   const [textError, setTextError] = useState('')
-  const [nameSubjectBank, setNameSubjectBank] = useState('')
+  // const [nameSubjectBank, setNameSubjectBank] = useState('')
   const location: any = useLocation()
   const { idExam } = location.state.params
   const { idSubject } = location.state.params
   const { examName } = location.state.params
+  const { subjectName } = location.state.params
+
+  // console.log('subjectNameTest', subjectName)
   const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
   //* Get question by idExam */
   useEffect(() => {
@@ -260,7 +294,7 @@ function UpdateExam(props: any) {
       .get(`${GET_QUESTIONBANK_URL}/${idSubject}`)
       .then((response) => {
         setSubject(response.data[0])
-        setNameSubjectBank(response.data[0].subjectName)
+        // setNameSubjectBank(response.data[0].subjectName)
         setQuestionBank(response.data[0].questionBank)
       })
       .catch((err) => {
@@ -311,7 +345,7 @@ function UpdateExam(props: any) {
         examId: idExam,
       }))
       if (questionAdd.length != 0) {
-        const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd);
+        const response = await axios.post(`${CREATE_QUESTION_URL}/${userId}`, questionAdd);
         if (response && response.data) {
           console.log(response)
           setOpenDialogAdd(false)
@@ -334,6 +368,7 @@ function UpdateExam(props: any) {
       setProgress(100)
       setSearchValue('')
       setTextSearch('')
+      refreshToken(userId)
     }
   }
   const handleCloseDialogAdd = (e: any) => {
@@ -551,7 +586,7 @@ function UpdateExam(props: any) {
   )
   /* event when click Back */
   const handleClickBack = () => {
-    history.push('/list-exam')
+    history.push('/exam')
   }
 
   const columns = [
@@ -778,8 +813,18 @@ function UpdateExam(props: any) {
       <div className="create-exam">
         <div className="container-exam">
           <div className="main">
+            <div className={classes.containerBack}>
+              <ArrowBackIcon
+                className={classes.iconBack}
+                fontSize="medium"
+                onClick={handleClickBack}
+              />
+              <NavLink to="/exam">
+                <span className={classes.textBack}>Back to list</span>
+              </NavLink>
+            </div>
             <div className={classes.titleOfExam}>
-              <h2 style={{ color: '#495057', fontFamily: 'inherit' }}>{nameSubjectBank} - {examName}</h2>
+              <h2 style={{ color: '#495057', fontFamily: 'inherit', width: '82%' }}>{subjectName} - {examName}</h2>
             </div>
             <div className="content-exam">
               <Table columns={columns} data={questions} isPagination={false} />
@@ -805,15 +850,15 @@ function UpdateExam(props: any) {
                 }}
               >
                 <span>
-                  Do you want delete this question???
+                  Do you want to delete this question ?
                 </span>
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => handleAcceptDialogDelete(idQuestion)} color="secondary">
-                  Delete
+                  Yes
                 </Button>
                 <Button onClick={handleCancelDialogDelete} color="primary">
-                  Cancel
+                  No
                 </Button>
               </DialogActions>
             </Dialog>
@@ -836,7 +881,7 @@ function UpdateExam(props: any) {
             >
               <DialogTitle id="alert-dialog-title">
                 <div className={classes.title}>
-                  <h2 className={classes.titleExam}>{nameSubjectBank} Bank</h2>
+                  <h2 className={classes.titleExam}>{subjectName} Bank</h2>
                 </div>
               </DialogTitle>
               <DialogContent>
