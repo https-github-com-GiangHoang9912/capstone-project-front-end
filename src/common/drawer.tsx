@@ -5,7 +5,7 @@ import {
   makeStyles,
   Theme,
   createStyles,
-  createMuiTheme,
+  createTheme,
   ThemeProvider,
 } from '@material-ui/core/styles'
 
@@ -38,7 +38,7 @@ makeStyles((theme: Theme) =>
   })
 )
 
-const customTheme = createMuiTheme({
+const customTheme = createTheme({
   overrides: {
     // Style sheet name ⚛️
     MuiDrawer: {

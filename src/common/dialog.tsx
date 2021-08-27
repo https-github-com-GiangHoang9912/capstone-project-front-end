@@ -11,8 +11,8 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 DialogComponent.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
-  buttonAccept: PropTypes.string.isRequired,
+  message: PropTypes.string,
+  buttonAccept: PropTypes.string,
   buttonCancel: PropTypes.string.isRequired,
   isOpen: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
@@ -20,6 +20,8 @@ DialogComponent.propTypes = {
 
 DialogComponent.defaultProps = {
   className: '',
+  message: '',
+  buttonAccept: ''
 }
 
 function DialogComponent(props?: any) {

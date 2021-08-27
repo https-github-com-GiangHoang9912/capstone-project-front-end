@@ -12,7 +12,7 @@ import Input from '@material-ui/core/Input'
 import LoadingBar from 'react-top-loading-bar'
 import Chip from '@material-ui/core/Chip'
 import DoneIcon from '@material-ui/icons/Done'
-import AddCircleIcon from '@material-ui/icons/AddCircle';
+import AddCircleIcon from '@material-ui/icons/AddCircle'
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
@@ -44,7 +44,7 @@ interface Subject {
   subjectName: String
 }
 const useStyles = makeStyles((theme) => ({
-  root: { },
+  root: {},
   inputQuestion: {
     width: '100%',
   },
@@ -71,11 +71,11 @@ const useStyles = makeStyles((theme) => ({
   },
   inputQB: {
     width: 600,
-    margin: '1.2rem'
+    margin: '1.2rem',
   },
   chipAddQB: {
-    margin: '2rem 1rem'
-  }
+    margin: '2rem 1rem',
+  },
 }))
 function Duplicate(props: any) {
   const { className, handleNotification } = props
@@ -137,7 +137,7 @@ function Duplicate(props: any) {
         setProgress(progress + 10)
         const response = await axios.post(MODEL_CHECK_DUPLICATE_URL, {
           question,
-          subjectId
+          subjectId,
         })
         if (response && response.data) {
           setResult(response.data)
@@ -249,7 +249,7 @@ function Duplicate(props: any) {
 
   const addQuestion = () => {
     const newList = [...listQuestion]
-    newList.push('');
+    newList.push('')
     setListQuestion(newList)
     console.log(listQuestion.length)
   }
@@ -260,29 +260,27 @@ function Duplicate(props: any) {
   }
   const handleQuestionValue = (index: number) => (e: any) => {
     const newList = [...listQuestion]
-    newList[index] = e.target.value;
+    newList[index] = e.target.value
     setListQuestion(newList)
   }
   const handleDialogFormAccept = () => {
-    setIsOpenDialogForm(false);
-    console.log(listQuestion);
-
+    setIsOpenDialogForm(false)
+    console.log(listQuestion)
   }
   const formBankDialog = (
     <div className={className}>
       {listQuestion.map((ques, index) => (
-        <div className="bank-item">
+        <div className="bank-item" key={index}>
           <TextField
             id="outlined-basic"
             value={ques}
             className={classes.inputQB}
             multiline
-            rowsMax={2}
+            maxRows={2}
             onChange={handleQuestionValue(index)}
             label={`Question ${index + 1}`}
             variant="outlined"
             placeholder="Enter question"
-
           />
           <RemoveCircleIcon
             fontSize="medium"
@@ -312,16 +310,16 @@ function Duplicate(props: any) {
         onChange={handleChange}
         input={<Input id="demo-dialog-native" />}
       >
-        {subjects.map((sub: Subject) => (
-          <option value={sub.id}>{sub.subjectName}</option>
+        {subjects.map((sub: Subject, index) => (
+          <option key={index} value={sub.id}>{sub.subjectName}</option>
         ))}
       </Select>
     </div>
   )
   const subjectDialogList = (
     <div className={className}>
-      {subjects.map((subject: Subject) => (
-        <Chip label={subject.subjectName} className={classes.chipSubject} />
+      {subjects.map((subject: Subject, index) => (
+        <Chip key={index} label={subject.subjectName} className={classes.chipSubject} />
       ))}
     </div>
   )
@@ -410,8 +408,8 @@ function Duplicate(props: any) {
                       onChange={handleChange}
                       input={<Input id="demo-dialog-native" />}
                     >
-                      {subjects.map((sub: Subject) => (
-                        <option value={sub.id}>{sub.subjectName}</option>
+                      {subjects.map((sub: Subject, index) => (
+                        <option key={index} value={sub.id}>{sub.subjectName}</option>
                       ))}
                     </Select>
                   </div>
@@ -442,7 +440,6 @@ function Duplicate(props: any) {
                   />
                 </p>
               </div>
-
             </div>
             <div className="create-bank">
               <h2 className="select">Create New Bank</h2>
@@ -490,7 +487,6 @@ function Duplicate(props: any) {
                 variant="outlined"
               />
             </div>
-
           </div>
         ) : (
           ''
@@ -501,7 +497,7 @@ function Duplicate(props: any) {
             <TextField
               id="outlined-multiline-static"
               multiline
-              rowsMax={6}
+              maxRows={6}
               variant="outlined"
               label="Question"
               value={question}
@@ -522,8 +518,8 @@ function Duplicate(props: any) {
               onChange={handleChange}
               input={<Input id="demo-dialog-native" />}
             >
-              {subjects.map((sub: Subject) => (
-                <option value={sub.id}>{sub.subjectName}</option>
+              {subjects.map((sub: Subject, index) => (
+                <option key={index} value={sub.id}>{sub.subjectName}</option>
               ))}
             </Select>
           </div>
@@ -647,7 +643,7 @@ function Duplicate(props: any) {
 const StyleDuplicate = styled(Duplicate)`
   width: 100%;
   height: auto;
- 
+
   .container {
     margin: 0.5rem;
     padding: 5em 10px 10px 10px;
@@ -714,7 +710,7 @@ const StyleDuplicate = styled(Duplicate)`
     text-align: start;
     border-radius: 5px;
   }
-  .subject-box{
+  .subject-box {
     margin: 1rem 0rem;
   }
   .csv-link {
@@ -736,7 +732,8 @@ const StyleDuplicate = styled(Duplicate)`
     margin: 0;
     font-size: 0.9rem;
   }
-  .add-subject, .create-bank {
+  .add-subject,
+  .create-bank {
     padding: 1em;
     margin-top: 1em;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -744,7 +741,7 @@ const StyleDuplicate = styled(Duplicate)`
     text-align: start;
     border-radius: 5px;
   }
-  .create-bank{
+  .create-bank {
     text-align: center;
   }
   .control-right {
@@ -808,7 +805,7 @@ const StyleDuplicate = styled(Duplicate)`
     font-size: 0.9rem;
     color: #545d7a;
   }
-  .gl-bank{
+  .gl-bank {
     font-size: 0.9rem;
     color: #545d7a;
     margin: 1rem;
@@ -822,8 +819,7 @@ const StyleDuplicate = styled(Duplicate)`
     color: #545d7a;
     margin: 1rem 0;
   }
-  .format-guideline li{
-    
+  .format-guideline li {
     margin: 0.4rem 0 0 2rem;
   }
   .button-group {
@@ -834,7 +830,7 @@ const StyleDuplicate = styled(Duplicate)`
     justify-content: center;
     align-items: center;
   }
-  .bank-item{
+  .bank-item {
     display: flex;
     justify-content: center;
     align-items: center;
