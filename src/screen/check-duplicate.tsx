@@ -44,12 +44,12 @@ interface Subject {
   subjectName: String
 }
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: { },
   inputQuestion: {
     width: '100%',
   },
   btnDup: {
-    margin: 10,
+    margin: '1rem',
   },
   chipDone: {
     marginLeft: '1rem',
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     width: 600,
     margin: '1.2rem'
   },
-  chipAddQB:{
+  chipAddQB: {
     margin: '2rem 1rem'
   }
 }))
@@ -201,7 +201,7 @@ function Duplicate(props: any) {
     setIsOpenDialogFormat(false)
     setIsOpenDialogForm(false)
   }
-  const handleOpenDialogForm = () =>{
+  const handleOpenDialogForm = () => {
     setIsOpenDialogForm(true)
   }
   const handleOpenDialogFormat = () => {
@@ -234,63 +234,63 @@ function Duplicate(props: any) {
         File sample:
       </p>
       <a href="train.csv" target="blank">
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.btnDup}
-        disabled={isDisableAddBank}
-      >
-        Download sample
-      </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.btnDup}
+          disabled={isDisableAddBank}
+        >
+          Download sample
+        </Button>
       </a>
     </div>
   )
 
-  const addQuestion = ()=>{
+  const addQuestion = () => {
     const newList = [...listQuestion]
     newList.push('');
     setListQuestion(newList)
     console.log(listQuestion.length)
   }
-  const deleteQuestion = (idx:number) =>{
+  const deleteQuestion = (idx: number) => {
     const newList = [...listQuestion]
     newList.splice(idx, 1)
     setListQuestion(newList)
   }
-  const handleQuestionValue = (index: number)=>(e:any)=>{
+  const handleQuestionValue = (index: number) => (e: any) => {
     const newList = [...listQuestion]
     newList[index] = e.target.value;
     setListQuestion(newList)
   }
-  const handleDialogFormAccept= ()=>{
+  const handleDialogFormAccept = () => {
     setIsOpenDialogForm(false);
     console.log(listQuestion);
 
   }
   const formBankDialog = (
     <div className={className}>
-      {listQuestion.map((ques, index)=>(
+      {listQuestion.map((ques, index) => (
         <div className="bank-item">
-         <TextField
-         id="outlined-basic"
-         value={ques}
-         className={classes.inputQB}
-         multiline
-         rowsMax={2}
-         onChange={handleQuestionValue(index)}
-         label={`Question ${index + 1}`}
-         variant="outlined"
-         placeholder="Enter question"
-  
-       />
-       <RemoveCircleIcon
-         fontSize="medium"
-         color="secondary"
-         onClick={() => deleteQuestion(index)}
-       />
+          <TextField
+            id="outlined-basic"
+            value={ques}
+            className={classes.inputQB}
+            multiline
+            rowsMax={2}
+            onChange={handleQuestionValue(index)}
+            label={`Question ${index + 1}`}
+            variant="outlined"
+            placeholder="Enter question"
+
+          />
+          <RemoveCircleIcon
+            fontSize="medium"
+            color="secondary"
+            onClick={() => deleteQuestion(index)}
+          />
         </div>
       ))}
-        <Chip
+      <Chip
         avatar={<AddCircleIcon />}
         label="New question"
         clickable
@@ -300,7 +300,7 @@ function Duplicate(props: any) {
       />
     </div>
   )
-  
+
   const subjectDialogContent = (
     <div className={className}>
       <h4>Select a subject to add a question</h4>
@@ -441,20 +441,20 @@ function Duplicate(props: any) {
                   />
                 </p>
               </div>
-              
+
             </div>
             <div className="create-bank">
-            <h2 className="select">Create New Bank</h2>
-            <p className="gl-bank">
-            <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-                 Enter the question in the input field to create new file bank
-                 </p>
-                <Button
+              <h2 className="select">Create New Bank</h2>
+              <p className="gl-bank">
+                <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+                Enter the question in the input field to create new file bank
+              </p>
+              <Button
                 variant="contained"
                 color="secondary"
                 onClick={handleOpenDialogForm}
                 disabled={isDisable}
-                >
+              >
                 Create new bank
               </Button>
             </div>
@@ -489,7 +489,7 @@ function Duplicate(props: any) {
                 variant="outlined"
               />
             </div>
-          
+
           </div>
         ) : (
           ''
@@ -513,7 +513,19 @@ function Duplicate(props: any) {
               <p className="warning">⚠ The text you entered is not a question or too short!</p>
             )}
           </div>
-
+          <div className="subject-box">
+            <h4>Select subject </h4>
+            <Select
+              native
+              value={subjectId}
+              onChange={handleChange}
+              input={<Input id="demo-dialog-native" />}
+            >
+              {subjects.map((sub: Subject) => (
+                <option value={sub.id}>{sub.subjectName}</option>
+              ))}
+            </Select>
+          </div>
           <div className="button-group">
             <Button
               variant="contained"
@@ -557,14 +569,14 @@ function Duplicate(props: any) {
               isOpen={isOpenDialogSubject}
               handleClose={handleCloseListSubject}
             />
-             <Dialog
+            <Dialog
               title="Format file bank"
               buttonCancel="Close"
               content={formatDialog}
               isOpen={isOpenDialogFormat}
               handleClose={handleDialogClose}
             />
-             <Dialog
+            <Dialog
               title="Creat New Bank"
               buttonAccept="Save"
               buttonCancel="Close"
@@ -634,7 +646,7 @@ function Duplicate(props: any) {
 const StyleDuplicate = styled(Duplicate)`
   width: 100%;
   height: auto;
-
+ 
   .container {
     margin: 0.5rem;
     padding: 5em 10px 10px 10px;
@@ -701,7 +713,9 @@ const StyleDuplicate = styled(Duplicate)`
     text-align: start;
     border-radius: 5px;
   }
-
+  .subject-box{
+    margin: 1rem 0rem;
+  }
   .csv-link {
     margin-left: 1rem;
   }
@@ -812,11 +826,11 @@ const StyleDuplicate = styled(Duplicate)`
     margin: 0.4rem 0 0 2rem;
   }
   .button-group {
-    width: 40%;
+    width: 50%;
     margin: auto;
     padding: 1rem;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
   }
   .bank-item{
