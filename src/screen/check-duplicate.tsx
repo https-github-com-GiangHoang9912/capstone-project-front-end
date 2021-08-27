@@ -421,6 +421,7 @@ function Duplicate(props: any) {
               label="Question"
               value={question}
               onChange={handleInputQuestion}
+              error={!isValidQues}
               className={classes.inputQuestion}
             />
             {isValidQues ? (

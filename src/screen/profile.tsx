@@ -51,8 +51,9 @@ function Profile(props: any) {
   const [file, setFile] = useState<any>('')
   const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
 
-  
-  function handleEditProfile() {
+
+  function handleEditProfile(e: any) {
+    e.preventDefault();
     setIsOpen(true)
     setEditStatus(!editStatus)
   }
@@ -61,7 +62,7 @@ function Profile(props: any) {
   }
   const handleAccept = async () => {
     setIsOpen(false)
-  
+
     if (isInputValid) {
       setProgress(100)
       try {
@@ -69,7 +70,7 @@ function Profile(props: any) {
           const uploadTask = storage.ref(`images/${file.name}`).put(file)
           uploadTask.on(
             'state_changed',
-            () => {},
+            () => { },
             (error) => {
               console.log(error)
             },
@@ -89,7 +90,7 @@ function Profile(props: any) {
                     avatar: url,
                   })
                   localStorage.setItem('avatar', url)
-                  
+
                 })
               refreshToken(userId)
               window.location.reload()
@@ -104,7 +105,7 @@ function Profile(props: any) {
             phone,
             dob,
           })
-        
+
           window.location.reload()
           refreshToken(userId)
         }
@@ -162,115 +163,112 @@ function Profile(props: any) {
         <div className="contain">
           <div className="form-contain">
             <h2 id="information">Information</h2>
-            <div className="form-info">
-              <span>
-                ‍<FontAwesomeIcon icon={faUser} /> First Name
-              </span>
-              <input
-                type="text"
-                id="first-name"
-                className="input-bar"
-                onBlur={(e) =>
-                  validateInput(e.target.value, /^(?!\s*$).+/, 'Name cannot be blank', 'fname')
-                }
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                
-              />
-              {inputError === 'fname' ? <p className="errorMessage">{errorMessage}</p> : ''}
-            </div>
-            <div className="form-info">
-              <span>
-                ‍<FontAwesomeIcon icon={faUser} /> Last Name
-              </span>
-              <input
-                type="text"
-                id="last-name"
-                className="input-bar"
-                onBlur={(e) =>
-                  validateInput(e.target.value, /^(?!\s*$).+/, 'Name cannot be blank', 'lname')
-                }
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                
-              />
-              {inputError === 'lname' ? <p className="errorMessage">{errorMessage}</p> : ''}
-            </div>
-            <div className="form-info">
-              <span>
-                <FontAwesomeIcon icon={faCalendar} /> Date of birth
-              </span>
-              <input
-                type="text"
-                id="dob"
-                className="input-bar"
-                onBlur={(e) =>
-                  validateInput(
-                    e.target.value,
-                    /^[0-9]{2}[\/][0-9]{2}[\/][0-9]{4}$/g,
-                    'Date must be in format DD/MM/YYYY',
-                    'dob'
-                  )
-                }
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
-               
-              />
-              {inputError === 'dob' ? <p className="errorMessage">{errorMessage}</p> : ''}
-            </div>
-            <div className="form-info">
-              <span>
-                <FontAwesomeIcon icon={faAddressBook} /> Address
-              </span>
-              <input
-                type="text"
-                id="address"
-                className="input-bar"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                
-              />
-            </div>
-            <div className="form-info">
-              <span>
-                <FontAwesomeIcon icon={faPhone} /> Phone number
-              </span>
-              <input
-                type="text"
-                id="phone"
-                className="input-bar"
-                onBlur={(e) =>
-                  validateInput(
-                    e.target.value,
-                    /^\d{10,11}$/,
-                    'Phone must be 10-11 digits',
-                    'Phone'
-                  )
-                }
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-      
-              />
-              {inputError === 'Phone' ? <p className="errorMessage">{errorMessage}</p> : ''}
-            </div>
-            <div className="form-info">
-              <span>
-                <FontAwesomeIcon icon={faEnvelope} /> Email
-              </span>
-              <input
-                type="text"
-                id="email"
-                className="input-bar "
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={true}
-              />
-              {inputError === 'Email' ? <p className="errorMessage">{errorMessage}</p> : ''}
-            </div>
-             
-              <Button variant="contained" color="primary" disabled={!isInputValid} onClick={handleEditProfile}>
-              Save
-             </Button>
+            <form onSubmit={handleEditProfile}>
+              <div className="form-info">
+                <span>
+                  ‍<FontAwesomeIcon icon={faUser} /> First Name
+                </span>
+                <input
+                  type="text"
+                  id="first-name"
+                  className="input-bar"
+                  required={true}
+                  title="Firstname cannot be empty"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+                {inputError === 'fname' ? <p className="errorMessage">{errorMessage}</p> : ''}
+              </div>
+              <div className="form-info">
+                <span>
+                  ‍<FontAwesomeIcon icon={faUser} /> Last Name
+                </span>
+                <input
+                  type="text"
+                  id="last-name"
+                  className="input-bar"
+                  required={true}
+                  title="LastName cannot be empty"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+
+                />
+                {inputError === 'lname' ? <p className="errorMessage">{errorMessage}</p> : ''}
+              </div>
+              <div className="form-info">
+                <span>
+                  <FontAwesomeIcon icon={faCalendar} /> Date of birth
+                </span>
+                <input
+                  type="text"
+                  id="dob"
+                  className="input-bar"
+                  required={true}
+                  pattern='^[0-9]{2}[\/][0-9]{2}[\/][0-9]{4}$'
+                  title="Date of Birth must have dd/mm/yyyy format"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                />
+                {inputError === 'dob' ? <p className="errorMessage">{errorMessage}</p> : ''}
+              </div>
+              <div className="form-info">
+                <span>
+                  <FontAwesomeIcon icon={faAddressBook} /> Address
+                </span>
+                <input
+                  type="text"
+                  id="address"
+                  required={true}
+                  title="Address cannot be empty"
+                  className="input-bar"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+
+                />
+              </div>
+              <div className="form-info">
+                <span>
+                  <FontAwesomeIcon icon={faPhone} /> Phone number
+                </span>
+                <input
+                  type="text"
+                  id="phone"
+                  className="input-bar"
+                  required={true}
+                  pattern="^\d{10,11}$"
+                  title="Phone number must have 10-11 digits"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+
+                />
+                {inputError === 'Phone' ? <p className="errorMessage">{errorMessage}</p> : ''}
+              </div>
+              <div className="form-info">
+                <span>
+                  <FontAwesomeIcon icon={faEnvelope} /> Email
+                </span>
+                <input
+                  type="text"
+                  id="email"
+                  required={true}
+                  title="Email cannot be empty"
+                  className="input-bar "
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={true}
+                />
+                {inputError === 'Email' ? <p className="errorMessage">{errorMessage}</p> : ''}
+              </div>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={!isInputValid}
+                type="submit"
+              >
+                Save
+              </Button>
+            </form>
+
             <Dialog
               title="Update profile"
               message="Save all profile infomation changes"
@@ -399,8 +397,11 @@ const styleProfile = styled(Profile)`
     border-bottom: 1px solid #306bf3;
   }
 
+  input:invalid {
+    border: 1px solid red !important
+  }
+
   span {
-    color: #10182f;
     font-weight: 500;
     font-size: 0.9rem;
   }
