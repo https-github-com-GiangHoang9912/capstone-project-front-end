@@ -12,6 +12,8 @@ import Input from '@material-ui/core/Input'
 import LoadingBar from 'react-top-loading-bar'
 import Chip from '@material-ui/core/Chip'
 import DoneIcon from '@material-ui/icons/Done'
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
 import Dialog from '../common/dialog'
@@ -67,6 +69,13 @@ const useStyles = makeStyles((theme) => ({
     height: 20,
     margin: '7px 4px',
   },
+  inputQB: {
+    width: 600,
+    margin: '1.2rem'
+  },
+  chipAddQB:{
+    margin: '2rem 1rem'
+  }
 }))
 function Duplicate(props: any) {
   const { className, handleNotification } = props
@@ -92,7 +101,9 @@ function Duplicate(props: any) {
   const [duplicateSubject, setDuplicateSubject] = useState<String>('')
   const [isOpenDialogSubject, setIsOpenDialogSubject] = useState(false)
   const [isOpenDialogFormat, setIsOpenDialogFormat] = useState(false)
+  const [isOpenDialogForm, setIsOpenDialogForm] = useState(false)
   const [isValidQues, setIsValidQues] = useState(true)
+  const [listQuestion, setListQuestion] = useState<string[]>([''])
 
   function handleFileChange(e: any) {
     setFile(e.target.files[0])
@@ -188,6 +199,10 @@ function Duplicate(props: any) {
     setIsOpen(false)
     setOpenDialogAdd(false)
     setIsOpenDialogFormat(false)
+    setIsOpenDialogForm(false)
+  }
+  const handleOpenDialogForm = () =>{
+    setIsOpenDialogForm(true)
   }
   const handleOpenDialogFormat = () => {
     setIsOpenDialogFormat(true)
@@ -201,7 +216,7 @@ function Duplicate(props: any) {
       <p className="format-guideline">
         {' '}
         <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        File bank name must be "train.csv"
+        Download the sample file and edit it
       </p>
       <p className="format-guideline">
         <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
@@ -210,8 +225,13 @@ function Duplicate(props: any) {
         <br /> <li>The next line is question, tag</li>
       </p>
       <p className="format-guideline">
+        {' '}
         <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        Download file sample
+        Replace all questions from the second line in the sample file with new questions
+      </p>
+      <p className="format-guideline">
+        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+        File sample:
       </p>
       <a href="train.csv" target="blank">
       <Button
@@ -226,6 +246,61 @@ function Duplicate(props: any) {
     </div>
   )
 
+  const addQuestion = ()=>{
+    const newList = [...listQuestion]
+    newList.push('');
+    setListQuestion(newList)
+    console.log(listQuestion.length)
+  }
+  const deleteQuestion = (idx:number) =>{
+    const newList = [...listQuestion]
+    newList.splice(idx, 1)
+    setListQuestion(newList)
+  }
+  const handleQuestionValue = (index: number)=>(e:any)=>{
+    const newList = [...listQuestion]
+    newList[index] = e.target.value;
+    setListQuestion(newList)
+  }
+  const handleDialogFormAccept= ()=>{
+    setIsOpenDialogForm(false);
+    console.log(listQuestion);
+
+  }
+  const formBankDialog = (
+    <div className={className}>
+      {listQuestion.map((ques, index)=>(
+        <div className="bank-item">
+         <TextField
+         id="outlined-basic"
+         value={ques}
+         className={classes.inputQB}
+         multiline
+         rowsMax={2}
+         onChange={handleQuestionValue(index)}
+         label={`Question ${index + 1}`}
+         variant="outlined"
+         placeholder="Enter question"
+  
+       />
+       <RemoveCircleIcon
+         fontSize="medium"
+         color="secondary"
+         onClick={() => deleteQuestion(index)}
+       />
+        </div>
+      ))}
+        <Chip
+        avatar={<AddCircleIcon />}
+        label="New question"
+        clickable
+        color="primary"
+        className={classes.chipAddQB}
+        onClick={addQuestion}
+      />
+    </div>
+  )
+  
   const subjectDialogContent = (
     <div className={className}>
       <h4>Select a subject to add a question</h4>
@@ -355,9 +430,10 @@ function Duplicate(props: any) {
               <div className="guide-line" style={{ textAlign: 'center' }}>
                 <p id="gl-left">
                   <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-                  View the file bank format
+                  View the guideline to import file question bank
+                  <br />
                   <Chip
-                    label="View Format"
+                    label="View guideline"
                     clickable
                     onClick={handleOpenDialogFormat}
                     className={classes.chipView}
@@ -365,6 +441,22 @@ function Duplicate(props: any) {
                   />
                 </p>
               </div>
+              
+            </div>
+            <div className="create-bank">
+            <h2 className="select">Create New Bank</h2>
+            <p className="gl-bank">
+            <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+                 Enter the question in the input field to create new file bank
+                 </p>
+                <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleOpenDialogForm}
+                disabled={isDisable}
+                >
+                Create new bank
+              </Button>
             </div>
             <div className="add-subject">
               <h4>Create new subject</h4>
@@ -397,15 +489,7 @@ function Duplicate(props: any) {
                 variant="outlined"
               />
             </div>
-            <div className="convert-csv">
-              <div className="csv-img" />
-              <div className="csv-link">
-                <a href="https://convertio.co/vn/doc-csv/" target="_blank" rel="noreferrer">
-                  <h3>Convert file to CSV</h3>
-                </a>
-                <p>Go to CSV convert page and convert your file to CSV format</p>
-              </div>
-            </div>
+          
           </div>
         ) : (
           ''
@@ -478,6 +562,15 @@ function Duplicate(props: any) {
               buttonCancel="Close"
               content={formatDialog}
               isOpen={isOpenDialogFormat}
+              handleClose={handleDialogClose}
+            />
+             <Dialog
+              title="Creat New Bank"
+              buttonAccept="Save"
+              buttonCancel="Close"
+              content={formBankDialog}
+              isOpen={isOpenDialogForm}
+              handleAccept={handleDialogFormAccept}
               handleClose={handleDialogClose}
             />
           </div>
@@ -628,13 +721,16 @@ const StyleDuplicate = styled(Duplicate)`
     margin: 0;
     font-size: 0.9rem;
   }
-  .add-subject {
+  .add-subject, .create-bank {
     padding: 1em;
     margin-top: 1em;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     background-color: #fff;
     text-align: start;
     border-radius: 5px;
+  }
+  .create-bank{
+    text-align: center;
   }
   .control-right {
     width: 50%;
@@ -697,6 +793,11 @@ const StyleDuplicate = styled(Duplicate)`
     font-size: 0.9rem;
     color: #545d7a;
   }
+  .gl-bank{
+    font-size: 0.9rem;
+    color: #545d7a;
+    margin: 1rem;
+  }
   #gl-left {
     width: 100%;
     margin: 0;
@@ -716,6 +817,11 @@ const StyleDuplicate = styled(Duplicate)`
     padding: 1rem;
     display: flex;
     justify-content: space-around;
+    align-items: center;
+  }
+  .bank-item{
+    display: flex;
+    justify-content: center;
     align-items: center;
   }
   .control-right {
