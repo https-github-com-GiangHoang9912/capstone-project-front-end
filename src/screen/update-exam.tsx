@@ -311,7 +311,7 @@ function UpdateExam(props: any) {
         examId: idExam,
       }))
       if (questionAdd.length != 0) {
-        const response = await axios.post(`${CREATE_QUESTION_URL}/${userId}`, questionAdd);
+        const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd);
         if (response && response.data) {
           console.log(response)
           setOpenDialogAdd(false)
