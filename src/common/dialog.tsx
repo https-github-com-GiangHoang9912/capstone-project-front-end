@@ -7,9 +7,11 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import { withStyles } from '@material-ui/core'
 
 DialogComponent.propTypes = {
   className: PropTypes.string,
+  id: PropTypes.string,
   title: PropTypes.string.isRequired,
   message: PropTypes.string,
   buttonAccept: PropTypes.string,
@@ -21,7 +23,8 @@ DialogComponent.propTypes = {
 DialogComponent.defaultProps = {
   className: '',
   message: '',
-  buttonAccept: ''
+  buttonAccept: '',
+  id: '',
 }
 
 function DialogComponent(props?: any) {
@@ -35,31 +38,64 @@ function DialogComponent(props?: any) {
     isOpen,
     handleAccept,
     handleClose,
+    id,
   } = props
+
+  console.log(id)
+
+  const StyledDialog = withStyles({
+    root: {
+      zIndex: 2000,
+    },
+  })(Dialog)
 
   return (
     <div className={className}>
-      <Dialog
-        open={isOpen}
-        keepMounted
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">{message}</DialogContentText>
-          {content}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleAccept} color="primary">
-            {buttonAccept}
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            {buttonCancel}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {id === 'subject' ? (
+        <StyledDialog
+          open={isOpen}
+          keepMounted
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">{message}</DialogContentText>
+            {content}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleAccept} color="primary">
+              {buttonAccept}
+            </Button>
+            <Button onClick={handleClose} color="primary">
+              {buttonCancel}
+            </Button>
+          </DialogActions>
+        </StyledDialog>
+      ) : (
+        <Dialog
+          open={isOpen}
+          keepMounted
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">{message}</DialogContentText>
+            {content}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleAccept} color="primary">
+              {buttonAccept}
+            </Button>
+            <Button onClick={handleClose} color="primary">
+              {buttonCancel}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   )
 }
