@@ -640,7 +640,7 @@ function Duplicate(props: any) {
                   </p>
                 </div>
               ) : (
-                <p className="warning">
+                <p className="duplicated-warning">
                   Duplicate detection, still add this question to bank
                   <Chip
                     label="Add question"
@@ -683,6 +683,13 @@ const StyleDuplicate = styled(Duplicate)`
     margin: 1rem 0.5rem;
     text-align: left;
   }
+
+  .duplicated-warning {
+    color: red;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
   .ques-input-box {
     width: 80%;
     margin: auto;
