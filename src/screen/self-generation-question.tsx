@@ -233,12 +233,14 @@ const SelfGenerate = (props: any) => {
 
   const validQuestionRegex = /([A-Za-z])+(\s)+/
 
-  const handleInputContext = (index: number, input: string) => (e: any) => {
+  const handleInputContext = (index: number) => (e: any) => {
     const newArr = [...items]
     newArr[index].context = e.target.value
     setItems(newArr)
 
+    const input = e.target.value
     const isValidInput = !!input && validQuestionRegex.test(input)
+    
     if (!isValidInput) {
       setIsDisable(true)
     } else {
@@ -316,14 +318,12 @@ const SelfGenerate = (props: any) => {
                   variant="outlined"
                   value={item.context}
                   rows={3}
-                  onChange={handleInputContext(index, item.context)}
+                  onChange={handleInputContext(index)}
                   required={true}
                   error={!!item.context && !validQuestionRegex.test(item.context)}
-                  helperText={
-                    !!item.context && !validQuestionRegex.test(item.context)
-                      ? '⚠ The text you entered is not valid or too short!'
-                      : ''
-                  }
+                  helperText={!!item.context && !validQuestionRegex.test(item.context)
+                    ? '⚠ The text you entered is not valid or too short!'
+                    : ''}
                 />
 
                 <p className="note-box">
@@ -353,7 +353,9 @@ const SelfGenerate = (props: any) => {
                   padding: '35px 24px',
                 }}
               >
-                <span>Do you want delete this section ?</span>
+                <span>
+                  Do you want delete this section ?
+                </span>
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleAcceptRemove(idRemove)} color="secondary">
@@ -374,7 +376,7 @@ const SelfGenerate = (props: any) => {
             color="primary"
             className={classes.btnGen}
             disabled={isDisable}
-            type="submit"
+            type='submit'
           >
             Generate
           </Button>
