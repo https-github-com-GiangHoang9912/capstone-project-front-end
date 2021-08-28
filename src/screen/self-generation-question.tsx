@@ -57,9 +57,8 @@ interface Subject {
 }
 const MODEL_SELF_GENERATION_URL = `${CONSTANT.BASE_URL}/self-generate`
 const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`
-const ADD_SENTENCE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/train-sentences`
 const ADD_QUESTION_TO_BANK = `${CONSTANT.BASE_URL}/question-bank/create`
-const MODEL_CHECK_DUPLICATE_URL = `${CONSTANT.BASE_URL}/check-duplicated`
+const MODEL_CHECK_DUPLICATE_ALL_URL = `${CONSTANT.BASE_URL}/check-duplicated/all`
 
 const SelfGenerate = (props: any) => {
   const { className, handleNotification } = props
@@ -134,15 +133,12 @@ const SelfGenerate = (props: any) => {
     try {
       setIsOpen(false)
       setProgress(progress + 10)
-      Promise.all([
-        await axios.post(ADD_SENTENCE_DATASET_URL, {
-          question: dialogSentence,
-        }),
-        await axios.post(ADD_QUESTION_TO_BANK, {
-          question: dialogSentence,
-          subjectId,
-        }),
-      ])
+
+      await axios.post(ADD_QUESTION_TO_BANK, {
+        question: dialogSentence,
+        subjectId,
+      })
+
       setProgress(100)
       handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
       refreshToken(userId)
@@ -150,7 +146,7 @@ const SelfGenerate = (props: any) => {
     } catch (error) {
       console.error(error)
       setProgress(100)
-      handleNotification('danger', `${CONSTANT.MESSAGE("Add Questions").FAIL}`)
+      handleNotification('danger', `${CONSTANT.MESSAGE('Add Questions').FAIL}`)
     }
   }
 
@@ -160,10 +156,10 @@ const SelfGenerate = (props: any) => {
       accessor: 'text',
     },
     {
-      Header: 'Add to bank',
+      Header: 'Check duplication',
       Cell: (cell: any) => (
         <Chip
-          label="Add"
+          label="Check"
           clickable
           color="secondary"
           onClick={() => handleCheckDuplicationThenAdd(cell.row.original.text)}
@@ -206,22 +202,25 @@ const SelfGenerate = (props: any) => {
 
   const handleCheckDuplicationThenAdd = async (text: string) => {
     try {
+      setProgress(progress + 10)
       await axios.get(GET_SUBJECT_URL).then((response) => {
         setSubjects(response.data)
-        console.log(response.data)
       })
 
-      const res = await axios.post(MODEL_CHECK_DUPLICATE_URL, {
+      const res = await axios.post(MODEL_CHECK_DUPLICATE_ALL_URL, {
         question: text,
       })
 
-      const duplicateCondition = res && res.data.length > 0 && res.data[0].point > CONSTANT.CONFIDENT.point
+      const duplicateCondition =
+        res && res.data.length > 0 && res.data[0].point > CONSTANT.CONFIDENT.point
 
       setIsDuplicate(duplicateCondition)
       setDialogSentence(text)
       setIsOpen(true)
       refreshToken(userId)
+      setProgress(100)
     } catch (error) {
+      setProgress(100)
       console.error(error)
     }
   }
@@ -367,7 +366,6 @@ const SelfGenerate = (props: any) => {
                 </Button>
               </DialogActions>
             </Dialog>
-
           </div>
           <div className="controls-wrapper">
             <AddCircleIcon color="primary" style={{ fontSize: 40 }} onClick={addItem} />
@@ -431,7 +429,7 @@ const SelfStyle = styled(SelfGenerate)`
     padding-bottom: 1rem;
   }
 
-  .context-field p{
+  .context-field p {
     color: red;
     margin: 1rem 0.5rem;
     text-align: left;

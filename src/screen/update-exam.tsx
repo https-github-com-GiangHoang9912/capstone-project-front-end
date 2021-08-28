@@ -335,6 +335,7 @@ function UpdateExam(props: any) {
 
   const handleSaveQuestion = async (e: any) => {
     e.preventDefault()
+    setOpenDialogAdd(false)
     try {
       setProgress(progress + 10)
       const questionAdd = arrayCheck.map((item: any) => ({
@@ -342,9 +343,8 @@ function UpdateExam(props: any) {
         examId: idExam,
       }))
       if (questionAdd.length != 0) {
-        const response = await axios.post(`${CREATE_QUESTION_URL}/${userId}`, questionAdd);
+        const response = await axios.post(`${CREATE_QUESTION_URL}`, questionAdd);
         if (response && response.data) {
-          setOpenDialogAdd(false)
           handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
           setProgress(100)
           setSearchValue('')

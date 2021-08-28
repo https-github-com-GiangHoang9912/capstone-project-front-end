@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
   txtNameExam: {
     marginTop: '1rem',
     marginBottom: '1rem',
-    width: '300px',
+    width: '350px',
     height: '80px',
     marginLeft: '17px',
   },
@@ -312,7 +312,7 @@ function ListExam(props: any) {
 
   const handleDeleteAccept = async (id: number) => {
     try {
-      const response = await axios.post(`${DELETE_EXAM_URL}/${id}`);
+      const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
       if (response) {
         setOpenDialogDelete(false)
         handleNotification('success', `${CONSTANT.MESSAGE("Exam").DELETE_SUCCESS}`)
