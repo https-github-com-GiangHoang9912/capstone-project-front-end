@@ -275,7 +275,7 @@ function Profile(props: any) {
 
             <Dialog
               title="Update profile"
-              message="Save all profile infomation changes"
+              message="Do you want to save all your changes?"
               buttonAccept="Yes"
               buttonCancel="No"
               isOpen={isOpen}
@@ -284,13 +284,11 @@ function Profile(props: any) {
             />
             <div className="footer-info">
               <div>
-                <h3>Change Password</h3>
                 <NavLink to="/change-password">
                   <button className="btn btn-change">Go to change password</button>
                 </NavLink>
               </div>
               <div>
-                <h3>View Activity History</h3>
                 <NavLink to="/history">
                   <button className="btn btn-his">View Activity History</button>
                 </NavLink>
@@ -446,6 +444,7 @@ const styleProfile = styled(Profile)`
   }
   .footer-info {
     display: flex;
+    margin-top: 3rem;
   }
   .footer-info div {
     width: 50%;
