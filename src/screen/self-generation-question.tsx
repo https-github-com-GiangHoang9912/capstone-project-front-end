@@ -312,7 +312,7 @@ const SelfGenerate = (props: any) => {
                     multiline
                     placeholder="Enter the Context"
                     style={{ margin: 8 }}
-                    rowsMax={10}
+                    maxRows={10}
                     fullWidth
                     variant="outlined"
                     value={item.context}

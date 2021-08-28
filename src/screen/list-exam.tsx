@@ -376,12 +376,17 @@ function ListExam(props: any) {
           subjectId,
           examName: txtNameExam,
         })
-        if (response && response.data) {
+
+        console.log(response)
+
+        if (response && response.data && response.data.statusCode === 200) {
           handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
           setOpenDialogCreate(false);
           setTxtNameExam('');
           setProgress(100)
         } else {
+          setCheckError(true)
+          setTextError(response.data.message)
           handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
           setProgress(100)
         }
@@ -395,7 +400,6 @@ function ListExam(props: any) {
     } catch (error) {
       setProgress(100)
       handleNotification('danger', `${CONSTANT.MESSAGE("Create Exam").FAIL}`);
-      console.error(error)
       refreshToken(idUser)
     }
   }
@@ -407,7 +411,7 @@ function ListExam(props: any) {
       {question.length !== 0 ? (
         <div className={classes.containerCreate}>
           {question.map((ques: Question, index: number) => (
-            <div>
+            <div key={index}>
               <div className="question">
                 <p
                   style={{
@@ -421,7 +425,7 @@ function ListExam(props: any) {
               </div>
               <div className="answer">
                 {ques.answerGroup.map((ansGroup: AnswerGroup, ansIndex: number) => (
-                  <p className={classes.showAnswer}>
+                  <p key={ansIndex} className={classes.showAnswer}>
                     {String.fromCharCode(97 + ansIndex)}. {ansGroup.answer.answerText}
                   </p>
                 ))}
@@ -463,8 +467,8 @@ function ListExam(props: any) {
                   onChange={handleChange}
                   input={<Input id="demo-dialog-native" />}
                 >
-                  {subject.map((sub: Subject) => (
-                    <option value={sub.id}>{sub.subjectName}</option>
+                  {subject.map((sub: Subject, index) => (
+                    <option key={index} value={sub.id}>{sub.subjectName}</option>
                   ))}
                 </Select>
               </FormControl>
