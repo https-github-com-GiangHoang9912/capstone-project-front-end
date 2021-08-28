@@ -154,7 +154,6 @@ function ListExam(props: any) {
 
   //* Get subject */
   useEffect(() => {
-    console.log('url', GET_SUBJECT_URL)
     axios
       .get(`${GET_SUBJECT_URL}`)
       .then((response) => {
@@ -187,10 +186,8 @@ function ListExam(props: any) {
       const response = await axios.get(`${GET_EXAM_BY_NAME_URL}/${idUser}/search/${name}`);
       if (response && response.data.length > 0) {
         setExams(response.data);
-        setTextSearch('')
       }
       else {
-        setTextSearch('')
         handleNotification('warning', `${CONSTANT.MESSAGE('no exam with name ').SEARCH_NOT_FOUND}'${textSearch}'`)
       }
       refreshToken(idUser)
@@ -219,11 +216,12 @@ function ListExam(props: any) {
   }
 
   //* event when click edit */
-  const handleClickEdit = (idExam: number, idSubject: number, examName: string) => {
+  const handleClickEdit = (idExam: number, idSubject: number, examName: string, subjectName: string) => {
     const infor = {
       idExam,
       idSubject,
       examName,
+      subjectName
     }
     history.push('/update-exam', { params: infor })
   }
@@ -261,7 +259,8 @@ function ListExam(props: any) {
               handleClickEdit(
                 cell.row.original.id,
                 cell.row.original.subject.id,
-                cell.row.original.examName
+                cell.row.original.examName,
+                cell.row.original.subject.subjectName
               )
             }
           >
@@ -286,7 +285,6 @@ function ListExam(props: any) {
   }
   //* Event when click button create exam */
   const handleChange = (event: any) => {
-    // setSubject((event.target.value) || '');
     setSubjectId(Number(event.target.value))
   }
   const handleClickBtnCreate = () => {
@@ -314,7 +312,7 @@ function ListExam(props: any) {
 
   const handleDeleteAccept = async (id: number) => {
     try {
-      const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
+      const response = await axios.post(`${DELETE_EXAM_URL}/${id}`);
       if (response) {
         setOpenDialogDelete(false)
         handleNotification('success', `${CONSTANT.MESSAGE("Exam").DELETE_SUCCESS}`)
@@ -332,6 +330,16 @@ function ListExam(props: any) {
 
   const onTextSearchChange = useCallback((e) => {
     setTextSearch(e.target.value)
+    if (e.target.value.trim().length === 0) {
+      axios
+        .get(`${GET_EXAM_URL}/${idUser}`)
+        .then((response) => {
+          setExams(response.data)
+        })
+        .catch((err) => {
+          console.log('Failed to fetch data exam by userID: ', err.message)
+        })
+    }
   }, [])
 
   const validateNameExam = (inputName: string) => {
@@ -486,6 +494,7 @@ function ListExam(props: any) {
             value={txtNameExam}
             onChange={onTxtNameExamChange}
             helperText={textError}
+            autoComplete="off"
             required
           />
           <p style={{ color: '#30336b' }}>
@@ -518,7 +527,7 @@ function ListExam(props: any) {
                   className="search-exam--txt"
                   id="outlined-search"
                   label="Search by title exam"
-                  type="search"
+                  type="text"
                   variant="outlined"
                   size="small"
                   value={textSearch}
@@ -588,16 +597,16 @@ function ListExam(props: any) {
                   }}
                 >
                   <span>
-                    Do you want delete
-                    <span style={{ fontWeight: 'bold' }}> {nameExam} </span> exam???
+                    Do you want to delete
+                    <span style={{ fontWeight: 'bold' }}> {nameExam} </span> exam ?
                   </span>
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={() => handleDeleteAccept(idDelete)} color="secondary">
-                    Delete
+                    Yes
                   </Button>
                   <Button onClick={handleDeleteCancel} color="primary">
-                    Cancel
+                    No
                   </Button>
                 </DialogActions>
               </Dialog>

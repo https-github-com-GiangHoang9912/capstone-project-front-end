@@ -203,7 +203,7 @@ const Login: FC<LoginProps> = (props) => {
           history.push('/Home')
         } else {
           stopLoading()
-          handleNotification('danger', `${CONSTANT.MESSAGE('Login').FAIL}`)
+          handleNotification('danger', `Username or password is incorrect`)
         }
         setLoading(false)
       }, 2000)
