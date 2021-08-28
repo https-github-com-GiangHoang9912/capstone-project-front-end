@@ -312,7 +312,7 @@ function ListExam(props: any) {
 
   const handleDeleteAccept = async (id: number) => {
     try {
-      const response = await axios.delete(`${DELETE_EXAM_URL}/${id}`);
+      const response = await axios.post(`${DELETE_EXAM_URL}/${id}`);
       if (response) {
         setOpenDialogDelete(false)
         handleNotification('success', `${CONSTANT.MESSAGE("Exam").DELETE_SUCCESS}`)
@@ -518,17 +518,6 @@ function ListExam(props: any) {
         <div className="container">
           <div className="main">
             <div className="search-exam">
-              {/* <Button
-                size="small"
-                className="btn-search"
-                variant="contained"
-                // disabled={!textSearch}
-                // onClick={() => getExamByName(textSearch)}
-                color="primary"
-              >
-                {' '}
-                Show All Exam{' '}
-              </Button> */}
               <div>
                 <TextField
                   className="search-exam--txt"

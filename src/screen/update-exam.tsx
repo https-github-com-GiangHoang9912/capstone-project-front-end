@@ -266,14 +266,12 @@ function UpdateExam(props: any) {
   const [progress, setProgress] = useState(0)
   const [checkError, setCheckError] = useState(false)
   const [textError, setTextError] = useState('')
-  // const [nameSubjectBank, setNameSubjectBank] = useState('')
   const location: any = useLocation()
   const { idExam } = location.state.params
   const { idSubject } = location.state.params
   const { examName } = location.state.params
   const { subjectName } = location.state.params
 
-  // console.log('subjectNameTest', subjectName)
   const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
   //* Get question by idExam */
   useEffect(() => {
@@ -294,7 +292,6 @@ function UpdateExam(props: any) {
       .get(`${GET_QUESTIONBANK_URL}/${idSubject}`)
       .then((response) => {
         setSubject(response.data[0])
-        // setNameSubjectBank(response.data[0].subjectName)
         setQuestionBank(response.data[0].questionBank)
       })
       .catch((err) => {
@@ -347,7 +344,6 @@ function UpdateExam(props: any) {
       if (questionAdd.length != 0) {
         const response = await axios.post(`${CREATE_QUESTION_URL}/${userId}`, questionAdd);
         if (response && response.data) {
-          console.log(response)
           setOpenDialogAdd(false)
           handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
           setProgress(100)
@@ -428,7 +424,7 @@ function UpdateExam(props: any) {
       setProgress(progress + 10)
       if (currentQuestionAnswerGroup.length > 0) {
         const elementIsEmpty = currentQuestionAnswerGroup.filter((item: any) => item.answer.answerText.trim().length <= 0);
-        if (elementIsEmpty.length == 0) {
+        if (elementIsEmpty.length === 0) {
           let response = null;
           response = await axios.post(`${CREATE_ANSWERS_URL}/${idQuestion}`, {
             currentQuestionAnswerGroup,
@@ -436,13 +432,11 @@ function UpdateExam(props: any) {
             userId
           })
           if (response) {
-            // console.log('success')
             handleNotification('success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`)
             setProgress(100)
             setOpenDialogUpdate(false)
           } else {
             handleNotification('danger', `${CONSTANT.MESSAGE("Update Question").FAIL}`);
-            // console.log('Error create answer tf...!')
             setOpenDialogUpdate(true)
             setProgress(100)
           }
@@ -470,7 +464,7 @@ function UpdateExam(props: any) {
   }
 
   useEffect(() => {
-    if (valueTypeAnswer === 'tf' && currentQuestionAnswerGroup.length <= 0) {
+    if (valueTypeAnswer === 'tf') {
       const answerGroupDefault = [
         {
           questionId: idQuestion,
@@ -498,11 +492,14 @@ function UpdateExam(props: any) {
   //* Event when click radio button tf or multiple choice
   const handleChangeTypeAnswer = (event: any) => {
     setValueTypeAnswer(event.target.value)
-    if (currentQuestionAnswerGroup.length == 0)
+    setCurrentQuestionAnswerGroup([])
+    if (event.target.value === 'tf') {
       setCurrentQuestionAnswerGroup([...defaultAnswerGroup])
+    } 
   }
   //* Event when click radio button tf
   const handleChangeCorrectTf = (event: any) => {
+
     setCorrectAnswerTypeTf(event.target.value)
     const newResult = currentQuestionAnswerGroup.map((item: AnswerGroup, index: number) => {
       const itemAnswer = { ...item }
