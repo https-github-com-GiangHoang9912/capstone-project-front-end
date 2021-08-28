@@ -127,9 +127,9 @@ function Duplicate(props: any) {
     })
   }, [])
 
+  const validQuestionRegex = /(([A-Za-z])+(\s)+){2,}/
+  const isValidQuestion = validQuestionRegex.test(question)
   async function handleCheck() {
-    const validQuestionRegex = /(([A-Za-z])+(\s)+){2,}/
-    const isValidQuestion = validQuestionRegex.test(question)
     if (isValidQuestion) {
       setIsValidQues(true)
       try {
@@ -161,6 +161,9 @@ function Duplicate(props: any) {
   }
 
   function handleInputQuestion(e: any) {
+    if (isValidQuestion) {
+      setIsValidQues(true)
+    }
     setQuestion(e.target.value)
   }
 
@@ -518,12 +521,13 @@ function Duplicate(props: any) {
               label="Question"
               value={question}
               onChange={handleInputQuestion}
+              error={!isValidQues}
               className={classes.inputQuestion}
             />
             {isValidQues ? (
               ''
             ) : (
-              <p className="warning">⚠ The text you entered is not a question or too short!</p>
+              <p className="warning">⚠ The text you entered must be more than 2 words and should be meaningful !</p>
             )}
           </div>
           <div className="subject-box">
