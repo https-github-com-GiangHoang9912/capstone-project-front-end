@@ -172,6 +172,7 @@ function Duplicate(props: any) {
           if (response.data[0].point.toFixed(2) >= 0.6) {
             setIsAdd(false)
           } else {
+            setResult([])
             setIsAdd(true)
           }
           setVisibleResult(true)
@@ -243,48 +244,41 @@ function Duplicate(props: any) {
 
   const formatDialog = (
     <div className={className}>
-      <p className="format-guideline">
-        {' '}
-        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        Step 1: Download the sample file
-      </p>
-      <p className="format-guideline">
-        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        Step 2: Open the sample file and edit it. The content of the bank file is written in the
-        form:
-        <br /> <li>The first line is "sentence,tag"</li>
-        <br /> <li>The next line is question, tag</li>
-      </p>
-      <p className="format-guideline">
-        {' '}
-        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        Step 3: Replace all questions from the second line in the sample file with new questions in
-        the question bank
-      </p>
-      <p className="format-guideline">
-        {' '}
-        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        Step 4: Create new subject if it doesn't already exist
-      </p>
-      <p className="format-guideline">
-        {' '}
-        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        Step 5: Upload the edited question bank file
-      </p>
-      <p className="format-guideline">
-        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        File sample:
-      </p>
-      <a href="train.csv" target="blank">
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.btnDup}
-          disabled={isDisableAddBank}
-        >
-          Download sample
-        </Button>
-      </a>
+      <div className="format-container">
+        <p className="format-guideline">
+          {' '}
+          Step 1: Download the sample file
+        </p>
+        <p className="format-guideline">
+          Step 2: Open the sample file and edit it. The content of the bank file is written in the
+          form:
+          <br /> <li>The first line is "sentence,tag"</li>
+          <br /> <li>The next line is question, tag</li>
+        </p>
+        <p className="format-guideline">
+          {' '}
+          Step 3: Replace all questions from the second line in the sample file with new questions in
+          the question bank
+        </p>
+        <p className="format-guideline">
+          {' '}
+          Step 4: Create new subject if it doesn't already exist
+        </p>
+        <p className="format-guideline">
+          {' '}
+          Step 5: Upload the edited question bank file
+        </p>
+        <a href="train.csv" target="blank">
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.btnDup}
+            disabled={isDisableAddBank}
+          >
+            Download sample
+          </Button>
+        </a>
+      </div>
     </div>
   )
 
@@ -305,7 +299,6 @@ function Duplicate(props: any) {
     setListQuestion(newList)
   }
   const handleDialogFormAccept = () => {
-    setIsOpenDialogForm(false)
     const dataCsv = listQuestion.map((e, index) => [`"${e.replaceAll(`"`, `'`)}"`, index])
     dataCsv.unshift(['sentence', 'tag'])
 
@@ -351,14 +344,14 @@ function Duplicate(props: any) {
         className={classes.chipAddQB}
         onClick={addQuestion}
       />
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.btnDup}
-          onClick={handleDialogFormAccept}
-        >
-          Save and download
-        </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.btnDup}
+        onClick={handleDialogFormAccept}
+      >
+        Save and download
+      </Button>
     </div>
   )
   const formBankDialog = (
@@ -377,7 +370,7 @@ function Duplicate(props: any) {
             <Chip
               label="View guideline"
               clickable
-              color="primary"
+              color={isGuideline ? "secondary" : "primary"}
               onClick={() => setIsGuideline(true)}
               className={classes.chipView}
               variant="outlined"
@@ -385,7 +378,7 @@ function Duplicate(props: any) {
             <Chip
               label="Create new bank"
               clickable
-              color="secondary"
+              color={!isGuideline ? "secondary" : "primary"}
               onClick={() => setIsGuideline(false)}
               className={classes.chipView}
               variant="outlined"
@@ -403,7 +396,7 @@ function Duplicate(props: any) {
     </div>
   )
 
-  const steps = ['Create New Subject', 'Create Bank File', 'Import Question Bank', 'Check Duplication For Bank'];
+  const steps = ['Create New Subject', 'Create Bank File', 'Import Question Bank', 'Finish'];
 
   const subjectDialogContent = (
     <div className={className}>
@@ -530,6 +523,10 @@ function Duplicate(props: any) {
   };
 
   const handleReset = () => {
+    setSubjectName('');
+    setListQuestion([]);
+    setFileName('');
+    setIsGuideline(true)
     setActiveStep(0);
   };
 
@@ -622,7 +619,7 @@ function Duplicate(props: any) {
       case 2:
         return importBankStep;
       default:
-        return 'Unknown step';
+        return '';
     }
   }
 
@@ -651,8 +648,13 @@ function Duplicate(props: any) {
             <Typography className={classes.instructions}>
               All steps completed - you&apos;re finished
             </Typography>
-            <Button onClick={handleReset} className={classes.button}>
-              Reset
+            <Button
+              onClick={handleReset}
+              className={classes.button}
+              color="primary"
+              variant="contained"
+            >
+              Train another bank file
             </Button>
           </div>
         ) : (
@@ -694,10 +696,10 @@ function Duplicate(props: any) {
         {role !== 3 ? (
           <div className="control control-left">
             <div className="create-bank">
-              <h2 className="select">Create New Bank</h2>
+              <h2 className="select">Train Bank File</h2>
               <p className="gl-bank">
                 <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-                Enter the question in the input field to create new file bank
+                Train dataset for AI model
               </p>
               <Button
                 variant="contained"
@@ -705,7 +707,7 @@ function Duplicate(props: any) {
                 onClick={handleOpenDialogForm}
                 disabled={isDisable}
               >
-                Create new bank
+                Start train
               </Button>
             </div>
           </div>
@@ -720,7 +722,7 @@ function Duplicate(props: any) {
               multiline
               maxRows={6}
               variant="outlined"
-              label="Question"
+              label="Enter your question"
               value={question}
               onChange={handleInputQuestion}
               error={!isValidQues}
@@ -729,11 +731,13 @@ function Duplicate(props: any) {
             {isValidQues ? (
               ''
             ) : (
-              <p className="warning">⚠ The text you entered must be more than 2 words and should be meaningful !</p>
+              <p className="warning">
+                ⚠ The text you entered must be more than 2 words and should be meaningful !
+              </p>
             )}
           </div>
           <div className="subject-box">
-            <h4>Select subject </h4>
+            <h3>Subject</h3>
             <Select
               native
               value={subjectId}
@@ -825,7 +829,8 @@ function Duplicate(props: any) {
 
           {visibleResult ? (
             <div>
-              <TableCheckDuplicate results={result} />
+              {result.length > 0 ? <TableCheckDuplicate results={result} /> : ''}
+
               {isAdd ? (
                 <div className="result-contain">
                   <p>
@@ -843,7 +848,7 @@ function Duplicate(props: any) {
                 </div>
               ) : (
                 <p className="duplicated-warning">
-                  Duplicate detection, still add this question to bank
+                  Detected duplication, do you still want to add this question to the bank ?
                   <Chip
                     label="Add question"
                     clickable
@@ -887,6 +892,7 @@ const StyleDuplicate = styled(Duplicate)`
   }
 
   .duplicated-warning {
+    margin-top: 1rem;
     color: red;
     font-size: 0.9rem;
     text-align: center;
@@ -972,10 +978,11 @@ const StyleDuplicate = styled(Duplicate)`
   }
 
   .create-bank {
-    margin-top: 1em;
+    margin-top: 0 1em;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     background-color: #fff;
     border-radius: 5px;
+    padding-bottom: 1rem 
   }
   .create-bank {
     text-align: center;
@@ -1049,11 +1056,17 @@ const StyleDuplicate = styled(Duplicate)`
   #gl-left {
     width: 100%;
     margin: 0;
+    padding: 1rem 0;
+  }
+  .format-container {
+    border: 1px solid lightgray;
+    margin: 1rem 0;
   }
   .format-guideline {
     font-size: 1rem;
     color: #545d7a;
-    margin: 1rem 0;
+    margin: 1rem !important;
+    text-align: start;
   }
   .format-guideline li {
     margin: 0.4rem 0 0 2rem;
