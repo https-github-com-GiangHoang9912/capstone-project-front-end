@@ -307,16 +307,21 @@ function UpdateExam(props: any) {
   }
   const handleAcceptDialogDelete = async (id: number) => {
     try {
+      setProgress(progress + 10)
       const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`)
       if (response && response.data) {
         handleNotification('success', `${CONSTANT.MESSAGE("Question").DELETE_SUCCESS}`)
         setOpenDialogDelete(false)
+        setProgress(100)
       } else {
         handleNotification('danger', `${CONSTANT.MESSAGE("Delete Question").FAIL}`);
+        setProgress(100)
       }
       refreshToken(userId)
     } catch (error) {
       console.error(error)
+      setProgress(100)
+      refreshToken(userId)
     }
   }
   const handleCancelDialogDelete = () => {
@@ -337,14 +342,13 @@ function UpdateExam(props: any) {
     e.preventDefault()
     try {
       setProgress(progress + 10)
-      const questionAdd = arrayCheck.map((item: any) => ({
-        questionBankId: item,
-        examId: idExam,
-      }))
-      if (questionAdd.length != 0) {
-        const response = await axios.post(`${CREATE_QUESTION_URL}/${userId}`, questionAdd);
+      setOpenDialogAdd(false)
+      if (arrayCheck.length != 0) {
+        const response = await axios.post(`${CREATE_QUESTION_URL}/${userId}`, {
+          questionBankId: arrayCheck,
+          examId: idExam
+        });
         if (response && response.data) {
-          setOpenDialogAdd(false)
           handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
           setProgress(100)
           setSearchValue('')
@@ -495,7 +499,7 @@ function UpdateExam(props: any) {
     setCurrentQuestionAnswerGroup([])
     if (event.target.value === 'tf') {
       setCurrentQuestionAnswerGroup([...defaultAnswerGroup])
-    } 
+    }
   }
   //* Event when click radio button tf
   const handleChangeCorrectTf = (event: any) => {
