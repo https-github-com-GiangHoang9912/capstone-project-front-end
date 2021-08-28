@@ -33,7 +33,6 @@ const ADD_FILE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/upload-datas
 const GET_ROLE_URL = `${CONSTANT.BASE_URL}/user/role`
 const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`
 const ADD_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject/create`
-const ADD_SENTENCE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/train-sentences`
 const ADD_QUESTION_TO_BANK = `${CONSTANT.BASE_URL}/question-bank/create`
 interface IQuestion {
   question: string
@@ -171,6 +170,7 @@ function Duplicate(props: any) {
     setVisibleResult(false)
     setQuestion('')
     setIsOpen(false)
+    setProgress(100)
   }
   const clickAddQuestion = () => {
     axios.get(GET_SUBJECT_URL).then((response) => {
@@ -180,18 +180,18 @@ function Duplicate(props: any) {
   }
   const handleAcceptAdd = async () => {
     try {
+      setProgress(progress + 10)
       setOpenDialogAdd(false)
-      Promise.all([
-        await axios.post(ADD_SENTENCE_DATASET_URL, {
-          question,
-        }),
-        await axios.post(ADD_QUESTION_TO_BANK, {
-          question,
-          subjectId,
-        }),
-      ])
+
+      await axios.post(ADD_QUESTION_TO_BANK, {
+        question,
+        subjectId,
+      })
+
+      setProgress(100)
       handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
     } catch (error) {
+      setProgress(100)
       handleNotification('danger', `${CONSTANT.MESSAGE('Add to bank').FAIL}`)
     }
     refreshToken(userId)
