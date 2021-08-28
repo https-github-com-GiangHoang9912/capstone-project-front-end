@@ -233,6 +233,7 @@ function Duplicate(props: any) {
     setIsOpenDialogForm(false)
   }
   const handleOpenDialogForm = () => {
+    handleReset()
     setIsOpenDialogForm(true)
   }
   const handleOpenDialogFormat = () => {
