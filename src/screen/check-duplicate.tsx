@@ -33,7 +33,6 @@ const ADD_FILE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/upload-datas
 const GET_ROLE_URL = `${CONSTANT.BASE_URL}/user/role`
 const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`
 const ADD_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject/create`
-const ADD_SENTENCE_DATASET_URL = `${CONSTANT.BASE_URL}/check-duplicated/train-sentences`
 const ADD_QUESTION_TO_BANK = `${CONSTANT.BASE_URL}/question-bank/create`
 interface IQuestion {
   question: string
@@ -51,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
   btnDup: {
     margin: '1rem',
   },
+  btnSubject: {
+    margin: '0.5rem',
+  },
   chipDone: {
     marginLeft: '1rem',
     border: '1px solid #0fac31',
@@ -59,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   chipView: {
     border: '1px solid #424c9e',
     color: '#424c9e',
-    marginLeft: 5,
+    margin: 5,
   },
   chipSubject: {
     margin: 10,
@@ -127,6 +129,16 @@ function Duplicate(props: any) {
     })
   }, [])
 
+  useEffect(() => {
+    if (question === '') {
+      setIsValidQues(true)
+    } else if (isValidQuestion) {
+      setIsValidQues(true)
+    } else {
+      setIsValidQues(false)
+    }
+  }, [question])
+
   const validQuestionRegex = /(([A-Za-z])+(\s)+){2,}/
   const isValidQuestion = validQuestionRegex.test(question)
   async function handleCheck() {
@@ -144,6 +156,7 @@ function Duplicate(props: any) {
           if (response.data[0].point.toFixed(2) >= 0.6) {
             setIsAdd(false)
           } else {
+            setResult([])
             setIsAdd(true)
           }
           setVisibleResult(true)
@@ -161,9 +174,6 @@ function Duplicate(props: any) {
   }
 
   function handleInputQuestion(e: any) {
-    if (isValidQuestion) {
-      setIsValidQues(true)
-    }
     setQuestion(e.target.value)
   }
 
@@ -174,6 +184,7 @@ function Duplicate(props: any) {
     setVisibleResult(false)
     setQuestion('')
     setIsOpen(false)
+    setProgress(100)
   }
   const clickAddQuestion = () => {
     axios.get(GET_SUBJECT_URL).then((response) => {
@@ -183,18 +194,18 @@ function Duplicate(props: any) {
   }
   const handleAcceptAdd = async () => {
     try {
+      setProgress(progress + 10)
       setOpenDialogAdd(false)
-      Promise.all([
-        await axios.post(ADD_SENTENCE_DATASET_URL, {
-          question,
-        }),
-        await axios.post(ADD_QUESTION_TO_BANK, {
-          question,
-          subjectId,
-        }),
-      ])
+
+      await axios.post(ADD_QUESTION_TO_BANK, {
+        question,
+        subjectId,
+      })
+
+      setProgress(100)
       handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
     } catch (error) {
+      setProgress(100)
       handleNotification('danger', `${CONSTANT.MESSAGE('Add to bank').FAIL}`)
     }
     refreshToken(userId)
@@ -220,18 +231,30 @@ function Duplicate(props: any) {
       <p className="format-guideline">
         {' '}
         <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        Download the sample file and edit it
+        Step 1: Download the sample file
       </p>
       <p className="format-guideline">
         <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        The content of the bank file is written in the form:
+        Step 2: Open the sample file and edit it. The content of the bank file is written in the
+        form:
         <br /> <li>The first line is "sentence,tag"</li>
         <br /> <li>The next line is question, tag</li>
       </p>
       <p className="format-guideline">
         {' '}
         <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        Replace all questions from the second line in the sample file with new questions
+        Step 3: Replace all questions from the second line in the sample file with new questions in
+        the question bank
+      </p>
+      <p className="format-guideline">
+        {' '}
+        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+        Step 4: Create new subject if it doesn't already exist
+      </p>
+      <p className="format-guideline">
+        {' '}
+        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+        Step 5: Upload the edited question bank file
       </p>
       <p className="format-guideline">
         <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
@@ -408,7 +431,7 @@ function Duplicate(props: any) {
         {role !== 3 ? (
           <div className="control control-left">
             <div className="import-bank">
-              <h2 className="select">Import new Bank</h2>
+              <h2 className="select">Import Bank File</h2>
               <div className="input-bank">
                 <input type="file" accept=".csv" onChange={handleFileChange} title=" " />
               </div>
@@ -417,7 +440,7 @@ function Duplicate(props: any) {
               {fileName.includes('.csv') ? (
                 <div>
                   <div>
-                    <h4>Select subject </h4>
+                    <h3>Subject</h3>
                     <Select
                       className="select-subject"
                       native
@@ -448,7 +471,8 @@ function Duplicate(props: any) {
               <div className="guide-line" style={{ textAlign: 'center' }}>
                 <p id="gl-left">
                   <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-                  View the guideline to import file question bank
+                  View the guideline to create a question bank file manually or using the Create New
+                  Bank function to automatically create it based on our tool.
                   <br />
                   <Chip
                     label="View guideline"
@@ -492,7 +516,7 @@ function Duplicate(props: any) {
                 variant="contained"
                 color="primary"
                 onClick={addSubject}
-                className={classes.btnDup}
+                className={classes.btnSubject}
                 disabled={isDisable}
               >
                 Add
@@ -518,7 +542,7 @@ function Duplicate(props: any) {
               multiline
               maxRows={6}
               variant="outlined"
-              label="Question"
+              label="Enter your question"
               value={question}
               onChange={handleInputQuestion}
               error={!isValidQues}
@@ -527,11 +551,13 @@ function Duplicate(props: any) {
             {isValidQues ? (
               ''
             ) : (
-              <p className="warning">⚠ The text you entered must be more than 2 words and should be meaningful !</p>
+              <p className="warning">
+                ⚠ The text you entered must be more than 2 words and should be meaningful !
+              </p>
             )}
           </div>
           <div className="subject-box">
-            <h4>Select subject </h4>
+            <h3>Subject</h3>
             <Select
               native
               value={subjectId}
@@ -607,6 +633,11 @@ function Duplicate(props: any) {
           </div>
           <div className="guide-line">
             <p>
+              {' '}
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Enter a
+              question and select a subject to check duplication for this question
+            </p>
+            <p>
               <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Processing
               will take a couple of time.
             </p>
@@ -614,16 +645,12 @@ function Duplicate(props: any) {
               <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Questions
               should be grammatically correct to get the best results
             </p>
-            <p>
-              {' '}
-              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> If the
-              results is "not duplicated", you can add them to your bank.
-            </p>
           </div>
 
           {visibleResult ? (
             <div>
-              <TableCheckDuplicate results={result} />
+              {result.length > 0 ? <TableCheckDuplicate results={result} /> : ''}
+
               {isAdd ? (
                 <div className="result-contain">
                   <p>
@@ -641,7 +668,7 @@ function Duplicate(props: any) {
                 </div>
               ) : (
                 <p className="duplicated-warning">
-                  Duplicate detection, still add this question to bank
+                  Detected duplication, do you still want to add this question to the bank ?
                   <Chip
                     label="Add question"
                     clickable
@@ -685,6 +712,7 @@ const StyleDuplicate = styled(Duplicate)`
   }
 
   .duplicated-warning {
+    margin-top: 1rem;
     color: red;
     font-size: 0.9rem;
     text-align: center;

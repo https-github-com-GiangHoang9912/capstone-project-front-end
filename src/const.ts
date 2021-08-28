@@ -11,27 +11,26 @@ export const HISTORY_TYPE = {
   CHANGE_PASSWORD: 4,
   FORGOT_PASSWORD: 5,
   EDIT_EXAM: 6,
-  CREATE_EXAM: 7
-
+  CREATE_EXAM: 7,
 }
 
 export const MESSAGE = (props?: any) => {
   const message = {
-    ADD_SUCCESS: 'Add Successfully !!',
-    DELETE_SUCCESS: `${props} Deleted Successfully !!`,
-    UPDATE_SUCCESS: 'Update Successfully !!',
-    CHECK_SUCCESS: 'Question Checked Successfully !!',
-    CHANGE_PASSWORD_SUCCESS: 'Change Password Successfully !!',
-    TRAIN_SUCCESS: 'Training Data Successfully !!',
-    CREATE_SUCCESS: 'Create Successfully !!',
-    CHANGE_SUCCESS: `${props}Role Changed Successfully !!`,
+    ADD_SUCCESS: 'Add Successfully',
+    DELETE_SUCCESS: `${props} Deleted Successfully`,
+    UPDATE_SUCCESS: 'Update Successfully',
+    CHECK_SUCCESS: 'Question Checked Successfully',
+    CHANGE_PASSWORD_SUCCESS: 'Change Password Successfully',
+    TRAIN_SUCCESS: 'Training Data Successfully',
+    CREATE_SUCCESS: 'Create Successfully',
+    CHANGE_SUCCESS: `${props}Role Changed Successfully`,
     FAIL: `Fail to ${props}`,
-    BLANK_INPUT: "Input is empty !!!",
-    GEN_SUCCESS: "Generate Question Successfully !!",
+    BLANK_INPUT: 'Input is empty',
+    GEN_SUCCESS: 'Generate Question Successfully ',
     SEARCH_NOT_FOUND: `Not found ${props}`,
-    NO_QUESTION_SELECTED: `Add fail, No questions selected !!`,
-    NO_ANSWER: `Update fail, you must add answer to update`,
-    SEND_MAIL_SUCCESS: 'Send Password Successfully !!',
+    NO_QUESTION_SELECTED: `Add failed. No question is selected`,
+    NO_ANSWER: `Update failed. You must add answer to update`,
+    SEND_MAIL_SUCCESS: 'Send Password Successfully',
   }
   return message
 }

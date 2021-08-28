@@ -340,6 +340,7 @@ function UpdateExam(props: any) {
 
   const handleSaveQuestion = async (e: any) => {
     e.preventDefault()
+    setOpenDialogAdd(false)
     try {
       setProgress(progress + 10)
       setOpenDialogAdd(false)

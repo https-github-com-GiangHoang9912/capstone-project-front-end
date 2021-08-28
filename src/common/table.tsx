@@ -34,8 +34,6 @@ const StyledTableRow = withStyles((theme: Theme) =>
   })
 )(TableRow)
 
-
-
 const useStyles = makeStyles({
   container: {
     width: '94%',
@@ -43,7 +41,6 @@ const useStyles = makeStyles({
   },
   table: {
     minWidth: 700,
-    
   },
   styleBtn: {
     width: 75,
@@ -92,22 +89,24 @@ export function TableCheckDuplicate(props: any) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {results.map((item: any, i: number) => (
-            <StyledTableRow key={i}>
-              <StyledTableCell component="th" scope="row">
-                {item.question}
-              </StyledTableCell>
-              <StyledTableCell>{item.point.toFixed(2)}</StyledTableCell>
-              <StyledTableCell>
-                {item.point.toFixed(2) >= 0.6 ? 'Duplicate' : 'No Duplicate'}
-              </StyledTableCell>
-              
-            </StyledTableRow>
-          ))}
+          {results.map((item: any, i: number) => {
+            if (item.point.toFixed(2) >= 0.6) {
+              return (
+                <StyledTableRow key={i}>
+                  <StyledTableCell component="th" scope="row">
+                    {item.question}
+                  </StyledTableCell>
+                  <StyledTableCell>{item.point.toFixed(2)}</StyledTableCell>
+                  <StyledTableCell>
+                    {item.point.toFixed(2) >= 0.6 ? 'Duplicate' : 'No Duplicate'}
+                  </StyledTableCell>
+                </StyledTableRow>
+              )
+            }
+            return ""
+          })}
         </TableBody>
       </Table>
     </TableContainer>
   )
 }
-
-

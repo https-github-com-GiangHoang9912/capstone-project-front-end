@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
   txtNameExam: {
     marginTop: '1rem',
     marginBottom: '1rem',
-    width: '300px',
+    width: '350px',
     height: '80px',
     marginLeft: '17px',
   },
