@@ -51,7 +51,8 @@ const useStyles = makeStyles((theme) => ({
     margin: '1rem',
   },
   btnSubject: {
-    margin: '0.5rem',
+    height: 38,
+    margin: '21px 5px',
   },
   chipDone: {
     marginLeft: '1rem',
@@ -59,8 +60,6 @@ const useStyles = makeStyles((theme) => ({
     color: '#0fac31',
   },
   chipView: {
-    border: '1px solid #424c9e',
-    color: '#424c9e',
     margin: 5,
   },
   chipSubject: {
@@ -69,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   inputSubject: {
     width: 140,
     height: 20,
-    margin: '7px 4px',
+    margin: '20px 4px',
   },
   inputQB: {
     width: 600,
@@ -429,8 +428,70 @@ function Duplicate(props: any) {
       <div className="container">
         {role !== 3 ? (
           <div className="control control-left">
+            <div className="add-subject">
+              <h2 className="select">1. Create new subject</h2>
+              <TextField
+                id="outlined"
+                error={isDuplicateSubject}
+                variant="outlined"
+                label="Subject"
+                size="small"
+                helperText={duplicateSubject}
+                value={subjectName}
+                onChange={handleSubjectName}
+                className={classes.inputSubject}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={addSubject}
+                className={classes.btnSubject}
+                disabled={isDisable}
+              >
+                Add
+              </Button>
+              <br />
+              <Chip
+                label="View Subject"
+                clickable
+                onClick={handleOpenListSubject}
+                className={classes.chipView}
+                variant="outlined"
+              />
+            </div>
+            <div className="create-bank">
+              <h2 className="select">2. Create New Bank</h2>
+              <div className="guide-line" style={{ textAlign: 'center' }}>
+                <p id="gl-left">
+                  <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+                  View the guideline to create a question bank file manually or using the 
+                  Create New Bank function bellow to automatically create it based on our tool.
+                  
+                </p>
+                <div className="chip-group">
+                <Chip
+                    label="View guideline"
+                    clickable
+                    color="primary"
+                    onClick={handleOpenDialogFormat}
+                    className={classes.chipView}
+                    variant="outlined"
+                  />
+                    <Chip
+                    label="Create new bank"
+                    clickable
+                    color="secondary"
+                    onClick={handleOpenDialogForm}
+                    className={classes.chipView}
+                    variant="outlined"
+                  />
+                </div>
+              </div>
+             
+            
+            </div>
             <div className="import-bank">
-              <h2 className="select">Import Bank File</h2>
+              <h2 className="select">3. Import Bank File</h2>
               <div className="input-bank">
                 <input type="file" accept=".csv" onChange={handleFileChange} title=" " />
               </div>
@@ -467,67 +528,10 @@ function Duplicate(props: any) {
               ) : (
                 ' '
               )}
-              <div className="guide-line" style={{ textAlign: 'center' }}>
-                <p id="gl-left">
-                  <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-                  View the guideline to import file question bank
-                  <br />
-                  <Chip
-                    label="View guideline"
-                    clickable
-                    onClick={handleOpenDialogFormat}
-                    className={classes.chipView}
-                    variant="outlined"
-                  />
-                </p>
-              </div>
+             
             </div>
-            <div className="create-bank">
-              <h2 className="select">Create New Bank</h2>
-              <p className="gl-bank">
-                <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-                Enter the question in the input field to create new file bank
-              </p>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleOpenDialogForm}
-                disabled={isDisable}
-              >
-                Create new bank
-              </Button>
-            </div>
-            <div className="add-subject">
-              <h4>Create new subject</h4>
-              <TextField
-                id="outlined"
-                error={isDuplicateSubject}
-                variant="outlined"
-                label="Subject"
-                size="small"
-                helperText={duplicateSubject}
-                value={subjectName}
-                onChange={handleSubjectName}
-                className={classes.inputSubject}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={addSubject}
-                className={classes.btnSubject}
-                disabled={isDisable}
-              >
-                Add
-              </Button>
-              <br />
-              <Chip
-                label="View Subject"
-                clickable
-                onClick={handleOpenListSubject}
-                className={classes.chipView}
-                variant="outlined"
-              />
-            </div>
+           
+       
           </div>
         ) : (
           ''
@@ -586,7 +590,7 @@ function Duplicate(props: any) {
               Clear
             </Button>
             <Dialog
-              title="Clear all text"
+              title="Enter your question"
               message="Do you want to clear all the text"
               buttonAccept="Yes"
               buttonCancel="No"
@@ -729,7 +733,7 @@ const StyleDuplicate = styled(Duplicate)`
     background-color: #fbfbfb;
   }
   .control-left h2 {
-    width: 90%;
+    width: 100%;
     margin: auto;
     font-size: 20px;
     color: #10182f;
@@ -747,8 +751,15 @@ const StyleDuplicate = styled(Duplicate)`
     width: 100%;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     background-color: #fff;
+    margin-top: 1rem;
     border-radius: 5px;
     padding-bottom: 20px;
+  }
+  .chip-group{
+    margin: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .convert-csv {
     display: flex;
@@ -786,14 +797,14 @@ const StyleDuplicate = styled(Duplicate)`
   .add-subject,
   .create-bank {
     padding: 1em;
-    margin-top: 1em;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     background-color: #fff;
-    text-align: start;
+    text-align: center;
     border-radius: 5px;
   }
   .create-bank {
     text-align: center;
+    margin-top: 1rem;
   }
   .control-right {
     width: 50%;
@@ -837,10 +848,10 @@ const StyleDuplicate = styled(Duplicate)`
     font-size: 0.9rem;
   }
   .select {
-    color: #f9fbff;
-    margin-top: 2rem;
-    padding: 20px;
+    margin: 1rem 0rem;
+    padding: 1rem 0.2rem;
   }
+
   .duplicate-icon {
     color: #303f9f;
     margin: 0 5px;
@@ -923,6 +934,7 @@ const StyleDuplicate = styled(Duplicate)`
       margin: 20px 40px;
     }
     .add-subject {
+      margin: 0 0 1rem 0;
       text-align: center;
     }
   }
