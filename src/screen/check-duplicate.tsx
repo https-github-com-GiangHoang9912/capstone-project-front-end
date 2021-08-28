@@ -51,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
   btnDup: {
     margin: '1rem',
   },
+  btnSubject: {
+    margin: '0.5rem',
+  },
   chipDone: {
     marginLeft: '1rem',
     border: '1px solid #0fac31',
@@ -59,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
   chipView: {
     border: '1px solid #424c9e',
     color: '#424c9e',
-    marginLeft: 5,
+    margin: 5,
   },
   chipSubject: {
     margin: 10,
@@ -217,18 +220,30 @@ function Duplicate(props: any) {
       <p className="format-guideline">
         {' '}
         <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        Download the sample file and edit it
+        Step 1: Download the sample file
       </p>
       <p className="format-guideline">
         <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        The content of the bank file is written in the form:
+        Step 2: Open the sample file and edit it. The content of the bank file is written in the
+        form:
         <br /> <li>The first line is "sentence,tag"</li>
         <br /> <li>The next line is question, tag</li>
       </p>
       <p className="format-guideline">
         {' '}
         <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-        Replace all questions from the second line in the sample file with new questions
+        Step 3: Replace all questions from the second line in the sample file with new questions in
+        the question bank
+      </p>
+      <p className="format-guideline">
+        {' '}
+        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+        Step 4: Create new subject if it doesn't already exist
+      </p>
+      <p className="format-guideline">
+        {' '}
+        <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+        Step 5: Upload the edited question bank file
       </p>
       <p className="format-guideline">
         <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
@@ -405,7 +420,7 @@ function Duplicate(props: any) {
         {role !== 3 ? (
           <div className="control control-left">
             <div className="import-bank">
-              <h2 className="select">Import new Bank</h2>
+              <h2 className="select">Import Bank File</h2>
               <div className="input-bank">
                 <input type="file" accept=".csv" onChange={handleFileChange} title=" " />
               </div>
@@ -489,7 +504,7 @@ function Duplicate(props: any) {
                 variant="contained"
                 color="primary"
                 onClick={addSubject}
-                className={classes.btnDup}
+                className={classes.btnSubject}
                 disabled={isDisable}
               >
                 Add
@@ -603,17 +618,17 @@ function Duplicate(props: any) {
           </div>
           <div className="guide-line">
             <p>
+              {' '}
+              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Enter a
+              question and select a subject to check duplication for this question
+            </p>
+            <p>
               <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Processing
               will take a couple of time.
             </p>
             <p>
               <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Questions
               should be grammatically correct to get the best results
-            </p>
-            <p>
-              {' '}
-              <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> If the
-              results is "not duplicated", you can add them to your bank.
             </p>
           </div>
 
@@ -636,7 +651,7 @@ function Duplicate(props: any) {
                   </p>
                 </div>
               ) : (
-                <p className="warning">
+                <p className="duplicate-result">
                   Duplicate detection, still add this question to bank
                   <Chip
                     label="Add question"
@@ -678,6 +693,11 @@ const StyleDuplicate = styled(Duplicate)`
     color: red;
     margin: 1rem 0.5rem;
     text-align: left;
+  }
+  .duplicate-result{
+    font-size: 0.9rem;
+    color: red;
+    text-align: center
   }
   .ques-input-box {
     width: 80%;
