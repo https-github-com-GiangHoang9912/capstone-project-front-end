@@ -323,7 +323,7 @@ const SelfGenerate = (props: any) => {
                   required={true}
                   error={!!item.context && !validQuestionRegex.test(item.context)}
                   helperText={!!item.context && !validQuestionRegex.test(item.context)
-                    ? '⚠ The text you entered is not valid or too short!'
+                    ? '⚠ The text you entered must have at least one word and should be meaningful!'
                     : ''}
                 />
 
