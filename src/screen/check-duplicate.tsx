@@ -524,7 +524,7 @@ function Duplicate(props: any) {
 
   const handleReset = () => {
     setSubjectName('');
-    setListQuestion([]);
+    setListQuestion(['']);
     setFileName('');
     setIsGuideline(true)
     setActiveStep(0);
@@ -788,6 +788,7 @@ function Duplicate(props: any) {
               handleClose={handleDialogClose}
             />
             <Dialog
+              id="subject"
               title="Subjects"
               buttonCancel="Close"
               content={subjectDialogList}
@@ -893,6 +894,7 @@ const StyleDuplicate = styled(Duplicate)`
 
   .duplicated-warning {
     margin-top: 1rem;
+    margin-bottom: 1rem;
     color: red;
     font-size: 0.9rem;
     text-align: center;
@@ -1029,7 +1031,7 @@ const StyleDuplicate = styled(Duplicate)`
     font-size: 0.9rem;
   }
   .select {
-    color: #f9fbff;
+    color:#000;
     margin-top: 2rem;
     padding: 20px;
   }
