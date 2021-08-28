@@ -130,6 +130,16 @@ function Duplicate(props: any) {
     })
   }, [])
 
+  useEffect(() => {
+    if (question === '') {
+      setIsValidQues(true)
+    } else if (isValidQuestion) {
+      setIsValidQues(true)
+    } else {
+      setIsValidQues(false)
+    }
+  }, [question])
+
   const validQuestionRegex = /(([A-Za-z])+(\s)+){2,}/
   const isValidQuestion = validQuestionRegex.test(question)
   async function handleCheck() {
@@ -164,9 +174,6 @@ function Duplicate(props: any) {
   }
 
   function handleInputQuestion(e: any) {
-    if (isValidQuestion) {
-      setIsValidQues(true)
-    }
     setQuestion(e.target.value)
   }
 
