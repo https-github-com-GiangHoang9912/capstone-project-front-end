@@ -63,6 +63,8 @@ function Profile(props: any) {
   const handleAccept = async () => {
     setIsOpen(false)
 
+    const finalDOB = moment.default(dob).format('DD/MM/YYYY').toString()
+
     if (isInputValid) {
       setProgress(100)
       try {
@@ -86,7 +88,7 @@ function Profile(props: any) {
                     lastName,
                     address,
                     phone,
-                    dob,
+                    dob: finalDOB,
                     avatar: url,
                   })
                   localStorage.setItem('avatar', url)
@@ -103,7 +105,7 @@ function Profile(props: any) {
             lastName,
             address,
             phone,
-            dob,
+            dob: finalDOB,
           })
 
           window.location.reload()
@@ -128,7 +130,7 @@ function Profile(props: any) {
           username,
         })
         .then((response) => {
-          const dobFormat = moment.default(response.data.dateOfBirth).format('DD/MM/YYYY')
+          const dobFormat = moment.default(response.data.dateOfBirth).format('YYYY-MM-DD')
           setFirstName(response.data.firstName ? response.data.firstName : '')
           setLastName(response.data.lastName ? response.data.lastName : '')
           setEmail(response.data.email ? response.data.email : '')
@@ -200,11 +202,13 @@ function Profile(props: any) {
                   <FontAwesomeIcon icon={faCalendar} /> Date of birth
                 </span>
                 <input
-                  type="text"
+                  type="date"
                   id="dob"
                   className="input-bar"
                   required={true}
-                  pattern='^[0-9]{2}[\/][0-9]{2}[\/][0-9]{4}$'
+                  pattern='\d{4}-\d{2}-\d{2}'
+                  placeholder="dd-mm-yyyy"
+                  min="1900-01-01" max="2021-01-09"
                   title="Date of Birth must have dd/mm/yyyy format"
                   value={dob}
                   onChange={(e) => setDob(e.target.value)}
