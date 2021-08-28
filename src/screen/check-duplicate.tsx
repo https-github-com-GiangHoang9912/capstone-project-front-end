@@ -156,6 +156,7 @@ function Duplicate(props: any) {
           if (response.data[0].point.toFixed(2) >= 0.6) {
             setIsAdd(false)
           } else {
+            setResult([])
             setIsAdd(true)
           }
           setVisibleResult(true)
@@ -439,7 +440,7 @@ function Duplicate(props: any) {
               {fileName.includes('.csv') ? (
                 <div>
                   <div>
-                    <h4>Select subject </h4>
+                    <h3>Subject</h3>
                     <Select
                       className="select-subject"
                       native
@@ -470,7 +471,8 @@ function Duplicate(props: any) {
               <div className="guide-line" style={{ textAlign: 'center' }}>
                 <p id="gl-left">
                   <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-                  View the guideline to import file question bank
+                  View the guideline to create a question bank file manually or using the Create New
+                  Bank function to automatically create it based on our tool.
                   <br />
                   <Chip
                     label="View guideline"
@@ -540,7 +542,7 @@ function Duplicate(props: any) {
               multiline
               maxRows={6}
               variant="outlined"
-              label="Question"
+              label="Enter your question"
               value={question}
               onChange={handleInputQuestion}
               error={!isValidQues}
@@ -549,11 +551,13 @@ function Duplicate(props: any) {
             {isValidQues ? (
               ''
             ) : (
-              <p className="warning">⚠ The text you entered must be more than 2 words and should be meaningful !</p>
+              <p className="warning">
+                ⚠ The text you entered must be more than 2 words and should be meaningful !
+              </p>
             )}
           </div>
           <div className="subject-box">
-            <h4>Select subject </h4>
+            <h3>Subject</h3>
             <Select
               native
               value={subjectId}
@@ -645,7 +649,8 @@ function Duplicate(props: any) {
 
           {visibleResult ? (
             <div>
-              <TableCheckDuplicate results={result} />
+              {result.length > 0 ? <TableCheckDuplicate results={result} /> : ''}
+
               {isAdd ? (
                 <div className="result-contain">
                   <p>
@@ -663,7 +668,7 @@ function Duplicate(props: any) {
                 </div>
               ) : (
                 <p className="duplicated-warning">
-                  Duplicate detection, still add this question to bank
+                  Detected duplication, do you still want to add this question to the bank ?
                   <Chip
                     label="Add question"
                     clickable
@@ -707,6 +712,7 @@ const StyleDuplicate = styled(Duplicate)`
   }
 
   .duplicated-warning {
+    margin-top: 1rem;
     color: red;
     font-size: 0.9rem;
     text-align: center;
