@@ -3,6 +3,11 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
+
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
@@ -59,8 +64,6 @@ const useStyles = makeStyles((theme) => ({
     color: '#0fac31',
   },
   chipView: {
-    border: '1px solid #424c9e',
-    color: '#424c9e',
     margin: 5,
   },
   chipSubject: {
@@ -78,7 +81,15 @@ const useStyles = makeStyles((theme) => ({
   chipAddQB: {
     margin: '2rem 1rem',
   },
+  instructions: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+  button: {
+    marginRight: theme.spacing(1),
+  },
 }))
+
 function Duplicate(props: any) {
   const { className, handleNotification } = props
   const classes = useStyles()
@@ -106,6 +117,11 @@ function Duplicate(props: any) {
   const [isOpenDialogForm, setIsOpenDialogForm] = useState(false)
   const [isValidQues, setIsValidQues] = useState(true)
   const [listQuestion, setListQuestion] = useState<string[]>([''])
+
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [skipped, setSkipped] = React.useState(new Set<number>());
+
+  const [isGuideline, setIsGuideline] = useState(true)
 
   function handleFileChange(e: any) {
     setFile(e.target.files[0])
@@ -304,7 +320,8 @@ function Duplicate(props: any) {
 
     link.click()
   }
-  const formBankDialog = (
+
+  const createBankDiv = (
     <div className={className}>
       {listQuestion.map((ques, index) => (
         <div className="bank-item" key={index}>
@@ -334,8 +351,59 @@ function Duplicate(props: any) {
         className={classes.chipAddQB}
         onClick={addQuestion}
       />
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.btnDup}
+          onClick={handleDialogFormAccept}
+        >
+          Save and download
+        </Button>
     </div>
   )
+  const formBankDialog = (
+    <div className={className}>
+
+
+      <div className="create-bank">
+        <div className="guide-line" style={{ textAlign: 'center' }}>
+          <p id="gl-left">
+            <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
+            View the guideline to create a question bank file manually or using the
+            Create New Bank function bellow to automatically create it based on our tool.
+
+          </p>
+          <div className="chip-group">
+            <Chip
+              label="View guideline"
+              clickable
+              color="primary"
+              onClick={() => setIsGuideline(true)}
+              className={classes.chipView}
+              variant="outlined"
+            />
+            <Chip
+              label="Create new bank"
+              clickable
+              color="secondary"
+              onClick={() => setIsGuideline(false)}
+              className={classes.chipView}
+              variant="outlined"
+            />
+          </div>
+          <div className="toggle-format-option">
+            {
+              isGuideline
+                ? formatDialog
+                : createBankDiv
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  const steps = ['Create New Subject', 'Create Bank File', 'Import Question Bank', 'Check Duplication For Bank'];
 
   const subjectDialogContent = (
     <div className={className}>
@@ -423,65 +491,208 @@ function Duplicate(props: any) {
     }
   }
 
+  const isStepOptional = (step: number) =>
+    step === 0 || step === 1;
+  ;
+
+  const isStepSkipped = (step: number) =>
+    skipped.has(step);
+  ;
+
+  const handleNext = () => {
+    let newSkipped = skipped;
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(newSkipped.values());
+      newSkipped.delete(activeStep);
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped(newSkipped);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleSkip = () => {
+    if (!isStepOptional(activeStep)) {
+      // You probably want to guard against something like this,
+      // it should never occur unless someone's actively trying to break something.
+      throw new Error("You can't skip a step that isn't optional.");
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
+    });
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+
+  const addSubjectStep = (
+    <div className={className}>
+      <div className="add-subject">
+        <TextField
+          id="outlined"
+          error={isDuplicateSubject}
+          variant="outlined"
+          label="Subject"
+          size="small"
+          helperText={duplicateSubject}
+          value={subjectName}
+          onChange={handleSubjectName}
+          className={classes.inputSubject}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={addSubject}
+          className={classes.btnSubject}
+          disabled={isDisable}
+        >
+          Add
+        </Button>
+        <br />
+        <Chip
+          label="View Subject"
+          clickable
+          onClick={handleOpenListSubject}
+          className={classes.chipView}
+          variant="outlined"
+        />
+      </div>
+    </div>
+
+  )
+
+  const importBankStep = (
+    <div className={className}>
+      <div className="import-bank">
+        <h2 className="select">Import Bank File</h2>
+        <div className="input-bank">
+          <input type="file" accept=".csv" onChange={handleFileChange} title=" " />
+        </div>
+        <p className="file-rule">Must be .csv file</p>
+        <p className="bank-name">Bank name: {fileName}</p>
+        {fileName.includes('.csv') ? (
+          <div>
+            <div>
+              <h4>Select subject </h4>
+              <Select
+                className="select-subject"
+                native
+                value={subjectId}
+                onChange={handleChange}
+                input={<Input id="demo-dialog-native" />}
+              >
+                {subjects.map((sub: Subject, index) => (
+                  <option key={index} value={sub.id}>
+                    {sub.subjectName}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.btnDup}
+              onClick={handleAddFileBank}
+              disabled={isDisableAddBank}
+            >
+              Add Bank
+            </Button>
+          </div>
+        ) : (
+          ' '
+        )}
+      </div>
+    </div>
+  )
+
+  const getStepContent = (step: number) => {
+    switch (step) {
+      case 0:
+        return addSubjectStep;
+      case 1:
+        return formBankDialog;
+      case 2:
+        return importBankStep;
+      default:
+        return 'Unknown step';
+    }
+  }
+
+  const stepWrapper = (
+    <div>
+      <Stepper activeStep={activeStep}>
+        {steps.map((label, index) => {
+          const stepProps: { completed?: boolean } = {};
+          const labelProps: { optional?: React.ReactNode } = {};
+          if (isStepOptional(index)) {
+            labelProps.optional = <Typography variant="caption">Optional</Typography>;
+          }
+          if (isStepSkipped(index)) {
+            stepProps.completed = false;
+          }
+          return (
+            <Step key={label} {...stepProps}>
+              <StepLabel {...labelProps}>{label}</StepLabel>
+            </Step>
+          );
+        })}
+      </Stepper>
+      <div>
+        {activeStep === steps.length ? (
+          <div>
+            <Typography className={classes.instructions}>
+              All steps completed - you&apos;re finished
+            </Typography>
+            <Button onClick={handleReset} className={classes.button}>
+              Reset
+            </Button>
+          </div>
+        ) : (
+          <div>
+            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+            <div>
+              <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
+                Back
+              </Button>
+              {isStepOptional(activeStep) && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSkip}
+                  className={classes.button}
+                >
+                  Skip
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                className={classes.button}
+              >
+                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+
   return (
     <div className={className}>
       <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="container">
         {role !== 3 ? (
           <div className="control control-left">
-            <div className="import-bank">
-              <h2 className="select">Import Bank File</h2>
-              <div className="input-bank">
-                <input type="file" accept=".csv" onChange={handleFileChange} title=" " />
-              </div>
-              <p className="file-rule">Must be .csv file</p>
-              <p className="bank-name">Bank name: {fileName}</p>
-              {fileName.includes('.csv') ? (
-                <div>
-                  <div>
-                    <h4>Select subject </h4>
-                    <Select
-                      className="select-subject"
-                      native
-                      value={subjectId}
-                      onChange={handleChange}
-                      input={<Input id="demo-dialog-native" />}
-                    >
-                      {subjects.map((sub: Subject, index) => (
-                        <option key={index} value={sub.id}>
-                          {sub.subjectName}
-                        </option>
-                      ))}
-                    </Select>
-                  </div>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    className={classes.btnDup}
-                    onClick={handleAddFileBank}
-                    disabled={isDisableAddBank}
-                  >
-                    Add Bank
-                  </Button>
-                </div>
-              ) : (
-                ' '
-              )}
-              <div className="guide-line" style={{ textAlign: 'center' }}>
-                <p id="gl-left">
-                  <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-                  View the guideline to import file question bank
-                  <br />
-                  <Chip
-                    label="View guideline"
-                    clickable
-                    onClick={handleOpenDialogFormat}
-                    className={classes.chipView}
-                    variant="outlined"
-                  />
-                </p>
-              </div>
-            </div>
             <div className="create-bank">
               <h2 className="select">Create New Bank</h2>
               <p className="gl-bank">
@@ -496,37 +707,6 @@ function Duplicate(props: any) {
               >
                 Create new bank
               </Button>
-            </div>
-            <div className="add-subject">
-              <h4>Create new subject</h4>
-              <TextField
-                id="outlined"
-                error={isDuplicateSubject}
-                variant="outlined"
-                label="Subject"
-                size="small"
-                helperText={duplicateSubject}
-                value={subjectName}
-                onChange={handleSubjectName}
-                className={classes.inputSubject}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={addSubject}
-                className={classes.btnSubject}
-                disabled={isDisable}
-              >
-                Add
-              </Button>
-              <br />
-              <Chip
-                label="View Subject"
-                clickable
-                onClick={handleOpenListSubject}
-                className={classes.chipView}
-                variant="outlined"
-              />
             </div>
           </div>
         ) : (
@@ -619,13 +799,13 @@ function Duplicate(props: any) {
             />
             <Dialog
               title="Creat New Bank"
-              buttonAccept="Save"
               buttonCancel="Close"
-              content={formBankDialog}
+              content={stepWrapper}
               isOpen={isOpenDialogForm}
               handleAccept={handleDialogFormAccept}
               handleClose={handleDialogClose}
             />
+
           </div>
           <div className="guide-line">
             <p>
@@ -749,6 +929,7 @@ const StyleDuplicate = styled(Duplicate)`
     background-color: #fff;
     border-radius: 5px;
     padding-bottom: 20px;
+    text-align: center;
   }
   .convert-csv {
     display: flex;
@@ -783,13 +964,17 @@ const StyleDuplicate = styled(Duplicate)`
     margin: 0;
     font-size: 0.9rem;
   }
-  .add-subject,
+  .add-subject {
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid lightgray;
+
+  }
+
   .create-bank {
-    padding: 1em;
     margin-top: 1em;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     background-color: #fff;
-    text-align: start;
     border-radius: 5px;
   }
   .create-bank {
