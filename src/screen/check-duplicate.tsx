@@ -94,6 +94,7 @@ function Duplicate(props: any) {
   const { className, handleNotification } = props
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false)
+  const [flagLoading, setFlagLoading] = useState(false)
   const [fileName, setFileName] = useState<string>('')
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const [isAdd, setIsAdd] = useState<boolean>(false)
@@ -122,6 +123,7 @@ function Duplicate(props: any) {
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
   const [isGuideline, setIsGuideline] = useState(true)
+  const [isNext, setIsNext] = useState(false)
 
   function handleFileChange(e: any) {
     setFile(e.target.files[0])
@@ -155,10 +157,27 @@ function Duplicate(props: any) {
     }
   }, [question])
 
+  useEffect(() => {
+    console.log(isNext);
+
+    if (
+      fileName && activeStep === 2
+      || subjectName && activeStep === 0
+      || listQuestion && activeStep === 1
+    ) {
+      setIsNext(true)
+    } else {
+      setIsNext(false)
+    }
+    console.log(isNext);
+  }, [fileName, subjectName, listQuestion])
+
   const validQuestionRegex = /(([A-Za-z])+(\s)+){2,}/
   const isValidQuestion = validQuestionRegex.test(question)
   async function handleCheck() {
     if (isValidQuestion) {
+      setVisibleResult(false)
+      setFlagLoading(true)
       setIsValidQues(true)
       try {
         setIsDisable(true)
@@ -180,11 +199,14 @@ function Duplicate(props: any) {
           setIsDisable(false)
           handleNotification('success', `${CONSTANT.MESSAGE().CHECK_SUCCESS}`)
           refreshToken(userId)
+          setFlagLoading(false)
         }
       } catch (error) {
+        setFlagLoading(false)
         handleNotification('danger', `${CONSTANT.MESSAGE('Check duplication').FAIL}`)
       }
     } else {
+      setFlagLoading(false)
       setIsValidQues(false)
     }
   }
@@ -287,7 +309,6 @@ function Duplicate(props: any) {
     const newList = [...listQuestion]
     newList.push('')
     setListQuestion(newList)
-    console.log(listQuestion.length)
   }
   const deleteQuestion = (idx: number) => {
     const newList = [...listQuestion]
@@ -527,7 +548,7 @@ function Duplicate(props: any) {
     setSubjectName('');
     setListQuestion(['']);
     setFileName('');
-    setIsGuideline(true)
+    setIsGuideline(true);
     setActiveStep(0);
   };
 
@@ -625,7 +646,7 @@ function Duplicate(props: any) {
   }
 
   const stepWrapper = (
-    <div>
+    <div className={className}>
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
@@ -661,7 +682,7 @@ function Duplicate(props: any) {
         ) : (
           <div>
             <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
-            <div>
+            <div className="btn-navigator">
               <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
                 Back
               </Button>
@@ -680,6 +701,7 @@ function Duplicate(props: any) {
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
+                disabled={!isNext}
               >
                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
               </Button>
@@ -708,7 +730,7 @@ function Duplicate(props: any) {
                 onClick={handleOpenDialogForm}
                 disabled={isDisable}
               >
-                Start train
+                Start Training
               </Button>
             </div>
           </div>
@@ -804,11 +826,10 @@ function Duplicate(props: any) {
               handleClose={handleDialogClose}
             />
             <Dialog
-              title="Creat New Bank"
+              title="Train Model"
               buttonCancel="Close"
               content={stepWrapper}
               isOpen={isOpenDialogForm}
-              handleAccept={handleDialogFormAccept}
               handleClose={handleDialogClose}
             />
 
@@ -821,7 +842,7 @@ function Duplicate(props: any) {
             </p>
             <p>
               <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Processing
-              will take a couple of time.
+              will take a couple of time
             </p>
             <p>
               <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Questions
@@ -829,9 +850,9 @@ function Duplicate(props: any) {
             </p>
           </div>
 
-          {visibleResult ? (
+          {visibleResult && !flagLoading ? (
             <div>
-              {result.length > 0 ? <TableCheckDuplicate results={result} /> : ''}
+              {result.length > 0 ? <TableCheckDuplicate results={result} /> : ""}
 
               {isAdd ? (
                 <div className="result-contain">
@@ -863,7 +884,7 @@ function Duplicate(props: any) {
               )}
             </div>
           ) : (
-            ' '
+            <div className={flagLoading ? "is-loading" : "non-loading"} />
           )}
         </div>
       </div>
@@ -885,6 +906,12 @@ const StyleDuplicate = styled(Duplicate)`
     text-align: center;
     /* box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
       rgba(17, 17, 26, 0.1) 0px 16px 56px; */
+  }
+
+  .btn-navigator {
+    position: absolute !important;
+    bottom: 0.6rem !important;
+    right: 4.5rem
   }
 
   .warning {
