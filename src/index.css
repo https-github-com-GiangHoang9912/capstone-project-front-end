@@ -9,6 +9,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.is-loading {
+  display: flex;
+  width: 173px;
+  height: 173px;
+  background-image: url('https://cdn.dribbble.com/users/42048/screenshots/8350927/media/23289b76ac7353ad4f0d0619ce6e9f2d.gif');
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: auto;
+  margin-bottom: 2rem;
+}
+
+.non-loading {
+  display: none;
+}
+
 #notification {
   position: absolute;
   z-index: 20000;

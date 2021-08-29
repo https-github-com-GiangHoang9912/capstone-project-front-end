@@ -205,7 +205,7 @@ const Login: FC<LoginProps> = (props) => {
           stopLoading()
           handleNotification('danger', `Username or password is incorrect`)
         }
-        setLoading(false)
+        // setLoading(false)
       }, 2000)
     }
   }

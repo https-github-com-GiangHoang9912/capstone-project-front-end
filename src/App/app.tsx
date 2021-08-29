@@ -1,6 +1,6 @@
 // lib
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
-import { useState, useEffect, FC } from 'react'
+import { useState, useEffect, FC, useContext } from 'react'
 
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,7 +17,7 @@ import PersistentDrawerLeft from '../common/drawer'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
 import ListExam from '../screen/list-exam'
-import { AccountContextProvider } from '../contexts/account-context'
+import { AccountContextProvider, AccountContext } from '../contexts/account-context'
 import ManageStaffs from '../screen/manage-staffs'
 import ViewHistory from '../screen/view-history'
 import ChangePassword from '../screen/change-password'
@@ -25,6 +25,12 @@ import UpdateExam from '../screen/update-exam'
 import NotFound from '../screen/404-not-found'
 import ForgotPassword from '../screen/forgot-password'
 import { refreshToken } from '../services/services'
+
+const AuthRequired: FC<{}> = (props) => {
+  const { isLoggedIn } = useContext(AccountContext)
+
+  return <Switch>{isLoggedIn ? props.children : <Redirect to="/login" />}</Switch>
+}
 
 const App: FC = (props: any) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true)
@@ -63,9 +69,9 @@ const App: FC = (props: any) => {
   }
 
   return (
-    <Router>
-      {message && <Notification message={message} types={type} />}
-      <AccountContextProvider>
+    <AccountContextProvider>
+      <Router>
+        {message && <Notification message={message} types={type} />}
         <Header
           isOpen={isMenuOpen}
           setIsOpen={setIsMenuOpen}
@@ -80,8 +86,20 @@ const App: FC = (props: any) => {
           className={isLogin ? 'hidden-component' : ''}
         />
         <div className={`${mainContent} ${toggleMenuClass} ${toggleHeaderClass}`}>
-          {/* {isStatus === 401 ? <Redirect to="/login" /> : ""} */}
           <Switch>
+            <Route exact path="/login" component={Login}>
+              <Login setIsLogin={setIsLogin} handleNotification={handleNotification} />
+            </Route>
+            <Route exact path="/forgot-password" component={ForgotPassword}>
+              <ForgotPassword
+                setIsForgotPassword={setIsForgotPassword}
+                setIsMenuOpen={setIsMenuOpen}
+                handleNotification={handleNotification}
+              />
+            </Route>
+          </Switch>
+          <AuthRequired>
+            <Route exact path="/login" />
             <Route exact path="/">
               <HomePage />
             </Route>
@@ -116,21 +134,11 @@ const App: FC = (props: any) => {
             ) : (
               ''
             )}
-            <Route exact path="/login" component={Login}>
-              <Login setIsLogin={setIsLogin} handleNotification={handleNotification} />
-            </Route>
-            <Route exact path="/forgot-password" component={ForgotPassword}>
-              <ForgotPassword
-                setIsForgotPassword={setIsForgotPassword}
-                setIsMenuOpen={setIsMenuOpen}
-                handleNotification={handleNotification}
-              />
-            </Route>
             <Route component={NotFound} />
-          </Switch>
+          </AuthRequired>
         </div>
-      </AccountContextProvider>
-    </Router>
+      </Router>
+    </AccountContextProvider>
   )
 }
 

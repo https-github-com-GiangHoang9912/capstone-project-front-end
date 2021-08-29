@@ -11,6 +11,7 @@ import axios from 'axios'
 import LoadingBar from 'react-top-loading-bar'
 import Chip from '@material-ui/core/Chip'
 import DoneIcon from '@material-ui/icons/Done'
+import { Link, animateScroll as scroll } from 'react-scroll'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import IconButton from '@material-ui/core/IconButton'
 import SvgIcon from '@material-ui/core/SvgIcon'
@@ -64,6 +65,7 @@ const SelfGenerate = (props: any) => {
   const { className, handleNotification } = props
   const [showProgress, setShowProgress] = useState<Boolean>(false)
   const [isOpen, setIsOpen] = useState(false)
+  const [flagLoading, setFlagLoading] = useState(false)
   const [openDialogRemove, setOpenDialogRemove] = useState(false)
   const [isDisable, setIsDisable] = useState(true)
   const [dialogContent, setDialogContent] = useState<any>()
@@ -101,6 +103,8 @@ const SelfGenerate = (props: any) => {
 
   async function handleProgress(e: any) {
     e.preventDefault()
+    setVisibleResult(false)
+    setFlagLoading(true)
     try {
       setIsDisable(true)
       setProgress(progress + 10)
@@ -118,9 +122,11 @@ const SelfGenerate = (props: any) => {
         handleNotification('success', `${CONSTANT.MESSAGE().GEN_SUCCESS}`)
       }
       refreshToken(userId)
+      setFlagLoading(false)
     } catch (error) {
       console.error(error)
       setProgress(100)
+      setFlagLoading(false)
       handleNotification('danger', `${CONSTANT.MESSAGE('Generate Questions !!').FAIL}`)
     }
   }
@@ -240,7 +246,7 @@ const SelfGenerate = (props: any) => {
 
     const input = e.target.value
     const isValidInput = !!input && validQuestionRegex.test(input)
-    
+
     if (!isValidInput) {
       setIsDisable(true)
     } else {
@@ -321,9 +327,11 @@ const SelfGenerate = (props: any) => {
                   onChange={handleInputContext(index)}
                   required={true}
                   error={!!item.context && !validQuestionRegex.test(item.context)}
-                  helperText={!!item.context && !validQuestionRegex.test(item.context)
-                    ? '⚠ The text you entered must have at least one word and should be meaningful!'
-                    : ''}
+                  helperText={
+                    !!item.context && !validQuestionRegex.test(item.context)
+                      ? '⚠ The text you entered must have at least one word and should be meaningful!'
+                      : ''
+                  }
                 />
 
                 <p className="note-box">
@@ -353,9 +361,7 @@ const SelfGenerate = (props: any) => {
                   padding: '35px 24px',
                 }}
               >
-                <span>
-                  Do you want delete this section ?
-                </span>
+                <span>Do you want delete this section ?</span>
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleAcceptRemove(idRemove)} color="secondary">
@@ -372,24 +378,24 @@ const SelfGenerate = (props: any) => {
           </div>
           {/* Generate cau hoi */}
           <Button
-            variant="contained"
-            color="primary"
-            className={classes.btnGen}
-            disabled={isDisable}
-            type='submit'
-          >
-            Generate
-          </Button>
+              variant="contained"
+              color="primary"
+              className={classes.btnGen}
+              disabled={isDisable}
+              type="submit"
+            >
+              Generate
+            </Button>
           <br />
           {/* call components ProgressBar */}
           {showProgress ? <Progress percentage={60} /> : ''}
           {/* Display question generated */}
-          {visibleResult ? (
+          {visibleResult && !flagLoading ? (
             <div>
               <Table columns={columns} data={questions} isPagination={false} />
             </div>
           ) : (
-            ' '
+            <div className={flagLoading ? 'is-loading' : 'non-loading'} />
           )}
           {/* Dialog show select subject to add  */}
           <DialogCustom
@@ -412,6 +418,7 @@ const SelfStyle = styled(SelfGenerate)`
   min-height: auto;
   margin: auto;
   padding-bottom: 20px;
+
   .form-container {
     margin: 2rem;
     text-align: center;

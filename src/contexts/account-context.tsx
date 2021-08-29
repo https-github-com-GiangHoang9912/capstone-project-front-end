@@ -2,7 +2,7 @@ import { createContext, useState } from 'react'
 import { AccountContextProps, Account } from '../interface/acc'
 
 const accountDefault: Account = {
-  id: 0,
+  id: +(localStorage.getItem('id') ?? 0),
   username: '',
   role: 0,
   profile: {
@@ -19,6 +19,7 @@ const accountDefault: Account = {
 export const AccountContext = createContext({
   accountContextData: accountDefault,
   setInformation: (accountLogin: Account) => {},
+  isLoggedIn: false
 })
 
 export const AccountContextProvider = ({ children }: AccountContextProps) => {
@@ -27,9 +28,11 @@ export const AccountContextProvider = ({ children }: AccountContextProps) => {
     setAccountLogin(accountLogin)
   }
   const accountContextData = account
+  const isLoggedIn = account.id !== 0
+  console.info(isLoggedIn)
 
   return (
-    <AccountContext.Provider value={{ accountContextData, setInformation }}>
+    <AccountContext.Provider value={{ accountContextData, setInformation, isLoggedIn }}>
       {children}
     </AccountContext.Provider>
   )
