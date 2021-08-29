@@ -94,6 +94,7 @@ function Duplicate(props: any) {
   const { className, handleNotification } = props
   const classes = useStyles()
   const [isOpen, setIsOpen] = useState(false)
+  const [flagLoading, setFlagLoading] = useState(false)
   const [fileName, setFileName] = useState<string>('')
   const [visibleResult, setVisibleResult] = useState<boolean>(false)
   const [isAdd, setIsAdd] = useState<boolean>(false)
@@ -175,6 +176,8 @@ function Duplicate(props: any) {
   const isValidQuestion = validQuestionRegex.test(question)
   async function handleCheck() {
     if (isValidQuestion) {
+      setVisibleResult(false)
+      setFlagLoading(true)
       setIsValidQues(true)
       try {
         setIsDisable(true)
@@ -196,11 +199,14 @@ function Duplicate(props: any) {
           setIsDisable(false)
           handleNotification('success', `${CONSTANT.MESSAGE().CHECK_SUCCESS}`)
           refreshToken(userId)
+          setFlagLoading(false)
         }
       } catch (error) {
+        setFlagLoading(false)
         handleNotification('danger', `${CONSTANT.MESSAGE('Check duplication').FAIL}`)
       }
     } else {
+      setFlagLoading(false)
       setIsValidQues(false)
     }
   }
@@ -836,7 +842,7 @@ function Duplicate(props: any) {
             </p>
             <p>
               <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Processing
-              will take a couple of time.
+              will take a couple of time
             </p>
             <p>
               <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" /> Questions
@@ -844,9 +850,9 @@ function Duplicate(props: any) {
             </p>
           </div>
 
-          {visibleResult ? (
+          {visibleResult && !flagLoading ? (
             <div>
-              {result.length > 0 ? <TableCheckDuplicate results={result} /> : ''}
+              {result.length > 0 ? <TableCheckDuplicate results={result} /> : ""}
 
               {isAdd ? (
                 <div className="result-contain">
@@ -878,7 +884,7 @@ function Duplicate(props: any) {
               )}
             </div>
           ) : (
-            ' '
+            <div className={flagLoading ? "is-loading" : "non-loading"} />
           )}
         </div>
       </div>

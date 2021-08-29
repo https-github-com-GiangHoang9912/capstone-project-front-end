@@ -29,11 +29,7 @@ import { refreshToken } from '../services/services'
 const AuthRequired: FC<{}> = (props) => {
   const { isLoggedIn } = useContext(AccountContext)
 
-  return (
-    <Switch>
-      {isLoggedIn ? props.children : <Redirect to="/login" />}
-    </Switch>
-  )
+  return <Switch>{isLoggedIn ? props.children : <Redirect to="/login" />}</Switch>
 }
 
 const App: FC = (props: any) => {
@@ -90,7 +86,6 @@ const App: FC = (props: any) => {
           className={isLogin ? 'hidden-component' : ''}
         />
         <div className={`${mainContent} ${toggleMenuClass} ${toggleHeaderClass}`}>
-          {/* {isStatus === 401 ? <Redirect to="/login" /> : ""} */}
           <Switch>
             <Route exact path="/login" component={Login}>
               <Login setIsLogin={setIsLogin} handleNotification={handleNotification} />
