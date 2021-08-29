@@ -116,7 +116,7 @@ function Duplicate(props: any) {
   const [isOpenDialogFormat, setIsOpenDialogFormat] = useState(false)
   const [isOpenDialogForm, setIsOpenDialogForm] = useState(false)
   const [isValidQues, setIsValidQues] = useState(true)
-  const [listQuestion, setListQuestion] = useState<string[]>([''])
+  const [listQuestion, setListQuestion] = useState<string[]>([])
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
@@ -162,7 +162,7 @@ function Duplicate(props: any) {
     if (
       fileName && activeStep === 2
       || subjectName && activeStep === 0
-      || listQuestion && activeStep === 1
+      || listQuestion.length && activeStep === 1
     ) {
       setIsNext(true)
     } else {
@@ -565,7 +565,7 @@ function Duplicate(props: any) {
           color="primary"
           onClick={addSubject}
           className={classes.btnSubject}
-          disabled={isDisable}
+          disabled={!subjectName}
         >
           Add
         </Button>
