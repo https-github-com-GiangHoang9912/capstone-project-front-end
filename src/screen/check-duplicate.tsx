@@ -724,7 +724,7 @@ function Duplicate(props: any) {
                 onClick={handleOpenDialogForm}
                 disabled={isDisable}
               >
-                Start train
+                Start Training
               </Button>
             </div>
           </div>
