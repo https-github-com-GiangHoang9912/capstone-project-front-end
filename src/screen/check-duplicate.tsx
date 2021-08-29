@@ -820,11 +820,10 @@ function Duplicate(props: any) {
               handleClose={handleDialogClose}
             />
             <Dialog
-              title="Creat New Bank"
+              title="Train Model"
               buttonCancel="Close"
               content={stepWrapper}
               isOpen={isOpenDialogForm}
-              handleAccept={handleDialogFormAccept}
               handleClose={handleDialogClose}
             />
 
@@ -905,7 +904,8 @@ const StyleDuplicate = styled(Duplicate)`
 
   .btn-navigator {
     position: absolute !important;
-    bottom: 1rem !important;
+    bottom: 0.6rem !important;
+    right: 4.5rem
   }
 
   .warning {

@@ -87,12 +87,16 @@ function DialogComponent(props?: any) {
             {content}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleAccept} color="primary">
-              {buttonAccept}
-            </Button>
-            <Button onClick={handleClose} color="primary">
-              {buttonCancel}
-            </Button>
+            {buttonAccept
+              ? (<Button onClick={handleAccept} color="primary">
+                {buttonAccept}
+              </Button>)
+              : ''}
+            {buttonCancel
+              ? (<Button onClick={handleClose} color="primary">
+                {buttonCancel}
+              </Button>)
+              : ''}
           </DialogActions>
         </Dialog>
       )}
