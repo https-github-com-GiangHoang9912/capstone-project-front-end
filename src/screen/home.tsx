@@ -57,7 +57,7 @@ function HomePage(props: any) {
             <h2 className="intro-sub">
               Duplicate Detection and Self-Generation Question based on answers
             </h2>
-            <Link to="main-function" spy={true} smooth={true} offset={-70} duration={700}>
+            <Link to="main-function" spy={true} smooth={true} offset={-115} duration={700}>
               <Button variant="contained" color="primary" className={classes.btnScroll}>
                 Get Started
               </Button>
