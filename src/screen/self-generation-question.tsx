@@ -378,14 +378,14 @@ const SelfGenerate = (props: any) => {
           </div>
           {/* Generate cau hoi */}
           <Button
-              variant="contained"
-              color="primary"
-              className={classes.btnGen}
-              disabled={isDisable}
-              type="submit"
-            >
-              Generate
-            </Button>
+            variant="contained"
+            color="primary"
+            className={classes.btnGen}
+            disabled={isDisable}
+            type="submit"
+          >
+            Generate
+          </Button>
           <br />
           {/* call components ProgressBar */}
           {showProgress ? <Progress percentage={60} /> : ''}
@@ -400,11 +400,11 @@ const SelfGenerate = (props: any) => {
           {/* Dialog show select subject to add  */}
           <DialogCustom
             title="Add question"
-            buttonAccept="Add"
+            buttonAccept={!isDuplicate ? 'Add' : null}
             buttonCancel="Cancel"
             content={dialogContent}
             isOpen={isOpen}
-            handleAccept={handleAccept}
+            handleAccept={!isDuplicate ? handleAccept : null}
             handleClose={handleDialogClose}
           />
         </form>
