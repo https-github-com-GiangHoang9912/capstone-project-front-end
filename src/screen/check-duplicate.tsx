@@ -122,6 +122,7 @@ function Duplicate(props: any) {
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
   const [isGuideline, setIsGuideline] = useState(true)
+  const [isNext, setIsNext] = useState(false)
 
   function handleFileChange(e: any) {
     setFile(e.target.files[0])
@@ -154,6 +155,21 @@ function Duplicate(props: any) {
       setIsValidQues(false)
     }
   }, [question])
+
+  useEffect(() => {
+    console.log(isNext);
+
+    if (
+      fileName && activeStep === 2
+      || subjectName && activeStep === 0
+      || listQuestion && activeStep === 1
+    ) {
+      setIsNext(true)
+    } else {
+      setIsNext(false)
+    }
+    console.log(isNext);
+  }, [fileName, subjectName, listQuestion])
 
   const validQuestionRegex = /(([A-Za-z])+(\s)+){2,}/
   const isValidQuestion = validQuestionRegex.test(question)
@@ -287,7 +303,6 @@ function Duplicate(props: any) {
     const newList = [...listQuestion]
     newList.push('')
     setListQuestion(newList)
-    console.log(listQuestion.length)
   }
   const deleteQuestion = (idx: number) => {
     const newList = [...listQuestion]
@@ -527,7 +542,7 @@ function Duplicate(props: any) {
     setSubjectName('');
     setListQuestion(['']);
     setFileName('');
-    setIsGuideline(true)
+    setIsGuideline(true);
     setActiveStep(0);
   };
 
@@ -625,7 +640,7 @@ function Duplicate(props: any) {
   }
 
   const stepWrapper = (
-    <div>
+    <div className={className}>
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
@@ -661,7 +676,7 @@ function Duplicate(props: any) {
         ) : (
           <div>
             <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
-            <div>
+            <div className="btn-navigator">
               <Button disabled={activeStep === 0} onClick={handleBack} className={classes.button}>
                 Back
               </Button>
@@ -680,6 +695,7 @@ function Duplicate(props: any) {
                 color="primary"
                 onClick={handleNext}
                 className={classes.button}
+                disabled={!isNext}
               >
                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
               </Button>
@@ -885,6 +901,11 @@ const StyleDuplicate = styled(Duplicate)`
     text-align: center;
     /* box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
       rgba(17, 17, 26, 0.1) 0px 16px 56px; */
+  }
+
+  .btn-navigator {
+    position: absolute !important;
+    bottom: 1rem !important;
   }
 
   .warning {
