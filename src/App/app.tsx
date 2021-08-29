@@ -99,6 +99,7 @@ const App: FC = (props: any) => {
             </Route>
           </Switch>
           <AuthRequired>
+            <Route exact path="/login" />
             <Route exact path="/">
               <HomePage />
             </Route>
