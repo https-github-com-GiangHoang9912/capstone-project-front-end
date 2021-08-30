@@ -279,6 +279,14 @@ const SelfGenerate = (props: any) => {
     setOpenDialogRemove(false)
   }
 
+  const [swipe, setSwipe] = useState(true)
+  const handleFocus = () => {
+    setSwipe(false)
+  }
+  const handleBlur = () => {
+    setSwipe(true)
+  }
+
   return (
     <div className={className}>
       <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
@@ -288,7 +296,7 @@ const SelfGenerate = (props: any) => {
           {/* Nhap cau tra loi */}
           <br />
 
-          <Carousel isRTL={false} className="carousel">
+          <Carousel enableMouseSwipe={swipe} isRTL={false} className="carousel">
             {items.map((item, index) => (
               <div className="item-input" key={index}>
                 <div className="icon-delete">
@@ -309,6 +317,8 @@ const SelfGenerate = (props: any) => {
                   value={item.answer}
                   required={true}
                   onChange={handleInputAnswer(index)}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
                 />
                 <br />
                 {/* Nhap doan van hoac ideal */}
@@ -332,6 +342,8 @@ const SelfGenerate = (props: any) => {
                       ? '⚠ The text you entered must have at least one word and should be meaningful!'
                       : ''
                   }
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
                 />
 
                 <p className="note-box">
