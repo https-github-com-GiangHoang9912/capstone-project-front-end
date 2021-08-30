@@ -10,12 +10,12 @@ TableReact.defaultProps = {
   className: '',
 }
 function TableReact(props: any) {
-  const { className, columns,data,isPagination } = props
+  const { className, columns, data, isPagination } = props
   useTable({
     columns,
     data,
   })
-  
+
   useTable({ columns, data }, usePagination)
   const {
     getTableProps,
@@ -62,9 +62,8 @@ function TableReact(props: any) {
             prepareRow(row)
             const { key, ...restRowProps } = row.getRowProps()
             return (
-
               <tr key={key} {...restRowProps}>
-                <td>{(index+1) + pageIndex*pageSize}</td>
+                <td>{index + 1 + pageIndex * pageSize}</td>
                 {row.cells.map((cell) => {
                   const { ...restCellProps } = cell.getCellProps()
                   return <td {...restCellProps}>{cell.render('Cell')}</td>
@@ -74,53 +73,58 @@ function TableReact(props: any) {
           })}
         </tbody>
       </table>
-     
-        <div className="pagination">
-        {!isPagination || data.length <= pageSize? (
-        <div className="pagin-page" />
-      ) : (
+
+      <div className="pagination">
+        {!isPagination || data.length <= pageSize ? (
+          <div className="pagin-page" />
+        ) : (
           <div>
-          <button className="btnChange" onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {'<'}
-          </button>{' '}
-          {arr.map((item, index) => (
             <button
-              className={pageIndex === index ? ' pageNumber pageActive' : 'pageNumber '}
-              onClick={() => gotoPage(item - 1)}
+              className="btnChange"
+              onClick={() => previousPage()}
+              disabled={!canPreviousPage}
             >
-              {item}
-            </button>
-          ))}
-          <button className="btnChange" onClick={() => nextPage()} disabled={!canNextPage}>
-            {'>'}
-          </button>{' '}
-          <span>
-            Page{' '}
-            <strong>
-              {pageIndex + 1} of {pageOptions.length}
-            </strong>{' '}
-          </span>
-          </div>
-      )}
-      {isPagination ?
-      <div>
-          <select
-            value={pageSize}
-            className="select-page"
-            onChange={(e) => {
-              setPageSize(Number(e.target.value))
-            }}
-          >
-            {[5, 10, 15, 50].map((pageSizes) => (
-              <option key={pageSizes} value={pageSizes}>
-                Show {pageSizes}
-              </option>
+              {'<'}
+            </button>{' '}
+            {arr.map((item, index) => (
+              <button
+                className={pageIndex === index ? ' pageNumber pageActive' : 'pageNumber '}
+                onClick={() => gotoPage(item - 1)}
+              >
+                {item}
+              </button>
             ))}
-          </select>
+            <button className="btnChange" onClick={() => nextPage()} disabled={!canNextPage}>
+              {'>'}
+            </button>{' '}
+            <span>
+              Page{' '}
+              <strong>
+                {pageIndex + 1} of {pageOptions.length}
+              </strong>{' '}
+            </span>
           </div>
-          : ' '}
-        </div>
-      
+        )}
+        {isPagination ? (
+          <div>
+            <select
+              value={pageSize}
+              className="select-page"
+              onChange={(e) => {
+                setPageSize(Number(e.target.value))
+              }}
+            >
+              {[5, 10, 15, 50].map((pageSizes) => (
+                <option key={pageSizes} value={pageSizes}>
+                  Show {pageSizes}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : (
+          ' '
+        )}
+      </div>
     </div>
   )
 }
@@ -136,7 +140,6 @@ const StyleTable = styled(TableReact)`
     width: 100%;
     border-collapse: collapse;
     margin: 0rem 0rem;
-   
   }
 
   th {
@@ -166,8 +169,8 @@ const StyleTable = styled(TableReact)`
     justify-content: space-between;
     align-items: center;
   }
-  .pagin-page{
-    width:100%;
+  .pagin-page {
+    width: 100%;
   }
   .pageSize {
     border: none;
@@ -177,7 +180,7 @@ const StyleTable = styled(TableReact)`
     border-bottom: 2px solid #303f9f;
     background: none;
   }
-  .select-page{
+  .select-page {
     margin: 1.3rem;
   }
   .btnChange {

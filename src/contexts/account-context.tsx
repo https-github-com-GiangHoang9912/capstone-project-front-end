@@ -19,7 +19,7 @@ const accountDefault: Account = {
 export const AccountContext = createContext({
   accountContextData: accountDefault,
   setInformation: (accountLogin: Account) => {},
-  isLoggedIn: false
+  isLoggedIn: false,
 })
 
 export const AccountContextProvider = ({ children }: AccountContextProps) => {

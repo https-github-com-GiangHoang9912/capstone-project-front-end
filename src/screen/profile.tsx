@@ -51,9 +51,8 @@ function Profile(props: any) {
   const [file, setFile] = useState<any>('')
   const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
 
-
   function handleEditProfile(e: any) {
-    e.preventDefault();
+    e.preventDefault()
     setIsOpen(true)
     setEditStatus(!editStatus)
   }
@@ -72,7 +71,7 @@ function Profile(props: any) {
           const uploadTask = storage.ref(`images/${file.name}`).put(file)
           uploadTask.on(
             'state_changed',
-            () => { },
+            () => {},
             (error) => {
               console.log(error)
             },
@@ -92,7 +91,6 @@ function Profile(props: any) {
                     avatar: url,
                   })
                   localStorage.setItem('avatar', url)
-
                 })
               refreshToken(userId)
               window.location.reload()
@@ -193,7 +191,6 @@ function Profile(props: any) {
                   title="LastName cannot be empty"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-
                 />
                 {inputError === 'lname' ? <p className="errorMessage">{errorMessage}</p> : ''}
               </div>
@@ -206,9 +203,10 @@ function Profile(props: any) {
                   id="dob"
                   className="input-bar"
                   required={true}
-                  pattern='\d{4}-\d{2}-\d{2}'
+                  pattern="\d{4}-\d{2}-\d{2}"
                   placeholder="dd-mm-yyyy"
-                  min="1900-01-01" max="2021-01-09"
+                  min="1900-01-01"
+                  max="2021-01-09"
                   title="Date of Birth must have dd/mm/yyyy format"
                   value={dob}
                   onChange={(e) => setDob(e.target.value)}
@@ -227,7 +225,6 @@ function Profile(props: any) {
                   className="input-bar"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-
                 />
               </div>
               <div className="form-info">
@@ -243,7 +240,6 @@ function Profile(props: any) {
                   title="Phone number must have 10-11 digits"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-
                 />
                 {inputError === 'Phone' ? <p className="errorMessage">{errorMessage}</p> : ''}
               </div>
@@ -263,12 +259,7 @@ function Profile(props: any) {
                 />
                 {inputError === 'Email' ? <p className="errorMessage">{errorMessage}</p> : ''}
               </div>
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={!isInputValid}
-                type="submit"
-              >
+              <Button variant="contained" color="primary" disabled={!isInputValid} type="submit">
                 Save
               </Button>
             </form>
@@ -373,7 +364,7 @@ const styleProfile = styled(Profile)`
   input::-webkit-file-upload-button:hover {
     background-color: #35367a;
   }
-  
+
   input[type='file'] {
     font-size: 0px;
   }
@@ -400,7 +391,7 @@ const styleProfile = styled(Profile)`
   }
 
   input:invalid {
-    border: 1px solid red !important
+    border: 1px solid red !important;
   }
 
   span {

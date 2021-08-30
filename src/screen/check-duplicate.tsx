@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import Typography from '@material-ui/core/Typography';
+import Stepper from '@material-ui/core/Stepper'
+import Step from '@material-ui/core/Step'
+import StepLabel from '@material-ui/core/StepLabel'
+import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
@@ -119,8 +119,8 @@ function Duplicate(props: any) {
   const [isValidQues, setIsValidQues] = useState(true)
   const [listQuestion, setListQuestion] = useState<string[]>([])
 
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set<number>());
+  const [activeStep, setActiveStep] = React.useState(0)
+  const [skipped, setSkipped] = React.useState(new Set<number>())
 
   const [isGuideline, setIsGuideline] = useState(true)
   const [isNext, setIsNext] = useState(false)
@@ -159,9 +159,9 @@ function Duplicate(props: any) {
 
   useEffect(() => {
     if (
-      fileName && activeStep === 2
-      || subjectName && activeStep === 0
-      || listQuestion.length && activeStep === 1
+      (fileName && activeStep === 2) ||
+      (subjectName && activeStep === 0) ||
+      (listQuestion.length && activeStep === 1)
     ) {
       setIsNext(true)
     } else {
@@ -265,10 +265,7 @@ function Duplicate(props: any) {
   const formatDialog = (
     <div className={className}>
       <div className="format-container">
-        <p className="format-guideline">
-          {' '}
-          Step 1: Download the sample file
-        </p>
+        <p className="format-guideline"> Step 1: Download the sample file</p>
         <p className="format-guideline">
           Step 2: Open the sample file and edit it. The content of the bank file is written in the
           form:
@@ -277,17 +274,11 @@ function Duplicate(props: any) {
         </p>
         <p className="format-guideline">
           {' '}
-          Step 3: Replace all questions from the second line in the sample file with new questions in
-          the question bank
+          Step 3: Replace all questions from the second line in the sample file with new questions
+          in the question bank
         </p>
-        <p className="format-guideline">
-          {' '}
-          Step 4: Create new subject if it doesn't already exist
-        </p>
-        <p className="format-guideline">
-          {' '}
-          Step 5: Upload the edited question bank file
-        </p>
+        <p className="format-guideline"> Step 4: Create new subject if it doesn't already exist</p>
+        <p className="format-guideline"> Step 5: Upload the edited question bank file</p>
         <a href="train.csv" target="blank">
           <Button
             variant="contained"
@@ -375,21 +366,18 @@ function Duplicate(props: any) {
   )
   const formBankDialog = (
     <div className={className}>
-
-
       <div className="create-bank">
         <div className="guide-line" style={{ textAlign: 'center' }}>
           <p id="gl-left">
             <FontAwesomeIcon icon={faExclamationCircle} className="duplicate-icon" />
-            View the guideline to create a question bank file manually or using the
-            Create New Bank function bellow to automatically create it based on our tool.
-
+            View the guideline to create a question bank file manually or using the Create New Bank
+            function bellow to automatically create it based on our tool.
           </p>
           <div className="chip-group">
             <Chip
               label="View guideline"
               clickable
-              color={isGuideline ? "secondary" : "primary"}
+              color={isGuideline ? 'secondary' : 'primary'}
               onClick={() => setIsGuideline(true)}
               className={classes.chipView}
               variant="outlined"
@@ -397,25 +385,19 @@ function Duplicate(props: any) {
             <Chip
               label="Create new bank"
               clickable
-              color={!isGuideline ? "secondary" : "primary"}
+              color={!isGuideline ? 'secondary' : 'primary'}
               onClick={() => setIsGuideline(false)}
               className={classes.chipView}
               variant="outlined"
             />
           </div>
-          <div className="toggle-format-option">
-            {
-              isGuideline
-                ? formatDialog
-                : createBankDiv
-            }
-          </div>
+          <div className="toggle-format-option">{isGuideline ? formatDialog : createBankDiv}</div>
         </div>
       </div>
     </div>
   )
 
-  const steps = ['Create New Subject', 'Create Bank File', 'Import Question Bank', 'Finish'];
+  const steps = ['Create New Subject', 'Create Bank File', 'Import Question Bank', 'Finish']
 
   const subjectDialogContent = (
     <div className={className}>
@@ -503,51 +485,45 @@ function Duplicate(props: any) {
     }
   }
 
-  const isStepOptional = (step: number) =>
-    step === 0 || step === 1;
-  ;
-
-  const isStepSkipped = (step: number) =>
-    skipped.has(step);
-  ;
-
+  const isStepOptional = (step: number) => step === 0 || step === 1
+  const isStepSkipped = (step: number) => skipped.has(step)
   const handleNext = () => {
-    let newSkipped = skipped;
+    let newSkipped = skipped
     if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
+      newSkipped = new Set(newSkipped.values())
+      newSkipped.delete(activeStep)
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+    setSkipped(newSkipped)
+  }
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+  }
 
   const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
       // You probably want to guard against something like this,
       // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
+      throw new Error("You can't skip a step that isn't optional.")
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
     setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
+      const newSkipped = new Set(prevSkipped.values())
+      newSkipped.add(activeStep)
+      return newSkipped
+    })
+  }
 
   const handleReset = () => {
-    setSubjectName('');
-    setListQuestion(['']);
-    setFileName('');
-    setIsGuideline(true);
-    setActiveStep(0);
-  };
+    setSubjectName('')
+    setListQuestion([''])
+    setFileName('')
+    setIsGuideline(true)
+    setActiveStep(0)
+  }
 
   const addSubjectStep = (
     <div className={className}>
@@ -582,7 +558,6 @@ function Duplicate(props: any) {
         />
       </div>
     </div>
-
   )
 
   const importBankStep = (
@@ -632,13 +607,13 @@ function Duplicate(props: any) {
   const getStepContent = (step: number) => {
     switch (step) {
       case 0:
-        return addSubjectStep;
+        return addSubjectStep
       case 1:
-        return formBankDialog;
+        return formBankDialog
       case 2:
-        return importBankStep;
+        return importBankStep
       default:
-        return '';
+        return ''
     }
   }
 
@@ -646,19 +621,19 @@ function Duplicate(props: any) {
     <div className={className}>
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => {
-          const stepProps: { completed?: boolean } = {};
-          const labelProps: { optional?: React.ReactNode } = {};
+          const stepProps: { completed?: boolean } = {}
+          const labelProps: { optional?: React.ReactNode } = {}
           if (isStepOptional(index)) {
-            labelProps.optional = <Typography variant="caption">Optional</Typography>;
+            labelProps.optional = <Typography variant="caption">Optional</Typography>
           }
           if (isStepSkipped(index)) {
-            stepProps.completed = false;
+            stepProps.completed = false
           }
           return (
             <Step key={label} {...stepProps}>
               <StepLabel {...labelProps}>{label}</StepLabel>
             </Step>
-          );
+          )
         })}
       </Stepper>
       <div>
@@ -829,7 +804,6 @@ function Duplicate(props: any) {
               isOpen={isOpenDialogForm}
               handleClose={handleDialogClose}
             />
-
           </div>
           <div className="guide-line">
             <p>
@@ -849,7 +823,7 @@ function Duplicate(props: any) {
 
           {visibleResult && !flagLoading ? (
             <div>
-              {result.length > 0 ? <TableCheckDuplicate results={result} /> : ""}
+              {result.length > 0 ? <TableCheckDuplicate results={result} /> : ''}
 
               {isAdd ? (
                 <div className="result-contain">
@@ -881,7 +855,7 @@ function Duplicate(props: any) {
               )}
             </div>
           ) : (
-            <div className={flagLoading ? "is-loading" : "non-loading"} />
+            <div className={flagLoading ? 'is-loading' : 'non-loading'} />
           )}
         </div>
       </div>
@@ -908,7 +882,7 @@ const StyleDuplicate = styled(Duplicate)`
   .btn-navigator {
     position: absolute !important;
     bottom: 0.6rem !important;
-    right: 4.5rem
+    right: 4.5rem;
   }
 
   .warning {
@@ -1001,7 +975,6 @@ const StyleDuplicate = styled(Duplicate)`
     padding: 2rem;
     text-align: center;
     border: 1px solid lightgray;
-
   }
 
   .create-bank {
@@ -1009,7 +982,7 @@ const StyleDuplicate = styled(Duplicate)`
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     background-color: #fff;
     border-radius: 5px;
-    padding-bottom: 1rem 
+    padding-bottom: 1rem;
   }
   .create-bank {
     text-align: center;
@@ -1056,7 +1029,7 @@ const StyleDuplicate = styled(Duplicate)`
     font-size: 0.9rem;
   }
   .select {
-    color:#000;
+    color: #000;
     margin-top: 2rem;
     padding: 20px;
   }

@@ -15,14 +15,14 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { Button, makeStyles } from '@material-ui/core'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import styled from 'styled-components'
 import axios from 'axios'
 import TextField from '@material-ui/core/TextField'
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle'
-import SearchIcon from '@material-ui/icons/Search';
+import SearchIcon from '@material-ui/icons/Search'
 import DialogCustom from '../common/dialog'
 import * as CONSTANT from '../const'
 import { refreshToken } from '../services/services'
@@ -175,7 +175,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
     width: '100%',
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   containerBack: {
     display: 'flex',
@@ -185,7 +185,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'start',
     '&:hover': {
       cursor: 'pointer',
-      color: '#3F51B5'
+      color: '#3F51B5',
     },
   },
   textBack: {
@@ -194,7 +194,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: ' 0.8rem',
     '&:hover': {
       cursor: 'pointer',
-      color: '#3F51B5'
+      color: '#3F51B5',
     },
   },
   iconBack: {
@@ -202,29 +202,28 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 400,
     '&:hover': {
       cursor: 'pointer',
-      color: '#3F51B5'
+      color: '#3F51B5',
     },
   },
   searchQuestions: {
     display: 'flex',
     justifyContent: 'space-around',
     alignItems: 'center',
-    flexWrap: 'wrap'
-
+    flexWrap: 'wrap',
   },
   fieldInputQuestions: {
-    flexBasis: '45%'
+    flexBasis: '45%',
   },
   totalQues: {
     flexBasis: '45%',
     color: '#272822',
-    fontWeight: 550
+    fontWeight: 550,
   },
   containerQuestions: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-around',
-  }
+  },
 }))
 
 const GET_QUESTIONS_URL = `${CONSTANT.BASE_URL}/questions/examId`
@@ -233,7 +232,6 @@ const DELETE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/delete`
 const GET_QUESTIONBANK_URL = `${CONSTANT.BASE_URL}/subject`
 const CREATE_QUESTION_URL = `${CONSTANT.BASE_URL}/questions/create`
 const CREATE_ANSWERS_URL = `${CONSTANT.BASE_URL}/answers-groups/create`
-
 
 function UpdateExam(props: any) {
   const { className, handleNotification } = props
@@ -258,7 +256,7 @@ function UpdateExam(props: any) {
   const [questionBank, setQuestionBank] = useState<QuestionBank[]>([])
   const [toltalQuestion, setToltalQuestion] = useState(0)
   const [subject, setSubject] = useState<ISubject | undefined>(undefined)
-  const typingTimeoutRef = useRef<any>(null);
+  const typingTimeoutRef = useRef<any>(null)
   const [valueTypeAnswer, setValueTypeAnswer] = useState('tf')
   const [correctAnswerTypeTf, setCorrectAnswerTypeTf] = useState('true')
   const [valueCorrectAnswer, setValueCorrectAnswer] = useState('0')
@@ -311,12 +309,12 @@ function UpdateExam(props: any) {
       setProgress(progress + 10)
       const response = await axios.delete(`${DELETE_QUESTION_URL}/${id}`)
       if (response && response.data) {
-        handleNotification('success', `${CONSTANT.MESSAGE("Question").DELETE_SUCCESS}`)
+        handleNotification('success', `${CONSTANT.MESSAGE('Question').DELETE_SUCCESS}`)
         setOpenDialogDelete(false)
         setProgress(100)
         refreshToken(userId)
       } else {
-        handleNotification('danger', `${CONSTANT.MESSAGE("Delete Question").FAIL}`);
+        handleNotification('danger', `${CONSTANT.MESSAGE('Delete Question').FAIL}`)
         setProgress(100)
         refreshToken(userId)
       }
@@ -351,7 +349,6 @@ function UpdateExam(props: any) {
     } catch {
       refreshToken(userId)
     }
-
   }
 
   const handleSaveQuestion = async (e: any) => {
@@ -363,17 +360,16 @@ function UpdateExam(props: any) {
       if (arrayCheck.length != 0) {
         const response = await axios.post(`${CREATE_QUESTION_URL}/${userId}`, {
           questionBankId: arrayCheck,
-          examId: idExam
-        });
+          examId: idExam,
+        })
         if (response && response.data) {
           handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
           setProgress(100)
           setSearchValue('')
           getQuestionByIdExam()
           refreshToken(userId)
-
         } else {
-          handleNotification('danger', `${CONSTANT.MESSAGE("Add Question").FAIL}`);
+          handleNotification('danger', `${CONSTANT.MESSAGE('Add Question').FAIL}`)
           setProgress(100)
           refreshToken(userId)
         }
@@ -381,7 +377,6 @@ function UpdateExam(props: any) {
         setProgress(100)
         refreshToken(userId)
       }
-
     } catch (error) {
       console.error(error)
       setProgress(100)
@@ -445,30 +440,35 @@ function UpdateExam(props: any) {
     try {
       setProgress(progress + 10)
       if (currentQuestionAnswerGroup.length > 0) {
-        const elementIsEmpty = currentQuestionAnswerGroup.filter((item: any) => item.answer.answerText.trim().length <= 0);
+        const elementIsEmpty = currentQuestionAnswerGroup.filter(
+          (item: any) => item.answer.answerText.trim().length <= 0
+        )
         if (elementIsEmpty.length === 0) {
-          let response = null;
+          let response = null
           response = await axios.post(`${CREATE_ANSWERS_URL}/${idQuestion}`, {
             currentQuestionAnswerGroup,
             valueTypeAnswer,
-            userId
+            userId,
           })
           if (response) {
             handleNotification('success', `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`)
             setProgress(100)
             setOpenDialogUpdate(false)
           } else {
-            handleNotification('danger', `${CONSTANT.MESSAGE("Update Question").FAIL}`);
+            handleNotification('danger', `${CONSTANT.MESSAGE('Update Question').FAIL}`)
             setOpenDialogUpdate(true)
             setProgress(100)
           }
         } else {
-          handleNotification('danger', `${CONSTANT.MESSAGE("update question cause answer is empty").FAIL}`)
+          handleNotification(
+            'danger',
+            `${CONSTANT.MESSAGE('update question cause answer is empty').FAIL}`
+          )
           setOpenDialogUpdate(true)
           setProgress(100)
         }
       } else {
-        handleNotification('danger', `${CONSTANT.MESSAGE("Update Question").NO_ANSWER}`)
+        handleNotification('danger', `${CONSTANT.MESSAGE('Update Question').NO_ANSWER}`)
         setOpenDialogUpdate(true)
         setProgress(100)
       }
@@ -547,23 +547,22 @@ function UpdateExam(props: any) {
   }
   //* Check question exist in dialog **/
   const checkQuestionExistInDialog = (initialList: any, listChange: any) => {
-    let countQuestion = 0;
+    let countQuestion = 0
     initialList?.map((quesBank: any, index: number) => {
       const isExist = listChange.some((item: any) => item.questionBankId === quesBank.id)
       if (!isExist) {
-        countQuestion += 1;
+        countQuestion += 1
       }
     })
-    return countQuestion;
+    return countQuestion
   }
 
   //* get question bank by name **/
   useEffect(() => {
     try {
-      const resultQuestion: any = subject?.questionBank?.filter(
-        (questionItem: any) =>
-          questionItem?.questionText?.toLowerCase().includes(searchValue.trim().toLowerCase())
-      );
+      const resultQuestion: any = subject?.questionBank?.filter((questionItem: any) =>
+        questionItem?.questionText?.toLowerCase().includes(searchValue.trim().toLowerCase())
+      )
       setQuestionBank(resultQuestion)
       const countQuestion = checkQuestionExistInDialog(resultQuestion, questions)
       setToltalQuestion(countQuestion)
@@ -574,8 +573,8 @@ function UpdateExam(props: any) {
 
   useEffect(() => {
     try {
-      const countTy = checkQuestionExistInDialog(questionBank, questions);
-      const result = countTy - arrayCheck.length;
+      const countTy = checkQuestionExistInDialog(questionBank, questions)
+      const result = countTy - arrayCheck.length
       setToltalQuestion(result)
     } catch (err) {
       console.log(err.message)
@@ -584,7 +583,7 @@ function UpdateExam(props: any) {
 
   //* onChange value search **/
   const handleSearchValue = async (event: any) => {
-    setSearchValue(event.target.value);
+    setSearchValue(event.target.value)
     if (event.target.value === '') {
       setQuestionBank(questionBank)
       const countQuestion = checkQuestionExistInDialog(questionBank, questions)
@@ -605,7 +604,6 @@ function UpdateExam(props: any) {
   }
 
   const columns = [
-
     {
       Header: 'Question',
       accessor: 'questionBank.questionText',
@@ -686,20 +684,22 @@ function UpdateExam(props: any) {
                     }
                   }}
                 />
-                <span className="sttQuestion" style={{
-                  margin: '0px 10px',
-                  fontSize: ' 1rem',
-                  fontWeight: 700,
-                  color: '#495057'
-
-                }}>
+                <span
+                  className="sttQuestion"
+                  style={{
+                    margin: '0px 10px',
+                    fontSize: ' 1rem',
+                    fontWeight: 700,
+                    color: '#495057',
+                  }}
+                >
                   {index + 1}.{' '}
                   <span
                     style={{
                       margin: '0px 10px',
                       fontWeight: 700,
                       fontSize: ' 1rem',
-                      color: '#2f6473'
+                      color: '#2f6473',
                     }}
                   >
                     {quesBank.questionText}
@@ -839,7 +839,9 @@ function UpdateExam(props: any) {
               </NavLink>
             </div>
             <div className={classes.titleOfExam}>
-              <h2 style={{ color: '#495057', fontFamily: 'inherit', width: '82%' }}>{subjectName} - {examName}</h2>
+              <h2 style={{ color: '#495057', fontFamily: 'inherit', width: '82%' }}>
+                {subjectName} - {examName}
+              </h2>
             </div>
             <div className="content-exam">
               <Table columns={columns} data={questions} isPagination={false} />
@@ -864,9 +866,7 @@ function UpdateExam(props: any) {
                   padding: '35px 24px',
                 }}
               >
-                <span>
-                  Do you want to delete this question ?
-                </span>
+                <span>Do you want to delete this question ?</span>
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => handleAcceptDialogDelete(idQuestion)} color="secondary">
@@ -914,9 +914,7 @@ function UpdateExam(props: any) {
                         helperText={textError}
                         error={checkError}
                       />
-                      <span className={classes.totalQues}>
-                        Total questions: {toltalQuestion}
-                      </span>
+                      <span className={classes.totalQues}>Total questions: {toltalQuestion}</span>
                     </div>
                     {bodyAddQuestion}
                   </div>

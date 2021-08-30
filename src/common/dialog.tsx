@@ -63,11 +63,13 @@ function DialogComponent(props?: any) {
             {content}
           </DialogContent>
           <DialogActions>
-            {buttonAccept
-              ? (<Button onClick={handleAccept} color="primary">
+            {buttonAccept ? (
+              <Button onClick={handleAccept} color="primary">
                 {buttonAccept}
-              </Button>)
-              : ''}
+              </Button>
+            ) : (
+              ''
+            )}
             <Button onClick={handleClose} color="primary">
               {buttonCancel}
             </Button>
@@ -87,16 +89,20 @@ function DialogComponent(props?: any) {
             {content}
           </DialogContent>
           <DialogActions>
-            {buttonAccept
-              ? (<Button onClick={handleAccept} color="primary">
+            {buttonAccept ? (
+              <Button onClick={handleAccept} color="primary">
                 {buttonAccept}
-              </Button>)
-              : ''}
-            {buttonCancel
-              ? (<Button onClick={handleClose} color="primary">
+              </Button>
+            ) : (
+              ''
+            )}
+            {buttonCancel ? (
+              <Button onClick={handleClose} color="primary">
                 {buttonCancel}
-              </Button>)
-              : ''}
+              </Button>
+            ) : (
+              ''
+            )}
           </DialogActions>
         </Dialog>
       )}

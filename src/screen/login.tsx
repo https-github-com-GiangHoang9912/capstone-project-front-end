@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'none',
     '&:hover': {
       color: '#0e8ed8',
-    }
+    },
   },
   textProcess: {
     marginTop: '15px',

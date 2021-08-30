@@ -102,7 +102,7 @@ export function TableCheckDuplicate(props: any) {
                 </StyledTableRow>
               )
             }
-            return ""
+            return ''
           })}
         </TableBody>
       </Table>

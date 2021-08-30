@@ -33,7 +33,6 @@ makeStyles((theme: Theme) =>
     drawer: {
       width: drawerWidth,
       flexShrink: 0,
-     
     },
   })
 )
@@ -44,7 +43,7 @@ const customTheme = createTheme({
     MuiDrawer: {
       // Name of the rule
       paper: {
-        // Some CSS 
+        // Some CSS
         width: drawerWidth,
         marginTop: '62px',
         zIndex: 1,
@@ -52,10 +51,11 @@ const customTheme = createTheme({
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         filter: 'brightness(1.1)',
-        background: 'url("https://static.vecteezy.com/system/resources/previews/002/063/012/non_2x/abstract-connecting-dots-and-lines-with-geometric-background-modern-technology-connection-science-polygonal-structure-background-illustration-vector.jpg")',
+        background:
+          'url("https://static.vecteezy.com/system/resources/previews/002/063/012/non_2x/abstract-connecting-dots-and-lines-with-geometric-background-modern-technology-connection-science-polygonal-structure-background-illustration-vector.jpg")',
         color: '#c5c5c5',
         padding: '0 0.5rem',
-        boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px;'
+        boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px;',
       },
     },
   },
