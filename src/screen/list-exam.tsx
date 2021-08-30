@@ -17,9 +17,7 @@ import Input from '@material-ui/core/Input'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import axios from 'axios'
-import * as moment from 'moment'
 import LoadingBar from 'react-top-loading-bar'
-// import Progress from '../common/progress'
 import * as CONSTANT from '../const'
 import { AccountContext } from '../contexts/account-context'
 import { refreshToken } from '../services/services'
@@ -157,7 +155,6 @@ function ListExam(props: any) {
     axios
       .get(`${GET_SUBJECT_URL}`)
       .then((response) => {
-        // console.log('laalala', response.data)
         setSubject(() => response.data)
       })
       .catch((err) => {
@@ -384,8 +381,6 @@ function ListExam(props: any) {
           subjectId,
           examName: txtNameExam,
         })
-
-        console.log(response)
 
         if (response && response.data && response.data.statusCode === 200) {
           handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`);
