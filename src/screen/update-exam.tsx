@@ -242,12 +242,11 @@ function UpdateExam(props: any) {
   const history = useHistory()
   const { accountContextData } = useContext(AccountContext)
   const account = accountContextData
-  const [openDialogAdd, setOpenDialogAdd] = useState(false) // for event click add
+  const [openDialogAdd, setOpenDialogAdd] = useState(false)
   const [openDialogDelete, setOpenDialogDelete] = useState(false)
   const [idQuestion, setIdQuestion] = useState(0)
   const [nameQuestion, setNameQuestion] = useState('')
   const [searchValue, setSearchValue] = useState('')
-  const [textSearch, setTextSearch] = useState('')
   const [openDialogUpdate, setOpenDialogUpdate] = useState(false)
   const [currentQuestionAnswerGroup, setCurrentQuestionAnswerGroup] = useState<AnswerGroup[]>([])
   const [defaultAnswerGroup, setDefaultAnswerGroup] = useState<AnswerGroup[]>([])
@@ -280,9 +279,11 @@ function UpdateExam(props: any) {
       .get(`${GET_QUESTIONS_URL}/${idExam}`)
       .then((response) => {
         setQuestions(response.data[0].question)
+        refreshToken(userId)
       })
       .catch((err) => {
         console.log('Failed to get question by  id Exam: ', err.message)
+        refreshToken(userId)
       })
   }, [openDialogDelete, openDialogAdd, openDialogUpdate])
 
@@ -293,9 +294,11 @@ function UpdateExam(props: any) {
       .then((response) => {
         setSubject(response.data[0])
         setQuestionBank(response.data[0].questionBank)
+        refreshToken(userId)
       })
       .catch((err) => {
         console.log('Failed to get question bank by id subject: ', err.message)
+        refreshToken(userId)
       })
   }, [])
 
@@ -313,11 +316,12 @@ function UpdateExam(props: any) {
         handleNotification('success', `${CONSTANT.MESSAGE("Question").DELETE_SUCCESS}`)
         setOpenDialogDelete(false)
         setProgress(100)
+        refreshToken(userId)
       } else {
         handleNotification('danger', `${CONSTANT.MESSAGE("Delete Question").FAIL}`);
         setProgress(100)
+        refreshToken(userId)
       }
-      refreshToken(userId)
     } catch (error) {
       console.error(error)
       setProgress(100)
@@ -329,14 +333,31 @@ function UpdateExam(props: any) {
   }
   /** event click button add */
   const handleClickAddQuestion = () => {
-    setTextSearch('')
     setSearchValue('')
-
     setOpenDialogAdd(true)
     setScroll(scroll)
   }
 
   //* event process click button save in dialog add question
+  const getQuestionByIdExam = async () => {
+    try {
+      axios
+        .get(`${GET_QUESTIONS_URL}/${idExam}`)
+        .then((response) => {
+          setQuestions(response.data[0].question)
+          refreshToken(userId)
+        })
+        .catch((err) => {
+          console.log('Failed to get question by  id Exam: ', err.message)
+          refreshToken(userId)
+        })
+    } catch {
+      console.log('Get questions by exam fail')
+      refreshToken(userId)
+
+    }
+
+  }
 
   const handleSaveQuestion = async (e: any) => {
     e.preventDefault()
@@ -353,29 +374,29 @@ function UpdateExam(props: any) {
           handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
           setProgress(100)
           setSearchValue('')
-          setTextSearch('')
+          getQuestionByIdExam()
+          refreshToken(userId)
+
         } else {
           handleNotification('danger', `${CONSTANT.MESSAGE("Add Question").FAIL}`);
           setProgress(100)
+          refreshToken(userId)
         }
-        refreshToken(userId)
       } else {
-        handleNotification('danger', `${CONSTANT.MESSAGE("Add Question").NO_QUESTION_SELECTED}`);
         setProgress(100)
+        refreshToken(userId)
       }
 
     } catch (error) {
       console.error(error)
       setProgress(100)
       setSearchValue('')
-      setTextSearch('')
       refreshToken(userId)
     }
   }
   const handleCloseDialogAdd = (e: any) => {
     e.preventDefault()
     setSearchValue('')
-    setTextSearch('')
     setOpenDialogAdd(false)
   }
 
@@ -415,9 +436,11 @@ function UpdateExam(props: any) {
       .get(`${GET_QUESTION_DETAIL_URL}/${questionId}`)
       .then((response) => {
         setQuestion(response.data)
+        refreshToken(userId)
       })
       .catch((err) => {
         console.log('Failed to get question detail by id: ', err.message)
+        refreshToken(userId)
       })
 
     setOpenDialogUpdate(true)
@@ -504,7 +527,6 @@ function UpdateExam(props: any) {
   }
   //* Event when click radio button tf
   const handleChangeCorrectTf = (event: any) => {
-
     setCorrectAnswerTypeTf(event.target.value)
     const newResult = currentQuestionAnswerGroup.map((item: AnswerGroup, index: number) => {
       const itemAnswer = { ...item }
@@ -529,7 +551,7 @@ function UpdateExam(props: any) {
     })
     setCurrentQuestionAnswerGroup(newAnswers)
   }
-
+  //* Check question exist in dialog **/
   const checkQuestionExistInDialog = (initialList: any, listChange: any) => {
     let countQuestion = 0;
     initialList?.map((quesBank: any, index: number) => {
@@ -541,13 +563,12 @@ function UpdateExam(props: any) {
     return countQuestion;
   }
 
-
   //* get question bank by name **/
   useEffect(() => {
     try {
       const resultQuestion: any = subject?.questionBank?.filter(
         (questionItem: any) =>
-          questionItem?.questionText?.toLowerCase().includes(textSearch.trim().toLowerCase())
+          questionItem?.questionText?.toLowerCase().includes(searchValue.trim().toLowerCase())
       );
       setQuestionBank(resultQuestion)
       const countQuestion = checkQuestionExistInDialog(resultQuestion, questions)
@@ -555,28 +576,26 @@ function UpdateExam(props: any) {
     } catch (err) {
       console.log('Message: ', err)
     }
-  }, [textSearch, openDialogAdd])
+  }, [searchValue, openDialogAdd])
+
+  useEffect(() => {
+    try {
+      const countTy = checkQuestionExistInDialog(questionBank, questions);
+      const result = countTy - arrayCheck.length;
+      setToltalQuestion(result)
+    } catch (err) {
+      console.log('Message: ', err)
+    }
+  }, [questions.length])
 
   //* onChange value search **/
   const handleSearchValue = async (event: any) => {
     setSearchValue(event.target.value);
     if (event.target.value === '') {
-      await axios
-        .get(`${GET_QUESTIONBANK_URL}/${idSubject}`)
-        .then((response) => {
-          setSubject(response.data[0])
-          setQuestionBank(response.data[0].questionBank)
-        })
-        .catch((err) => {
-          console.log('Failed to get question bank by id subject: ', err.message)
-        })
+      setQuestionBank(questionBank)
+      const countQuestion = checkQuestionExistInDialog(questionBank, questions)
+      setToltalQuestion(countQuestion)
     }
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
-    typingTimeoutRef.current = setTimeout(async () => {
-      setTextSearch(event.target.value)
-    }, 300)
   }
 
   const titleDialogUpdate = (
@@ -664,6 +683,8 @@ function UpdateExam(props: any) {
                   onChange={(e: any) => {
                     if (e.target.checked) {
                       arrayCheck.push(quesBank.id)
+                      console.log(arrayCheck.length)
+
                     } else {
                       for (let i = 0; i < arrayCheck.length; i++) {
                         if (arrayCheck[i] === quesBank.id) {
