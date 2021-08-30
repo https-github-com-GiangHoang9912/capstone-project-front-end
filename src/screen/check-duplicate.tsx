@@ -137,7 +137,7 @@ function Duplicate(props: any) {
         setRole(response.data.role)
       })
       .catch((err) => {
-        console.log('Failed to fetch data: ', err.message)
+        console.log(err.message)
       })
   }, [])
 
@@ -158,8 +158,6 @@ function Duplicate(props: any) {
   }, [question])
 
   useEffect(() => {
-    console.log(isNext);
-
     if (
       fileName && activeStep === 2
       || subjectName && activeStep === 0
@@ -169,7 +167,6 @@ function Duplicate(props: any) {
     } else {
       setIsNext(false)
     }
-    console.log(isNext);
   }, [fileName, subjectName, listQuestion])
 
   const validQuestionRegex = /(([A-Za-z])+(\s)+){2,}/

@@ -154,10 +154,6 @@ const Login: FC<LoginProps> = (props) => {
     if (container.current) container.current.style.display = 'none'
   }
 
-  if (container.current) {
-    console.log('?????')
-  }
-
   const HandleLogin = (e: any) => {
     e.preventDefault()
     if (container.current) {
@@ -184,15 +180,12 @@ const Login: FC<LoginProps> = (props) => {
             }
           )
           .catch((err) => {
-            console.log(err)
             stopLoading()
             setLoading(false)
           })
         if (response && response.data && response.data.statusCode !== 401) {
           setInformation(response.data)
-          console.log(response.data)
           stopLoading()
-          console.log(cookies.getAll())
           localStorage.setItem('id', response.data.id)
           localStorage.setItem('role', response.data.role)
           localStorage.setItem('username', response.data.username)
@@ -228,13 +221,11 @@ const Login: FC<LoginProps> = (props) => {
             withCredentials: true,
           })
           .catch((err) => {
-            console.log(err)
             stopLoading()
             setLoading(false)
           })
         if (response && response.data && response.data.statusCode !== 401) {
           setInformation(response.data)
-          console.log(response.data)
           stopLoading()
           localStorage.setItem('id', response.data.id)
           localStorage.setItem('role', response.data.role)

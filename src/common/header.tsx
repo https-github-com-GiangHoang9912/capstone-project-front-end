@@ -68,7 +68,6 @@ const Header: FC<HeaderProps> = (props) => {
     const response = await axios.get(LOGOUT_URL)
     setIsLogin?.(true)
     setIsForgotPassword?.(false)
-    console.log(response)
     localStorage.clear()
   }
 

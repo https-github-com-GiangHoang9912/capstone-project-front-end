@@ -67,7 +67,6 @@ function ChangePassword(props: any) {
             withCredentials: true,
           }
         )
-        console.log('changeDataResponse', changeDataResponse)
         if (changeDataResponse.data.status == 200 && validatePassword) {
           handleNotification('success', `${CONSTANT.MESSAGE().CHANGE_PASSWORD_SUCCESS}`)
           history.push('/login')

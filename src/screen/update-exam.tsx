@@ -282,7 +282,6 @@ function UpdateExam(props: any) {
         refreshToken(userId)
       })
       .catch((err) => {
-        console.log('Failed to get question by  id Exam: ', err.message)
         refreshToken(userId)
       })
   }, [openDialogDelete, openDialogAdd, openDialogUpdate])
@@ -297,7 +296,6 @@ function UpdateExam(props: any) {
         refreshToken(userId)
       })
       .catch((err) => {
-        console.log('Failed to get question bank by id subject: ', err.message)
         refreshToken(userId)
       })
   }, [])
@@ -348,13 +346,10 @@ function UpdateExam(props: any) {
           refreshToken(userId)
         })
         .catch((err) => {
-          console.log('Failed to get question by  id Exam: ', err.message)
           refreshToken(userId)
         })
     } catch {
-      console.log('Get questions by exam fail')
       refreshToken(userId)
-
     }
 
   }
@@ -439,7 +434,6 @@ function UpdateExam(props: any) {
         refreshToken(userId)
       })
       .catch((err) => {
-        console.log('Failed to get question detail by id: ', err.message)
         refreshToken(userId)
       })
 
@@ -574,7 +568,7 @@ function UpdateExam(props: any) {
       const countQuestion = checkQuestionExistInDialog(resultQuestion, questions)
       setToltalQuestion(countQuestion)
     } catch (err) {
-      console.log('Message: ', err)
+      console.log(err.message)
     }
   }, [searchValue, openDialogAdd])
 
@@ -584,7 +578,7 @@ function UpdateExam(props: any) {
       const result = countTy - arrayCheck.length;
       setToltalQuestion(result)
     } catch (err) {
-      console.log('Message: ', err)
+      console.log(err.message)
     }
   }, [questions.length])
 
@@ -683,8 +677,6 @@ function UpdateExam(props: any) {
                   onChange={(e: any) => {
                     if (e.target.checked) {
                       arrayCheck.push(quesBank.id)
-                      console.log(arrayCheck.length)
-
                     } else {
                       for (let i = 0; i < arrayCheck.length; i++) {
                         if (arrayCheck[i] === quesBank.id) {

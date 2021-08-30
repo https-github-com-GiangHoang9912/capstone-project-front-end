@@ -158,7 +158,7 @@ function ListExam(props: any) {
         setSubject(() => response.data)
       })
       .catch((err) => {
-        console.log('Failed to fetch data subject: ', err.message)
+        console.log(err.message)
       })
   }, [])
 
@@ -173,7 +173,7 @@ function ListExam(props: any) {
         setExams(response.data)
       })
       .catch((err) => {
-        console.log('Failed to fetch data exam by userID: ', err.message)
+        console.log(err.message)
       })
   }, [openDialogCreate, openDialogDelete])
 
@@ -208,7 +208,7 @@ function ListExam(props: any) {
       }
       refreshToken(idUser)
     } catch (error) {
-      console.log('Failed to get data question by examID: ', error.message)
+      console.log(error.message)
     }
   }
 
@@ -334,7 +334,7 @@ function ListExam(props: any) {
           setExams(response.data)
         })
         .catch((err) => {
-          console.log('Failed to fetch data exam by userID: ', err.message)
+          console.log(err.message)
         })
     }
   }, [])
