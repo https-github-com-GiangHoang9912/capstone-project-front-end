@@ -41,8 +41,6 @@ function DialogComponent(props?: any) {
     id,
   } = props
 
-  console.log(id)
-
   const StyledDialog = withStyles({
     root: {
       zIndex: 2000,
