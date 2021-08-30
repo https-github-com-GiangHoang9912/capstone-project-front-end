@@ -240,7 +240,6 @@ function ManageStaffs(props: any) {
   const data = user
   const columns = React.useMemo(
     () => [
-
       {
         Header: 'Account',
         accessor: 'username',
@@ -297,15 +296,14 @@ function ManageStaffs(props: any) {
 
   const handleSearchValue = useCallback((e: any) => {
     setSearchValue(e.target.value)
-    if(!searchValue){
+    if (!searchValue) {
       axios.get(`${GET_USERS_URL}`).then((response) => {
         setUser(response.data)
       })
     }
-  },[])
+  }, [])
 
-  const searchAccount = ()=>{
-    
+  const searchAccount = () => {
     axios.get(`${GET_USERS_SEARCH_URL}/${searchValue}`).then((response) => {
       setUser(response.data)
     })
@@ -324,10 +322,7 @@ function ManageStaffs(props: any) {
             value={searchValue}
             onChange={handleSearchValue}
           />
-          <button
-            className="btn-search"
-            onClick={searchAccount}
-          >
+          <button className="btn-search" onClick={searchAccount}>
             {' '}
             Search{' '}
           </button>
@@ -348,7 +343,7 @@ function ManageStaffs(props: any) {
               prepareRow(row)
               return (
                 <tr {...row.getRowProps()}>
-                  <td>{(index+1) + (pageIndex)*pageSize}</td>
+                  <td>{index + 1 + pageIndex * pageSize}</td>
                   {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                   ))}
@@ -357,75 +352,78 @@ function ManageStaffs(props: any) {
             })}
           </tbody>
         </table>
-      
+
         <div className="pagination">
-        {data.length <= pageSize? (
-         <div className="pagin-page" />
-         ) : (
+          {data.length <= pageSize ? (
+            <div className="pagin-page" />
+          ) : (
+            <div>
+              <button
+                className="btnChange"
+                onClick={() => previousPage()}
+                disabled={!canPreviousPage}
+              >
+                {'<'}
+              </button>{' '}
+              {arr.map((item, index) => (
+                <button
+                  className={pageIndex === index ? ' pageNumber pageActive' : 'pageNumber '}
+                  onClick={() => gotoPage(item - 1)}
+                >
+                  {item}
+                </button>
+              ))}
+              <button className="btnChange" onClick={() => nextPage()} disabled={!canNextPage}>
+                {'>'}
+              </button>{' '}
+              <span>
+                Page{' '}
+                <strong>
+                  {pageIndex + 1} of {pageOptions.length}
+                </strong>{' '}
+              </span>
+            </div>
+          )}
           <div>
-          <button className="btnChange" onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {'<'}
-          </button>{' '}
-          {arr.map((item, index) => (
-            <button
-              className={pageIndex === index ? ' pageNumber pageActive' : 'pageNumber '}
-              onClick={() => gotoPage(item - 1)}
+            <select
+              value={pageSize}
+              className="select-page"
+              onChange={(e) => {
+                setPageSize(Number(e.target.value))
+              }}
             >
-              {item}
-            </button>
-          ))}
-          <button className="btnChange" onClick={() => nextPage()} disabled={!canNextPage}>
-            {'>'}
-          </button>{' '}
-          <span>
-            Page{' '}
-            <strong>
-              {pageIndex + 1} of {pageOptions.length}
-            </strong>{' '}
-          </span>
-          </div>
-       )}
-      <div>
-          <select
-            value={pageSize}
-            className="select-page"
-            onChange={(e) => {
-              setPageSize(Number(e.target.value))
-            }}
-          >
-            {[5, 10, 15, 50].map((pageSizes) => (
-              <option key={pageSizes} value={pageSizes}>
-                Show {pageSizes}
-              </option>
-            ))}
-          </select>
+              {[5, 10, 15, 50].map((pageSizes) => (
+                <option key={pageSizes} value={pageSizes}>
+                  Show {pageSizes}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
-      <Dialog
-        title="Profile"
-        buttonCancel="Close"
-        content={detailDialog}
-        isOpen={isOpen}
-        handleClose={handleDialogClose}
-      />
-      <Dialog
-        title="Profile"
-        buttonCancel="Close"
-        buttonAccept="Change"
-        message="Change this account role"
-        content={RoleDialog}
-        isOpen={isOpenRole}
-        handleAccept={handleDialogChangeRole}
-        handleClose={handleDialogClose}
-      />
-    </div>
+        <Dialog
+          title="Profile"
+          buttonCancel="Close"
+          content={detailDialog}
+          isOpen={isOpen}
+          handleClose={handleDialogClose}
+        />
+        <Dialog
+          title="Profile"
+          buttonCancel="Close"
+          buttonAccept="Change"
+          message="Change this account role"
+          content={RoleDialog}
+          isOpen={isOpenRole}
+          handleAccept={handleDialogChangeRole}
+          handleClose={handleDialogClose}
+        />
+      </div>
     </div>
   )
 }
 
 const StyledAdmin = styled(ManageStaffs)`
-
   table {
     border-collapse: collapse !important;
     margin: auto;
@@ -475,20 +473,20 @@ const StyledAdmin = styled(ManageStaffs)`
     max-width: 50px;
     max-height: 50px;
   }
-   .btn-search {
-     height: 40px;
-     width: 80px;
-     margin: 0 1rem;
-     background-color: #303f9f;
-     font-size: 0.9rem;
-     color: #fff;
-     border: none;
-     outline: none;
-     border-radius: 5px;
-   }
-   .btn-search:hover {
-     filter: grayscale(50%)
-   }
+  .btn-search {
+    height: 40px;
+    width: 80px;
+    margin: 0 1rem;
+    background-color: #303f9f;
+    font-size: 0.9rem;
+    color: #fff;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+  }
+  .btn-search:hover {
+    filter: grayscale(50%);
+  }
   .name {
     padding: 0;
     color: #3f96f3;
@@ -513,13 +511,13 @@ const StyledAdmin = styled(ManageStaffs)`
     align-items: center;
     text-align: center;
   }
-  .pagin-page{
-    width:100%;
+  .pagin-page {
+    width: 100%;
   }
   .pagin-number {
     margin: 1rem;
   }
-  .select-page{
+  .select-page {
     margin: 1.3rem;
   }
   .pageSize {

@@ -10,7 +10,7 @@ import {
   faExclamationCircle,
   IconDefinition,
   faFileAlt,
-  faEdit
+  faEdit,
 } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
 import * as moment from 'moment'
@@ -108,7 +108,6 @@ function ViewHistory(props: any) {
                           <FontAwesomeIcon icon={faCopy} className="item-icon" />
                           Check duplication:{' '}
                         </>
-
                       ) : (
                         ''
                       )}
@@ -144,7 +143,6 @@ function ViewHistory(props: any) {
                     </span>
                   </div>
                 </div>
-
               </div>
             ))}
           </div>

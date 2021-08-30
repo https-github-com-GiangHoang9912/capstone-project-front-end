@@ -108,8 +108,9 @@ const useStyles = makeStyles({
 const FORGOT_PASSWORD = `${CONSTANT.BASE_URL}/verify-user`
 
 function validateEmail(email: string) {
-  const myRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return myRegex.test(String(email).toLowerCase());
+  const myRegex =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return myRegex.test(String(email).toLowerCase())
 }
 
 function ForgotPassword(props: any) {
@@ -134,7 +135,10 @@ function ForgotPassword(props: any) {
     try {
       setProgress(progress + 10)
       if (!validateEmail(email)) {
-        handleNotification('warning', `${CONSTANT.MESSAGE('Change Password, Input wrong format mail ! ').FAIL}`)
+        handleNotification(
+          'warning',
+          `${CONSTANT.MESSAGE('Change Password, Input wrong format mail ! ').FAIL}`
+        )
         setCheckError(true)
         setTextError('You must enter the correct email address')
         setProgress(100)
@@ -176,8 +180,7 @@ function ForgotPassword(props: any) {
                 color: '#A1A1A1',
               }}
             >
-              Enter email we'll send you a link to get back into your
-              account
+              Enter email we'll send you a link to get back into your account
             </span>
           </div>
           <div className={classes.inputContent}>
@@ -192,7 +195,7 @@ function ForgotPassword(props: any) {
                 helperText={textError}
                 required
               />
-            {/* <input
+              {/* <input
                 className={classes.txtEmail}
                 type="text"
                 id="uname"
@@ -204,21 +207,21 @@ function ForgotPassword(props: any) {
                   fontSize: '13px',
                 }}
               /> */}
-          </div>
-          <div className="button-reset">
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.styleBtn}
-              onClick={handleForgotPassword}
-            >
-              Send Login Link
-            </Button>
+            </div>
+            <div className="button-reset">
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.styleBtn}
+                onClick={handleForgotPassword}
+              >
+                Send Login Link
+              </Button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    </div >
   )
 }
 

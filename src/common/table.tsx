@@ -75,7 +75,6 @@ export function TableCheckDuplicate(props: any) {
 
   const handleAddQuestion = (question: string) => (e: any) => {
     e.preventDefault()
-    console.log(question)
   }
 
   return (
@@ -103,7 +102,7 @@ export function TableCheckDuplicate(props: any) {
                 </StyledTableRow>
               )
             }
-            return ""
+            return ''
           })}
         </TableBody>
       </Table>

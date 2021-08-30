@@ -109,7 +109,6 @@ const SelfGenerate = (props: any) => {
       setIsDisable(true)
       setProgress(progress + 10)
       const response = await axios.post(MODEL_SELF_GENERATION_URL, items)
-      console.log(response)
       if (response && response.data) {
         const newArr = response.data.question?.map((item: string, index: number) => ({
           id: index + 1,
