@@ -97,7 +97,7 @@ function PersistentDrawerLeft(props: any) {
     {
       key: 6,
       icon: <NoteAddIcon fontSize="small" />,
-      text: 'Manage Subject',
+      text: 'Manage Subjects',
       link: '/subject',
     },
   ]

@@ -809,6 +809,7 @@ function Duplicate(props: any) {
             />
             <Dialog
               id="subject"
+              warn={true}
               title="Finish Process"
               buttonCancel="No"
               buttonAccept="Yes"

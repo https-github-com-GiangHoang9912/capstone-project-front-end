@@ -353,10 +353,11 @@ function ListSubject(props: any) {
             />
             <Dialog
               id="subject"
-              title="Finish Process"
+              title="DELETE"
+              warn={true}
               buttonCancel="No"
               buttonAccept="Yes"
-              message="Do you want to finish this process ?"
+              message="Do you want to delete this subject ?"
               isOpen={isConfirmOpen}
               handleClose={handleDialogClose}
               handleAccept={handleDelete}

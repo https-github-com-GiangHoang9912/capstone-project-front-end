@@ -18,6 +18,7 @@ DialogComponent.propTypes = {
   buttonCancel: PropTypes.string.isRequired,
   isOpen: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
+  warn: PropTypes.bool,
 }
 
 DialogComponent.defaultProps = {
@@ -25,6 +26,7 @@ DialogComponent.defaultProps = {
   message: '',
   buttonAccept: '',
   id: '',
+  warn: null,
 }
 
 function DialogComponent(props?: any) {
@@ -39,6 +41,7 @@ function DialogComponent(props?: any) {
     handleAccept,
     handleClose,
     id,
+    warn,
   } = props
 
   const StyledDialog = withStyles({
@@ -57,7 +60,21 @@ function DialogComponent(props?: any) {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >
-          <DialogTitle id="alert-dialog-slide-title">{title}</DialogTitle>
+          <DialogTitle
+            style={
+              warn
+                ? {
+                    backgroundColor: '#ff6b81',
+                    color: '#ffffff',
+                    fontWeight: 'bold',
+                    padding: '5px 24px',
+                  }
+                : {}
+            }
+            id="alert-dialog-slide-title"
+          >
+            {warn ? title : (<h3>`${title}`</h3>)}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">{message}</DialogContentText>
             {content}
