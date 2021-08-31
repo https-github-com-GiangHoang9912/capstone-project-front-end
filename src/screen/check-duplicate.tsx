@@ -144,6 +144,7 @@ function Duplicate(props: any) {
   useEffect(() => {
     axios.get(GET_SUBJECT_URL).then((response) => {
       setSubjects(response.data)
+      if (response && response.data.length !== 0) setSubjectId(response.data[0].id)
     })
   }, [])
 
@@ -200,11 +201,13 @@ function Duplicate(props: any) {
         }
       } catch (error) {
         setFlagLoading(false)
+        setProgress(100)
         handleNotification('danger', `${CONSTANT.MESSAGE('Check duplication').FAIL}`)
       }
     } else {
       setFlagLoading(false)
       setIsValidQues(false)
+      setProgress(100)
     }
   }
 
@@ -597,9 +600,7 @@ function Duplicate(props: any) {
                 input={<Input id="demo-dialog-native" />}
               >
                 {subjects.map((sub: Subject, index) => (
-                  <option key={index} value={sub.id}>
-                    {sub.subjectName}
-                  </option>
+                  <option value={sub.id}>{sub.subjectName}</option>
                 ))}
               </Select>
             </div>

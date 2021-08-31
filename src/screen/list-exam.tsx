@@ -155,6 +155,7 @@ function ListExam(props: any) {
       .get(`${GET_SUBJECT_URL}`)
       .then((response) => {
         setSubject(() => response.data)
+        if (response && response.data.length !== 0) setSubjectId(response.data[0].id)
       })
       .catch((err) => {
         console.log(err.message)

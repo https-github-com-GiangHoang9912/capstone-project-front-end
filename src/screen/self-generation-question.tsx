@@ -210,6 +210,7 @@ const SelfGenerate = (props: any) => {
       setProgress(progress + 10)
       await axios.get(GET_SUBJECT_URL).then((response) => {
         setSubjects(response.data)
+        if (response && response.data.length !== 0) setSubjectId(response.data[0].id)
       })
 
       const res = await axios.post(MODEL_CHECK_DUPLICATE_ALL_URL, {

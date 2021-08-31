@@ -17,6 +17,7 @@ import PersistentDrawerLeft from '../common/drawer'
 import Profile from '../screen/profile'
 import Login from '../screen/login'
 import ListExam from '../screen/list-exam'
+import ListSubject from '../screen/list-subject'
 import { AccountContextProvider, AccountContext } from '../contexts/account-context'
 import ManageStaffs from '../screen/manage-staffs'
 import ViewHistory from '../screen/view-history'
@@ -130,6 +131,13 @@ const App: FC = (props: any) => {
             {role === 1 ? (
               <Route exact path="/manage-staffs" component={ManageStaffs}>
                 <ManageStaffs handleNotification={handleNotification} />
+              </Route>
+            ) : (
+              ''
+            )}
+            {role === 1 || role === 2 ? (
+              <Route exact path="/subject" component={ListSubject}>
+                <ListSubject handleNotification={handleNotification} />
               </Route>
             ) : (
               ''

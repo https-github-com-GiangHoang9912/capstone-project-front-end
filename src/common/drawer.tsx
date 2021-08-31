@@ -94,6 +94,12 @@ function PersistentDrawerLeft(props: any) {
       text: 'Manage Exams',
       link: '/exam',
     },
+    {
+      key: 6,
+      icon: <NoteAddIcon fontSize="small" />,
+      text: 'Manage Subject',
+      link: '/subject',
+    },
   ]
 
   return (
@@ -110,6 +116,8 @@ function PersistentDrawerLeft(props: any) {
             const role = Number(localStorage.getItem('role') ? localStorage.getItem('role') : 3)
 
             if (item.key === 4 && role !== 1) return ''
+
+            if (item.key === 6 && role === 3) return ''
 
             return (
               <ListItem key={item.key}>
