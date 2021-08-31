@@ -114,7 +114,7 @@ function Duplicate(props: any) {
   const [isDuplicateSubject, setIsDuplicateSubject] = useState(false)
   const [duplicateSubject, setDuplicateSubject] = useState<String>('')
   const [isOpenDialogSubject, setIsOpenDialogSubject] = useState(false)
-  const [isOpenDialogFormat, setIsOpenDialogFormat] = useState(false)
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [isOpenDialogForm, setIsOpenDialogForm] = useState(false)
   const [isValidQues, setIsValidQues] = useState(true)
   const [listQuestion, setListQuestion] = useState<string[]>([])
@@ -248,16 +248,19 @@ function Duplicate(props: any) {
   const handleDialogClose = () => {
     setIsOpen(false)
     setOpenDialogAdd(false)
-    setIsOpenDialogFormat(false)
     setIsOpenDialogForm(false)
+    setIsConfirmOpen(false)
   }
+
+  const handleConfirmYes = () => {
+    setIsConfirmOpen(true)
+  }
+
   const handleOpenDialogForm = () => {
     handleReset()
     setIsOpenDialogForm(true)
   }
-  const handleOpenDialogFormat = () => {
-    setIsOpenDialogFormat(true)
-  }
+
   const handleChange = (event: any) => {
     setSubjectId(Number(event.target.value))
   }
@@ -290,6 +293,19 @@ function Duplicate(props: any) {
           </Button>
         </a>
       </div>
+    </div>
+  )
+
+  const confirmDialog = (
+    <div
+      style={{
+        backgroundColor: '#ff6b81',
+        color: '#ffffff',
+        fontWeight: 'bold',
+        padding: '5px 24px',
+      }}
+    >
+      <h3 className="title-delete">Delete</h3>
     </div>
   )
 
@@ -791,18 +807,23 @@ function Duplicate(props: any) {
               handleClose={handleCloseListSubject}
             />
             <Dialog
-              title="Format file bank"
-              buttonCancel="Close"
-              content={formatDialog}
-              isOpen={isOpenDialogFormat}
-              handleClose={handleDialogClose}
+              id="subject"
+              title="Finish Process"
+              buttonCancel="No"
+              buttonAccept="Yes"
+              message="Do you want to finish this process ?"
+              isOpen={isConfirmOpen}
+              handleClose={() => {
+                setIsConfirmOpen(false)
+              }}
+              handleAccept={handleDialogClose}
             />
             <Dialog
               title="Train Model"
               buttonCancel="Close"
               content={stepWrapper}
               isOpen={isOpenDialogForm}
-              handleClose={handleDialogClose}
+              handleClose={handleConfirmYes}
             />
           </div>
           <div className="guide-line">
