@@ -27,9 +27,9 @@ import ForgotPassword from '../screen/forgot-password'
 import { refreshToken } from '../services/services'
 
 const AuthRequired: FC<{}> = (props) => {
-  const { isLoggedIn } = useContext(AccountContext)
-
-  return <Switch>{isLoggedIn ? props.children : <Redirect to="/login" />}</Switch>
+  // const { isLoggedIn } = useContext(AccountContext)
+  const userId = localStorage.getItem('id')
+  return <Switch>{userId ? props.children : <Redirect to="/login" />}</Switch>
 }
 
 const App: FC = (props: any) => {
@@ -38,8 +38,8 @@ const App: FC = (props: any) => {
   const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false)
 
   useEffect(() => {
-    const id = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : -1
-    if (id !== -1) {
+    const id = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : 0
+    if (id !== 0) {
       refreshToken(id)
         .then((res) => {
           console.info(res)

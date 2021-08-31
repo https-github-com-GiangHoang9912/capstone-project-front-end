@@ -16,12 +16,13 @@ import * as CONSTANT from '../const'
 
 interface Styled {
   className?: string
-  isOpen?: Boolean
+  isOpen?: boolean
   setIsOpen?: Dispatch<SetStateAction<boolean>>
   isForgotPassword: boolean
   setIsLogin?: Dispatch<SetStateAction<boolean>>
   setIsForgotPassword?: Dispatch<SetStateAction<boolean>>
 }
+
 type HeaderProps = {} & Styled
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -48,7 +49,14 @@ const useStyles = makeStyles((theme: Theme) =>
 const LOGOUT_URL = `${CONSTANT.BASE_URL}/logout`
 
 const Header: FC<HeaderProps> = (props) => {
-  const { className, isOpen, setIsOpen, isForgotPassword, setIsLogin, setIsForgotPassword } = props
+  const {
+    className,
+    isOpen,
+    setIsOpen,
+    isForgotPassword,
+    setIsLogin,
+    setIsForgotPassword,
+  } = props
   const username = localStorage.getItem('username')
   const avatar = localStorage.getItem('avatar')
   const classes = useStyles()
@@ -65,11 +73,13 @@ const Header: FC<HeaderProps> = (props) => {
     setAnchorEl(null)
   }
   const handleLogout = async () => {
-    const response = await axios.get(LOGOUT_URL)
+    await axios.get(LOGOUT_URL)
     setIsLogin?.(true)
     setIsForgotPassword?.(false)
     localStorage.clear()
   }
+
+  const userId = localStorage.getItem('id')
 
   return (
     <AppBar color="inherit" className={className}>
@@ -91,9 +101,13 @@ const Header: FC<HeaderProps> = (props) => {
         )}
 
         <div className={classes.title}>
-          <NavLink to="/home">
+          {userId ? (
+            <NavLink to="/home">
+              <img className="cmsIcon" src="images/DDSGQ.png" alt="" />
+            </NavLink>
+          ) : (
             <img className="cmsIcon" src="images/DDSGQ.png" alt="" />
-          </NavLink>
+          )}
         </div>
         <div className="account-box">
           {username ? (
