@@ -390,9 +390,9 @@ function ListExam(props: any) {
           examName: txtNameExam,
         })
 
-        setOpenDialogCreate(false)
 
         if (response && response.data && response.data.statusCode === 200) {
+          setOpenDialogCreate(false)
           handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`)
           setTxtNameExam('')
           setProgress(100)

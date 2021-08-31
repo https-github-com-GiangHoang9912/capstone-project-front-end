@@ -69,7 +69,7 @@ function ChangePassword(props: any) {
         )
         if (changeDataResponse.data.status == 200 && validatePassword) {
           handleNotification('success', `${CONSTANT.MESSAGE().CHANGE_PASSWORD_SUCCESS}`)
-          history.push('/login')
+          history.push('/profile')
         } else {
           setValidatePassword(false)
         }
