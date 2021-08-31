@@ -31,6 +31,7 @@ export const MESSAGE = (props?: any) => {
     NO_QUESTION_SELECTED: `Add failed. No question is selected`,
     NO_ANSWER: `Update failed. You must add answer to update`,
     SEND_MAIL_SUCCESS: 'Send Password Successfully',
+    FPT_MAIL_REQUIRE: 'You must log in with FPT mail'
   }
   return message
 }

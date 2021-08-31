@@ -185,7 +185,7 @@ function ListExam(props: any) {
       } else {
         handleNotification(
           'warning',
-          `${CONSTANT.MESSAGE('no exam with name ').SEARCH_NOT_FOUND}'${textSearch}'`
+          `${CONSTANT.MESSAGE('').SEARCH_NOT_FOUND}'${textSearch}'`
         )
       }
       refreshToken(idUser)
