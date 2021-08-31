@@ -101,6 +101,7 @@ function ListSubject(props: any) {
   const [textSearch, setTextSearch] = useState<string>('')
   const [currentEditSubject, setCurrentEditSubject] = useState(0)
   const [currentDeleteSubject, setCurrentDeleteSubject] = useState(0)
+  const [currentDeleteSubjectName, setCurrentDeleteSubjectName] = useState("")
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
   useEffect(() => {
@@ -138,25 +139,24 @@ function ListSubject(props: any) {
     setDuplicateSubject('')
     setIsConfirmOpen(false)
     setCurrentDeleteSubject(0)
+    setCurrentDeleteSubjectName('')
   }
 
   const handleDelete = async () => {
     setProgress(progress + 10)
-    console.log(currentDeleteSubject)
     const response = await axios.post(`${DELETE_SUBJECT_URL}`, {
       subjectId: currentDeleteSubject,
     })
     if (response && response.data) {
       handleNotification('success', `${CONSTANT.MESSAGE('').DELETE_SUCCESS}`)
       setSubjects(response.data)
-      handleDialogClose()
     } else {
       handleNotification('danger', `${CONSTANT.MESSAGE('Delete').FAIL}`)
-      handleDialogClose()
     }
     setSubjectName('')
     setCurrentEditSubject(0)
     setProgress(100)
+    handleDialogClose()
   }
 
   const handleSubjectName = (e: any) => {
@@ -177,9 +177,10 @@ function ListSubject(props: any) {
     }
   }, [])
 
-  const handleOpenConfirm = (subjectId: number) => {
+  const handleOpenConfirm = (subjectId: number, subjectNameDelete: string) => {
     setIsConfirmOpen(true)
     setCurrentDeleteSubject(subjectId)
+    setCurrentDeleteSubjectName(subjectNameDelete)
   }
 
   const columns = [
@@ -206,7 +207,7 @@ function ListSubject(props: any) {
             className="style-btn"
             id={cell.row.original.id}
             onClick={() => {
-              handleOpenConfirm(cell.row.original.id)
+              handleOpenConfirm(cell.row.original.id, cell.row.original.subjectName)
             }}
           >
             Delete
@@ -261,17 +262,17 @@ function ListSubject(props: any) {
           await axios.get(GET_SUBJECT_URL).then((res) => {
             setSubjects(res.data)
           })
-          setIsOpenDialogSubject(false)
+          handleDialogClose()
         } else {
           handleNotification('danger', `${CONSTANT.MESSAGE('Create New Subject').FAIL}`)
-          setIsOpenDialogSubject(false)
+          handleDialogClose()
         }
         setSubjectName('')
         setCurrentEditSubject(0)
         setProgress(100)
       } catch {
         handleNotification('danger', `${CONSTANT.MESSAGE('Create New Subject').FAIL}`)
-        setIsOpenDialogSubject(false)
+        handleDialogClose()
         setCurrentEditSubject(0)
         setProgress(100)
       }
@@ -348,16 +349,16 @@ function ListSubject(props: any) {
               buttonAccept={currentEditSubject === 0 ? 'Add' : 'Edit'}
               content={subjectContent}
               isOpen={isOpenDialogSubject}
-              handleClose={handleCloseSubject}
+              handleClose={handleDialogClose}
               handleAccept={handleAddSubject}
             />
             <Dialog
               id="subject"
-              title="DELETE"
+              title="Delete"
               warn={true}
               buttonCancel="No"
               buttonAccept="Yes"
-              message="Do you want to delete this subject ?"
+              message={`Do you want to delete ${currentDeleteSubjectName} ?`}
               isOpen={isConfirmOpen}
               handleClose={handleDialogClose}
               handleAccept={handleDelete}
