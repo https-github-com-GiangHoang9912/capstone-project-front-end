@@ -392,6 +392,7 @@ function UpdateExam(props: any) {
 
   //* Handle process with answer
   const handleAddAnswer = () => {
+    if (currentQuestionAnswerGroup.length === 10) return
     const newAnswerGroup = [...currentQuestionAnswerGroup]
     newAnswerGroup.push({
       correct: newAnswerGroup.length == 0,
@@ -609,7 +610,7 @@ function UpdateExam(props: any) {
       accessor: 'questionBank.questionText',
     },
     {
-      Header: 'Answer',
+      Header: 'Answers',
       accessor: (data: any) => (
         <div>
           {data.answerGroup.map((item: any, index: number) => (

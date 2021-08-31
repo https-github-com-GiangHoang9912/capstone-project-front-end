@@ -151,7 +151,9 @@ function ManageStaffs(props: any) {
         <tr>
           <td>DOB</td>
           <td className="info-user">
-            {moment.default(userDetail.dateOfBirth).format('DD/MM/YYYY')}
+            {userDetail.dateOfBirth
+              ? moment.default(userDetail.dateOfBirth).format('DD/MM/YYYY')
+              : ''}
           </td>
         </tr>
         <tr>
@@ -296,17 +298,17 @@ function ManageStaffs(props: any) {
 
   const handleSearchValue = useCallback((e: any) => {
     setSearchValue(e.target.value)
-    if (!searchValue) {
-      axios.get(`${GET_USERS_URL}`).then((response) => {
-        setUser(response.data)
-      })
-    }
   }, [])
 
   const searchAccount = () => {
     axios.get(`${GET_USERS_SEARCH_URL}/${searchValue}`).then((response) => {
       setUser(response.data)
     })
+    if (!searchValue) {
+      axios.get(`${GET_USERS_URL}`).then((response) => {
+        setUser(response.data)
+      })
+    }
   }
 
   return (

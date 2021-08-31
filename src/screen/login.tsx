@@ -203,44 +203,50 @@ const Login: FC<LoginProps> = (props) => {
     }
   }
 
-  const responseGoogle = (googleRes?: any) => {
+  const responseGoogle = (googleRes?: any): any => {
     if (container.current && googleRes.profileObj) {
-      container.current.style.display = 'block'
-      if (loading) {
-        lottie.loadAnimation({
-          container: container.current,
-          renderer: 'svg',
-          loop: true,
-          autoplay: true,
-          animationData: location,
-        })
-      }
-      setTimeout(async () => {
-        const response = await axios
-          .post(LOGIN_WITH_GOOGLE_API, googleRes.profileObj, {
-            withCredentials: true,
+      const patten = new RegExp('(@fpt.edu.vn)|(@fe.edu.vn)')
+      const isFPTEmail = patten.test(googleRes.profileObj.email)
+
+      if (!isFPTEmail) handleNotification('danger', `${CONSTANT.MESSAGE().FPT_MAIL_REQUIRE}`)
+      else {
+        container.current.style.display = 'block'
+        if (loading) {
+          lottie.loadAnimation({
+            container: container.current,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            animationData: location,
           })
-          .catch((err) => {
-            stopLoading()
-            setLoading(false)
-          })
-        if (response && response.data && response.data.statusCode !== 401) {
-          setInformation(response.data)
-          stopLoading()
-          localStorage.setItem('id', response.data.id)
-          localStorage.setItem('role', response.data.role)
-          localStorage.setItem('username', response.data.username)
-          localStorage.setItem(
-            'avatar',
-            response.data.profile ? response.data.profile.avatar : 'avatar2.png'
-          )
-          history.push('/Home')
-        } else {
-          stopLoading()
-          handleNotification('danger', `${CONSTANT.MESSAGE('Login').FAIL}`)
         }
-        setLoading(false)
-      }, 2000)
+        setTimeout(async () => {
+          const response = await axios
+            .post(LOGIN_WITH_GOOGLE_API, googleRes.profileObj, {
+              withCredentials: true,
+            })
+            .catch((err) => {
+              stopLoading()
+              setLoading(false)
+            })
+          if (response && response.data && response.data.statusCode !== 401) {
+            setInformation(response.data)
+            stopLoading()
+            localStorage.setItem('id', response.data.id)
+            localStorage.setItem('role', response.data.role)
+            localStorage.setItem('username', response.data.username)
+            localStorage.setItem(
+              'avatar',
+              response.data.profile ? response.data.profile.avatar : 'avatar2.png'
+            )
+            history.push('/Home')
+          } else {
+            stopLoading()
+            handleNotification('danger', `${CONSTANT.MESSAGE('Login').FAIL}`)
+          }
+          setLoading(false)
+        }, 2000)
+      }
     }
   }
 
