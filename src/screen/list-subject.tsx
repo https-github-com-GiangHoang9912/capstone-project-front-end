@@ -232,14 +232,17 @@ function ListSubject(props: any) {
 
   const handleAddSubject = async () => {
     const subj = subjects.find((name) => name.subjectName === subjectName)
-    setProgress(progress + 10)
-    console.log(currentEditSubject)
-    if (subj) {
+    console.log(subjectName)
+    if (!subjectName) {
+      setIsDuplicateSubject(true)
+      setDuplicateSubject(`subject name can't blank`)
+    } else if (subj) {
       setIsDuplicateSubject(true)
       setDuplicateSubject('Existing subject ')
     } else {
       setIsDuplicateSubject(false)
       setDuplicateSubject('')
+      setProgress(progress + 10)
       try {
         let response = null
         if (currentEditSubject !== 0) {
@@ -304,7 +307,7 @@ function ListSubject(props: any) {
                 <TextField
                   className="search-exam--txt"
                   id="outlined-search"
-                  label="Search by title exam"
+                  label="Search by title subject"
                   type="text"
                   variant="outlined"
                   size="small"
@@ -332,7 +335,7 @@ function ListSubject(props: any) {
                   color="primary"
                 >
                   {' '}
-                  Create Exam{' '}
+                  Create Subject{' '}
                 </Button>
               </div>
             </div>
@@ -423,7 +426,7 @@ const StyleListExam = styled(ListSubject)`
     margin-top: 1rem;
   }
   .tbl-exams {
-    width: 100%;
+    width: 90%;
   }
   .tiltle-delete {
     color: red;
@@ -518,7 +521,7 @@ const StyleListExam = styled(ListSubject)`
     margin-bottom: 2%;
   }
   .btn-search {
-    width: 120px;
+    width: 130px;
     height: 40px;
     margin-left: 0.5rem;
     font-size: 0.7rem;
