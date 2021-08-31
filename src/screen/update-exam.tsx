@@ -793,7 +793,6 @@ function UpdateExam(props: any) {
                 {currentQuestionAnswerGroup.map((item: any, index: number) => (
                   <div className={classes.containQuesIcon}>
                     <TextField
-                      id="outlined-basic"
                       value={currentQuestionAnswerGroup[index].answer.answerText}
                       onChange={handleInputAnswer(index)}
                       label={`Answer ${index + 1}`}

@@ -390,9 +390,10 @@ function ListExam(props: any) {
           examName: txtNameExam,
         })
 
+        setOpenDialogCreate(false)
+
         if (response && response.data && response.data.statusCode === 200) {
           handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`)
-          setOpenDialogCreate(false)
           setTxtNameExam('')
           setProgress(100)
         } else {
@@ -404,7 +405,6 @@ function ListExam(props: any) {
       } else {
         setProgress(progress + 10)
         setCheckError(true)
-        setTextError('Name can not is blank!!!')
       }
       refreshToken(idUser)
       setProgress(100)
