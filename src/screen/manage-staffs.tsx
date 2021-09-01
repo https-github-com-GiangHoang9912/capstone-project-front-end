@@ -208,11 +208,17 @@ function ManageStaffs(props: any) {
     })
   }, [])
 
-  const handleDialogOpen = (username: any) => {
-    setIsOpen(true)
-    axios.post(GET_INFORMATION_URL, { username }).then((response) => {
-      setUserDetail(response.data)
-    })
+  const handleDialogOpen = async (username: any) => {
+    try {
+      await axios.post(GET_INFORMATION_URL, { username }).then((response) => {
+        setUserDetail(response.data)
+      })
+      setProgress(100)
+      setIsOpen(true)
+    } catch (error) {
+      setProgress(100)
+      setIsOpen(true)
+    }
   }
   function handleDialogClose() {
     setIsOpen(false)
