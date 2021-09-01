@@ -129,6 +129,9 @@ function Duplicate(props: any) {
     setFile(e.target.files[0])
     setFileName(e.target.files[0].name)
   }
+
+  const userRole = localStorage.getItem('role')
+
   const userId = localStorage.getItem('id') ? Number(localStorage.getItem('id')) : account.id
   useEffect(() => {
     axios
@@ -705,7 +708,7 @@ function Duplicate(props: any) {
     <div className={className}>
       <LoadingBar color="#f11946" progress={progress} onLoaderFinished={() => setProgress(0)} />
       <div className="container">
-        {role !== 3 ? (
+        {Number(userRole) !== 3 ? (
           <div className="control control-left">
             <div className="create-bank">
               <h2 className="select">Train Bank File</h2>

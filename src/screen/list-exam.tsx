@@ -43,6 +43,7 @@ interface AnswerGroup {
   id: number
   correctAnswer: boolean
   answer: Answer
+  correct?: boolean
 }
 
 interface Question {
@@ -184,10 +185,7 @@ function ListExam(props: any) {
       if (response && response.data.length > 0) {
         setExams(response.data)
       } else {
-        handleNotification(
-          'warning',
-          `${CONSTANT.MESSAGE('').SEARCH_NOT_FOUND}'${textSearch}'`
-        )
+        handleNotification('warning', `${CONSTANT.MESSAGE('').SEARCH_NOT_FOUND}'${textSearch}'`)
       }
       refreshToken(idUser)
     } catch (error) {
@@ -391,7 +389,6 @@ function ListExam(props: any) {
           examName: txtNameExam,
         })
 
-
         if (response && response.data && response.data.statusCode === 200) {
           setOpenDialogCreate(false)
           handleNotification('success', `${CONSTANT.MESSAGE().CREATE_SUCCESS}`)
@@ -404,7 +401,7 @@ function ListExam(props: any) {
           setProgress(100)
         }
       } else {
-        setTextError("Name must be at least 3 characters including one letter")
+        setTextError('Name must be at least 3 characters including one letter')
         setProgress(progress + 10)
         setCheckError(true)
       }
@@ -415,6 +412,33 @@ function ListExam(props: any) {
       handleNotification('danger', `${CONSTANT.MESSAGE('Create Exam').FAIL}`)
       refreshToken(idUser)
     }
+  }
+
+  const handleDownloadExam = () => {
+    const dataCsv = question.map((e, index) => {
+      const data = []
+      let correctAnswer = ''
+      data.push(e.questionBank.questionText)
+      e.answerGroup.forEach((answer) => {
+        data.push(`"${answer.answer.answerText}"`)
+        if (answer.correct) {
+          correctAnswer = answer.answer.answerText
+        }
+      })
+      data.push(correctAnswer)
+      return data
+    })
+
+    const csvContent = `data:text/csv;charset=utf-8,${dataCsv.map((e) => e.join(',')).join('\n')}`
+
+    const encodedUri = encodeURI(csvContent)
+
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', 'test.csv')
+    document.body.appendChild(link)
+
+    link.click()
   }
 
   //* Body view exam dialog */
@@ -633,7 +657,11 @@ function ListExam(props: any) {
                   <h3>{nameExam}</h3>
                 </DialogTitle>
                 <DialogContent>{bodyView}</DialogContent>
+
                 <DialogActions>
+                  <Button color="primary" onClick={handleDownloadExam}>
+                    Download
+                  </Button>
                   <Button onClick={handleViewClose} color="primary">
                     Close
                   </Button>
