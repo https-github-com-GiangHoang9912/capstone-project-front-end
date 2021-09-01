@@ -29,7 +29,6 @@ export const AccountContextProvider = ({ children }: AccountContextProps) => {
   }
   const accountContextData = account
   const isLoggedIn = account.id !== 0
-  console.info(isLoggedIn)
 
   return (
     <AccountContext.Provider value={{ accountContextData, setInformation, isLoggedIn }}>

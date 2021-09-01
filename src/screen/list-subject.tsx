@@ -101,14 +101,13 @@ function ListSubject(props: any) {
   const [textSearch, setTextSearch] = useState<string>('')
   const [currentEditSubject, setCurrentEditSubject] = useState(0)
   const [currentDeleteSubject, setCurrentDeleteSubject] = useState(0)
-  const [currentDeleteSubjectName, setCurrentDeleteSubjectName] = useState("")
+  const [currentDeleteSubjectName, setCurrentDeleteSubjectName] = useState('')
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
   useEffect(() => {
     axios
       .get(`${GET_SUBJECT_URL}`)
       .then((response) => {
-        console.log(response)
         setSubjects(() => response.data)
       })
       .catch((err) => {
@@ -123,13 +122,6 @@ function ListSubject(props: any) {
     setSubjectName(newSubjectName)
     setCurrentEditSubject(subjectId)
   }
-  const handleCloseSubject = () => {
-    setIsOpenDialogSubject(false)
-    setIsDuplicateSubject(false)
-    setCurrentEditSubject(0)
-    setSubjectName('')
-    setDuplicateSubject('')
-  }
 
   const handleDialogClose = () => {
     setIsOpenDialogSubject(false)
@@ -143,20 +135,24 @@ function ListSubject(props: any) {
   }
 
   const handleDelete = async () => {
-    setProgress(progress + 10)
-    const response = await axios.post(`${DELETE_SUBJECT_URL}`, {
-      subjectId: currentDeleteSubject,
-    })
-    if (response && response.data) {
-      handleNotification('success', `${CONSTANT.MESSAGE('').DELETE_SUCCESS}`)
-      setSubjects(response.data)
-    } else {
+    setProgress(progress)
+    try {
+      const response = await axios.post(`${DELETE_SUBJECT_URL}`, {
+        subjectId: currentDeleteSubject,
+      })
+      if (response && response.data) {
+        handleNotification('success', `${CONSTANT.MESSAGE('').DELETE_SUCCESS}`)
+        setSubjects(response.data)
+      } else {
+        handleNotification('danger', `${CONSTANT.MESSAGE('Delete').FAIL}`)
+      }
+      handleDialogClose()
+      setProgress(100)
+    } catch (error) {
       handleNotification('danger', `${CONSTANT.MESSAGE('Delete').FAIL}`)
+      setProgress(100)
+      handleDialogClose()
     }
-    setSubjectName('')
-    setCurrentEditSubject(0)
-    setProgress(100)
-    handleDialogClose()
   }
 
   const handleSubjectName = (e: any) => {
@@ -233,7 +229,6 @@ function ListSubject(props: any) {
 
   const handleAddSubject = async () => {
     const subj = subjects.find((name) => name.subjectName === subjectName)
-    console.log(subjectName)
     if (!subjectName) {
       setIsDuplicateSubject(true)
       setDuplicateSubject(`subject name can't blank`)
@@ -344,7 +339,7 @@ function ListSubject(props: any) {
               <Table columns={columns} data={subjects} isPagination={true} />
             </div>
             <Dialog
-              title="Add Subject"
+              title={currentEditSubject === 0 ? 'Add Subject' : 'Update Subject'}
               buttonCancel="Close"
               buttonAccept={currentEditSubject === 0 ? 'Add' : 'Edit'}
               content={subjectContent}

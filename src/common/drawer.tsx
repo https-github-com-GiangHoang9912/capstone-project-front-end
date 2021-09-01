@@ -13,7 +13,6 @@ import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
 import Divider from '@material-ui/core/Divider'
 import ListItem from '@material-ui/core/ListItem'
-
 import {
   Home as HomeIcon,
   Filter2 as Filter2Icon,
@@ -21,6 +20,7 @@ import {
   ContactSupport as ContactSupportIcon,
   NoteAdd as NoteAddIcon,
   Build as BuildIcon,
+  LibraryBooks as Libraries
 } from '@material-ui/icons'
 
 const drawerWidth = '15rem'
@@ -96,7 +96,7 @@ function PersistentDrawerLeft(props: any) {
     },
     {
       key: 6,
-      icon: <NoteAddIcon fontSize="small" />,
+      icon: <Libraries fontSize="small" />,
       text: 'Manage Subjects',
       link: '/subject',
     },
