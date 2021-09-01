@@ -321,7 +321,8 @@ function ListSubject(props: any) {
                   {' '}
                   Search{' '}
                 </Button>
-                <Button
+              </div>
+              <Button
                   size="small"
                   onClick={() => {
                     setIsOpenDialogSubject(true)
@@ -333,7 +334,6 @@ function ListSubject(props: any) {
                   {' '}
                   Create Subject{' '}
                 </Button>
-              </div>
             </div>
             <div className="tbl-exams">
               <Table columns={columns} data={subjects} isPagination={true} />
