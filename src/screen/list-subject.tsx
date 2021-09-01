@@ -79,6 +79,9 @@ const useStyles = makeStyles((theme) => ({
     height: 20,
     marginBottom: '2rem',
   },
+  textSearch: {
+    width: 250,
+  }
 }))
 
 const GET_SUBJECT_URL = `${CONSTANT.BASE_URL}/subject`
@@ -97,7 +100,7 @@ function ListSubject(props: any) {
   const [isDuplicateSubject, setIsDuplicateSubject] = useState(false)
   const [isOpenDialogSubject, setIsOpenDialogSubject] = useState(false)
   const [subjects, setSubjects] = useState<Subject[]>([])
-  const [subjectName, setSubjectName] = useState<String>()
+  const [subjectName, setSubjectName] = useState<string>("")
   const [textSearch, setTextSearch] = useState<string>('')
   const [currentEditSubject, setCurrentEditSubject] = useState(0)
   const [currentDeleteSubject, setCurrentDeleteSubject] = useState(0)
@@ -229,9 +232,10 @@ function ListSubject(props: any) {
 
   const handleAddSubject = async () => {
     const subj = subjects.find((name) => name.subjectName === subjectName)
-    if (!subjectName) {
+    const myRegex = /(?=^.{3,}$)(?=.*)(?=.*[a-z]).*$/
+    if (!myRegex.test(subjectName.toLowerCase())) {
       setIsDuplicateSubject(true)
-      setDuplicateSubject(`subject name can't blank`)
+      setDuplicateSubject(`Name must be at least 3 characters including one letter`)
     } else if (subj) {
       setIsDuplicateSubject(true)
       setDuplicateSubject('Existing subject ')
@@ -253,7 +257,12 @@ function ListSubject(props: any) {
         }
 
         if (response && response.data) {
-          handleNotification('success', `${CONSTANT.MESSAGE().ADD_SUCCESS}`)
+          handleNotification(
+            'success',
+            currentEditSubject === 0
+              ? `${CONSTANT.MESSAGE().ADD_SUCCESS}`
+              : `${CONSTANT.MESSAGE().UPDATE_SUCCESS}`
+          )
           await axios.get(GET_SUBJECT_URL).then((res) => {
             setSubjects(res.data)
           })
@@ -301,9 +310,9 @@ function ListSubject(props: any) {
             <div className="search-exam">
               <div>
                 <TextField
-                  className="search-exam--txt"
+                  className={classes.textSearch}
                   id="outlined-search"
-                  label="Search by title subject"
+                  label="Search by subject name"
                   type="text"
                   variant="outlined"
                   size="small"
@@ -323,17 +332,17 @@ function ListSubject(props: any) {
                 </Button>
               </div>
               <Button
-                  size="small"
-                  onClick={() => {
-                    setIsOpenDialogSubject(true)
-                  }}
-                  className="btn-search"
-                  variant="contained"
-                  color="primary"
-                >
-                  {' '}
-                  Create Subject{' '}
-                </Button>
+                size="small"
+                onClick={() => {
+                  setIsOpenDialogSubject(true)
+                }}
+                className="btn-search"
+                variant="contained"
+                color="primary"
+              >
+                {' '}
+                Create Subject{' '}
+              </Button>
             </div>
             <div className="tbl-exams">
               <Table columns={columns} data={subjects} isPagination={true} />

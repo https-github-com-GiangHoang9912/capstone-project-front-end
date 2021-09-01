@@ -367,7 +367,7 @@ function ListExam(props: any) {
       const checkNameExamDuplicate = checkDuplicateName(e.target.value, exams)
       if (!validateNameExam(e.target.value.trim())) {
         setCheckError(true)
-        setTextError('Name must be at least 3 characters including one letter!')
+        setTextError('Name must be at least 3 characters including one letter')
       }
       if (checkNameExamDuplicate) {
         setCheckError(true)
@@ -404,6 +404,7 @@ function ListExam(props: any) {
           setProgress(100)
         }
       } else {
+        setTextError("Name must be at least 3 characters including one letter")
         setProgress(progress + 10)
         setCheckError(true)
       }
@@ -530,7 +531,7 @@ function ListExam(props: any) {
                 <TextField
                   className="search-exam--txt"
                   id="outlined-search"
-                  label="Search by title exam"
+                  label="Search by exam name"
                   type="text"
                   variant="outlined"
                   size="small"

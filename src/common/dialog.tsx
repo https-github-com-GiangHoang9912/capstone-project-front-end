@@ -73,7 +73,7 @@ function DialogComponent(props?: any) {
             }
             id="alert-dialog-slide-title"
           >
-            {warn ? title : (<h3>`${title}`</h3>)}
+            {warn ? title : <h3>{title}</h3>}
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">{message}</DialogContentText>

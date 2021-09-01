@@ -810,10 +810,10 @@ function Duplicate(props: any) {
             <Dialog
               id="subject"
               warn={true}
-              title="Finish Process"
+              title="Close Process"
               buttonCancel="No"
               buttonAccept="Yes"
-              message="Do you want to finish this process ?"
+              message="Do you want to close this process ?"
               isOpen={isConfirmOpen}
               handleClose={() => {
                 setIsConfirmOpen(false)
