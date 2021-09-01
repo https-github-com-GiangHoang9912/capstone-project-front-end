@@ -418,18 +418,18 @@ function ListExam(props: any) {
     const dataCsv = question.map((e, index) => {
       const data = []
       let correctAnswer = ''
-      data.push(e.questionBank.questionText)
-      e.answerGroup.forEach((answer) => {
-        data.push(`"${answer.answer.answerText}"`)
+      data.push(`${index + 1}.${e.questionBank.questionText}`)
+      e.answerGroup.forEach((answer, aIndex) => {
+        data.push(`${String.fromCharCode(97 + aIndex)}. "${answer.answer.answerText}"`)
         if (answer.correct) {
           correctAnswer = answer.answer.answerText
         }
       })
-      data.push(correctAnswer)
+      data.push(`correct: ${correctAnswer}`)
       return data
     })
 
-    const csvContent = `data:text/csv;charset=utf-8,${dataCsv.map((e) => e.join(',')).join('\n')}`
+    const csvContent = `data:text/csv;charset=utf-8,${dataCsv.map((e) => e.join('\n')).join('\n')}`
 
     const encodedUri = encodeURI(csvContent)
 
